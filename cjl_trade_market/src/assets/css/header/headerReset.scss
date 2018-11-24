@@ -1,0 +1,32 @@
+.header-white {
+  @include minWidth;
+  @include hCenter;
+  .hd-body {
+    background: $bg-white;
+  }
+  .nav-bar {
+    // a {
+    //   color: $main-font-color;
+    // }
+    .nav-item {
+      &:hover,
+      &.active {
+        background: $hover-bg-color;
+        > a {
+          color: $bg-white;
+        }
+      }
+    }
+  }
+  .sub-nav {
+    .sub-nav-item {
+      &:hover,
+      &:active {
+        background: $hover-bg-color;
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

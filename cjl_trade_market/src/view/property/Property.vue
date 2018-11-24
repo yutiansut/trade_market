@@ -1,0 +1,233 @@
+<template>
+    <div class="content">
+        <div class="table-panel">
+            <div class="panel-head flex flex-v-center flex-between">
+                <span class="font-16 font-bit-bold">
+                    <em>资产折合：</em>
+                    <em>0.0000202 BTC <i class="color-999 font-12">≈ 0 CNY</i></em>
+                </span>
+                <div class="nav-link">
+                    <router-link to="/property/property_record" class="color-danger">财务记录</router-link>
+                    <router-link to="/property/address_admin" class="color-danger">地址管理</router-link>
+                </div>
+            </div>
+            <el-table :data='myPropetyData' :header-cell-style='changeStyle'>
+                <el-table-column label="币种">
+                    <div class="flex flex-v-center" slot-scope="scope">
+                        <img class="currency-thumb thumb-20" src="" alt="">
+                        <span v-text="scope.row.currency"></span>
+                    </div>
+                </el-table-column>
+                <el-table-column prop="balance" label="可用余额"></el-table-column>
+                <el-table-column prop="amount" label="挂单金额"></el-table-column>
+                <el-table-column prop="total" label="总计"></el-table-column>
+                <el-table-column prop="RmbVal" label="估算为人民币"></el-table-column>
+                <el-table-column width='150' label="操作">
+                    <div class="operation"  slot-scope="scope">
+                        <span @click="showDialog(0)" class="color-danger">充币</span>
+                        <span @click="showDialog(1)" class="color-success">提币</span>
+                        <span>交易</span>
+                    </div>
+                </el-table-column>
+            </el-table>
+        </div>
+        <!-- 提币弹窗 -->
+        <dialog-box 
+          :showDialog='showWidthDrawDialog'
+          :model='formData'
+          dialogTitle='提币'
+          @onDialogClose='dialogClose(0)'>
+          <div class="font-bold mt-15">可用余额：<span class="color-danger">0 USDT</span></div>
+          <div class="font-bold mt-15">当日提现上限：<span>10000/10000 USDT</span></div>
+          <el-form label-position='top' @submit.native.prevent>
+            <el-form-item label="USDT提现地址">
+              <el-select v-model="formData.cid" placeholder='请输入您的钱包地址'>
+                <el-option v-for="item in formData.usdtAddr" 
+                  :key='item.value' :label='item.label' :value="item.value">
+                </el-option>
+              </el-select>
+            </el-form-item>
+            <div class="tips font-12 color-999">USDT提现地址支持比特币BTC和以太坊ETH ERC20格式</div>
+            <el-form-item label='地址名称'>
+              <el-input v-model="formData.addressName" placeholder='例如 My Address#1, 选填'></el-input>
+            </el-form-item>
+            <div class="tips font-12 color-999">提现成功后，系统会记住您的提现地址，以便下次使用，
+              填写“地址名称”可便于您分辨钱包地址</div>
+            <el-form-item label='提现数额（币数）'>
+              <el-input v-model="formData.widthDrawAmount" placeholder='最少60USDT，一次最多1000000 USDT'></el-input>
+            </el-form-item>
+            <div class="tips font-12">手续费：0% + 10 USDT （BTC格式地址），10 USDT（ETH格式地址）</div>
+            <el-form-item label='资金密码'>
+              <el-input type='password' v-model="formData.propertyPass" placeholder='请填写资金密码'></el-input>
+            </el-form-item>
+            <el-form-item label='短信验证码'>
+              <el-input v-model="formData.mobileCode" placeholder='请填写短信验证码'></el-input>
+            </el-form-item>
+            <el-form-item label='谷歌验证码'>
+              <el-input v-model="formData.googleCode" placeholder='请填写谷歌验证码'></el-input>
+            </el-form-item>
+            <button class="btn-block btn-danger btn-large btn-active">提交提现申请</button>
+          </el-form>
+        </dialog-box>
+        <!-- 充币弹窗 -->
+        <dialog-box 
+          :showDialog='showChargeDialog'
+          :model='formData'
+          dialogTitle='充币'
+          @onDialogClose='dialogClose(1)'>
+          <div class="slot-content">
+            <div class="mt-15 charge-label">请将ETH汇入如下地址 <router-link to="">（点击这里查看区块链记录）</router-link></div>
+            <input class="eth-addr" v-model="ETHAddress"/>
+            <div>或扫描二维码</div>
+            <div class="qr-code p-rel"><img src="" alt=""></div>
+            <div class="warning color-666">
+              请通过 ETH 客户端或在线钱包将您需要充值的ETH数目发送到该地址。发送完成后，系统会自动在此交易获得 12 个确认后将该笔虚拟币充值到您在本站的账户，12 个确认需要大约 0.5 到 1 小时时间，请耐心等待。 同一个地址可多次充值，不影响到账。最小充值金额0.0001。 
+            </div>
+          </div>
+        </dialog-box>
+    </div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      showChargeDialog: false,
+      showWidthDrawDialog: false,
+      formData: {
+        cid: '',
+        usdtAddr: [
+          {
+            label: 'jfejfoaejegeioajgea',
+            value: 'jigajoijgoeajgoieajg',
+          },
+          {
+            label: 'geagea',
+            value: 'aagegea',
+          },
+        ],
+        addressName: '',
+        widthDrawAmount: null,
+        propertyPass: null,
+        mobileCode: null,
+        googleCode: null,
+      },
+      ETHAddress: 'ajigeojagoejageaigjoew',
+      myPropetyData: [
+        {
+          currency: 'BDEF',
+          thumb: '',
+          balance: 'afeafa',
+          amount: '1321',
+          total: '41421',
+          RmbVal: '14214',
+        },
+      ],
+    };
+  },
+  methods: {
+    changeStyle({ columnIndex }) {
+      if (columnIndex == 5) {
+        return 'text-align:right;';
+      }
+    },
+    showDialog(i) {
+      switch (i) {
+        case 0:
+          this.showChargeDialog = true;
+          break;
+        case 1:
+          this.showWidthDrawDialog = true;
+          break;
+      }
+    },
+    dialogClose(i) {
+      switch (i) {
+        case 1:
+          this.showChargeDialog = false;
+          break;
+        case 0:
+          this.showWidthDrawDialog = false;
+          break;
+      }
+    },
+  },
+};
+</script>
+<style lang="scss" scoped>
+.mt-15 {
+  margin-top: 15px;
+}
+.table-panel {
+  border: $default-border;
+  border-bottom: none;
+  margin-top: 12px;
+  .panel-head {
+    height: 50px;
+    padding: 0 15px;
+    border-bottom: $default-border;
+    background-color: #fcfcfc;
+  }
+  .operation {
+    text-align: right;
+    span {
+      display: inline-block;
+      margin-left: 12px;
+      cursor: pointer;
+      &:first-child {
+        margin-left: 0;
+      }
+    }
+  }
+  .currency-thumb {
+    margin-right: 8px;
+  }
+  .nav-link {
+    a {
+      margin-left: 30px;
+    }
+  }
+}
+.el-form {
+  margin-top: 20px;
+  .el-form-item {
+    margin-bottom: 0;
+    margin-top: 15px;
+  }
+  .el-select {
+    width: 100%;
+  }
+  .tips {
+    margin-top: 5px;
+  }
+  button {
+    margin-top: 15px;
+  }
+}
+.slot-content {
+  .charge-label {
+    margin-bottom: 10px;
+  }
+  input {
+    @include textVcenter;
+    width: 100%;
+    border-color: $bd-color;
+    padding: 0 10px;
+    color: $color-danger;
+    margin-bottom: 15px;
+  }
+  .qr-code {
+    width: 23.2%;
+    padding-top: 23.2%;
+    margin: 10px 0;
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
+  .warning {
+    line-height: 1.5;
+  }
+}
+</style>

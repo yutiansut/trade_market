@@ -1,0 +1,51 @@
+<template>
+    <div class="content">
+      <div class="title font-16 font-bold">OTC记录</div>
+      <div class="table-wrap">
+        <el-table
+          :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
+          :data='orderDetailData'>
+          <el-table-column prop='orderId' label='单号'></el-table-column>
+          <el-table-column prop='type' label='类型'></el-table-column>
+          <el-table-column prop='currency' label='币种'></el-table-column>
+          <el-table-column prop='price' label='价格（CNY）'></el-table-column>
+          <el-table-column prop='num' label='数量'></el-table-column>
+          <el-table-column prop='amount' label='金额（CNY）'></el-table-column>
+          <el-table-column prop='createdTime' label='建立时间'></el-table-column>
+          <el-table-column prop='paidDate' label='最后打款时间'></el-table-column>
+          <el-table-column prop='confirmDate' label='最后确认时间'></el-table-column>
+          <el-table-column width='100' label='操作'></el-table-column>
+        </el-table>
+      </div>
+    </div>
+</template>
+<style lang="scss" scoped>
+.table-wrap {
+  border: $default-border;
+  border-bottom: none;
+}
+.title {
+  margin-bottom: 25px;
+}
+</style>
+<script>
+export default {
+  data() {
+    return {
+      orderDetailData: [
+        {
+          orderId: "116166",
+          currency: "USDt",
+          type: "买入",
+          num: "46516",
+          price: "0.4849USDT",
+          amount: "48489.448 BOE",
+          createdTime: "2484-4-8",
+          paidDate: "2484-4-8",
+          confirmDate: "2484-4-8"
+        }
+      ]
+    };
+  }
+};
+</script>
