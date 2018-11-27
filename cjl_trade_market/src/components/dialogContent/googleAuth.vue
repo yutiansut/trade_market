@@ -22,10 +22,22 @@
                         <div class="qr-code p-rel"><img src="" alt=""></div>
                     </el-col>
                     <el-col :span='18'>
-                      <p class="color-666">请确保你已备份密钥。如果你的手机丢失、被盗或密钥被删除，你将需要此密钥找回你的谷歌二次验证。 
-否则重置你的谷歌二次验证需要提交工单，可能需要很长时间来处理。</p>
-<p class="color-666 color-danger">提示：如果您无法扫描二维码，请手动输入账户名、密钥来添加谷歌身份认证账户。</p>
-</el-col>
+                      <template v-if="$i18n.locale=='zh-CN'">
+                        <p class="color-666">请确保你已备份密钥。
+                          如果你的手机丢失、被盗或密钥被删除，你将需要此密钥找回你的谷歌二次验证。
+                          否则重置你的谷歌二次验证需要提交工单，
+                          可能需要很长时间来处理。
+                        </p>
+                        <p class="color-666 color-danger">提示：如果您无法扫描二维码，请手动输入账户名、密钥来添加谷歌身份认证账户。</p>
+                      </template>
+                      <template v-if="$i18n.locale=='en-US'">
+                        <p style="text-align:justify;" class="color-666">Make sure that you have backup of the Key. 
+                          The Key is used to get your google authenitication code when your cellphone is missing or stolen, or Key is deleted.
+                          Otherwise,you need to submit a work order to reset the secondary google auth, which may take a very long time to deal with.
+                        </p>
+                        <p class="color-666 color-danger">Note:If you cannot scan the code, please input your account and key to add google auth account</p>
+                      </template>
+                    </el-col>
                 </el-row>
             </div>
             <el-form label-position='top' @submit.native.prevent>
@@ -84,6 +96,14 @@ export default {
 .panel {
   .el-row {
     margin-top: 15px;
+  }
+  .el-col {
+    p {
+      line-height: 1.5;
+      &:last-child {
+        margin-top: 4px;
+      }
+    }
   }
 }
 .el-form-item {

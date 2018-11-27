@@ -42,53 +42,77 @@
         <dialog-box 
           :showDialog='showWidthDrawDialog'
           :model='formData'
-          dialogTitle='提币'
+          :dialogTitle='$t("withdrawCoin")||"提币"'
           @onDialogClose='dialogClose(0)'>
-          <div class="font-bold mt-15">可用余额：<span class="color-danger">0 USDT</span></div>
-          <div class="font-bold mt-15">当日提现上限：<span>10000/10000 USDT</span></div>
+          <div class="font-bold mt-15">
+            {{$t('avaliableBalance')+':'||'可用余额：'}}
+            <span class="color-danger">0 USDT</span>
+          </div>
+          <div class="font-bold mt-15">
+            {{$t('todayMaxiumnWithdraw')+':'||'当日提现上限：'}}<span>10000/10000 USDT</span>
+          </div>
           <el-form label-position='top' @submit.native.prevent>
-            <el-form-item label="USDT提现地址">
-              <el-select v-model="formData.cid" placeholder='请输入您的钱包地址'>
+            <el-form-item :label="'USDT'+($t('withdrawAddress')||'提现地址')">
+              <el-select v-model="formData.cid" :placeholder='$t("walletAddrPlaceholder")||"请输入您的钱包地址"'>
                 <el-option v-for="item in formData.usdtAddr" 
                   :key='item.value' :label='item.label' :value="item.value">
                 </el-option>
               </el-select>
             </el-form-item>
-            <div class="tips font-12 color-999">USDT提现地址支持比特币BTC和以太坊ETH ERC20格式</div>
-            <el-form-item label='地址名称'>
-              <el-input v-model="formData.addressName" placeholder='例如 My Address#1, 选填'></el-input>
+            <div class="tips font-12 color-999">
+              <template v-if="$i18n.locale=='zh-CN'">USDT提现地址支持比特币BTC和以太坊ETH ERC20格式</template>
+              <template v-if="$i18n.locale=='en-US'">USDT address supports BTC formated address and ETH ERC200 formated address</template>
+            </div>
+            <el-form-item :label='$t("addressName")||"地址名称"'>
+              <el-input v-model="formData.addressName" :placeholder='$t("addressNamePlaceholder")||"例如 My Address#1, 选填"'></el-input>
             </el-form-item>
-            <div class="tips font-12 color-999">提现成功后，系统会记住您的提现地址，以便下次使用，
-              填写“地址名称”可便于您分辨钱包地址</div>
-            <el-form-item label='提现数额（币数）'>
-              <el-input v-model="formData.widthDrawAmount" placeholder='最少60USDT，一次最多1000000 USDT'></el-input>
+            <div class="tips font-12 color-999">
+              <template v-if="$i18n.locale=='zh-CN'">提现成功后，系统会记住您的提现地址，以便下次使用，填写“地址名称”可便于您分辨钱包地址</template>
+              <template v-if="$i18n.locale=='en-US'">After the withdrawal is done, the system will save your withdrawal address for the next time,
+                fill in 'address name' will help you distinguish wallet addresses better.
+              </template>
+            </div>
+            <el-form-item :label='$t("withdrawAmount")||"提现数额（币数）"'>
+              <el-input v-model="formData.widthDrawAmount" :placeholder='$t("withdrawAmountPlaceholder")||"最少60USDT，一次最多1000000 USDT"'></el-input>
             </el-form-item>
-            <div class="tips font-12">手续费：0% + 10 USDT （BTC格式地址），10 USDT（ETH格式地址）</div>
-            <el-form-item label='资金密码'>
-              <el-input type='password' v-model="formData.propertyPass" placeholder='请填写资金密码'></el-input>
+            <div class="tips font-12">{{$t('commision')||"手续费"}}：0% + 10 USDT （{{$t('btcAddress')||"BTC格式地址"}}），10 USDT（{{$t('ethAddress')||"ETH格式地址"}}）</div>
+            <el-form-item :label='$t("fundPwd")||"资金密码"'>
+              <el-input type='password' v-model="formData.propertyPass" :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'></el-input>
             </el-form-item>
-            <el-form-item label='短信验证码'>
-              <el-input v-model="formData.mobileCode" placeholder='请填写短信验证码'></el-input>
+            <el-form-item :label='$t("mobileCode")||"短信验证码"'>
+              <el-input v-model="formData.mobileCode" :placeholder='$t("mobileCodePlaceholder")||"请填写短信验证码"'></el-input>
             </el-form-item>
-            <el-form-item label='谷歌验证码'>
-              <el-input v-model="formData.googleCode" placeholder='请填写谷歌验证码'></el-input>
+            <el-form-item :label='$t("googleCode")||"谷歌验证码"'>
+              <el-input v-model="formData.googleCode" :placeholder='$t("fillGoogleCode")||"请填写谷歌验证码"'></el-input>
             </el-form-item>
-            <button class="btn-block btn-danger btn-large btn-active">提交提现申请</button>
+            <button class="btn-block btn-danger btn-large btn-active" v-text="$t('submitWithdraw')||'提交提现申请'"></button>
           </el-form>
         </dialog-box>
         <!-- 充币弹窗 -->
         <dialog-box 
           :showDialog='showChargeDialog'
           :model='formData'
-          dialogTitle='充币'
+          :dialogTitle='$t("rechargeCoin")||"充币"'
           @onDialogClose='dialogClose(1)'>
           <div class="slot-content">
-            <div class="mt-15 charge-label">请将ETH汇入如下地址 <router-link to="">（点击这里查看区块链记录）</router-link></div>
+            <div class="mt-15 charge-label">
+              <template  v-if="$i18n.locale=='zh-CN'">请将ETH汇入如下地址</template>
+              <template  v-if="$i18n.locale=='en-US'">Please place ETH to the following address</template>
+              <router-link to="">
+                <template v-if="$i18n.locale=='zh-CN'">（点击这里查看区块链记录）</template>
+                <template v-if="$i18n.locale=='en-US'">(click to check block chain record)</template>
+              </router-link>
+            </div>
             <input class="eth-addr" v-model="ETHAddress"/>
-            <div>或扫描二维码</div>
+            <div>{{$t('or')||"或"}}&nbsp;{{$t('scanCode')||"扫描二维码"}}</div>
             <div class="qr-code p-rel"><img src="" alt=""></div>
             <div class="warning color-666">
-              请通过 ETH 客户端或在线钱包将您需要充值的ETH数目发送到该地址。发送完成后，系统会自动在此交易获得 12 个确认后将该笔虚拟币充值到您在本站的账户，12 个确认需要大约 0.5 到 1 小时时间，请耐心等待。 同一个地址可多次充值，不影响到账。最小充值金额0.0001。 
+              <template v-if="$i18n.locale=='en-US'">
+                Please send the number of ETHs you need to recharge to this address via the ETH client or online wallet. After the transmission is completed, the system will automatically recharge the virtual currency to your account on the site after 12 confirmations. 12 confirmations take about 0.5 to 1 hour, please be patient. The same address can be recharged multiple times without affecting the account. The minimum recharge amount is 0.0001.
+              </template>
+              <template v-if="$i18n.locale=='zh-CN'">请通过 ETH 客户端或在线钱包将您需要充值的ETH数目发送到该地址。
+              发送完成后，系统会自动在此交易获得 12 个确认后将该笔虚拟币充值到您在本站的账户，12 个确认需要大约 0.5 到 1 小时时间，请耐心等待。
+              同一个地址可多次充值，不影响到账。最小充值金额0.0001。</template>
             </div>
           </div>
         </dialog-box>
@@ -235,6 +259,7 @@ export default {
   }
   .warning {
     line-height: 1.5;
+    text-align: justify;
   }
 }
 </style>

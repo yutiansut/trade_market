@@ -8,25 +8,25 @@
         @onDialogClose='closeModal'>
         <div class="content">
             <el-form label-position='top' @submit.native.prevent>
-                <el-form-item :label='mobileLabel'>
-                    <el-input name='mobile' placeholder='请输入手机号'></el-input>
+                <el-form-item :label='$t("cellphone")||mobileLabel'>
+                    <el-input name='mobile' :placeholder='$t("mobilePlaceholder")||"请输入手机号"'></el-input>
                 </el-form-item>
-                <el-form-item label='手机验证码'>
+                <el-form-item :label='$t("mobileCode")||"手机验证码"'>
                     <div class="mobile-code-wrap p-rel">
-                        <el-input name='mobileCode' placeholder='请输入手机验证码'></el-input>
-                        <div class="mobile-code abs-v-center color-danger">获取验证码</div>
+                        <el-input name='mobileCode' :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'></el-input>
+                        <div class="mobile-code abs-v-center color-danger"></div>
                     </div>
                 </el-form-item>
-                <el-form-item :label='passwordLabel'>
-                    <el-input name='password' type='password' placeholder='请输入密码'></el-input>
+                <el-form-item :label='$t("loginPwd")||passwordLabel'>
+                    <el-input name='password' type='password' :placeholder='$t("pwdPlaceholder")||"请输入密码"'></el-input>
                 </el-form-item>
-                <el-form-item label='图形验证码'>
+                <el-form-item :label='$t("imgCode")||"图形验证码"'>
                     <div class="code-wrap flex flex-between">
-                        <el-input name='code' placeholder='请输入图形验证码'></el-input>
+                        <el-input name='code' :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'></el-input>
                         <div class="code"></div>
                     </div>
                 </el-form-item>
-                <button style="margin-top: 1px;" class="btn-block btn-large btn-danger btn-active">提交</button>
+                <button style="margin-top: 1px;" class="btn-block btn-large btn-danger btn-active" v-text="$t('submit')||'提交'"></button>
             </el-form>
         </div>
     </dialog-box>
@@ -37,34 +37,34 @@ export default {
     title: String,
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     mobileLabel: {
       type: String,
-      default: '手机号',
+      default: "手机号码"
     },
     passwordLabel: {
       type: String,
-      default: '登录密码',
-    },
+      default: "登录密码"
+    }
   },
   data() {
     return {
-      showModal: this.show,
+      showModal: this.show
     };
   },
   watch: {
     show: function() {
       this.showModal = this.show;
-    },
+    }
   },
   methods: {
     formSubmit() {},
     closeModal() {
       this.showModal = false;
-      this.$emit('closeModal');
-    },
-  },
+      this.$emit("closeModal");
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

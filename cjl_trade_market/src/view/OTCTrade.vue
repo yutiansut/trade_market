@@ -76,14 +76,15 @@
                     </div>
                 </div>
                 <div class="warning-box">
-                    <h3>转让须知</h3>
+                    <h3 v-text="$t('transferNote')||'转让须知'"></h3>
                     <span class="color-666">1、转让后获得相应的CNY。  2、转让获得的CNY可以提现至您指定的账户内，最低提现金额为100。 3、转让是直接扣除您在本平台的相应代币的数量。 4、本平台仅提供收购各类币种，转让后无法取消操作。</span>
                 </div>
                 <div class="panel-container">
                     <div class="panel-header flex flex-between flex-v-center">
                         <span class="font-bit-bold font-18"
-                            v-text="$t('myOrder')||'我的订单'"></span>
-                        <router-link to=''>更多</router-link>
+                            v-text="$t('myOrder')||'我的订单'">
+                        </span>
+                        <!-- <router-link to=''>更多</router-link> -->
                     </div>
                     <div class="break-line"></div>
                     <el-table

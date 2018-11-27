@@ -42,7 +42,7 @@
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                             <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
-                            <a href="javascript:" v-text="$t('recharge')||'充值'"></a>
+                            <a href="/property" v-text="$t('recharge')||'充值'"></a>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyingValiation')||'买入估价'"></label>

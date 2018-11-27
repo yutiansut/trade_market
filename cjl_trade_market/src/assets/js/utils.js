@@ -162,6 +162,7 @@ const Utils = (function () {
                 }
                 (config.onCounting && this.dataType(config.onCounting) === "function") && config.onCounting(n);
             }, config.duration);
+            return timer;
         }
     }
 }());

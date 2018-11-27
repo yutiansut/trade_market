@@ -53,14 +53,14 @@
         <!-- 绑定登录密码 -->
         <bind-password 
           :show='dialogId=="loginPassword"?true:false'
-          title='绑定登录密码'
+          :title='$t("bindLoginPwd")||"绑定登录密码"'
           @closeModal='onClose'>
         </bind-password>
         <!-- 绑定资金密码 -->
         <bind-password 
           :show='dialogId=="financialPassword"?true:false'
-          title='绑定资金密码'
-          passwordLabel='资金密码'
+          :title='$t("bindFundPwd")||"绑定资金密码"'
+          :passwordLabel='$t("fundPwd")||"资金密码"'
           @closeModal='onClose'>
         </bind-password>
         <!-- 绑定邮箱 -->
