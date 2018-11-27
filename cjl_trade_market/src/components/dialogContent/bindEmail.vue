@@ -25,9 +25,7 @@
                         <el-input v-model="formData.mobileCode" name='mobileCode' 
                           :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'>
                         </el-input>
-                        <div @click='getMobileCode' class="mobile-code abs-v-center color-danger"
-                          v-text="codeText">
-                        </div>
+                        <div @click='getMobileCode' class="mobile-code abs-v-center color-danger" v-text="codeText"></div>
                     </div>
                 </el-form-item>
                 <el-form-item :label='$t("imgCode")||"图形验证码"'>
@@ -35,7 +33,12 @@
                         <el-input v-model="formData.code" name='code'
                           :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'>
                         </el-input>
-                        <div class="code"></div>
+                        <div @click="createCode(verCodeNumArr,4)" class="code">
+                          <ver-code
+                            :contentHeight='38'
+                            :identifyCode='verCodeStr'>
+                          </ver-code>
+                        </div>
                     </div>
                 </el-form-item>
                 <button style="margin-top: 1px;" class="btn-block btn-large btn-danger btn-active" v-text="$t('submit')||'提交'"></button>
@@ -44,7 +47,9 @@
     </dialog-box>
 </template>
 <script>
+import verCode from "@/components/other/verCode";
 export default {
+  components: { verCode },
   props: {
     title: { type: String, default: "绑定邮箱" },
     show: {
@@ -59,6 +64,8 @@ export default {
       canGetCode: true,
       codeText: null,
       timer: null,
+      verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      verCodeStr: "",
       formData: null
     };
   },
@@ -67,10 +74,22 @@ export default {
       this.showModal = this.show;
     }
   },
+  mounted() {
+    this.createCode(this.verCodeNumArr, 4);
+  },
   created() {
     this.init();
   },
   methods: {
+    createCode(arr, len) {
+      let str = "";
+      for (let i = 0; i < len; i++) {
+        str += this.verCodeNumArr[
+          this.Util.randomNum(0, this.verCodeNumArr.length)
+        ];
+      }
+      this.verCodeStr = str;
+    },
     formSubmit() {},
     init() {
       this.getCodeTimes = 0;
@@ -122,6 +141,11 @@ export default {
     width: 95px;
     border: $default-border;
     margin-left: 15px;
+  }
+  .code-wrap {
+    height: 40px;
+    box-sizing: border-box;
+    line-height: normal;
   }
   .mobile-code {
     width: 120px;

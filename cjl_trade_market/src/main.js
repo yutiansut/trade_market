@@ -84,6 +84,7 @@ Object.assign(Vue.prototype, {
   api: apiCfg,
   userModel: userModel,
   routeModel: routeModel,
+  canvasId: 0,
   redirectTo(pathName, params) {
     let data = {
       path: pathName,

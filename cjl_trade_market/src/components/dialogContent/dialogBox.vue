@@ -15,51 +15,51 @@
 </template>
 <script>
 export default {
-  name: 'dialog-box',
+  name: "dialog-box",
   props: {
     showDialog: {
       type: Boolean,
-      default: false,
+      default: false
     },
     showHeaderImg: {
       type: Boolean,
-      default: true,
+      default: true
     },
     showHeaderTitle: {
       type: Boolean,
-      default: false,
+      default: false
     },
     width: {
       type: String,
-      default: '560px',
+      default: "560px"
     },
     headerTitle: {
       type: String,
-      default: '标题',
+      default: "标题"
     },
     headerBg: {
       type: String,
-      default: null,
+      default: null
     },
     headerImg: {
       type: String,
-      default: require('@/assets/images/footer/bottom_logo.png'),
+      default: require("@/assets/images/footer/bottom_logo.png")
     },
     dialogTitle: {
       type: String,
-      default: '',
-    },
+      default: ""
+    }
   },
   data() {
     return {
-      show: false,
+      show: false
     };
   },
   methods: {
     closeHandle() {
       this.show = false;
-      this.$emit('onDialogClose');
-    },
+      this.$emit("onDialogClose");
+    }
   },
   mounted() {
     this.show = this.showDialog;
@@ -67,8 +67,8 @@ export default {
   watch: {
     showDialog: function() {
       this.show = this.showDialog;
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

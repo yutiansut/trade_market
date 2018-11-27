@@ -1,6 +1,6 @@
 <template>
   <div class="s-canvas">
-    <canvas title="点击刷新验证码" id="s-canvas" :width="contentWidth" :height="contentHeight"></canvas>
+    <canvas title="点击刷新验证码" ref='canvas' :width="contentWidth" :height="contentHeight"></canvas>
   </div>
 </template>
 <script>
@@ -62,6 +62,12 @@ export default {
       default: 30
     }
   },
+  data() {
+    return {};
+  },
+  mounted() {
+    this.drawPic();
+  },
   methods: {
     // 生成一个随机数
     randomNum(min, max) {
@@ -74,8 +80,8 @@ export default {
       let b = this.randomNum(min, max);
       return "rgb(" + r + "," + g + "," + b + ")";
     },
-    drawPic() {
-      let canvas = document.getElementById("s-canvas");
+    drawPic(dom) {
+      let canvas = this.$refs.canvas;
       if (!canvas) return false;
       let ctx = canvas.getContext("2d");
       ctx.textBaseline = "bottom";
