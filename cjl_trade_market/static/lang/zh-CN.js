@@ -182,6 +182,7 @@ module.exports = {
     confirmedSubmit: "确认提交",
     submit: "提交",
     download: "下载",
+    copy: "复制",
     scanCode: "扫描二维码",
     key: "秘钥",
     finishBinding: "完成绑定",
