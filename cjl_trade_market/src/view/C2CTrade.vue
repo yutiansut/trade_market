@@ -13,10 +13,22 @@
                     <img class="thumb-30" src="" alt="">
                     <span class="font-bold font-20">BTC/CNY</span>
                     <div class="market-condition">
-                        <span><em class="color-666">实时价</em><i>￥6.94</i></span>
-                        <span><em class="color-666">涨幅</em><i class="color-danger">+3.68%</i></span>
-                        <span><em class="color-666">高</em><i>￥7.29</i></span>
-                        <span><em class="color-666">低</em><i>￥6.70</i></span>
+                        <span>
+                          <em class="color-666" v-text="$t('livePrice')||'实时价'"></em>
+                          <i>￥6.94</i>
+                        </span>
+                        <span>
+                          <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
+                          <i class="color-danger">+3.68%</i>
+                        </span>
+                        <span>
+                          <em class="color-666" v-text="$t('high')||'高'"></em>
+                          <i>￥7.29</i>
+                        </span>
+                        <span>
+                          <em class="color-666" v-text="$t('low')||'低'"></em>
+                          <i>￥6.70</i>
+                        </span>
                     </div>
                 </div>
                 <!-- 分割线 -->
@@ -24,92 +36,116 @@
                 <!-- 买入/卖出 -->
                 <div class="panel-container p-rel flex flex-between">
                     <div class="form-wrap">
-                        <div class="font-18 font-bit-bold">买入BTC</div>
+                        <div class="font-18 font-bit-bold">
+                          {{$t('buy')||'买入'}}&nbsp;BTC
+                        </div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                            <span class="balance">可用 0.00000000 BTC</span>
-                            <a href="javascript:">充值</a>
+                            <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                            <a href="javascript:" v-text="$t('recharge')||'充值'"></a>
                         </div>
                         <div class="input-group">
-                            <label>买入估价</label>
+                            <label v-text="$t('buyingValiation')||'买入估价'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">BTC</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>买入量</label>
+                            <label v-text="$t('buyVol')||'买入量'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">USDT</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>余额</label>
+                            <label v-text="$t('balance')||'余额'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
-                        <button @click="isLogin?buyBTC:errMsg('请登录后操作')" class="btn-block btn-large btn-danger btn-active">买入BTC</button>
+                        <button @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
+                          class="btn-block btn-large btn-danger btn-active"
+                          v-text="($t('buy')||'买入')+' BTC'">
+                        </button>
                     </div>
                     <div class="vertical-line p-abs abs-h-center"></div>
                     <div class="form-wrap">
-                        <div class="font-18 font-bit-bold">卖出BTC</div>
+                        <div class="font-18 font-bit-bold">{{$t('sell')||'卖出'}}&nbsp;BTC</div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                            <span class="balance">可用 0.00000000 BTC</span>
-                            <a href="javascript:">充值</a>
+                          <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                          <a href="javascript:" v-text="$t('recharge')"></a>
                         </div>
                         <div class="input-group">
-                            <label>卖出估价</label>
+                            <label v-text="$t('sellingValiation')||'卖出估价'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">BTC</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>卖出量</label>
+                            <label v-text="$t('sellVol')||'卖出量'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">USDT</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>余额</label>
+                            <label v-text="$t('balance')||'余额'"></label>                            
                             <el-input>
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
-                        <button @click="isLogin?sellHandle:errMsg('请登录后操作')" class="btn-block btn-large btn-success btn-active">卖出BTC</button>
+                        <button @click="userData.isLogin?sellHandle:errMsg('请登录后操作')"
+                          class="btn-block btn-large btn-success btn-active"
+                          v-text="($t('sell')||'卖出')+' BTC'">
+                        </button>
                     </div>
                 </div>
                 <!-- 挂单 -->
                 <div class="panel-container">
-                    <div class="panel-header font-18 font-bit-bold">市场挂单</div>
+                    <div class="panel-header font-18 font-bit-bold" v-text="$t('inOrder')||'市场挂单'"></div>
                     <div class="break-line"></div>
                     <el-table
                         :fit='true'
                         :max-height='428'
                         :data='marketList'>
-                        <el-table-column width="120" label='类型'>
+                        <el-table-column width="120"
+                          :label='$t("type")||"类型"'>
                           <span slot-scope="scope"
-                            v-text="scope.row.type"
+                            v-text="scope.row.type=='买入'?($t('buy')||'买入'):($t('sell')||'卖出')"
                             :class="scope.row.type=='买入'?'color-danger':'color-success'">
                           </span>
                         </el-table-column>
-                        <el-table-column prop='price' label='价格(CNY)'></el-table-column>
-                        <el-table-column prop='amount' label='数量(USDT)'></el-table-column>
-                        <el-table-column prop='total' label='总计(CNY)'></el-table-column>
-                        <el-table-column prop='tradeLimit' label='交易限额(USDT)'></el-table-column>
-                        <el-table-column width="150" prop='seller' label='商家在线'></el-table-column>
-                        <el-table-column width="150" prop='volumn' label='成交单数'></el-table-column>
-                        <el-table-column width="120" prop='meanTime' label='平均用时'></el-table-column>
-                        <el-table-column width='100' label='操作'>
+                        <el-table-column prop='price'
+                          :label='($t("price")||"价格")+"(CNY)"'>
+                        </el-table-column>
+                        <el-table-column prop='amount'
+                          :label='($t("amount")||"数量")+"(USDT)"'>
+                        </el-table-column>
+                        <el-table-column prop='total'
+                          :label='($t("total")||"总计")+"(CNY)"'>
+                        </el-table-column>
+                        <el-table-column prop='tradeLimit'
+                          :label='($t("tradeLimit")||"交易限额")+"(USDT)"'>
+                        </el-table-column>
+                        <el-table-column width="150" prop='seller'
+                          :label='$t("sellerOnline")||"商家在线"'>
+                        </el-table-column>
+                        <el-table-column width="150" prop='volumn'
+                          :label='$t("orderVol")||"成交单数"'>
+                        </el-table-column>
+                        <el-table-column width="120" prop='meanTime'
+                          :label='$t("averageTime")||"平均用时"'>
+                        </el-table-column>
+                        <el-table-column width='100'
+                          :label='$t("operation")||"操作"'>
                           <template slot-scope="scope">
                             <button v-if='scope.row.type=="买入"'
                               class="btn-inline btn-mini btn-radius btn-danger"
-                              v-text="scope.row.type"
-                              @click="isLogin?buyOrderHandle:errMsg('请登录后操作')">
+                              v-text="$t('buy')||scope.row.type"
+                              @click="userData.isLogin?buyOrderHandle:errMsg('请登录后操作')">
                             </button>
                             <button v-else
                               class="btn-inline btn-mini btn-radius btn-success"
-                              v-text="scope.row.type">
+                              v-text="$t('sell')||scope.row.type">
                             </button>
                           </template>
                         </el-table-column>
@@ -117,48 +153,87 @@
                 </div>
                 <!-- 我的订单 -->
                 <div class="panel-container">
-                    <div class="panel-header font-18 font-bit-bold">我的订单</div>
-                    <template v-if="isLogin">
+                    <div class="panel-header font-18 font-bit-bold" v-text="$t('myOrder')"></div>
+                    <template v-if="userData.isLogin">
                       <div class="break-line"></div>
                       <el-table
                         :fit='true'
                         :data='myOrderList'>
-                          <el-table-column width="150" prop='orderId' label='单号'></el-table-column>
-                          <el-table-column width='120' label='类型'>
+                          <el-table-column width="150"
+                            prop='orderId'
+                            :label='$t("orderId")||"单号"'>
+                          </el-table-column>
+                          <el-table-column width='120'
+                            :label='$t("type")||"类型"'>
                             <span slot-scope="scope"
-                              v-text="scope.row.type"
+                              v-text="scope.row.type=='买入'?($t('buy')||'买入'):($t('sell')||'卖出')"
                               :class="scope.row.type=='买入'?'color-danger':'color-success'">
                             </span>
                           </el-table-column>
-                          <el-table-column prop='price' label='价格(CNY)'></el-table-column>
-                          <el-table-column prop='amount' label='数量(USDT)'></el-table-column>
-                          <el-table-column prop='money' label='金额(CNY)'></el-table-column>
-                          <el-table-column width='150' prop='name' label='对方姓名'></el-table-column>
-                          <el-table-column width="200" prop='createdTime' label='建立时间'></el-table-column>
-                          <el-table-column width="100" label='操作'>
-                              <span slot-scope="scope" 
-                              v-text='statusMap["status_"+scope.row.status].label'
-                              :class='"status-"+scope.row.status'></span>
+                          <el-table-column prop='price'
+                            :label='($t("price")||"价格")+"(CNY)"'>
+                          </el-table-column>
+                          <el-table-column prop='amount'
+                            :label='($t("amount")||"数量")+"(USDT)"'>
+                          </el-table-column>
+                          <el-table-column prop='money'
+                            :label='($t("money")||"金额")+"(CNY)"'>
+                          </el-table-column>
+                          <el-table-column width='150' prop='name'
+                            :label='$t("theirName")||"对方姓名"'>
+                          </el-table-column>
+                          <el-table-column width="200" prop='createdTime'
+                            :label='$t("createdTime")||"建立时间"'>
+                          </el-table-column>
+                          <el-table-column width="100"
+                            :label='$t("operation")||"操作"'>
+                            <span slot-scope="scope" 
+                            v-text='statusMap["status_"+scope.row.status].label'
+                            :class='"status-"+scope.row.status'></span>
                           </el-table-column>
                       </el-table>
                     </template>
                     <unlogin-tip></unlogin-tip>
                 </div>
                 <div class="panel-container">
-                    <div class="panel-header font-18 font-bit-bold">我的C2C交易订单</div>
-                    <template v-if="isLogin">
+                    <div class="panel-header font-18 font-bit-bold"
+                      v-text="$t('myCtcOrder')||'我的CTC交易订单'">
+                    </div>
+                    <template v-if="userData.isLogin">
                       <div class="break-line"></div>
                       <el-table
                           :data='myC2COrderList'>
-                          <el-table-column label='单号' prop=''></el-table-column>
-                          <el-table-column label='类型' prop=''></el-table-column>
-                          <el-table-column label='价格(CNY)' prop=''></el-table-column>
-                          <el-table-column label='数量(USDT)' prop=''></el-table-column>
-                          <el-table-column label='金额(CNY)' prop=''></el-table-column>
-                          <el-table-column label='对方姓名' prop=''></el-table-column>
-                          <el-table-column label='建立时间' prop=''></el-table-column>
-                          <el-table-column width="100" label='操作'>
-                              <span slot-scope="scope"></span>
+                          <el-table-column width="150"
+                            prop='orderId'
+                            :label='$t("orderId")||"单号"'>
+                          </el-table-column>
+                          <el-table-column width='120'
+                            :label='$t("type")||"类型"'>
+                            <span slot-scope="scope"
+                              v-text="scope.row.type=='买入'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                              :class="scope.row.type=='买入'?'color-danger':'color-success'">
+                            </span>
+                          </el-table-column>
+                          <el-table-column prop='price'
+                            :label='($t("price")||"价格")+"(CNY)"'>
+                          </el-table-column>
+                          <el-table-column prop='amount'
+                            :label='($t("amount")||"数量")+"(USDT)"'>
+                          </el-table-column>
+                          <el-table-column prop='money'
+                            :label='($t("money")||"金额")+"(CNY)"'>
+                          </el-table-column>
+                          <el-table-column width='150' prop='name'
+                            :label='$t("theirName")||"对方姓名"'>
+                          </el-table-column>
+                          <el-table-column width="200" prop='createdTime'
+                            :label='$t("createdTime")||"建立时间"'>
+                          </el-table-column>
+                          <el-table-column width="100"
+                            :label='$t("operation")||"操作"'>
+                            <span slot-scope="scope" 
+                            v-text='statusMap["status_"+scope.row.status].label'
+                            :class='"status-"+scope.row.status'></span>
                           </el-table-column>
                       </el-table>
                     </template>
@@ -213,7 +288,7 @@ export default {
   data() {
     return {
       dialogId: null,
-      isLogin: null,
+      userData: this.userModel,
       operateLable: "卖出",
       // 订单匹配弹窗配置
       confirmCfg: {
@@ -236,10 +311,10 @@ export default {
           label: "已完成"
         },
         status_2: {
-          label: "代付款"
+          label: "待付款"
         },
         status_3: {
-          label: "代收款"
+          label: "待收款"
         },
         status_4: {
           label: "撤单"
@@ -251,7 +326,27 @@ export default {
           type: "买入",
           price: "6.64",
           amount: "30000.0000",
-          total: "20335.0000 拷贝",
+          total: "20335.0000",
+          tradeLimit: "800.00~30000.00",
+          seller: "黎** 1分钟",
+          volumn: "6分钟",
+          meanTime: "6分钟"
+        },
+        {
+          type: "买入",
+          price: "6.64",
+          amount: "30000.0000",
+          total: "20335.0000",
+          tradeLimit: "800.00~30000.00",
+          seller: "黎** 1分钟",
+          volumn: "6分钟",
+          meanTime: "6分钟"
+        },
+        {
+          type: "买入",
+          price: "6.64",
+          amount: "30000.0000",
+          total: "20335.0000",
           tradeLimit: "800.00~30000.00",
           seller: "黎** 1分钟",
           volumn: "6分钟",
@@ -297,12 +392,10 @@ export default {
       ]
     };
   },
-  mounted() {
-    this.isLogin = this.userModel.isLogin;
-  },
+  mounted() {},
   methods: {
-    buyBTC() {},
-    sellBTC() {},
+    buyHandle() {},
+    sellHandle() {},
     buyOrderHandle() {}
   }
 };

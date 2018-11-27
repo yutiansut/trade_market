@@ -1,7 +1,7 @@
 <template>
     <div v-if='userData.isLogin==false' class="content font-16">
+        <span>请先</span>
         <router-link to='/user/login'>登录</router-link>
-        <span>后才可查看</span>
     </div>
 </template>
 <script>

@@ -10,59 +10,69 @@
             <el-main>
                 <div class="panel-container p-rel flex flex-between">
                     <div class="form-wrap">
-                        <div class="font-18 font-bit-bold">买入BTC</div>
+                        <div class="font-18 font-bit-bold">
+                          {{$t('buy')||'买入'}}&nbsp;BTC
+                        </div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                            <span class="balance">可用 0.00000000 BTC</span>
-                            <a href="javascript:">充值</a>
+                            <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                            <a href="javascript:" v-text="$t('recharge')||'充值'"></a>
                         </div>
                         <div class="input-group">
-                            <label>买入估价</label>
+                            <label v-text="$t('buyingValiation')||'买入估价'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">BTC</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>买入量</label>
+                            <label v-text="$t('buyVol')||'买入量'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">USDT</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>余额</label>
+                            <label v-text="$t('balance')||'余额'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
-                        <button class="btn-block btn-large btn-danger btn-active">买入BTC</button>
+                        <button
+                            @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
+                            class="btn-block btn-large btn-danger btn-active"
+                            v-text="($t('buy')||'买入')+' BTC'">
+                        </button>
                     </div>
                     <div class="vertical-line p-abs abs-h-center"></div>
                     <div class="form-wrap">
-                        <div class="font-18 font-bit-bold">卖出BTC</div>
+                        <div class="font-18 font-bit-bold">{{$t('sell')||'卖出'}}&nbsp;BTC</div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                            <span class="balance">可用 0.00000000 BTC</span>
-                            <a href="javascript:">充值</a>
+                          <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                          <a href="javascript:" v-text="$t('recharge')"></a>
                         </div>
                         <div class="input-group">
-                            <label>卖出估价</label>
+                            <label v-text="$t('sellingValiation')||'卖出估价'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">BTC</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>卖出量</label>
+                            <label v-text="$t('sellVol')||'卖出量'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">USDT</span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label>余额</label>
+                            <label v-text="$t('balance')||'余额'"></label>                            
                             <el-input>
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
-                        <button class="btn-block btn-large btn-success btn-active">买入BTC</button>
+                        <button
+                            @click="userData.isLogin?sellHandle:errMsg('请登录后操作')"
+                            class="btn-block btn-large btn-success btn-active"
+                            v-text="($t('sell')||'卖出')+' BTC'">
+                        </button>
                     </div>
                 </div>
                 <div class="warning-box">
@@ -71,18 +81,31 @@
                 </div>
                 <div class="panel-container">
                     <div class="panel-header flex flex-between flex-v-center">
-                        <span class="font-bit-bold font-18">我的订单</span>
+                        <span class="font-bit-bold font-18"
+                            v-text="$t('myOrder')||'我的订单'"></span>
                         <router-link to=''>更多</router-link>
                     </div>
                     <div class="break-line"></div>
                     <el-table
                     :data='myOrderList'>
-                        <el-table-column prop='date' label='时间'></el-table-column>
-                        <el-table-column prop='currency' label='币种'></el-table-column>
-                        <el-table-column prop='amount' label='数量'></el-table-column>
-                        <el-table-column prop='unitPrice' label='单价(CNY)'></el-table-column>
-                        <el-table-column prop='totalPrice' label='总价(CNY)'></el-table-column>
-                        <el-table-column prop='status' label='状态'></el-table-column>
+                        <el-table-column prop='date'
+                            :label='$t("time")||"时间"'>
+                        </el-table-column>
+                        <el-table-column prop='currency'
+                            :label='$t("currencyType")||"币种"'>
+                        </el-table-column>
+                        <el-table-column prop='amount'
+                           :label='$t("amount")||"数量"'>
+                        </el-table-column>
+                        <el-table-column prop='unitPrice'
+                            :label='($t("unitPrice")||"单价")+"(CNY)"'>
+                        </el-table-column>
+                        <el-table-column prop='totalPrice'
+                            :label='($t("totalPrice")||"总价")+"(CNY)"'>
+                        </el-table-column>
+                        <el-table-column prop='status'
+                            :label='($t("status")||"状态")'>
+                        </el-table-column>
                     </el-table>
                 </div>
             </el-main>

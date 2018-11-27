@@ -20,25 +20,29 @@
                   <span class="font-bold">【BTC】Bitcoin 比特币 钱包下载与资料</span>
                 </div>
                 <dl>
-                  <dt class="font-bold">币种简介</dt>
+                  <dt class="font-bold" v-text="$t('currencyIntro')||'币种简介'"></dt>
                   <dd class="mt-20">Bitcoin是点对点的基于SHA-256算法的网络数字货币，到2140年之前总额达到2100万。</dd>
-                  <dt class="font-bold">币种参数</dt>
+                  <dt class="font-bold" v-text="$t('currencyProp')||'币种参数'"></dt>
                   <dd>
                     <ul class="properties">
-                      <li>推出日期：&nbsp;&nbsp;2009-01-03</li>
-                      <li>发行总量：&nbsp;&nbsp;21000000</li>
-                      <li>市值：&nbsp;&nbsp;$ 106,364,261,880</li>
-                      <li>币种算法：&nbsp;&nbsp;$ SHA-256</li>
-                      <li>区块大小：&nbsp;&nbsp;25</li>
-                      <li>难度调整： &nbsp;&nbsp;2016 Blocks</li>
+                      <li>{{$t("publishDate")||"推出日期"}}：&nbsp;&nbsp;2009-01-03</li>
+                      <li>{{$t("publishVol")||"发行总量"}}：&nbsp;&nbsp;21000000</li>
+                      <li>{{$t("marketVal")||"市值"}}：&nbsp;&nbsp;$ 106,364,261,880</li>
+                      <li>{{$t("currencyAlgorithm")||"币种算法"}}：&nbsp;&nbsp;$ SHA-256</li>
+                      <li>{{$t("blockSize")||"区块大小"}}：&nbsp;&nbsp;25</li>
+                      <li>{{$t("currencyDifficulty")||"区块大小"}}：&nbsp;&nbsp;2016 Blocks</li>
                     </ul>
                   </dd>
-                  <dt class="font-bold">链接</dt>
+                  <dt class="font-bold" v-text="$t('link')"></dt>
                   <dd class="link">
                     <template v-for="item in links">
-                      <a :key='item.href' :href="item.href">
-                        <i class="iconfont" :class='item.icon'></i>
-                        <span>{{item.label}}</span>
+                      <a
+                        :key='item.href'
+                        :href="item.href">
+                        <i class="iconfont"
+                          :class='item.icon'>
+                        </i>
+                        <span v-text="$t(item.i18nKey)||item.label"></span>
                       </a>
                     </template>
                   </dd>
@@ -87,36 +91,43 @@ export default {
       links: [
         {
           href: "1",
+          i18nKey: "eWalletdownload",
           label: "钱包下载",
           icon: "icon-qianbao"
         },
         {
           href: "2",
+          i18nKey: "sourceCode",
           label: "源码下载",
           icon: "icon-baobiaoyuanmax"
         },
         {
           href: "3",
+          i18nKey: "blockBrowser",
           label: "区块链浏览器",
           icon: "icon-qukuailianjishu"
         },
         {
           href: "4",
+          i18nKey: "website",
           label: "官方网站",
           icon: "icon-guanwang"
         },
         {
           href: "5",
+          i18nKey: "forum",
           label: "论坛",
           icon: "icon-luntan"
         },
         {
           href: "6",
+          i18nKey: "mining",
           label: "挖矿",
           icon: "icon-wakuang"
         },
         {
           href: "7",
+          i18nKey: "transaction",
           label: "交易",
           icon: "icon-jiaoyi"
         }

@@ -22,6 +22,11 @@ let apiCfg = (function () {
             url: 'api/common/registerUser.do',
             method: 'post'
         },
+        //退出
+        logout: {
+            url: "api/logout",
+            method: 'post'
+        },
         //忘记密码
         forgetPassword: {
             url: 'api/common/forgetPass.do',

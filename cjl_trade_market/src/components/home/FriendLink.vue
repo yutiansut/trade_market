@@ -1,6 +1,8 @@
 <template>
     <div class="friend-link">
-        <div class="heading">友情链接<span>Friendship link</span></div>
+        <div class="heading">{{$t("friendLink")||"友情链接"}}
+          <!-- <span>Friendship link</span> -->
+        </div>
         <ul class="links">
             <li v-for="(item,i) in links" :key='i' class="fl" :class="i<=3?'mt-0':''">
                 <router-link :to='item.link'><img :src="item.thumb" alt=""></router-link>

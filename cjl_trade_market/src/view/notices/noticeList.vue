@@ -5,8 +5,8 @@
             :key='item.id'
             :path='"/notice/detail/"+item.id'>
             <div class="statistic">
-                <span>阅读：<em v-text="item.view"></em></span>
-                <span>更新时间：<em v-text="item.updated_data"></em></span>
+                <span>{{$t("view")||"阅读"}}：<em v-text="item.view"></em></span>
+                <span>{{$t("updateTime")||"更新时间"}}：<em v-text="item.updated_data"></em></span>
             </div>
         </snap-shot>
     </div>

@@ -1,16 +1,16 @@
 <template>
     <div class="content">
-      <div class="title font-16 font-bold">成交记录</div>
+      <div class="title font-16 font-bold" v-text="$t('transRecord')||'交易记录'"></div>      
       <div class="table-wrap">
         <el-table
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderDetailData'>
-          <el-table-column prop='date' label='日期'></el-table-column>
-          <el-table-column prop='type' label='交易类型'></el-table-column>
-          <el-table-column prop='tradePair' label='交易对'></el-table-column>
-          <el-table-column prop='price' label='成交价'></el-table-column>
-          <el-table-column prop='volumn' label='成交量'></el-table-column>
-          <el-table-column prop='total' label='总计'></el-table-column>
+          <el-table-column prop='date' :label='$t("date")||"日期"'></el-table-column>
+          <el-table-column prop='type' :label='$t("type")||"交易类型"'></el-table-column>
+          <el-table-column prop='tradePair' :label='$t("tradePair")||"交易对"'></el-table-column>
+          <el-table-column prop='price' :label='$t("finalPrice")||"成交价"'></el-table-column>
+          <el-table-column prop='volumn' :label='$t("volumn"||"成交量")'></el-table-column>
+          <el-table-column prop='total' :label='$t("total")||"总计"'></el-table-column>
         </el-table>
       </div>
     </div>

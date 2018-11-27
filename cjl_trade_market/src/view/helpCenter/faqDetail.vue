@@ -3,9 +3,9 @@
         <img :src="banner" alt="">
         <div class="main">
           <el-breadcrumb separator="/">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item :to="{ path: '/help_center/' }">问题中心</el-breadcrumb-item>
-            <el-breadcrumb-item>新手指导</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/' }">{{$t('home')||"首页"}}</el-breadcrumb-item>
+            <el-breadcrumb-item :to="{ path: '/help_center/faq' }">{{$t('faqCenter')||"问题中心"}}</el-breadcrumb-item>
+            <el-breadcrumb-item>{{$t(breadNavItem.i18nKey)||breadNavItem.label}}</el-breadcrumb-item>
           </el-breadcrumb>
           <el-container>
             <el-aside width="360px">
@@ -39,8 +39,17 @@
 export default {
   data() {
     return {
-      banner: require("@/assets/images/help/bangzhu_banner.png")
+      banner: require("@/assets/images/help/bangzhu_banner.png"),
+      qList: {},
+      breadNavItem: {}
     };
+  },
+  mounted() {
+    let q = Object.assign({}, this.$route.query);
+    if (JSON.stringify(q) != "{}") {
+      q.qList && (this.qList = q.qList);
+      q.tabItem && (this.breadNavItem = q.tabItem);
+    }
   }
 };
 </script>

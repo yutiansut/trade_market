@@ -1,19 +1,31 @@
 <template>
     <div class="fee">
-        <div class="title font-18 font-bit-bold">费率标准</div>
+        <div class="title font-18 font-bit-bold" v-text="$t('rate')||'费率标准'"></div>
         <div class="table-wrap">
             <el-table :data='formData'>
-                <el-table-column label='币种'>
-                    <div slot-scope="scope" class="flex flex-v-center">
-                        <img class="thumb-30" :src="scope.row.thumb" alt="">
-                        <span v-text="scope.row.currency"></span>
-                    </div>
+                <el-table-column
+                  :label="$t('currencyType')||'币种'"
+                  width='180'>
+                  <div slot-scope="scope" class="flex flex-v-center">
+                    <img class="thumb-30" :src="scope.row.thumb" alt="">
+                    <span v-text="scope.row.currency"></span>
+                  </div>
                 </el-table-column>
-                <el-table-column prop='tradeCommission' label='交易手续费(24小时)'></el-table-column>
-                <el-table-column prop='widthDrawCommission' label='提币手续费'></el-table-column>
-                <el-table-column prop='minumWithDraw' label='提币单笔最低'></el-table-column>
-                <el-table-column prop='maxumWidthDraw' label='提币单笔最高'></el-table-column>
-                <el-table-column prop='dailyMaxumWidthDraw' label='提币单日最高'></el-table-column>
+                <el-table-column prop='tradeCommission'
+                  :label='$t("commision")+"(24"+$t("hour")+")"||"交易手续费(24H)"'>
+                </el-table-column>
+                <el-table-column prop='widthDrawCommission'
+                  :label='$t("withdrawCommision")||"提币手续费"'>
+                </el-table-column>
+                <el-table-column prop='minumWithDraw'
+                  :label='$t("withdrawMin") ||"提币单笔最低"'>
+                </el-table-column>
+                <el-table-column prop='maxumWidthDraw'
+                  :label='$t("withdrawMax") ||"提币单笔最高"'>
+                </el-table-column>
+                <el-table-column prop='dailyMaxumWidthDraw'
+                  :label='$t("dayWidthDrawMax") ||"单日提币最高"'>
+                </el-table-column>
             </el-table>
         </div>
     </div>

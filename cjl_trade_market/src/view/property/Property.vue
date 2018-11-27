@@ -3,30 +3,37 @@
         <div class="table-panel">
             <div class="panel-head flex flex-v-center flex-between">
                 <span class="font-16 font-bit-bold">
-                    <em>资产折合：</em>
+                    <em>{{$t('assetsEquivalent')||"资产折合"}}：</em>
                     <em>0.0000202 BTC <i class="color-999 font-12">≈ 0 CNY</i></em>
                 </span>
                 <div class="nav-link">
-                    <router-link to="/property/property_record" class="color-danger">财务记录</router-link>
-                    <router-link to="/property/address_admin" class="color-danger">地址管理</router-link>
+                    <router-link
+                      to="/property/property_record" class="color-danger"
+                      v-text="$t('financialRecord')||'财务记录'">
+                    </router-link>
+                    <router-link
+                      to="/property/address_admin"
+                      class="color-danger"
+                      v-text="$t('addressAdmin')||'地址管理'">
+                    </router-link>
                 </div>
             </div>
             <el-table :data='myPropetyData' :header-cell-style='changeStyle'>
-                <el-table-column label="币种">
+                <el-table-column :label="$t('currencyType')||'币种'">
                     <div class="flex flex-v-center" slot-scope="scope">
                         <img class="currency-thumb thumb-20" src="" alt="">
                         <span v-text="scope.row.currency"></span>
                     </div>
                 </el-table-column>
-                <el-table-column prop="balance" label="可用余额"></el-table-column>
-                <el-table-column prop="amount" label="挂单金额"></el-table-column>
-                <el-table-column prop="total" label="总计"></el-table-column>
-                <el-table-column prop="RmbVal" label="估算为人民币"></el-table-column>
-                <el-table-column width='150' label="操作">
+                <el-table-column prop="balance" :label="$t('avaliableBalance')||'可用余额'"></el-table-column>
+                <el-table-column prop="amount" :label="$t('marketMoney')||'挂单金额'"></el-table-column>
+                <el-table-column prop="total" :label="$t('total')||'总计'"></el-table-column>
+                <el-table-column prop="RmbVal" :label="$t('equivalentRmb')||'估算为人民币'"></el-table-column>
+                <el-table-column width='150' :label="$t('operation')||'操作'">
                     <div class="operation"  slot-scope="scope">
-                        <span @click="showDialog(0)" class="color-danger">充币</span>
-                        <span @click="showDialog(1)" class="color-success">提币</span>
-                        <span>交易</span>
+                        <span @click="showDialog(0)" class="color-danger" v-text="$t('rechargeCoin')||'充币'"></span>
+                        <span @click="showDialog(1)" class="color-success" v-text="$t('withdrawCoin')||'提币'"></span>
+                        <span v-text="$t('transaction')||'交易'"></span>
                     </div>
                 </el-table-column>
             </el-table>
@@ -94,40 +101,40 @@ export default {
       showChargeDialog: false,
       showWidthDrawDialog: false,
       formData: {
-        cid: '',
+        cid: "",
         usdtAddr: [
           {
-            label: 'jfejfoaejegeioajgea',
-            value: 'jigajoijgoeajgoieajg',
+            label: "jfejfoaejegeioajgea",
+            value: "jigajoijgoeajgoieajg"
           },
           {
-            label: 'geagea',
-            value: 'aagegea',
-          },
+            label: "geagea",
+            value: "aagegea"
+          }
         ],
-        addressName: '',
+        addressName: "",
         widthDrawAmount: null,
         propertyPass: null,
         mobileCode: null,
-        googleCode: null,
+        googleCode: null
       },
-      ETHAddress: 'ajigeojagoejageaigjoew',
+      ETHAddress: "ajigeojagoejageaigjoew",
       myPropetyData: [
         {
-          currency: 'BDEF',
-          thumb: '',
-          balance: 'afeafa',
-          amount: '1321',
-          total: '41421',
-          RmbVal: '14214',
-        },
-      ],
+          currency: "BDEF",
+          thumb: "",
+          balance: "afeafa",
+          amount: "1321",
+          total: "41421",
+          RmbVal: "14214"
+        }
+      ]
     };
   },
   methods: {
     changeStyle({ columnIndex }) {
       if (columnIndex == 5) {
-        return 'text-align:right;';
+        return "text-align:right;";
       }
     },
     showDialog(i) {
@@ -149,8 +156,8 @@ export default {
           this.showWidthDrawDialog = false;
           break;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

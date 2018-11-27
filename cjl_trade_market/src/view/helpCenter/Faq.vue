@@ -5,7 +5,7 @@
             <ul class="tab-bar">
                 <li v-for="(item,i) in tabCfg" 
                     :key='item.id'
-                    v-text='item.label'
+                    v-text='$t(item.i18nKey)||item.label'
                     :class='currentId==item.id?"active":""'
                     @click='onTabChange(item.id,i)'>
                 </li>
@@ -14,7 +14,7 @@
                 <template v-for="(item,i) in currentItem">
                 <li class="flex flex-between flex-v-center" 
                   :key='i'
-                  @click='navigateTo("/help_center/faq_detail")'>
+                  @click='navigateTo("/help_center/faq_detail",{qList:currentItem,tabItem:currentTab})'>
                   <span class="font-16" v-text="item.q"></span>
                   <i class="el-icon-arrow-right font-16"></i>
                 </li>
@@ -32,18 +32,22 @@ export default {
       currentItem: null,
       tabCfg: [
         {
+          i18nKey: "userGuide",
           id: "1",
           label: "新手指导"
         },
         {
+          i18nKey: "faq",
           id: "2",
           label: "常见问题"
         },
         {
+          i18nKey: "ctcTrade",
           id: "3",
           label: "C2C交易"
         }
       ],
+      currentTab: null,
       qList: [
         [{ q: "这是问题一" }, { q: "这里是问题二" }],
         [{ q: "这是问题二" }, { q: "这里是问题三" }],
@@ -53,11 +57,13 @@ export default {
   },
   mounted() {
     this.currentItem = this.qList[this.currentId - 1];
+    this.currentTab = this.tabCfg[0];
   },
   methods: {
     onTabChange(id, index) {
       this.currentId = id;
       this.currentItem = this.qList[index];
+      this.currentTab = this.tabCfg[index];
     }
   }
 };

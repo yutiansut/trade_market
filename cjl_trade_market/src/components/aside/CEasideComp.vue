@@ -6,16 +6,15 @@
             <li @click="onTabChange(item.id,i)" v-for="(item,i) in tabConfig" 
               :key="i"
               :class='currentId==item.id?"active":""'
-              v-text='item.label'>
+              v-text='$t(item.i18nKey)||item.label'>
           </li>
         </ul>
         </div>
         <el-input suffix-icon="el-icon-search"></el-input>
         <el-table style="font-size:14px;"
           :data='tableData'
-          max-height='800'
           stripe>
-          <el-table-column label='币种' width='100px'>
+          <el-table-column :label='$t("coin")||"币种"' width='100px'>
               <template slot-scope="scope">
               <div class="operate">
                   <img class="thumb-20" src="" alt="">
@@ -23,13 +22,18 @@
               </div>
               </template>
           </el-table-column>
-          <el-table-column label='最新价' prop='latestPrize'></el-table-column>
-          <el-table-column label='涨幅' prop='increase'>
+          <el-table-column :label='$t("latestPrice")||"最新价"' prop='latestPrize'></el-table-column>
+          <el-table-column 
+            :label='$t("increase")||"涨幅"'
+            prop='increase'
+            width='100'>
             <template slot-scope="scope">
               <span :class="scope.row.increase>0?'color-danger':'color-success'" v-text="scope.row.increase"></span>
             </template>
           </el-table-column>
-          <el-table-column width='56px' label='自选'>
+          <el-table-column
+            :label='$t("optional")||"自选"'
+            width='100'>
               <template slot-scope="scope">
               <div class="operate">
                   <span v-text="scope.row.trend"></span>
@@ -47,21 +51,25 @@ export default {
     return {
       tabConfig: [
         {
+          i18nKey: "",
           id: "1",
           name: "USDT",
           label: "USDT"
         },
         {
+          i18nKey: "",
           id: "2",
           name: "BTC",
           label: "BTC"
         },
         {
+          i18nKey: "",
           id: "3",
           name: "ETH",
           label: "ETH"
         },
         {
+          i18nKey: "optional",
           id: "4",
           name: "自选",
           label: "自选"
@@ -107,6 +115,11 @@ export default {
 .tab-wrap {
   height: 40px;
   border-bottom: $default-border;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
   ul {
     @include textVcenter;
     position: absolute;
@@ -114,7 +127,7 @@ export default {
     display: flex;
     top: 1px;
     li {
-      width: 80px;
+      padding: 0 25px;
       box-sizing: border-box;
       text-align: center;
       font-size: $font-normal;

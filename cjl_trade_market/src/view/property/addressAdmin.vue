@@ -6,33 +6,36 @@
                 label-position='top'
                 :model='formData'>
                 <div class="flex flex-between">
-                  <el-form-item label='币种' >
+                  <el-form-item :label='$t("currencyType")||"币种"' >
                       <el-select name='currency' v-model='formData.cid'>
                           <el-option v-for="item in formData.currencies" 
-                              :key='item.value' :label='item.label' :value="item.value">
+                            :key='item.value' :label='item.label' :value="item.value">
                           </el-option>
                       </el-select>
                   </el-form-item>
-                  <el-form-item label='提币地址'>
+                  <el-form-item :label='$t("withdrawAddress")||"提币地址"'>
                       <el-input name='address' v-model="formData.address"></el-input>
                   </el-form-item>
-                  <el-form-item label='备注'>
+                  <el-form-item :label='$t("note")||"备注"'>
                       <el-input name='note' v-model="formData.note"></el-input>
                   </el-form-item>
                 </div>
-            <button class="btn btn-block btn-large btn-danger btn-active">添加</button>
+                <button class="btn btn-block btn-large btn-danger btn-active" v-text="$t('add')||'添加'"></button>
             </el-form>
         </div>
         <div class="table-panel">
-            <div class="panel-head">地址列表</div>
+            <div class="panel-head" v-text="$t('addressList')||'地址列表'"></div>
             <el-table
                 :data='addList' 
                 :header-cell-style='changeStyle'>
-                <el-table-column prop='currency' label="币种"></el-table-column>
-                <el-table-column prop='address' label="提币地址"></el-table-column>
-                <el-table-column prop='note' label="备注"></el-table-column>
-                <el-table-column width='150' label="操作">
-                    <div class="operation color-danger txt-rt"  slot-scope="scope">删除</div>
+                <el-table-column prop='currency' :label="$t('currencyType')||'币种'"></el-table-column>
+                <el-table-column prop='address' :label="$t('withdrawAddress')||'提币地址'"></el-table-column>
+                <el-table-column prop='note' :label="$t('note')||'备注'"></el-table-column>
+                <el-table-column width='150' :label="$t('operation')||'操作'">
+                    <div class="operation color-danger txt-rt"
+                      slot-scope="scope"
+                      v-text="$t('delete')||'删除'">
+                    </div>
                 </el-table-column>
             </el-table>
         </div>
@@ -43,36 +46,47 @@ export default {
   data() {
     return {
       formData: {
-        cid: '',
+        cid: "",
         currencies: [
           {
-            label: '币种1',
-            id: 'type_1',
+            label: "币种1",
+            id: "type_1"
           },
           {
-            label: '币种2',
-            id: 'type_2',
-          },
+            label: "币种2",
+            id: "type_2"
+          }
         ],
-        address: '',
-        note: '',
+        address: "",
+        note: ""
       },
       addList: [
         {
-          currency: 'age',
-          address: 'ageag',
-          note: 'gaege',
-        },
-      ],
+          currency: "age",
+          address: "ageag",
+          note: "gaege"
+        }
+      ]
     };
+  },
+  mounted() {
+    this.routeModel.assetsRoutes = {
+      i18nKey: "addressAdmin",
+      title: this.$route.meta.title || "",
+      path: this.$route.path
+    };
+  },
+  beforeRouteLeave(to, from, next) {
+    this.routeModel.assetsRoutes = null;
+    next();
   },
   methods: {
     changeStyle({ columnIndex }) {
       if (columnIndex == 3) {
-        return 'text-align:right;';
+        return "text-align:right;";
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

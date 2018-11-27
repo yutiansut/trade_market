@@ -5,7 +5,7 @@
         </my-header>
         <el-container>
             <!-- 左侧表格栏目 -->
-            <el-aside width="400px">
+            <el-aside width="24%">
               <ce-aside-comp></ce-aside-comp>
             </el-aside>
             <!-- 主要body -->
@@ -18,10 +18,22 @@
                   <span class="font-14 color-666">≈0.05 CNY </span>
                 </div>
                 <div class="market-condition font-12">
-                  <span><em class="color-666">涨幅</em><i class="color-danger">+3.68%</i></span>
-                  <span><em class="color-666">高</em><i>0.000013482</i></span>
-                  <span><em class="color-666">低</em><i>0.000010578</i></span>
-                  <span><em class="color-666">24H量</em><i>314854300BTC</i></span>
+                  <span>
+                    <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
+                    <i class="color-danger">+3.68%</i>
+                  </span>
+                  <span>
+                    <em class="color-666" v-text="$t('high')||'高'"></em>
+                    <i>0.000013482</i>
+                  </span>
+                  <span>
+                    <em class="color-666" v-text="$t('low')||'低'"></em>
+                    <i>0.000010578</i>
+                  </span>
+                  <span>
+                    <em class="color-666" v-text="$t('dayVol')||'24H量'"></em>
+                    <i>314854300BTC</i>
+                  </span>
                 </div>
               </div>
               <!-- K线图占位 -->
@@ -30,63 +42,71 @@
                 <div class="content-lf flex flex-between">
                   <!-- 买入 -->
                   <div class="form-wrap">
-                    <div class="font-18 font-bit-bold">买入BTC</div>
+                    <div class="font-18 font-bit-bold">
+                      {{$t('buy')||'买入'}}&nbsp;BTC
+                    </div>
                     <div class="break-line"></div>
                     <div class="account flex flex-between">
-                      <span class="balance">可用 0.00000000 BTC</span>
-                      <a href="javascript:">充值</a>
+                      <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                      <a href="javascript:" v-text="$t('recharge')||'充值'"></a>
                     </div>
                     <div class="input-group">
-                      <label>买入价</label>
+                      <label v-text="$t('buyingRate')||'买入价'"></label>
                       <el-input v-model="buyFormData.price">
                         <span class="unit" slot="suffix">BTC</span>
                       </el-input>
                       <em class="hint font-12">≈0.05</em>
                     </div>
                     <div class="input-group">
-                      <label>买入量</label>
+                      <label v-text="$t('buyVol')||'买入量'"></label>
                       <el-input v-model="buyFormData.orderVol">
                         <span class="unit" slot="suffix">USDT</span>
                       </el-input>
                     </div>
                     <div class="total flex flex-between">
-                      <span>累计USDT</span>0
+                      <span>{{$t('total')||'累计'}}&nbsp;USDT</span>0
                     </div>
                     <button @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
-                      class="btn-block btn-large btn-danger btn-active">买入BTC</button>
+                      class="btn-block btn-large btn-danger btn-active"
+                      v-text="($t('buy')||'买入')+' BTC'">
+                    </button>
                   </div>
                   <!-- 卖出 -->
                   <div class="form-wrap">
-                    <div class="font-18 font-bit-bold">卖出BTC</div>
+                    <div class="font-18 font-bit-bold">{{$t('sell')||'卖出'}}&nbsp;BTC</div>
                     <div class="break-line"></div>
                     <div class="account flex flex-between">
-                      <span class="balance">可用 0.00000000 BTC</span>
-                      <a href="javascript:">充值</a>
+                      <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                      <a href="javascript:" v-text="$t('recharge')"></a>
                     </div>
                     <div class="input-group">
-                      <label>卖出BTC</label>
+                      <label v-text="$t('sellingRate')||'卖出价'"></label>
                       <el-input v-model="sellFormData.price">
                         <span class="unit" slot="suffix">BTC</span>
                       </el-input>
                       <em class="hint font-12">≈0.05</em>
                     </div>
                     <div class="input-group">
-                      <label>卖出量</label>
+                      <label v-text="$t('sellVol')||'卖出量'"></label>
                       <el-input v-model="sellFormData.price">
                         <span class="unit" slot="suffix">USDT</span>
                       </el-input>
                     </div>
                     <div class="total flex flex-between">
-                      <span>累计USDT</span>0
+                      <span>{{$t('total')}}&nbsp;USDT</span>0
                     </div>
                     <button @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
-                      class="btn-block btn-large btn-success btn-active">卖出BTC</button>
+                      class="btn-block btn-large btn-success btn-active"
+                      v-text="($t('sell')||'卖出')+' BTC'">
+                    </button>
                   </div>
                 </div>
                 <!-- 交易行情 -->
                 <div class="trade-market">
                   <div class="flex flex-between flex-v-center">
-                    <span class='font-18'>最新价 0.0000011422 BTC<em class="font-12 color-666">≈ 0.05 CNY</em></span>
+                    <span class='font-18'>{{$t('latestPrice')||'最新价'}}&nbsp;0.0000011422&nbsp;BTC
+                      <em class="font-12 color-666">≈ 0.05 CNY</em>
+                    </span>
                     <!-- <router-link to=''>更多</router-link> -->
                   </div>
                   <div class="break-line"></div>
@@ -94,12 +114,21 @@
                     :data='latestBuyData'
                     :cell-style='myCellStyle' 
                     max-height='220' stripe>
-                    <el-table-column width='80' label='档位'>
-                      <span class="color-danger" slot-scope="scope" v-text="scope.row.lv"></span>
+                    <el-table-column width='80'
+                      :label='$t("stalls")||"档位"'>
+                      <span class="color-danger" slot-scope="scope">
+                        {{$t('buy')}}&nbsp;{{scope.row.lv}}
+                      </span>
                     </el-table-column>
-                    <el-table-column width='150' label='价格(USDT)' prop='price'></el-table-column>
-                    <el-table-column width='120' label='数量(BTC)' prop='amount'></el-table-column>
-                    <el-table-column label='累计(BTC)'>
+                    <el-table-column width='150'
+                      :label='($t("price")||"价格")+"(USDT)"'
+                      prop='price'>
+                    </el-table-column>
+                    <el-table-column width='120'
+                      :label='($t("amount")||"数量")+"(BTC)"'
+                      prop='amount'>
+                    </el-table-column>
+                    <el-table-column :label='($t("total")||"累计")+"(BTC)"'>
                       <div slot-scope="scope" v-text="scope.row.total"></div>
                     </el-table-column>
                   </el-table>
@@ -109,12 +138,22 @@
                     :cell-style='myCellStyle'
                     :show-header='false'
                     max-height='180' stripe>
-                    <el-table-column width='80' label='档位'>
-                      <span class="color-success" slot-scope="scope" v-text="scope.row.lv"></span>
+                    <el-table-column width='80'
+                      :label='$t("stalls")||"档位"'>
+                      <span class="color-success" slot-scope="scope">
+                        {{$t('sell')}}&nbsp;{{scope.row.lv}}
+                      </span>
                     </el-table-column>
-                    <el-table-column width='150' label='价格(USDT)' prop='price'></el-table-column>
-                    <el-table-column width='120' label='数量(BTC)' prop='amount'></el-table-column>
-                    <el-table-column label='累计(BTC)'>
+                    <el-table-column width='150' 
+                      :label='($t("price")||"价格")+"(USDT)"'
+                      prop='price'>
+                    </el-table-column>
+                    <el-table-column width='120'
+                      :label='($t("amount")||"数量")+"(BTC)"'
+                      prop='amount'>
+                    </el-table-column>
+                    <el-table-column
+                      :label='($t("total")||"累计")+"(BTC)"'>
                       <div slot-scope="scope" v-text="scope.row.total"></div>
                     </el-table-column>
                   </el-table>
@@ -122,35 +161,77 @@
               </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf">
-                    <div class="panel-title font-18 font-bit-bold">当前委托</div>
+                    <div class="panel-title font-18 font-bit-bold"
+                      v-text="$t('currEnstrument')||'当前委托'"></div>
                     <template v-if="userData.isLogin">
                       <el-table stripe 
                         :data='currentDeclareData'>
-                        <el-table-column width="140" label='日期' prop='date'></el-table-column>
-                        <el-table-column width='100' label='类型'>
-                          <span slot-scope="scope" v-text="scope.row.type"></span>
+                        <el-table-column width="140"
+                          :label='$t("date")||"日期"'
+                          prop='date'>
                         </el-table-column>
-                        <el-table-column label='价格(USDT)' prop='price'></el-table-column>
-                        <el-table-column label='挂单量(BTC)' prop='order_vol'></el-table-column>
-                        <el-table-column label='成交量' prop='complete_vol'></el-table-column>
-                        <el-table-column width="60" label='操作'>
-                          <span class="handle color-danger" slot-scope="scope">撤单</span>
+                        <el-table-column width='100'
+                          :label='$t("type")||"类型"'>
+                          <span slot-scope="scope"
+                            v-text="scope.row.type=='买入'?$t('buy'):$t('sell')"
+                            :class="scope.row.type=='买入'?'color-danger':'color-success'">
+                          </span>
+                        </el-table-column>
+                        <el-table-column
+                          :label='($t("price")||"价格")+"(USDT)"'
+                          prop='price'>
+                        </el-table-column>
+                        <el-table-column
+                          :label='($t("marketVol")||"挂单量")+"(BTC)"'
+                          prop='order_vol'>
+                        </el-table-column>
+                        <el-table-column
+                          :label='$t("volumn")||"成交量"'
+                          prop='complete_vol'>
+                        </el-table-column>
+                        <el-table-column
+                          :width="$i18n.locale==='zh-CN'?'60':'120'"
+                          :label='$t("operation")||"操作"'>
+                          <span class="handle color-danger"
+                            slot-scope="scope"
+                            v-text="$t('withdrawed'||'撤单')">
+                          </span>
                         </el-table-column>
                       </el-table>
                     </template>
                     <unlogin-tip></unlogin-tip>
-                    <div class="panel-title font-18 font-bit-bold">历史委托</div>
+                    <div class="panel-title font-18 font-bit-bold" v-text="$t('oldEnstrument')||'历史委托'"></div>
                     <template v-if="userData.isLogin">
                       <el-table stripe :data='historicalDeclareData'>
-                        <el-table-column width="140" label='日期' prop='date'></el-table-column>
-                        <el-table-column width='100' label='类型'>
-                          <span slot-scope="scope" v-text="scope.row.type"></span>
+                        <el-table-column width="140"
+                          :label='$t("date")||"日期"' prop='date'>
                         </el-table-column>
-                        <el-table-column label='价格(USDT)' prop='price'></el-table-column>
-                        <el-table-column label='挂单量(BTC)' prop='order_vol'></el-table-column>
-                        <el-table-column label='成交量' prop='complete_vol'></el-table-column>
-                        <el-table-column width="60" label='操作'>
-                          <span class="handle color-danger" slot-scope="scope">撤单</span>
+                        <el-table-column width='100'
+                          :label='$t("type")||"类型"'>
+                          <span slot-scope="scope"
+                            :class="scope.row.type=='买入'?'color-danger':'color-success'"
+                            v-text="scope.row.type=='买入'?$t('buy'):$t('sell')" >
+                          </span>
+                        </el-table-column>
+                        <el-table-column
+                          :label='($t("price")||"价格")+"(USDT)"'
+                          prop='price'>
+                        </el-table-column>
+                        <el-table-column
+                          :label='($t("marketVol")||"挂单量")+"(BTC)"'
+                          prop='order_vol'>
+                        </el-table-column>
+                        <el-table-column
+                          :label='$t("volumn")||"成交量"'
+                          prop='complete_vol'>
+                        </el-table-column>
+                        <el-table-column
+                          :width="$i18n.locale==='zh-CN'?'60':'120'"
+                          :label='$t("operation")||"操作"'>
+                          <span class="handle color-danger"
+                            slot-scope="scope"
+                            v-text="$t('withdrawed'||'撤单')">
+                          </span>
                         </el-table-column>
                       </el-table>
                     </template>
@@ -158,7 +239,7 @@
                 </div>
                 <div class="content-rt">
                   <div class="panel-title flex flex-between">
-                    <span class="font-18 font-bit-bold">成交历史</span>
+                    <span class="font-18 font-bit-bold" v-text="$t('tradeRecord')||'成交历史'"></span>
                     <!-- <router-link to=''>更多</router-link> -->
                   </div>
                   <template v-if="userData.isLogin">
@@ -166,12 +247,18 @@
                     <el-table style="font-weight:normal"
                       :data='historicalBuyData'
                       :cell-style='myCellStyle' stripe>
-                      <el-table-column width='100' label='时间'>
+                      <el-table-column width='100' :label='$t("time")||"时间"'>
                         <span class="color-danger" slot-scope="scope" v-text="scope.row.date"></span>
                       </el-table-column>
-                      <el-table-column width='150' label='价格(USDT)' prop='price'></el-table-column>
-                      <el-table-column width='120' label='数量(BTC)' prop='amount'></el-table-column>
-                      <el-table-column label='累计(BTC)'>
+                      <el-table-column width='150'
+                        :label='($t("price")||"价格")+"(USDT)"'
+                        prop='price'>
+                      </el-table-column>
+                      <el-table-column width='120'
+                        :label='($t("amount")||"数量")+"(BTC)"'
+                        prop='amount'>
+                      </el-table-column>
+                      <el-table-column :label='($t("total")||"累计")+"(BTC)"'>
                         <div slot-scope="scope" v-text="scope.row.total"></div>
                       </el-table-column>
                     </el-table>
@@ -198,28 +285,6 @@ export default {
         orderVol: ""
       },
       sellFormData: {},
-      tabConfig: [
-        {
-          id: "1",
-          name: "USDT",
-          label: "USDT"
-        },
-        {
-          id: "2",
-          name: "BTC",
-          label: "BTC"
-        },
-        {
-          id: "3",
-          name: "ETH",
-          label: "ETH"
-        },
-        {
-          id: "4",
-          name: "自选",
-          label: "自选"
-        }
-      ],
       currentId: 1,
       tableData: [
         {
@@ -237,31 +302,36 @@ export default {
       ],
       latestBuyData: [
         {
-          lv: "买5",
+          i18nKey: "buy",
+          lv: "5",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "买4",
+          i18nKey: "buy",
+          lv: "4",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "买3",
+          i18nKey: "buy",
+          lv: "3",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "买2",
+          i18nKey: "buy",
+          lv: "2",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "买1",
+          i18nKey: "buy",
+          lv: "1",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
@@ -269,31 +339,36 @@ export default {
       ],
       latestSoldData: [
         {
-          lv: "卖5",
+          i18nKey: "sell",
+          lv: "5",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "卖4",
+          i18nKey: "sell",
+          lv: "4",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "卖3",
+          i18nKey: "sell",
+          lv: "3",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "卖2",
+          i18nKey: "sell",
+          lv: "2",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
         },
         {
-          lv: "卖1",
+          i18nKey: "sell",
+          lv: "1",
           price: "2.461",
           amount: "114.041",
           total: "280.65"
@@ -318,14 +393,14 @@ export default {
       historicalDeclareData: [
         {
           date: "2018-8-8",
-          type: "买入",
+          type: "卖出",
           price: "0.354581",
           order_vol: "15161",
           complete_vol: "156516"
         },
         {
           date: "2018-8-8",
-          type: "买入",
+          type: "卖出",
           price: "0.354581",
           order_vol: "15161",
           complete_vol: "156516"
@@ -349,9 +424,6 @@ export default {
   },
   mounted() {},
   methods: {
-    onTabChange(id, index) {
-      this.currentId = id;
-    },
     myCellStyle() {
       return "padding:6px 0 !important;border:none";
     },
@@ -379,12 +451,18 @@ $border: 1px solid #e5e5e5;
 }
 
 .trade-market {
-  width: 480px;
+  width: 34%;
   > div:first-child {
     margin-bottom: 12px;
   }
 }
-
+.vertical-line {
+  height: 360px;
+  width: 1px;
+  background: $bd-color;
+  transform: scaleX(0.5);
+  bottom: 0;
+}
 .panel-head {
   @include textVcenter;
   border-bottom: 1px solid #fcfcfc;
@@ -414,10 +492,10 @@ $border: 1px solid #e5e5e5;
   }
 }
 .k-map {
-  height: 480px;
+  height: auto;
 }
 .form-wrap {
-  width: 470px;
+  width: 48%;
   .break-line {
     margin-top: 12px;
   }
@@ -455,13 +533,13 @@ $border: 1px solid #e5e5e5;
     margin-bottom: 12px;
   }
   .content-lf {
-    width: 980px;
+    width: 64%;
     .handle {
       cursor: pointer;
     }
   }
   .content-rt {
-    width: 480px;
+    width: 34%;
   }
 }
 </style>

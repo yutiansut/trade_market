@@ -3,7 +3,8 @@
         <div class="title" v-text="articleDetail.title"></div>
         <div class="info">
             <span v-text="articleDetail.updated_at"></span>
-            <span>阅读量：{{articleDetail.view}}</span></div> 
+            <span>{{$t("view")||"阅读"}}：{{articleDetail.view}}</span>
+        </div>
         <div class="break-line"></div>
         <div class="article-content">
             今年9月，中办、国办印发了《海南省机构改革方案》，这是全国首个获得中央批复同意的地方机构改革方案。此后，省一级的机构改革方案密集获批。

@@ -70,6 +70,7 @@ Vue.component(unLoginTip.name, unLoginTip);
 import Util from './assets/js/utils'
 import Request from './assets/js/request';
 import userModel from './model/userData';
+import routeModel from './model/routeModel';
 import myStorage from './assets/js/myStorage';
 import apiCfg from './config/apiConfig';
 Vue.config.productionTip = false;
@@ -82,20 +83,21 @@ Object.assign(Vue.prototype, {
   storage: myStorage,
   api: apiCfg,
   userModel: userModel,
+  routeModel: routeModel,
   redirectTo(pathName, params) {
     let data = {
       path: pathName,
-      params: params
+      query: params
     }
-    if (!params) delete data.params;
+    if (!params) delete data.query;
     router.replace(data);
   },
   navigateTo(pathName, params) {
     let data = {
       path: pathName,
-      params: params
+      query: params
     }
-    if (!params) delete data.params;
+    if (!params) delete data.query;
     router.push(data);
   },
   errMsg(msg) {
@@ -123,7 +125,6 @@ router.beforeEach((to, from, next) => {
     }
     next();
   }
-
 });
 /* eslint-disable  */
 new Vue({

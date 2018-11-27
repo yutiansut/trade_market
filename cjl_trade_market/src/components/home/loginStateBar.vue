@@ -27,8 +27,7 @@
                 <i class="iconfont icon-xiala fr"></i>
               </span>
               <ul :style='{"top":dropDownTop}'
-                class="drop-down-item lf-0"
-                v-if="isRefresh">
+                class="drop-down-item lf-0">
                 <li v-for='(item,i) in myOrderDropdown'
                   :key='i'
                   v-text="$t(item.i18nKey)||item.label"
@@ -48,6 +47,7 @@
                   v-text="$t(item.i18nKey)||item.label"
                   @click='dropDownHandle(item.link)'>
                 </li>
+                <li @click="logout" v-text="$t('logout')||'退出登录'"></li>
               </ul>
             </div>
           </div>
@@ -58,13 +58,12 @@
           <div class="lang-selection drop-down p-rel">
             <span class="flex flex-between flex-v-center">
               <i class="el-icon-setting m-right-10"></i>
-              <em v-text='$t("type")'></em>
+              <em v-text='$t("language")'></em>
               <i class="iconfont icon-xiala fr"></i>
             </span>
             <ul :style='{"top":dropDownTop}'
                 ref='dropDown'
-                class="drop-down-item rt-0"
-                v-if="isRefresh">
+                class="drop-down-item rt-0">
                 <li v-for="(item,i) in langList.items" 
                   :key='i'
                   v-text="item.label"
@@ -81,7 +80,6 @@ export default {
     return {
       userData: this.userModel,
       dropDownTop: 0,
-      isRefresh: true,
       myOrderDropdown: [
         {
           label: "账单明细",
@@ -127,12 +125,6 @@ export default {
           label: "API管理",
           link: "",
           icon: ""
-        },
-        {
-          i18nKey: "logout",
-          label: "退出登录",
-          link: "",
-          icon: ""
         }
       ],
       langList: {
@@ -175,6 +167,11 @@ export default {
         this.storage.set("PCDefaultLanguage", val);
         loading.close();
       }, 800);
+    },
+    logout() {
+      this.request(this.api.logout).then(res => {
+        console.log(res);
+      });
     }
   }
 };
