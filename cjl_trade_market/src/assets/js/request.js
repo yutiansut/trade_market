@@ -80,7 +80,7 @@ const ajaxRequest = (function () {
         };
         let httpDefaultOpts = {
             //http默认配置
-            method: opts.method,
+            method: opts.method ? opts.method : "get",
             baseURL: baseURL,
             url: opts.url,
             timeout: 60000,

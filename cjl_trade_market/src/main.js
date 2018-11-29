@@ -25,7 +25,7 @@ Vue.use(ElementUI, zhLocale);
  * 方法
  */
 let initLang = () => {
-  let lang = "en-US";
+  let lang = "zh-CN";
   myStorage.get('PCDefaultLanguage') && (lang = myStorage.get('PCDefaultLanguage'));
   return lang;
 }
