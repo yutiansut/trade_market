@@ -1,29 +1,29 @@
 <template>
     <dialog-box 
         :showDialog='showModal'
-        :dialogTitle='title'
+        :dialogTitle='$t("orderDetail")||title'
         @onDialogClose='closeModal'>
         <div class="content">
             <div class="form-group">
-                <span class="label" v-text="priceLabel"></span>
+                <span class="label" v-text="$t('price')||priceLabel"></span>
                 <el-input disabled name='price' 
                     :value='price'>
                 </el-input>
             </div>
             <div class="form-group">
-                <span class="label" v-text="numLabel"></span>
+                <span class="label" v-text="$t('amount')||numLabel"></span>
                 <el-input disabled name='num' 
                     :value='num'>
                 </el-input>
             </div>
             <div class="form-group">
-                <span class="label" v-text="amountLabel"></span>
+                <span class="label" v-text="$t('money')||amountLabel"></span>
                 <el-input disabled name='amount' 
                     :value='amount'>
                 </el-input>
             </div>
             <div class="form-group">
-                <span class="label" v-text="numLabel"></span>
+                <span class="label" v-text="$t('status')||stateLabel"></span>
                 <el-input disabled name='stateLabel' 
                     :value='state'>
                 </el-input>
@@ -61,9 +61,9 @@ export default {
   },
   data() {
     return {
-      price: "1591",
-      amount: "000",
-      num: "1515",
+      price: "0",
+      amount: "0",
+      num: "0",
       state: "待确认",
       showModal: this.show
     };

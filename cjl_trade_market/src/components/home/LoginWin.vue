@@ -125,27 +125,17 @@ export default {
       this.verCodeStr = str;
     },
     validate(val, name) {
+      if (val == "") return;
       switch (name) {
         case "account":
-          if (val == "") {
-            this.errMsg("手机号不能为空");
-          } else if (!this.Util.isPhone(val)) {
-            this.errMsg("手机号码格式不正确");
-          }
+          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
           break;
         case "password":
-          if (val == "") {
-            this.errMsg("密码不能为空");
-          } else if (!this.Util.isPassword(val)) {
+          !this.Util.isPassword(val) &&
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
-          }
           break;
-        case "code":
-          if (val == "") {
-            this.errMsg("图片验证码不能为空");
-          } else if (val != this.verCodeStr) {
-            this.errMsg("图片验证码不正确");
-          }
+        case "verCode":
+          val != this.verCodeStr && this.errMsg("图形验证码不正确");
           break;
       }
     },

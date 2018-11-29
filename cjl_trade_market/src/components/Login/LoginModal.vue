@@ -18,10 +18,7 @@ export default {
       type: String,
       default: "500px"
     },
-    titleText: {
-      type: String,
-      default: "登录"
-    },
+    titleText: String,
     headerBg: {
       type: String,
       default: null

@@ -245,16 +245,17 @@
         <!-- 操作确认弹窗 -->
         <trade-confirm
           :show='dialogId==1?true:false'
-          :title="confirmCfg.title"
-          :numLabel="confirmCfg.numLabel"
-          :amountLabel="confirmCfg.amountLabel"
-          :valuationLabel='confirmCfg.valuationLabel'>
+          :title="$t(confirmCfg.titlei18n)||confirmCfg.title"
+          :numLabel="$t(confirmCfg.numLabeli18n)||confirmCfg.numLabel"
+          :amountLabel="$t(confirmCfg.amountLabeli18n)||confirmCfg.amountLabel"
+          :valuationLabel='$t(confirmCfg.valuationLabeli18n)||confirmCfg.valuationLabel'
+          :tradeModeLabel='$t(confirmCfg.tradeModeLabeli18n)||confirmCfg.tradeModeLabel'>
         </trade-confirm>
         <!-- 订单匹配弹窗 -->
         <order-match
           :show='dialogId==2?true:false'
           :myData='orderMatchList'
-          :operateLable='operateLable'>
+          :operateLable='$t(operateLabeli18n)||operateLable'>
         </order-match>
         <!-- 挂单买入/卖出待确认弹窗 -->
         <order-confirm
@@ -262,12 +263,12 @@
         </order-confirm>
         <market-order
           :show='dialogId==4?true:false'
-          :title='marketOrderCfg.title'
-          :volumnLabel='marketOrderCfg.volumnLabel'>
+          :title='$t("buyPendingOrder")||marketOrderCfg.title'
+          :volumnLabel='$t("buyVol")||marketOrderCfg.volumnLabel'>
         </market-order>
         <order-paid
           :show='dialogId==5?true:false'
-          :title="'订单详情'">
+          :title="$t('orderDetail')||'订单详情'">
         </order-paid>
     </div>
 </template>
@@ -290,12 +291,19 @@ export default {
       dialogId: null,
       userData: this.userModel,
       operateLable: "卖出",
+      operateLabeli18n: "sell",
       // 订单匹配弹窗配置
       confirmCfg: {
         title: "买入确认",
+        titlei18n: "buyingConfirm",
         numLabel: "买入数量",
+        numLabeli18n: "buyingNum",
         amountLabel: "买入金额",
-        valuationLabel: "买入估价"
+        amountLabeli18n: "buyingAmount",
+        valuationLabel: "买入估价",
+        valuationLabeli18n: "buyingValiation",
+        tradeModeLabel: "交易方式",
+        tradeModeLabeli18n: "tradeMethods"
       },
       //市场挂单弹窗配置
       marketOrderCfg: {

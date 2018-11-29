@@ -1,46 +1,48 @@
 <template>
     <div :style="bg" class="content p-rel">
-        <login-modal class="resize" titleText='注册'>
+        <login-modal class="resize"
+          :titleText='$t("register")||"注册"'>
             <el-form
               :model='registerData'
               label-position='top'
               @submit.native.prevent>
-                <el-form-item label='手机号'>
+                <el-form-item :label='$t("cellphone")||"手机号"'>
                     <el-input
                       v-model.trim="registerData.cellphone"
                       name='cellphone'
-                      placeholder='请输入手机号'
+                      :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
                       maxlength='11'
                       @blur="validate(registerData.cellphone,'cellphone')">
                     </el-input>
                 </el-form-item>
-                <el-form-item label='手机验证码'>
+                <el-form-item :label='$t("mobileCode")||"手机验证码"'>
                     <div class="mobile-code-wrap p-rel">
                         <el-input
                           v-model="registerData.mobileCode"
-                          name='mobileCode' placeholder='请输入手机验证码'
+                          name='mobileCode'
+                          :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
                           :disabled="myMobileCode?false:true"
                           @blur="validate(registerData.mobileCode,'mobileCode')">
                         </el-input>
                         <div v-text="codeText"
                           @click='getMobileCode'
-                          class="mobile-code abs-v-center color-danger">获取验证码
+                          class="mobile-code abs-v-center color-danger">
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label='登录密码'>
+                <el-form-item :label='$t("loginPwd")||"登录密码"'>
                    <el-input
                     v-model="registerData.password"
                     name='password' type='password'
-                    placeholder='请输入密码'
+                    :placeholder='$t("pwdPlaceholder")||"请输入密码"'
                     @blur="validate(registerData.password,'password')">
                   </el-input>
                 </el-form-item>
-                <el-form-item label='图形验证码'>
+                <el-form-item :label='$t("imgCode")||"图形验证码"'>
                     <div class="code-wrap flex flex-between">
                         <el-input
                           v-model="registerData.verCode" name='verCode'
-                          placeholder='请输入图形验证码'
+                          :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'
                           @blur="validate(registerData.verCode,'verCode')">
                         </el-input>
                         <div class="code" @click="createCode(verCodeNumArr,4)">
@@ -51,23 +53,36 @@
                         </div>
                     </div>
                 </el-form-item>
-                <el-form-item label='邀请人（选填）'>
+                <el-form-item :label='$t("recommender")||"邀请人（选填）"'>
                    <el-input
                       v-model="registerData.recommender"
                       name='recommender'
-                      placeholder='请输入邀请人账号'>
+                      :placeholder='$t("recommenderPlaceholder")||"请输入邀请人账号"'>
                     </el-input>
                 </el-form-item>
                 <div :class="isAgreed?'active':''" class="agree flex flex-between">
                     <div>
                         <i class="el-icon-circle-check"></i>
-                        <span>我已阅读并同意</span>
-                        <router-link to=''>《用户使用协议》</router-link>
+                        <template v-if="$i18n.locale=='zh-CN'">
+                          <span>我已阅读并同意</span>
+                          <router-link to=''>《用户使用协议》</router-link>
+                        </template>
+                        <template v-if="$i18n.locale=='en-US'">
+                          <span>I've read and agreed with</span>
+                          <router-link to=''>'User agreement'</router-link>
+                        </template>
                     </div>
-                    <router-link class="back" to='/user/login'>返回登录</router-link>
+                    <router-link class="back"
+                      to='/user/login'
+                      v-text="$t('backToLogin')||'返回登录'">
+                    </router-link>
                 </div>
                 <el-form-item>
-                    <button @click="formSubmit" class="btn-block btn-large btn-danger btn-active">登录</button>
+                    <button
+                      @click="formSubmit"
+                      class="btn-block btn-large btn-danger btn-active"
+                      v-text="$t('register')||'注册'">
+                    </button>
                 </el-form-item>
             </el-form>
         </login-modal>
@@ -89,8 +104,8 @@ export default {
         verCode: "",
         recommender: ""
       },
-      myMobileCode: false,
-      codeText: "获取验证码",
+      myMobileCode: "",
+      codeText: this.$t("getMsgCode") || "获取验证码",
       canGetCode: true,
       isAgreed: true,
       verCodeStr: "",
@@ -103,34 +118,20 @@ export default {
   },
   methods: {
     validate(val, name) {
+      if (val == "") return;
       switch (name) {
         case "cellphone":
-          if (val == "") {
-            this.errMsg("手机号不能为空");
-          } else if (!this.Util.isPhone(val)) {
-            this.errMsg("手机号码格式不正确");
-          }
+          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
           break;
         case "password":
-          if (val == "") {
-            this.errMsg("密码不能为空");
-          } else if (!this.Util.isPassword(val)) {
+          !this.Util.isPassword(val) &&
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
-          }
           break;
         case "mobileCode":
-          if (val == "") {
-            this.errMsg("手机验证码不能为空");
-          } else if (val != this.registerData.mobileCode) {
-            this.errMsg("手机验证码不正确");
-          }
+          val != this.myMobileCode && this.errMsg("手机验证码不正确");
           break;
         case "verCode":
-          if (val == "") {
-            this.errMsg("图片验证码不能为空");
-          } else if (val != this.verCodeStr) {
-            this.errMsg("图形验证码不正确");
-          }
+          val != this.verCodeStr && this.errMsg("图形验证码不正确");
           break;
       }
     },
@@ -150,22 +151,22 @@ export default {
         cellphone: this.registerData.cellphone
       }).then(res => {
         if (res.data.mobileCode) {
-          this.myMobileCode = true;
-          this.registerData.mobileCode = res.data.mobileCode;
+          this.myMobileCode = res.data.mobileCode;
         }
       });
-      this.Util.timerCounter({
+      this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;
           this.getCodeTimes += 1;
-          this.codeText = `倒计时（${t}）s`;
+          this.codeText = `${this.$t("countDown") || "倒计时"}（${t}）s`;
         },
         onCounting: t => {
-          this.codeText = `倒计时（${t}）s`;
+          this.codeText = `${this.$t("countDown") || "倒计时"}（${t}）s`;
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 && (this.codeText = "重新获取");
+          this.getCodeTimes > 0 &&
+            (this.codeText = $t("tryAgain") || "重新获取");
         }
       });
     },
@@ -177,6 +178,14 @@ export default {
           return;
         }
       }
+      this.request(
+        this.api.register,
+        Object.assign({}, this.registerData)
+      ).then(res => {
+        if (!res.code) {
+          this.$message.success("注册成功");
+        }
+      });
     }
   }
 };

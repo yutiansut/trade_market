@@ -51,7 +51,7 @@
             </el-table>
         </div>
         <!-- 绑定登录密码 -->
-        <bind-password 
+        <bind-password
           :show='dialogId=="loginPassword"?true:false'
           :title='$t("bindLoginPwd")||"绑定登录密码"'
           @closeModal='onClose'>

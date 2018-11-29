@@ -19,7 +19,7 @@ let apiCfg = (function () {
         },
         //注册
         register: {
-            url: 'api/common/registerUser.do',
+            url: 'api/register',
             method: 'post'
         },
         //退出

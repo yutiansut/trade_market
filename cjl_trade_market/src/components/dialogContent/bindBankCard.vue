@@ -15,6 +15,7 @@
                 </el-form-item>
                 <el-form-item :label='$t("bankCardNo")||"银行卡号"'>
                     <el-input name='cardNum' v-model="cardNum"
+                      @blur="validate(cardNum,'cardNum')"
                       :placeholder='$t("bankCardNoPlaceholder")||"请输入银行卡号"'>
                     </el-input>
                 </el-form-item>
@@ -26,7 +27,10 @@
                     <el-input name='bankBranches' v-model="bankBranches"
                       :placeholder='$t("bankBranchPlaceholder")||"请输入开户支行"'></el-input>
                 </el-form-item>
-                <button style="margin-top: 1px;" class="btn-block btn-large btn-danger btn-active" v-text="$t('submit')||'提交'"></button>
+                <button style="margin-top: 1px;"
+                  @click="formSubmit"
+                  class="btn-block btn-large btn-danger btn-active"
+                  v-text="$t('submit')||'提交'"></button>
             </el-form>
         </div>
     </dialog-box>
@@ -55,7 +59,25 @@ export default {
     }
   },
   methods: {
-    formSubmit() {},
+    validate(val, name) {
+      if (val == "") return false;
+      switch (name) {
+        case "cardNum":
+          !this.Util.isBankNo(val) && this.errMsg("银行卡号格式不正确");
+          break;
+      }
+    },
+    formSubmit() {
+      if (
+        this.owner == "" ||
+        this.cardNum == "" ||
+        this.depositBank == "" ||
+        this.bankBranches == ""
+      ) {
+        this.errMsg("请填写完整信息");
+        return false;
+      }
+    },
     closeModal() {
       this.showModal = false;
       this.$emit("closeModal");

@@ -150,11 +150,7 @@ export default {
   },
   watch: {
     identifyCode(newVal, oldVal) {
-      let timer = setTimeout(() => {
-        this.drawPic();
-        clearTimeout(timer);
-        timer = null;
-      }, 250);
+      this.drawPic();
     }
   }
 };

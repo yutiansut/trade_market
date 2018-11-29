@@ -22,7 +22,7 @@
                 </el-input>
             </div>
             <div class="form-group">
-                <span class="label" v-text="tradeModeLabel"></span>
+                <span class="label" v-text="tradeModeLabel ||'交易方式'"></span>
                 <el-select v-model="tradeMode" placeholder="请选择">
                     <el-option
                         v-for="item in options"
@@ -33,8 +33,14 @@
                 </el-select>
             </div>
             <div class="btn-group">
-                <button @click='formSubmit' class="btn-block btn-large btn-danger btn-active">提交</button>
-                <button class="btn-block btn-large btn-bordered btn-active">取消</button>
+                <button
+                  @click='formSubmit' class="btn-block btn-large btn-danger btn-active"
+                  v-text="$t('submit')||'提交'">
+                </button>
+                <button
+                  class="btn-block btn-large btn-bordered btn-active"
+                  v-text="$t('cancel')||'取消'">
+                </button>
             </div>
         </div>
     </dialog-box>
@@ -45,57 +51,54 @@ export default {
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     title: String,
     numLabel: String,
     amountLabel: String,
     valuationLabel: String,
-    tradeModeLabel: {
-      type: String,
-      default: '交易方式',
-    },
+    tradeModeLabel: String
   },
   data() {
     return {
       amount: null,
       num: null,
       valuation: null,
-      tradeMode: '选项1',
+      tradeMode: "选项1",
       showModal: this.show,
       options: [
         {
-          value: '选项1',
-          label: '银行卡',
+          value: "选项1",
+          label: "银行卡"
         },
         {
-          value: '选项2',
-          label: '支付宝',
-        },
-      ],
+          value: "选项2",
+          label: "支付宝"
+        }
+      ]
     };
   },
   watch: {
     show: function() {
       this.showModal = this.show;
-    },
+    }
   },
   methods: {
     formSubmit() {
-      this.$emit('onSubmit', {
+      this.$emit("onSubmit", {
         formData: {
           amount: this.amount,
           num: this.num,
           valuation: this.valuation,
-          tradeMode: this.tradeMode,
-        },
+          tradeMode: this.tradeMode
+        }
       });
     },
     closeModal() {
       this.showModal = false;
-      this.$emit('closeModal');
-    },
-  },
+      this.$emit("closeModal");
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -15,6 +15,11 @@ const Utils = (function () {
             if (data == "") return false;
             return pattern.test(data);
         },
+        isEmail(data) {
+            let pattern = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/;
+            if (data == "") return false;
+            return pattern.test(data);
+        },
         isIdCard(data) {
             let str = data;
             if (str == "") return false;

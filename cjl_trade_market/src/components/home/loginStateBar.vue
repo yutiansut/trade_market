@@ -57,7 +57,7 @@
           </div>
           <div class="lang-selection drop-down p-rel">
             <span class="flex flex-between flex-v-center">
-              <i class="el-icon-setting m-right-10"></i>
+              <i class="iconfont icon-duoyuyan m-right-10"></i>
               <em v-text='$t("language")'></em>
               <i class="iconfont icon-xiala fr"></i>
             </span>

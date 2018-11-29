@@ -10,6 +10,7 @@
             <el-form label-position='top' @submit.native.prevent>
                 <el-form-item :label='$t("cellphone")||mobileLabel'>
                     <el-input name='mobile'
+                      @blur="validate(formData.cellphone,'cellphone')"
                       v-model="formData.cellphone"
                       :placeholder='$t("mobilePlaceholder")||"请输入手机号"'>
                     </el-input>
@@ -17,6 +18,7 @@
                 <el-form-item :label='$t("mobileCode")||"手机验证码"'>
                     <div class="mobile-code-wrap p-rel">
                         <el-input name='mobileCode'
+                          @blur="validate(formData.mobileCode,'mobileCode')"
                           v-model="formData.mobileCode"
                           :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'>
                         </el-input>
@@ -25,6 +27,7 @@
                 </el-form-item>
                 <el-form-item :label='$t("loginPwd")||passwordLabel'>
                     <el-input name='password' type='password'
+                      @blur="validate(formData.password,'password')"
                       v-model="formData.password"
                       :placeholder='$t("pwdPlaceholder")||"请输入密码"'>
                     </el-input>
@@ -32,6 +35,7 @@
                 <el-form-item :label='$t("imgCode")||"图形验证码"'>
                     <div class="code-wrap flex flex-between">
                         <el-input name='code'
+                          @blur="validate(formData.imgCode,'verCode')"
                           v-model="formData.imgCode"
                           :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'>
                         </el-input>
@@ -43,7 +47,11 @@
                         </div>
                     </div>
                 </el-form-item>
-                <button style="margin-top: 1px;" class="btn-block btn-large btn-danger btn-active" v-text="$t('submit')||'提交'"></button>
+                <button style="margin-top: 1px;"
+                  @click="formSubmit"
+                  class="btn-block btn-large btn-danger btn-active"
+                  v-text="$t('submit')||'提交'">
+                </button>
             </el-form>
         </div>
     </dialog-box>
@@ -75,6 +83,7 @@ export default {
       codeText: null,
       timer: null,
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      myMobileCode: "",
       verCodeStr: "",
       formData: {
         cellphone: "",
@@ -99,15 +108,44 @@ export default {
       this.canGetCode = true;
       this.codeText = this.$t("getMsgCode") || "获取验证码";
       this.timer = null;
+      this.myMobileCode = "";
       this.formData = {
         cellphone: "",
         mobileCode: "",
+        password: "",
         imgCode: ""
       };
     },
-    formSubmit() {},
+    validate(val, name) {
+      if (val == "") return;
+      switch (name) {
+        case "cellphone":
+          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
+          break;
+        case "password":
+          !this.Util.isPassword(val) &&
+            this.errMsg("密码必须是以英文字母开头的6-12位字符");
+          break;
+        case "mobileCode":
+          val != this.myMobileCode && this.errMsg("手机验证码不正确");
+          break;
+        case "verCode":
+          val != this.verCodeStr && this.errMsg("图形验证码不正确");
+          break;
+      }
+    },
+    formSubmit() {
+      for (let key in this.formData) {
+        let item = this.formData[key];
+        if (item == "") {
+          this.errMsg("请填写完整信息");
+          return;
+        }
+      }
+    },
     getMobileCode() {
-      if (!this.canGetCode) return false;
+      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
+        return false;
       this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;

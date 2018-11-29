@@ -1,13 +1,13 @@
 <template>
     <dialog-box
         :showDialog='showModal'
-        dialogTitle='最佳匹配订单'>
+        :dialogTitle='$t("bestMatched")||"最佳匹配订单"'>
         <div class="table-content">
             <div class='table-head flex flex-between'>
-                <span class="cell">用户名</span>
-                <span class="cell">价格</span>
-                <span class="cell">数量</span>
-                <span class="cell">操作</span>
+                <span class="cell" v-text="$t('username')||'用户名'"></span>
+                <span class="cell" v-text="$t('price')||'价格'"></span>
+                <span class="cell" v-text="$t('amount')||'数量'"></span>
+                <span class="cell" v-text="$t('operation')||'操作'"></span>
             </div>
             <div class="table-body">
                 <div v-for="(item,i) in dataList" 
@@ -26,8 +26,8 @@
             </div>
         </div>
         <div class="btn-group">
-          <button class="btn-block btn-large btn-danger">提交</button>
-          <button class="btn-block btn-large btn-bordered">取消</button>
+          <button class="btn-block btn-large btn-danger" v-text="$t('submit')||'提交'"></button>
+          <button class="btn-block btn-large btn-bordered" v-text="$t('cancel')||'取消'"></button>
         </div>
     </dialog-box>
 </template>
@@ -36,43 +36,43 @@ export default {
   props: {
     show: {
       type: Boolean,
-      default: false,
+      default: false
     },
     myData: {
       type: Array,
-      default: null,
+      default: null
     },
-    operateLable: String,
+    operateLable: String
   },
   data() {
     return {
       showModal: this.show,
       dataList: this.myData,
-      textColor: 'danger',
+      textColor: "danger"
     };
   },
   mounted() {
     switch (this.operateLable) {
-      case '买入':
-        this.textColor = 'danger';
+      case "买入":
+        this.textColor = "danger";
         break;
-      case '卖出':
-        this.textColor = 'success';
+      case "卖出":
+        this.textColor = "success";
         break;
     }
   },
   watch: {
     show: function() {
       this.showModal = this.show;
-    },
+    }
   },
   methods: {
     handleFunc(id, index) {},
     closeModal() {
       this.showModal = false;
-      this.$emit('closeModal');
-    },
-  },
+      this.$emit("closeModal");
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
