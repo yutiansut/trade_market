@@ -1,6 +1,6 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "http://192.168.5.145:8080/API/",
+        baseURL: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "/API",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner
@@ -39,6 +39,10 @@ let apiCfg = (function () {
         checklogin: {
             url: "checklogin",
             method: "post"
+        },
+        // 获取验证码
+        bzcode: {
+            url: 'bzcode'
         },
         //忘记密码
         forget: {
@@ -176,6 +180,11 @@ let apiCfg = (function () {
         //发布C2C卖出订单
         addsellc2c: {
             url: 'addsellc2c'
+        },
+        //上传接口
+        img: {
+            url: 'img',
+            method: "post"
         }
     }
 }());

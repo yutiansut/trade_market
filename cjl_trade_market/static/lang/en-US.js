@@ -158,6 +158,7 @@ module.exports = {
     accountSecurity: "Account security",
     security: "Security setting",
     loginPwd: "Login password",
+    loginRepass: "Repeat password",
     loginPwdDesp: "Password you login",
     fundPwd: "Fund password",
     fundPwdDesp: "Password for transaction，keep it safe",
@@ -265,5 +266,7 @@ module.exports = {
     username: "Username",
     bestMatched: "Best matched order",
     buyPendingOrder: "Buy pending order",
-    transferAmount: "Transfer amount"
+    transferAmount: "Transfer amount",
+    nextStep: "Next",
+    loginAuth: "Login authentication"
 }

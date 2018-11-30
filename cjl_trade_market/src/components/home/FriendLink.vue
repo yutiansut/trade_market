@@ -91,6 +91,11 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    this.request(this.api.friendlink).then(res => {
+      
+    });
   }
 };
 </script>

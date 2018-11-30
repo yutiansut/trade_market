@@ -158,6 +158,7 @@ module.exports = {
     accountSecurity: "账户安全",
     security: "安全认证",
     loginPwd: "登录密码",
+    loginRepass: "确认密码",
     loginPwdDesp: "用于登陆时的密码",
     fundPwd: "资金密码",
     fundPwdDesp: "交易时密码，请谨慎保管",
@@ -265,5 +266,7 @@ module.exports = {
     username: "用户名",
     bestMatched: "最佳匹配挂单",
     buyPendingOrder: "市场挂单买入",
-    transferAmount: "转账金额"
+    transferAmount: "转账金额",
+    nextStep: "下一步",
+    loginAuth: "登录授权",
 }

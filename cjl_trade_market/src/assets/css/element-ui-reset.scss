@@ -10,6 +10,13 @@ $color-primary: #ab1e24;
     color: $color-primary !important;
   }
 }
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: $color-primary;
+  background: $color-primary;
+}
+.el-radio__input.is-checked + .el-radio__label {
+  color: $color-primary;
+}
 .el-table th {
   font-weight: 500;
   font-size: 16px;

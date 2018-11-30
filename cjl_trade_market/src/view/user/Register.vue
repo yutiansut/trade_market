@@ -24,9 +24,8 @@
                           :disabled="myMobileCode?false:true"
                           @blur="validate(registerData.mobileCode,'mobileCode')">
                         </el-input>
-                        <div v-text="codeText"
-                          @click='getMobileCode'
-                          class="mobile-code abs-v-center color-danger">
+                        <div  @click='getMobileCode'
+                          class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
                         </div>
                     </div>
                 </el-form-item>
@@ -36,6 +35,14 @@
                     name='password' type='password'
                     :placeholder='$t("pwdPlaceholder")||"请输入密码"'
                     @blur="validate(registerData.password,'password')">
+                  </el-input>
+                </el-form-item>
+                <el-form-item :label='$t("loginRepass")||"确认登录密码"'>
+                   <el-input
+                    v-model="registerData.repassword"
+                    name='password' type='password'
+                    :placeholder='$t("pwdPlaceholder")||"请再次输入密码"'
+                    @blur="validate(registerData.repassword,'repassword')">
                   </el-input>
                 </el-form-item>
                 <el-form-item :label='$t("imgCode")||"图形验证码"'>
@@ -68,7 +75,7 @@
                           <router-link to=''>《用户使用协议》</router-link>
                         </template>
                         <template v-if="$i18n.locale=='en-US'">
-                          <span>I've read and agreed with</span>
+                          <span>I've read and agreed with the</span>
                           <router-link to=''>'User agreement'</router-link>
                         </template>
                     </div>
@@ -100,12 +107,15 @@ export default {
       registerData: {
         cellphone: "",
         password: "",
+        repassword: "",
         mobileCode: "",
         verCode: "",
         recommender: ""
       },
-      myMobileCode: "",
-      codeText: this.$t("getMsgCode") || "获取验证码",
+      myMobileCode: "123456",
+      codeText: "获取验证码",
+      codeTexti18n: "getMsgCode",
+      second: "",
       canGetCode: true,
       isAgreed: true,
       verCodeStr: "",
@@ -127,6 +137,10 @@ export default {
           !this.Util.isPassword(val) &&
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
           break;
+        case "repassword":
+          val != this.registerData.password &&
+            this.errMsg("两次输入密码不一致");
+          break;
         case "mobileCode":
           val != this.myMobileCode && this.errMsg("手机验证码不正确");
           break;
@@ -147,26 +161,20 @@ export default {
     getMobileCode() {
       if (!this.canGetCode || !this.Util.isPhone(this.registerData.cellphone))
         return false;
-      this.request(this.api.getMsgCode, {
-        cellphone: this.registerData.cellphone
-      }).then(res => {
-        if (res.data.mobileCode) {
-          this.myMobileCode = res.data.mobileCode;
-        }
-      });
       this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;
           this.getCodeTimes += 1;
-          this.codeText = `${this.$t("countDown") || "倒计时"}（${t}）s`;
+          this.second = `${t}s`;
+          this.codeTexti18n = "countDown";
         },
         onCounting: t => {
-          this.codeText = `${this.$t("countDown") || "倒计时"}（${t}）s`;
+          this.second = `(${t}s)`;
+          this.codeText = "countDown";
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 &&
-            (this.codeText = $t("tryAgain") || "重新获取");
+          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
         }
       });
     },
@@ -178,13 +186,13 @@ export default {
           return;
         }
       }
-      this.request(
-        this.api.register,
-        Object.assign({}, this.registerData)
-      ).then(res => {
-        if (!res.code) {
-          this.$message.success("注册成功");
-        }
+      let postData = {
+        tel: this.registerData.cellphone,
+        password: this.registerData.password,
+        code: this.registerData.mobileCode
+      };
+      this.request(this.api.register, postData).then(res => {
+        console.log(res);
       });
     }
   }
@@ -194,7 +202,7 @@ export default {
 .content {
   padding: 1px;
   min-height: calc(100% - 360px);
-  background-size: 105% auto;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center 0;
   .resize {

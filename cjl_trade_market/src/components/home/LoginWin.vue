@@ -4,9 +4,9 @@
         <div v-if="userData.isLogin">
             <div class="user-info">
                 <h3 class="nick-name">138918984</h3>
-                <div class="account">
+                <div class="cellphone">
                     <span><em v-text="$t('accountId')"></em> ：</span>
-                    <span class="color-primary" v-text="userData.account"></span>
+                    <span class="color-primary" v-text="userData.cellphone"></span>
                 </div>
                 <div><em v-text="$t('totalEstimate')"></em>：</div>
                 <div class="wealth">
@@ -32,15 +32,17 @@
             </div>
         </div>
         <div v-else>
+          <!-- 登录第一步 -->
+          <template v-if="!checkLogin">
             <el-input
-              @blur="validate(formData.account,'account')"
-              v-model="formData.account"
+              @blur="validate(checkLoginData.cellphone,'cellphone')"
+              v-model="checkLoginData.cellphone"
               :placeholder="$t('cellphone')||'手机号'">
             </el-input>
             <el-input
-              @blur="validate(formData.password,'password')"
+              @blur="validate(checkLoginData.password,'password')"
               type='password'
-              v-model="formData.password"
+              v-model="checkLoginData.password"
               maxlength='12'
               :placeholder="$t('password')||'密码'">
             </el-input>
@@ -54,22 +56,47 @@
                 </div>
                 <div class="code-input">
                   <el-input
-                    @blur="validate(formData.code,'code')"
+                    @blur="validate(checkLoginData.code,'code')"
                     type='tel'
-                    v-model="formData.code"
+                    v-model="checkLoginData.code"
                     :placeholder="$t('imgCode')||'验证码'">
                   </el-input>
                 </div>
             </div>
             <button
-              @click.prevent="submitForm"
+              @click.prevent="loginStep"
               class="btn-block btn-large btn-active btn-danger"
-              v-text="$t('login')||'登录'">
+              v-text="$t('nextStep')||'下一步'">
             </button>
             <div class="panel">
                 <router-link to='/user/resetpwd' v-text="$t('forgetPwd')+'?'||'忘记密码？'"></router-link>
                 <router-link to='/user/register' v-text="$t('onlineRegister'||'在线注册')"></router-link>
             </div>
+          </template>
+          <!-- 登录验证 -->
+          <template v-else>
+            <el-radio-group v-model="loginData.type">
+              <el-radio label="mobile">{{$t('mobileCode')||'手机验证码'}}</el-radio>
+              <el-radio disabled='disabled' label="google">{{$t('googleCode')||'谷歌验证码'}}</el-radio>
+            </el-radio-group>
+            <div class="mobile-code-wrap p-rel">
+              <el-input
+                v-model="loginData.mobileCode"
+                name='mobileCode'
+                :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
+                :disabled="myMobileCode?false:true"
+                @blur="validate(loginData.mobileCode,'mobileCode')">
+              </el-input>
+              <div @click='getMobileCode'
+                class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
+              </div>
+            </div>
+            <button
+              @click.prevent="loginHandle"
+              class="btn-block btn-large btn-active btn-danger"
+              v-text="$t('login')||'登录'">
+            </button>
+          </template>
         </div>
     </div>
 </template>
@@ -83,11 +110,21 @@ export default {
   data() {
     return {
       visiable: 1,
-      formData: {
-        account: "",
+      checkLogin: false,
+      checkLoginData: {
+        cellphone: "",
         password: "",
         code: ""
       },
+      loginData: {
+        type: "mobile",
+        mobileCode: "",
+        googleCode: ""
+      },
+      myMobileCode: "",
+      codeTexti18n: "getMsgCode",
+      second: "",
+      canGetCode: true,
       verCodeStr: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       userData: this.userModel
@@ -97,24 +134,42 @@ export default {
     this.createCode(this.verCodeNumArr, 4);
   },
   methods: {
-    submitForm() {
-      for (let key in this.formData) {
-        let item = this.formData[key];
+    getMobileCode() {
+      if (!this.canGetCode || !this.Util.isPhone(this.checkLoginData.cellphone))
+        return false;
+      this.timer = this.Util.timerCounter({
+        onStart: t => {
+          this.canGetCode = false;
+          this.getCodeTimes += 1;
+          this.second = `${t}s`;
+          this.codeTexti18n = "countDown";
+        },
+        onCounting: t => {
+          this.second = `(${t}s)`;
+          this.codeText = "countDown";
+        },
+        onComplete: () => {
+          this.canGetCode = true;
+          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
+        }
+      });
+    },
+    loginStep() {
+      for (let key in this.checkLoginData) {
+        let item = this.checkLoginData[key];
         if (item == "") {
           this.errMsg("请填写完整信息");
           return;
         }
       }
       this.request(this.api.login, {
-        ...this.formData
+        tel: this.checkLoginData.cellphone,
+        password: this.checkLoginData.password
       }).then(res => {
-        if (!res.code) {
-          let token = res.token;
-          token && this.storage.set("token", token);
-          this.userModel.isLogin = true;
-        }
+        console.log(res);
       });
     },
+    loginHandle() {},
     createCode(arr, len) {
       let str = "";
       for (let i = 0; i < len; i++) {
@@ -127,12 +182,15 @@ export default {
     validate(val, name) {
       if (val == "") return;
       switch (name) {
-        case "account":
+        case "cellphone":
           !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
           break;
         case "password":
           !this.Util.isPassword(val) &&
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
+          break;
+        case "mobileCode":
+          val != this.loginData.mobileCode && this.errMsg("手机验证码不正确");
           break;
         case "verCode":
           val != this.verCodeStr && this.errMsg("图形验证码不正确");
@@ -157,17 +215,16 @@ $mt: 9px;
   height: 280px;
   right: 180px;
   padding: 20px;
-  min-height: 280px;
   background: $bg-white;
   box-shadow: 0 0 10px 1px #333;
-
   z-index: 99;
   .win-title {
     font-size: $font-middile;
     margin-bottom: 10px;
   }
   .el-input,
-  .code-box {
+  .code-box,
+  .el-radio-group {
     margin-top: $mt;
   }
   .btn-block {
@@ -202,7 +259,7 @@ $mt: 9px;
     .nick-name {
       margin-top: 22px;
     }
-    .account {
+    .cellphone {
       margin: 27px 0 21px 0;
     }
     .wealth {
@@ -212,6 +269,24 @@ $mt: 9px;
         @include float(right);
         cursor: pointer;
       }
+    }
+  }
+  .mobile-code-wrap {
+    margin-top: $mt;
+    .el-input {
+      margin-top: 0;
+    }
+  }
+  .mobile-code {
+    width: 120px;
+    text-align: right;
+    right: 15px;
+    cursor: pointer;
+    &:hover {
+      opacity: 0.8;
+    }
+    &.color-danger {
+      color: $color-danger;
     }
   }
   .btn-group {

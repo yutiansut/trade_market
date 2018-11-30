@@ -3,7 +3,7 @@
         <el-carousel :interval="5000" :height='bannerHeight'>
             <el-carousel-item v-for="(item,index) in bannerList" :key="index">
                 <router-link :to='item.link'>
-                    <img class="banner-image" :src="item.thumb">
+                    <img class="banner-image" :src="item.bannerurl||item.url">
                 </router-link>
             </el-carousel-item>
         </el-carousel>
@@ -14,6 +14,7 @@
 .index-banner {
   @include minWidth;
   .banner-image {
+    border: none;
     width: 100%;
     height: 410px;
   }
@@ -26,16 +27,21 @@ export default {
   components: {
     loginWin
   },
+  mounted() {
+    this.request(this.api.banner).then(res => {
+      if (!res.code) this.bannerList = res.data;
+    });
+  },
   data() {
     return {
       bannerHeight: "410px",
       bannerList: [
         {
-          thumb: require("@/assets/images/home/home_page_bannrt_.png"),
+          url: require("@/assets/images/home/home_page_bannrt_.png"),
           link: "abc"
         },
         {
-          thumb: require("@/assets/images/home/home_page_bannrt_1.png"),
+          url: require("@/assets/images/home/home_page_bannrt_1.png"),
           link: "abc"
         }
       ]

@@ -4,6 +4,7 @@ import router from "../../router/index";
 import { Toast } from "vant";
 import { Loading } from 'element-ui';
 import api from '@/config/apiConfig.js';
+import Utils from './utils';
 import myStorage from '@/assets/js/myStorage';
 let loadingMask = null;
 const ajaxRequest = (function () {
@@ -71,20 +72,29 @@ const ajaxRequest = (function () {
                 });
                 break;
         }
-
+    };
+    function createParam(data) {
+        let params = '';
+        if (data && Utils.dataType(data) == "object") {
+            for (let key in data) {
+                data[key] && (params += `/${data[key]}`);
+            }
+            return params;
+        }
     };
     return (opts, data) => {
         let Public = {
             //公共参数
-            token: myStorage.get("token")
+            token: myStorage.get("token") || ""
         };
+        let postData = Object.assign(Public, data);
+        let params = createParam(postData);
         let httpDefaultOpts = {
             //http默认配置
             method: opts.method ? opts.method : "get",
             baseURL: baseURL,
-            url: opts.url,
+            url: opts.url + (params ? params : ""),
             timeout: 60000,
-            params: Object.assign(Public, data),
             data: qs.stringify(Object.assign(Public, data)),
             headers:
                 opts.method == "get"
