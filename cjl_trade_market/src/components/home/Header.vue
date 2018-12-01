@@ -190,17 +190,6 @@ export default {
   mounted() {
     this.showHead = this.showHeadTop;
     this.currentPath = this.$route.path;
-    if (this.storage.get("token")) {
-      this.request(this.api.userInfo).then(res => {
-        if (!res.code && res.data.userInfo) {
-          this.userModel.isLogin = true;
-        } else {
-          Toast({
-            message: res.msg
-          });
-        }
-      });
-    }
   },
   methods: {
     handleSelect(index) {

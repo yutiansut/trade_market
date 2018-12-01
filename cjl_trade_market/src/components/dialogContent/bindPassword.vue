@@ -22,7 +22,9 @@
                           v-model="formData.mobileCode"
                           :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'>
                         </el-input>
-                        <div @click="getMobileCode" class="mobile-code abs-v-center color-danger" v-text="codeText"></div>                        
+                        <div @click="getMobileCode" class="mobile-code abs-v-center color-danger">
+                          {{$t(this.codeTexti18n)}}{{second}}
+                        </div>                        
                     </div>
                 </el-form-item>
                 <el-form-item :label='$t("loginPwd")||passwordLabel'>
@@ -85,6 +87,8 @@ export default {
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       myMobileCode: "",
       verCodeStr: "",
+      second: "",
+      codeTexti18n: "getMsgCode",
       formData: {
         cellphone: "",
         mobileCode: "",
@@ -106,9 +110,9 @@ export default {
     initData() {
       this.getCodeTimes = 0;
       this.canGetCode = true;
-      this.codeText = this.$t("getMsgCode") || "获取验证码";
+
       this.timer = null;
-      this.myMobileCode = "";
+      this.myMobileCode = false;
       this.formData = {
         cellphone: "",
         mobileCode: "",
@@ -143,24 +147,28 @@ export default {
         }
       }
     },
-    getMobileCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
-        return false;
+    countDown() {
       this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;
           this.getCodeTimes += 1;
-          this.codeText = `${this.$t("countDown") || "倒计时"}（${t}）s`;
+          this.second = `${t}s`;
+          this.codeTexti18n = "countDown";
         },
         onCounting: t => {
-          this.codeText = `${this.$t("countDown") || "倒计时"}（${t}）s`;
+          this.second = `(${t}s)`;
+          this.codeTexti18n = "countDown";
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 &&
-            (this.codeText = $t("tryAgain") || "重新获取");
+          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
         }
       });
+    },
+    getMobileCode() {
+      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
+        return false;
+      this.countDown();
     },
     createCode(arr, len) {
       let str = "";

@@ -23,7 +23,7 @@ let apiCfg = (function () {
         // 钱包注册
         registeruser: {
             url: "registeruser",
-            method: "post"
+
         },
         //手机登录
         signin: {
@@ -33,21 +33,32 @@ let apiCfg = (function () {
         //pc登录
         login: {
             url: "login",
-            method: "post"
+
         },
         // 登录验证
         checklogin: {
             url: "checklogin",
-            method: "post"
+
+        },
+        //用户不存在是发送短信
+        sendcode: {
+            url: 'sendcode'
+        },
+        //修改密码获取验证码
+        sendcodeuser: {
+            url: 'sendcodeuser'
+        },
+        // 资金交易获取验证码
+        sendcodetoken: {
+            url: 'sendcodetoken'
         },
         // 获取验证码
         bzcode: {
             url: 'bzcode'
         },
         //忘记密码
-        forget: {
-            url: "forget",
-            method: "post"
+        forgetpwd: {
+            url: "forgetpwd",
         },
         //获取我的资产
         getaccount: {
@@ -184,7 +195,7 @@ let apiCfg = (function () {
         //上传接口
         img: {
             url: 'img',
-            method: "post"
+
         }
     }
 }());

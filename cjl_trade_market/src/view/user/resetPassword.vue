@@ -18,13 +18,11 @@
                           name='mobileCode'
                           placeholder='请输入手机验证码'
                           v-model="formData.mobileCode"
-                          :disabled='myMobileCode?false:true'
-                          @blur="validate(formData.mobileCode,'mobileCode')">
+                          :disabled='myMobileCode?false:true'>
                         </el-input>
                         <div
                           class="mobile-code abs-v-center color-danger"
-                          v-text="codeText"
-                          @click='getMobileCode'>
+                          @click='getMobileCode'>{{$t(this.codeTexti18n)}}{{second}}
                         </div>
                     </div>
                 </el-form-item>
@@ -77,11 +75,13 @@ export default {
         password: "",
         verCode: ""
       },
-      myMobileCode: "",
+      second: "",
+      myMobileCode: false,
       canGetCode: true,
       verCodeStr: "",
       getCodeTimes: 0,
       codeText: "获取验证码",
+      codeTexti18n: "getMsgCode",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     };
   },
@@ -98,25 +98,39 @@ export default {
       }
       this.verCodeStr = str;
     },
-    getMobileCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
-        return false;
-      this.Util.timerCounter({
+    // 倒计时函数
+    countDown() {
+      this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;
           this.getCodeTimes += 1;
-          this.codeText = `倒计时（${t}）s`;
+          this.second = `${t}s`;
+          this.codeTexti18n = "countDown";
         },
         onCounting: t => {
-          this.codeText = `倒计时（${t}）s`;
+          this.second = `(${t}s)`;
+          this.codeTexti18n = "countDown";
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 && (this.codeText = "重新获取");
+          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
+        }
+      });
+    },
+    getMobileCode() {
+      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
+        return false;
+      this.countDown();
+      this.request(this.api.sendcodeuser, {
+        tel: this.formData.cellphone
+      }).then(res => {
+        if (res.code == "0") {
+          this.myMobileCode = true;
         }
       });
     },
     validate(val, name) {
+      if (!val) return false;
       switch (name) {
         case "cellphone":
           if (val == "") {
@@ -156,6 +170,16 @@ export default {
           return;
         }
       }
+      this.request(this.api.forgetpwd, {
+        tel: this.formData.cellphone,
+        code: this.formData.mobileCode,
+        password: this.formData.password
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg);
+          this.navigateTo("/user/login");
+        }
+      });
     }
   }
 };

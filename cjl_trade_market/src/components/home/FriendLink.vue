@@ -94,7 +94,9 @@ export default {
   },
   mounted() {
     this.request(this.api.friendlink).then(res => {
-      
+      if (!res.code && res.data.list && res.data.list.length > 0) {
+        this.links = res.data.list;
+      }
     });
   }
 };

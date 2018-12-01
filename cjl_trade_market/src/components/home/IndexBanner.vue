@@ -29,7 +29,9 @@ export default {
   },
   mounted() {
     this.request(this.api.banner).then(res => {
-      if (!res.code) this.bannerList = res.data;
+      if (!res.code && res.data.list.length > 0) {
+        this.bannerList = res.data.list;
+      }
     });
   },
   data() {

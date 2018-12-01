@@ -21,8 +21,7 @@
                           v-model="registerData.mobileCode"
                           name='mobileCode'
                           :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
-                          :disabled="myMobileCode?false:true"
-                          @blur="validate(registerData.mobileCode,'mobileCode')">
+                          :disabled="myMobileCode?false:true">
                         </el-input>
                         <div  @click='getMobileCode'
                           class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
@@ -112,7 +111,7 @@ export default {
         verCode: "",
         recommender: ""
       },
-      myMobileCode: "123456",
+      myMobileCode: false,
       codeText: "获取验证码",
       codeTexti18n: "getMsgCode",
       second: "",
@@ -141,9 +140,6 @@ export default {
           val != this.registerData.password &&
             this.errMsg("两次输入密码不一致");
           break;
-        case "mobileCode":
-          val != this.myMobileCode && this.errMsg("手机验证码不正确");
-          break;
         case "verCode":
           val != this.verCodeStr && this.errMsg("图形验证码不正确");
           break;
@@ -158,9 +154,8 @@ export default {
       }
       this.verCodeStr = str;
     },
-    getMobileCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.registerData.cellphone))
-        return false;
+    // 倒计时函数
+    countDown() {
       this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;
@@ -170,12 +165,22 @@ export default {
         },
         onCounting: t => {
           this.second = `(${t}s)`;
-          this.codeText = "countDown";
+          this.codeTexti18n = "countDown";
         },
         onComplete: () => {
           this.canGetCode = true;
           this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
         }
+      });
+    },
+    getMobileCode() {
+      if (!this.canGetCode || !this.Util.isPhone(this.registerData.cellphone))
+        return false;
+      this.countDown();
+      this.request(this.api.sendcode, {
+        tel: this.registerData.cellphone
+      }).then(res => {
+        this.myMobileCode = true;
       });
     },
     formSubmit() {
@@ -189,10 +194,14 @@ export default {
       let postData = {
         tel: this.registerData.cellphone,
         password: this.registerData.password,
-        code: this.registerData.mobileCode
+        code: this.registerData.mobileCode,
+        parent: this.registerData.recommender || ""
       };
       this.request(this.api.register, postData).then(res => {
-        console.log(res);
+        if (!res.code * 1) {
+          this.successMsg(res.msg);
+          this.navigateTo("/user/login");
+        }
       });
     }
   }

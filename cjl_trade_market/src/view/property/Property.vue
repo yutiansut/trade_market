@@ -155,6 +155,7 @@ export default {
       ]
     };
   },
+  mounted() {},
   methods: {
     changeStyle({ columnIndex }) {
       if (columnIndex == 5) {

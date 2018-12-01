@@ -3,10 +3,10 @@
         <div class="win-title" v-text="$t('welcome')"></div>
         <div v-if="userData.isLogin">
             <div class="user-info">
-                <h3 class="nick-name">138918984</h3>
+                <h3 class="nick-name" v-text="userData.cellphone"></h3>
                 <div class="cellphone">
                     <span><em v-text="$t('accountId')"></em> ：</span>
-                    <span class="color-primary" v-text="userData.cellphone"></span>
+                    <span class="color-primary"></span>
                 </div>
                 <div><em v-text="$t('totalEstimate')"></em>：</div>
                 <div class="wealth">
@@ -76,18 +76,32 @@
           <!-- 登录验证 -->
           <template v-else>
             <el-radio-group v-model="loginData.type">
-              <el-radio label="mobile">{{$t('mobileCode')||'手机验证码'}}</el-radio>
-              <el-radio disabled='disabled' label="google">{{$t('googleCode')||'谷歌验证码'}}</el-radio>
+              <el-radio label="0">{{$t('mobileCode')||'短信验证码'}}</el-radio>
+              <el-radio label='1' :disabled='bindGoogleAuth?false:true'>{{$t('googleCode')||'谷歌验证码'}}</el-radio>
             </el-radio-group>
             <div class="mobile-code-wrap p-rel">
               <el-input
+                v-show="loginData.type==0"
                 v-model="loginData.mobileCode"
                 name='mobileCode'
-                :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
+                :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
                 :disabled="myMobileCode?false:true"
                 @blur="validate(loginData.mobileCode,'mobileCode')">
               </el-input>
-              <div @click='getMobileCode'
+              <el-input
+                v-show="loginData.type==1"
+                v-model="loginData.googleCode"
+                name='googleCode'
+                :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
+                :disabled="myGoogleCode?false:true"
+                @blur="validate(loginData.googleCode,'googleCode')">
+              </el-input>
+              <div v-show="loginData.type==0"
+                @click='getMobileCode'
+                class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
+              </div>
+              <div v-show="loginData.type==1"
+                @click='getGoogleCode'
                 class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
               </div>
             </div>
@@ -112,16 +126,18 @@ export default {
       visiable: 1,
       checkLogin: false,
       checkLoginData: {
-        cellphone: "",
+        cellphone: "15623454605",
         password: "",
         code: ""
       },
       loginData: {
-        type: "mobile",
+        type: "0", //1 是google验证，0手机验证
         mobileCode: "",
         googleCode: ""
       },
-      myMobileCode: "",
+      bindGoogleAuth: false,
+      myGoogleCode: false,
+      myMobileCode: false,
       codeTexti18n: "getMsgCode",
       second: "",
       canGetCode: true,
@@ -134,9 +150,7 @@ export default {
     this.createCode(this.verCodeNumArr, 4);
   },
   methods: {
-    getMobileCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.checkLoginData.cellphone))
-        return false;
+    countDown() {
       this.timer = this.Util.timerCounter({
         onStart: t => {
           this.canGetCode = false;
@@ -154,6 +168,20 @@ export default {
         }
       });
     },
+    getGoogleCode() {},
+    getMobileCode() {
+      if (!this.canGetCode || !this.Util.isPhone(this.checkLoginData.cellphone))
+        return false;
+      this.countDown();
+      this.request(this.api.sendcodeuser, {
+        tel: this.checkLoginData.cellphone
+      }).then(res => {
+        if (res.code == "0") {
+          this.myMobileCode = true;
+        }
+      });
+    },
+    // 第一步登录
     loginStep() {
       for (let key in this.checkLoginData) {
         let item = this.checkLoginData[key];
@@ -162,14 +190,38 @@ export default {
           return;
         }
       }
-      this.request(this.api.login, {
+      this.request(this.api.checklogin, {
         tel: this.checkLoginData.cellphone,
         password: this.checkLoginData.password
       }).then(res => {
-        console.log(res);
+        if (res && res.code != 1) {
+          res.code == 4 && (this.bindGoogleAuth = false);
+          res.code == 0 && (this.bindGoogleAuth = true);
+          this.checkLogin = true;
+        } else {
+          this.errMsg(res.msg || "账号或者密码错误");
+        }
       });
     },
-    loginHandle() {},
+    // 登录验证
+    loginHandle() {
+      if (this.loginData.mobileCode == "" && this.loginData.googleCode == "") {
+        this.errMsg("请填写完整信息");
+        return;
+      }
+      this.request(this.api.login, {
+        type: this.loginData.type,
+        code: this.loginData.mobileCode || this.loginData.googleCode
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg);
+          this.userModel.cellphone = this.checkLoginData.cellphone;
+          this.storage.set("token", res.data.token);
+          this.storage.set("isLogin", true);
+          this.storage.set("userInfo", this.userModel);
+        }
+      });
+    },
     createCode(arr, len) {
       let str = "";
       for (let i = 0; i < len; i++) {
@@ -179,6 +231,7 @@ export default {
       }
       this.verCodeStr = str;
     },
+    // y验证
     validate(val, name) {
       if (val == "") return;
       switch (name) {
@@ -190,7 +243,10 @@ export default {
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
           break;
         case "mobileCode":
-          val != this.loginData.mobileCode && this.errMsg("手机验证码不正确");
+          val != this.myMobileCode && this.errMsg("手机验证码不正确");
+          break;
+        case "myGoogleCode":
+          val != this.myGoogleCode && this.errMsg("谷歌验证码不正确");
           break;
         case "verCode":
           val != this.verCodeStr && this.errMsg("图形验证码不正确");
@@ -199,6 +255,15 @@ export default {
     },
     hideAccount() {
       this.visiable = !this.visiable;
+    },
+    //验证方式切换 切换时初始化验证码发送定时器
+    onTypeChage() {
+      this.timer && clearInterval(this.timer);
+      this.codeTexti18n = "getMsgCode";
+      this.loginData.mobileCode = "";
+      this.loginData.googleCode = "";
+      this.second = "";
+      this.canGetCode = true;
     }
   }
 };

@@ -103,6 +103,12 @@ Object.assign(Vue.prototype, {
   },
   errMsg(msg) {
     this.$message.error(`${msg}`);
+  },
+  successMsg(msg) {
+    this.$message({
+      message: `${msg}`,
+      type: "success"
+    });
   }
 });
 /**全局路由守卫 */

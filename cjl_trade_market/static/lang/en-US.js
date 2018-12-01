@@ -268,5 +268,6 @@ module.exports = {
     buyPendingOrder: "Buy pending order",
     transferAmount: "Transfer amount",
     nextStep: "Next",
-    loginAuth: "Login authentication"
+    loginAuth: "Login authentication",
+    allCoin: "All"
 }

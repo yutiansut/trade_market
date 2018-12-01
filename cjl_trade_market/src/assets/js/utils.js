@@ -158,8 +158,8 @@ const Utils = (function () {
             let n = config.count;
             config.onStart && this.dataType(config.onStart) === 'function' && config.onStart(n)
             let timer = setInterval(() => {
-                --n;
-                if (n <= 0) {
+                n--;
+                if (n < 0) {
                     clearInterval(timer);
                     timer = null;
                     (config.onComplete && this.dataType(config.onComplete) === "function") && config.onComplete();

@@ -23,25 +23,31 @@
             </div>
             <el-table style="width:100%;font-size:14px;border-top:1px solid #eee;" 
               :data='tableData'
-              :cell-style='cellStyle'
               :fit='true'
               stripe>
-              <el-table-column :label="$t('currencyPair')||'货币对'">
+              <el-table-column
+                width='200'
+                :label="$t('currencyPair')||'货币对'">
                 <div class="flex flex-v-center" slot-scope="scope">
-                  <img class="thumb-30 m-right-10" src="" alt="">
-                  <span v-text="scope.row.currency"></span>
+                  <img class="thumb-30 m-right-10" :src="scope.row.logo" alt="">
+                  <span v-text="scope.row.coin"></span>
                 </div>
               </el-table-column>
-              <el-table-column width='150' :label="$t('status')||'状态'" prop='status'></el-table-column>
-              <el-table-column :label="$t('price')||'价格'" prop='prize'></el-table-column>
-              <el-table-column :label="'24H '+$t('highestPrice')||'最高价'" prop='maxVal'></el-table-column>
-              <el-table-column :label="'24H '+$t('lowestPrice')||'最低价'" prop='miniumVal'></el-table-column>
-              <el-table-column :label="'24H '+$t('volumn')||'成交量'" prop='volume'></el-table-column>
-              <el-table-column :label="$t('priceTrends')+'（3'+$t('day')+'）'"></el-table-column>
-              <el-table-column :label="$t('priceChange')+'（'+$t('day')+'）'" width='120px;'>
+              <el-table-column width='150' :label="$t('status')||'状态'">
+                <span slot-scope="scope"
+                  v-text="statusMap['s_'+scope.row.state]"
+                  :class="'status_'+scope.row.state">
+                </span>
+              </el-table-column>
+              <el-table-column :label="$t('price')||'价格'" prop='cny'></el-table-column>
+              <el-table-column :label="'24H '+$t('highestPrice')||'最高价'" prop='height'></el-table-column>
+              <el-table-column :label="'24H '+$t('lowestPrice')||'最低价'" prop='low'></el-table-column>
+              <el-table-column :label="'24H '+$t('volumn')||'成交量'" prop='number'></el-table-column>
+              <!-- <el-table-column :label="$t('priceTrends')+'（3'+$t('day')+'）'"></el-table-column> -->
+              <el-table-column :label="($t('priceChange')||'涨跌')+'（'+($t('day')||'日')+'）'" width='120px;'>
                 <template slot-scope="scope">
                   <div class="operate">
-                    <span v-text="scope.row.trend"></span>
+                    <span v-text="scope.row.rise"></span>
                     <i class="el-icon-star-off"></i>
                   </div>
                 </template>
@@ -62,8 +68,13 @@ export default {
   data() {
     return {
       logo: require("@/assets/images/home/pcew_logo.png"),
-      currentTabId: 1,
+      currentTabId: 0,
       tabItem: [
+        {
+          i18nKey: "allCoin",
+          label: "全部",
+          id: 0
+        },
         {
           i18nKey: "btcMarket",
           label: "BTC交易区",
@@ -85,6 +96,10 @@ export default {
           id: 4
         }
       ],
+      statusMap: {
+        s_0: "交易中",
+        s_1: "禁用"
+      },
       grid: {
         show: false
       },
@@ -104,14 +119,14 @@ export default {
       ]
     };
   },
-  created() {},
-  mounted() {},
-  methods: {
-    cellStyle(row) {
-      if (row.columnIndex == 1) {
-        return "color:#4FA56D;";
+  mounted() {
+    this.request(this.api.allcoin).then(res => {
+      if (res && !res.code && res.data) {
+        this.tableData = res.data.list;
       }
-    },
+    });
+  },
+  methods: {
     onTabChange(e, id) {
       return (this.currentTabId = id);
     }
@@ -126,6 +141,12 @@ export default {
   border-radius: 4px;
   background: #666;
   right: -40px;
+}
+span.status_0 {
+  color: $color-success;
+}
+span.status_1 {
+  color: #999;
 }
 .content {
   width: $content-width;

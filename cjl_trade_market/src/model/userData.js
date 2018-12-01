@@ -1,6 +1,6 @@
 export default {
     isLogin: false,
-    account: null,
+    cellphone: null,
     username: null,
     nickname: null,
     cellphone: null,

@@ -1,11 +1,11 @@
 import qs from 'qs';
 import axios from 'axios';
-import router from "../../router/index";
 import { Toast } from "vant";
 import { Loading } from 'element-ui';
 import api from '@/config/apiConfig.js';
 import Utils from './utils';
 import myStorage from '@/assets/js/myStorage';
+axios.defaults.withCredentials = true;
 let loadingMask = null;
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
@@ -52,7 +52,7 @@ const ajaxRequest = (function () {
 
     function successState(response) {
         loadingMask.close();
-        let code = response.data.code || null;
+        let code = response.data.code * 1 || null;
         let msg = null;
         //统一判断后端返回的错误码
         switch (code) {
@@ -66,6 +66,7 @@ const ajaxRequest = (function () {
             case 2:
                 msg = "登录信息已失效！";
                 myStorage.remove('token');
+                myStorage.set('isLogin', false);
                 Toast({
                     message: msg,
                     position: 'bottom'
@@ -88,13 +89,13 @@ const ajaxRequest = (function () {
             token: myStorage.get("token") || ""
         };
         let postData = Object.assign(Public, data);
-        let params = createParam(postData);
         let httpDefaultOpts = {
             //http默认配置
-            method: opts.method ? opts.method : "get",
+            method: opts.method ? opts.method : "post",
             baseURL: baseURL,
-            url: opts.url + (params ? params : ""),
+            url: opts.url,
             timeout: 60000,
+            params: postData,
             data: qs.stringify(Object.assign(Public, data)),
             headers:
                 opts.method == "get"

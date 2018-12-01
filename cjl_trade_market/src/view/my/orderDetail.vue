@@ -53,6 +53,9 @@ export default {
       ],
       seachVal: ""
     };
+  },
+  created() {
+    // this.request(this.api.getbill).then(res => {});
   }
 };
 </script>

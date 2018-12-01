@@ -38,7 +38,7 @@
             <div ref='dropDown' class="drop-down p-rel">
               <span>
                 <i class="iconfont icon-yonghu fl"></i>
-                <em>138 **** 2955</em>
+                <em v-text="userData.cellphone"></em>
                 <i class="iconfont icon-xiala fr"></i>
               </span>
               <ul :style='{"top":dropDownTop}' class="drop-down-item lf-0">
@@ -148,6 +148,9 @@ export default {
   mounted() {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
+    this.userModel.isLogin = this.storage.get("isLogin");
+    this.storage.get("userInfo") &&
+      (this.userModel.cellphone = this.storage.get("userInfo").cellphone);
   },
   methods: {
     dropDownHandle(link) {

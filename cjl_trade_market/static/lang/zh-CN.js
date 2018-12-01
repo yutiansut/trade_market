@@ -269,4 +269,5 @@ module.exports = {
     transferAmount: "转账金额",
     nextStep: "下一步",
     loginAuth: "登录授权",
+    allCoin: "全部币种"
 }
