@@ -1,31 +1,34 @@
 <template>
-    <div class='content wh-full'>
+    <div class='content wh-full' v-if="articleDetail">
         <div class="title" v-text="articleDetail.title"></div>
         <div class="info">
-            <span v-text="articleDetail.updated_at"></span>
-            <span>{{$t("view")||"阅读"}}：{{articleDetail.view}}</span>
+            <span v-text="articleDetail.writedate"></span>
+            <span v-if="articleDetail.num">{{$t("view")||"阅读"}}：{{articleDetail.num}}</span>
         </div>
         <div class="break-line"></div>
-        <div class="article-content">
-            今年9月，中办、国办印发了《海南省机构改革方案》，这是全国首个获得中央批复同意的地方机构改革方案。此后，省一级的机构改革方案密集获批。
-根据公开报道，截至目前，已有至少29省份的机构改革方案获中央批复同意，部分省份还透露了当地的党政机构设置数量。
-例如，在此次机构改革后，宁夏的党政机构总数为55个；重庆的党政机构总数为64个，其中市委机构17个，市政府机构47个。
-        </div>
+        <div class="article-content" v-html="articleDetail.con"></div>
     </div>
 </template>
 <script>
 export default {
   data() {
     return {
-      articleDetail: {
-        title: "这里是标题",
-        updated_at: "2018-8-9",
-        view: "100"
-      }
+      articleDetail: null
     };
   },
   mounted() {
     let id = this.$route.params.id;
+    this.getDetail(id);
+  },
+  methods: {
+    getDetail(id) {
+      this.request(this.api.notice, { id: id }).then(res => {
+        console.log(`公告列表:${JSON.stringify(res)}`);
+        res.data &&
+          res.data.result &&
+          (this.articleDetail = res.data.result[0]);
+      });
+    }
   }
 };
 </script>

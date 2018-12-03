@@ -11,6 +11,18 @@ let apiCfg = (function () {
         allcoin: {
             url: 'allcoin'
         },
+        //个人信息
+        userinfo: {
+            url: 'userinfo'
+        },
+        //公告列表
+        notices: {
+            url: "notices"
+        },
+        // 公告详情
+        notice: {
+            url: "notice"
+        },
         // 友情链接
         friendlink: {
             url: 'link'
@@ -51,6 +63,10 @@ let apiCfg = (function () {
         // 资金交易获取验证码
         sendcodetoken: {
             url: 'sendcodetoken'
+        },
+        //获取主币种
+        getmaincoin: {
+            url: 'getmaincoin'
         },
         // 获取验证码
         bzcode: {
@@ -111,6 +127,10 @@ let apiCfg = (function () {
         //获取我的地址通讯录
         getoutaddress: {
             url: "getoutaddress"
+        },
+        //根据主币种 获取交易币种
+        getTradCoin: {
+            url: "getTradCoin"
         },
         //新增我的地址通讯录
         addoutaddress: {

@@ -55,24 +55,24 @@ const ajaxRequest = (function () {
         let code = response.data.code * 1 || null;
         let msg = null;
         //统一判断后端返回的错误码
-        switch (code) {
-            case 1:
-                msg = response.data.msg || "网络不给力";
-                Toast({
-                    message: msg,
-                    position: 'bottom'
-                });
-                break;
-            case 2:
-                msg = "登录信息已失效！";
-                myStorage.remove('token');
-                myStorage.set('isLogin', false);
-                Toast({
-                    message: msg,
-                    position: 'bottom'
-                });
-                break;
-        }
+        // switch (code) {
+        //     case 1:
+        //         msg = response.data.msg;
+        //         Toast({
+        //             message: msg,
+        //             position: 'bottom'
+        //         });
+        //         break;
+        //     case 2:
+        //         msg = "登录信息已失效！";
+        //         myStorage.remove('token');
+        //         myStorage.set('isLogin', false);
+        //         Toast({
+        //             message: msg,
+        //             position: 'bottom'
+        //         });
+        //         break;
+        // }
     };
     function createParam(data) {
         let params = '';

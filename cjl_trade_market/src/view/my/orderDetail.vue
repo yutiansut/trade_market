@@ -42,20 +42,16 @@
 export default {
   data() {
     return {
-      orderDetailData: [
-        {
-          date: "2018-8-8",
-          type: "买入",
-          currency: "BOE/BOE",
-          price: "0.4849USDT",
-          num: "2"
-        }
-      ],
+      orderDetailData: null,
       seachVal: ""
     };
   },
-  created() {
-    // this.request(this.api.getbill).then(res => {});
+  mounted() {
+    this.request(this.api.getbill).then(res => {
+      console.log(`订单详情:${JSON.stringify(res)}`);
+      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      res.data && res.data.list && (this.orderDetailData = res.data.list);
+    });
   }
 };
 </script>

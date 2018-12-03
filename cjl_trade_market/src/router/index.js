@@ -156,7 +156,7 @@ const routes = [
     path: '/application',
     name: 'application',
     component: r => require(['@/view/Application'], r),
-    meta: { auth: true, title: "上币申请" }
+    meta: { auth: false, title: "上币申请" }
   },
   {
     path: '/help_center',

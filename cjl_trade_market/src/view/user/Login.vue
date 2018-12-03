@@ -155,6 +155,8 @@ export default {
       }).then(res => {
         if (res.code == "0") {
           this.myMobileCode = true;
+        } else {
+          this.errMsg(res.msg || "获取验证码失败");
         }
       });
     },
@@ -204,13 +206,18 @@ export default {
       }
       this.request(this.api.login, {
         type: this.loginData.type,
+        tel: this.checkLoginData.cellphone,
         code: this.loginData.mobileCode || this.loginData.googleCode
       }).then(res => {
+        if (res && res.code != "0") {
+          this.errMsg(res.msg || "登录失败");
+          return false;
+        }
         this.successMsg(res.msg);
         this.userModel.cellphone = this.checkLoginData.cellphone;
-        this.storage.set("token", res.data.token);
         this.storage.set("isLogin", true);
-        this.storage.set("userInfo", this.userModel);
+        this.storage.set("token", res.data.token);
+        this.storage.set("cellphone", this.this.checkLoginData.cellphone);
         this.navigateTo("/");
       });
     },
@@ -227,7 +234,7 @@ export default {
         tel: this.checkLoginData.cellphone,
         password: this.checkLoginData.password
       }).then(res => {
-        if (res && res.code != 1) {
+        if (res && res.code * 1 != 1) {
           res.code == 4 && (this.bindGoogleAuth = false);
           res.code == 0 && (this.bindGoogleAuth = true);
           this.checkLogin = true;

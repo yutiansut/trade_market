@@ -4,7 +4,7 @@
       <div class="table-wrap">
         <el-table
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
-          :data='orderDetailData'>
+          :data='myEnstrumentData'>
           <el-table-column prop='date' :label='$t("date")||"下单日期"'></el-table-column>
           <el-table-column :label='$t("type")||"类型"'>
             <span slot-scope="scope" v-text="scope.row.type=='买入'?$t('buy'):$t('sell')"></span>
@@ -30,17 +30,15 @@
 export default {
   data() {
     return {
-      orderDetailData: [
-        {
-          date: "2018-8-8",
-          type: "买入",
-          tradePair: "BOE/BOE",
-          price: "0.4849USDT",
-          volumn: "48489.448 BOE",
-          total: "2"
-        }
-      ]
+      myEnstrumentData: null
     };
+  },
+  mounted() {
+    this.request(this.api.getmyentru).then(res => {
+      console.log(`我的委托:${JSON.stringify(res)}`);
+      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      res.data && res.data.list && (this.myEnstrumentData = res.data.list);
+    });
   }
 };
 </script>

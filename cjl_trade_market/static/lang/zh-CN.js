@@ -33,7 +33,7 @@ module.exports = {
     myEntrustment: "我的委托",
     transRecord: "交易记录",
     otcRecord: "OTC 记录",
-    ctcRecord: "CTC 记录",
+    ctcRecord: "C2C 记录",
     transferNote: "转让须知",
     securityCenter: "安全中心",
     identify: "身份认证",
@@ -44,7 +44,7 @@ module.exports = {
     btcMarket: "对BTC交易",
     ethMarket: "对ETH交易",
     optMarket: "自选",
-    ctcTrade: "CTC交易",
+    ctcTrade: "C2C交易",
     otcTrade: "OTC交易",
     anouncement: "系统公告",
     listing: "上币申请",
@@ -303,5 +303,6 @@ module.exports = {
     initialPrice: "成本价格",
     onLinePlateform: "已上线交易平台",
     otherInfo: "其他信息说明",
-    submitApplication: "提交上线申请"
+    submitApplication: "提交上线申请",
+    trade: "交易"
 }

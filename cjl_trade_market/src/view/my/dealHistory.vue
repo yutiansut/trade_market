@@ -4,7 +4,7 @@
       <div class="table-wrap">
         <el-table
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
-          :data='orderDetailData'>
+          :data='orderRecordData'>
           <el-table-column prop='date' :label='$t("date")||"日期"'></el-table-column>
           <el-table-column prop='type' :label='$t("type")||"交易类型"'></el-table-column>
           <el-table-column prop='tradePair' :label='$t("tradePair")||"交易对"'></el-table-column>
@@ -28,17 +28,16 @@
 export default {
   data() {
     return {
-      orderDetailData: [
-        {
-          date: "2018-8-8",
-          type: "买入",
-          tradePair: "BOE/BOE",
-          price: "0.4849USDT",
-          volumn: "48489.448 BOE",
-          total: "2"
-        }
-      ]
+      orderRecordData: null
     };
+  },
+  mounted() {
+    this.request(this.api.getmyrecord).then(res => {
+      console.log(`成交记录:${JSON.stringify(res)}`);
+      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      res.data && res.data.list && (this.orderRecordData = res.data.list);
+      
+    });
   }
 };
 </script>

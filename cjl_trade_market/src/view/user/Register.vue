@@ -124,6 +124,7 @@ export default {
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
+    this.userModel.isLogin && this.navigateTo("/");
   },
   methods: {
     validate(val, name) {
@@ -180,7 +181,11 @@ export default {
       this.request(this.api.sendcode, {
         tel: this.registerData.cellphone
       }).then(res => {
-        this.myMobileCode = true;
+        if (res.code == "0") {
+          this.myMobileCode = true;
+        } else {
+          this.errMsg(res.msg || "获取验证码失败");
+        }
       });
     },
     formSubmit() {
@@ -198,9 +203,11 @@ export default {
         parent: this.registerData.recommender || ""
       };
       this.request(this.api.register, postData).then(res => {
-        if (!res.code * 1) {
+        if (res.code == "0") {
           this.successMsg(res.msg);
           this.navigateTo("/user/login");
+        } else {
+          this.errMsg(res.msg || "注册失败");
         }
       });
     }

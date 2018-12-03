@@ -85,8 +85,7 @@
                 v-model="loginData.mobileCode"
                 name='mobileCode'
                 :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
-                :disabled="myMobileCode?false:true"
-                @blur="validate(loginData.mobileCode,'mobileCode')">
+                :disabled="myMobileCode?false:true">
               </el-input>
               <el-input
                 v-show="loginData.type==1"
@@ -126,7 +125,7 @@ export default {
       visiable: 1,
       checkLogin: false,
       checkLoginData: {
-        cellphone: "15623454605",
+        cellphone: "",
         password: "",
         code: ""
       },
@@ -178,6 +177,8 @@ export default {
       }).then(res => {
         if (res.code == "0") {
           this.myMobileCode = true;
+        } else {
+          this.errMsg(res.msg || "获取验证码失败");
         }
       });
     },
@@ -211,14 +212,17 @@ export default {
       }
       this.request(this.api.login, {
         type: this.loginData.type,
+        tel: this.checkLoginData.cellphone,
         code: this.loginData.mobileCode || this.loginData.googleCode
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg);
           this.userModel.cellphone = this.checkLoginData.cellphone;
-          this.storage.set("token", res.data.token);
           this.storage.set("isLogin", true);
-          this.storage.set("userInfo", this.userModel);
+          this.storage.set("token", res.data.token);
+          this.storage.set("cellphone", this.checkLoginData.cellphone);
+        } else {
+          this.errMsg(res.msg || "登录失败");
         }
       });
     },
@@ -241,9 +245,6 @@ export default {
         case "password":
           !this.Util.isPassword(val) &&
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
-          break;
-        case "mobileCode":
-          val != this.myMobileCode && this.errMsg("手机验证码不正确");
           break;
         case "myGoogleCode":
           val != this.myGoogleCode && this.errMsg("谷歌验证码不正确");

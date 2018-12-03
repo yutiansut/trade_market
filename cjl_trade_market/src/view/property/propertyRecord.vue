@@ -18,17 +18,17 @@
         </div>
         <div class="table-panel">
           <div class="panel-head font-16">
-            <a @click="onTabClick(0)" href="javascript:"
+            <a @click="onTabClick(0,'getmyput')" href="javascript:"
               :class="currentIndex==0?'active':''"
               v-text="$t('rechargeRecord')||'充币记录'">
             </a>
-            <a @click="onTabClick(1)" href="javascript:"
+            <a @click="onTabClick(1,'getmyrecharge')" href="javascript:"
               :class="currentIndex==1?'active':''"
               v-text="$t('withdrawRecord')||'提币记录'">
             </a>
           </div>
           <el-table 
-            :data='allRecord'
+            :data='myRecord'
             :header-cell-style='changeStyle'
             :fit='true'>
             <el-table-column :label="$t('time')||'时间'"></el-table-column>
@@ -48,8 +48,8 @@ export default {
   data() {
     return {
       currentIndex: 0,
-      latestRecord: [],
-      allRecord: []
+      latestRecord: null,
+      myRecord: null
     };
   },
   mounted() {
@@ -58,6 +58,7 @@ export default {
       title: this.$route.meta.title || "",
       path: this.$route.path
     };
+    this.getRecord(this.api.getmyput);
   },
   beforeRouteLeave(to, from, next) {
     this.routeModel.assetsRoutes = null;
@@ -67,8 +68,16 @@ export default {
     changeStyle({ columnIndex }) {
       if (columnIndex == 5) return "text-align:right;";
     },
-    onTabClick(i) {
+    onTabClick(i, apiUrl) {
       this.currentIndex = i;
+      this.getRecord(this.api[apiUrl]);
+    },
+    getRecord(api, param) {
+      this.request(api, param || {}).then(res => {
+        console.log(`充值记录:${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.myRecord = res.data.list);
+      });
     }
   }
 };

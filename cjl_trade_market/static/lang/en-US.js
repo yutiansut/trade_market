@@ -33,7 +33,7 @@ module.exports = {
     myEntrustment: "My Entrustment",
     transRecord: "Transaction Record",
     otcRecord: "OTC Record",
-    ctcRecord: "CTC Record",
+    ctcRecord: "C2C Record",
     transferNote: "Transfer notice",
     securityCenter: "Security Center",
     identify: "Identify Authentication",
@@ -44,7 +44,7 @@ module.exports = {
     btcMarket: "BTC Market",
     ethMarket: "ETH Market",
     optMarket: "Optional Market",
-    ctcTrade: "CTC Trade",
+    ctcTrade: "C2C Trade",
     otcTrade: "OTC Trade",
     anouncement: "Anouncement",
     listing: "Listing",
@@ -304,4 +304,5 @@ module.exports = {
     logoPlaceholder: "fill in logo url",
     sitePlaceholder: "fill in offical website link",
     distributionPlaceholder: "such as ICO distribution, team preservation and so on",
+    trade: "Trade"
 }

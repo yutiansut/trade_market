@@ -20,13 +20,17 @@
                       <el-input name='note' v-model="formData.note"></el-input>
                   </el-form-item>
                 </div>
-                <button class="btn btn-block btn-large btn-danger btn-active" v-text="$t('add')||'添加'"></button>
+                <button
+                  class="btn btn-block btn-large btn-danger btn-active"
+                  v-text="$t('add')||'添加'"
+                  @click="addMyAddress(formData)">
+                </button>
             </el-form>
         </div>
         <div class="table-panel">
             <div class="panel-head" v-text="$t('addressList')||'地址列表'"></div>
             <el-table
-                :data='addList' 
+                :data='addrList' 
                 :header-cell-style='changeStyle'>
                 <el-table-column prop='currency' :label="$t('currencyType')||'币种'"></el-table-column>
                 <el-table-column prop='address' :label="$t('withdrawAddress')||'提币地址'"></el-table-column>
@@ -60,13 +64,7 @@ export default {
         address: "",
         note: ""
       },
-      addList: [
-        {
-          currency: "age",
-          address: "ageag",
-          note: "gaege"
-        }
-      ]
+      addrList: null
     };
   },
   mounted() {
@@ -75,6 +73,7 @@ export default {
       title: this.$route.meta.title || "",
       path: this.$route.path
     };
+    this.getMyAddress();
   },
   beforeRouteLeave(to, from, next) {
     this.routeModel.assetsRoutes = null;
@@ -85,6 +84,19 @@ export default {
       if (columnIndex == 3) {
         return "text-align:right;";
       }
+    },
+    getMyAddress() {
+      this.request(this.api.getoutaddress, { search: null }).then(res => {
+        console.log(`我的地址列表：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.addrList = res.data.list);
+      });
+    },
+    addMyAddress(param) {
+      this.request(this.api.addoutaddress, param).then(res => {
+        console.log(`添加地址：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+      });
     }
   }
 };

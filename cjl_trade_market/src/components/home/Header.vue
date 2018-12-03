@@ -9,6 +9,32 @@
       <div class="hd-body">
         <router-link to="/"><img class="logo p-rel" :src="headLogo" alt=""></router-link>
         <ul class="nav-bar">
+          <!-- 币币交易 -->
+          <li
+            class="nav-item p-rel"
+            :class='currentPath==currencyTradeNav.link?"active":""'>
+            <router-link :to='currencyTradeNav.link'>
+              <span v-text="$t(currencyTradeNav.i18nKey)||item.currencyTradeNav"></span>&nbsp;
+              <i v-if='currencyTradeNav.subItem' class="iconfont icon-xiala"></i>
+            </router-link>
+            <ol class="sub-nav p-abs" v-if="currencyTradeNav.subItem">
+              <li class="sub-nav-item p-rel"
+                v-for="(sItem,index) in currencyTradeNav.subItem"
+                :key='index'>
+                <a href="javascript:void(0)">
+                  <span>{{sItem.coinid}}&nbsp;{{$t('trade')}}</span>
+                  <i class="iconfont icon-arrow-right abs-v-center rt-0"></i>
+                </a>
+                <div v-if="currencyConfig[sItem.type]" class="nav-container p-abs">
+                  <currency-nav
+                    :myValue='currencyConfig[sItem.type]'
+                    :myKey='sItem.type'>
+                  </currency-nav>
+                </div>
+              </li>
+            </ol>
+          </li>
+          <!-- 其他交易 -->
           <li v-for='(item,i) in navBarCfg'
             :key='i' class="nav-item p-rel"
             :class='currentPath==item.link?"active":""'>
@@ -19,15 +45,9 @@
             <ol class="sub-nav p-abs" v-if="item.subItem">
               <li class="sub-nav-item p-rel" v-for="(sItem,j) in item.subItem" :key='j'>
                 <router-link :to="sItem.link?sItem.link:''">
-                  <span v-text='$t(sItem.i18nKey)||sItem.label'></span>
+                  <span v-text="$t(sItem.i18nKey)||sItem.label"></span>
                   <i v-if='sItem.type' class="iconfont icon-arrow-right abs-v-center rt-0"></i>
                 </router-link>
-                <div v-if="currencyConfig[sItem.type]" class="nav-container p-abs">
-                  <currency-nav 
-                    :myValue='currencyConfig[sItem.type]'
-                    :myKey='sItem.type'>
-                  </currency-nav>
-                </div>
               </li>
             </ol>
           </li>
@@ -39,6 +59,7 @@
 <script>
 import currencyNav from "@/components/other/currencyNav";
 import { Toast } from "vant";
+import mainCoinlist from "@/model/allCoinModel.js";
 export default {
   name: "my-header",
   components: { currencyNav },
@@ -111,33 +132,13 @@ export default {
           }
         ]
       },
+      currencyTradeNav: {
+        i18nKey: "marketTrade",
+        label: "币币交易",
+        link: "/currency_trade",
+        subItem: null
+      },
       navBarCfg: [
-        {
-          cfgId: 1,
-          i18nKey: "marketTrade",
-          label: "币币交易",
-          link: "/currency_trade",
-          subItem: [
-            {
-              i18nKey: "usdtMarket",
-              type: "USDT",
-              label: "对USDT交易区",
-              link: ""
-            },
-            {
-              i18nKey: "btcMarket",
-              type: "BTC",
-              label: "对BTC交易区",
-              link: ""
-            },
-            {
-              i18nKey: "ethMarket",
-              type: "ETH",
-              label: "对ETH交易区",
-              link: ""
-            }
-          ]
-        },
         {
           i18nKey: "ctcTrade",
           label: "C2C交易",
@@ -190,10 +191,24 @@ export default {
   mounted() {
     this.showHead = this.showHeadTop;
     this.currentPath = this.$route.path;
+    // 币币交易币种列表
+    this.getMainCoin();
   },
   methods: {
     handleSelect(index) {
       this.activeIndex = index;
+    },
+    getMainCoin() {
+      this.request(this.api.getmaincoin).then(res => {
+        console.log(`主币种:${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        let list = null;
+        res.data && res.data.list && (list = res.data.list.slice(0));
+        list.map(item => {
+          item.coinid && (item.i18nKey = `${item.coinid.toLowerCase()}Market`);
+        });
+        this.currencyTradeNav.subItem = mainCoinlist.list = list;
+      });
     }
   }
 };

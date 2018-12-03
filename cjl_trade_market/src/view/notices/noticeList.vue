@@ -3,6 +3,7 @@
         <snap-shot v-for="item in articleList"
             v-bind="item" 
             :key='item.id'
+            :content='item.con'
             :path='"/notice/detail/"+item.id'>
             <div class="statistic">
                 <span>{{$t("view")||"阅读"}}：<em v-text="item.view"></em></span>
@@ -26,6 +27,18 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    this.getNewsList();
+  },
+  methods: {
+    getNewsList() {
+      this.request(this.api.notices).then(res => {
+        console.log(`公告列表:${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.articleList = res.data.list);
+      });
+    }
   }
 };
 </script>

@@ -22,13 +22,13 @@
                 <el-table-column :label="$t('currencyType')||'币种'">
                     <div class="flex flex-v-center" slot-scope="scope">
                         <img class="currency-thumb thumb-20" src="" alt="">
-                        <span v-text="scope.row.currency"></span>
+                        <span v-text="scope.row.name"></span>
                     </div>
                 </el-table-column>
-                <el-table-column prop="balance" :label="$t('avaliableBalance')||'可用余额'"></el-table-column>
+                <el-table-column prop="usable" :label="$t('avaliableBalance')||'可用余额'"></el-table-column>
                 <el-table-column prop="amount" :label="$t('marketMoney')||'挂单金额'"></el-table-column>
-                <el-table-column prop="total" :label="$t('total')||'总计'"></el-table-column>
-                <el-table-column prop="RmbVal" :label="$t('equivalentRmb')||'估算为人民币'"></el-table-column>
+                <el-table-column prop="allnumber" :label="$t('total')||'总计'"></el-table-column>
+                <el-table-column prop="usdt" :label="$t('equivalentRmb')||'估算为人民币'"></el-table-column>
                 <el-table-column width='150' :label="$t('operation')||'操作'">
                     <div class="operation"  slot-scope="scope">
                         <span @click="showDialog(0)" class="color-danger" v-text="$t('rechargeCoin')||'充币'"></span>
@@ -143,19 +143,16 @@ export default {
         googleCode: null
       },
       ETHAddress: "ajigeojagoejageaigjoew",
-      myPropetyData: [
-        {
-          currency: "BDEF",
-          thumb: "",
-          balance: "afeafa",
-          amount: "1321",
-          total: "41421",
-          RmbVal: "14214"
-        }
-      ]
+      myPropetyData: null
     };
   },
-  mounted() {},
+  mounted() {
+    this.request(this.api.getaccount, { search: null }).then(res => {
+      console.log(`我的资产:${JSON.stringify(res)}`);
+      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      res.data && res.data.list && (this.myPropetyData = res.data.list);
+    });
+  },
   methods: {
     changeStyle({ columnIndex }) {
       if (columnIndex == 5) {

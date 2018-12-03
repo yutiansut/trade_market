@@ -148,9 +148,11 @@ export default {
   mounted() {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
+    this.request(this.api.userinfo).then(res => {
+      console.log(`个人信息:${JSON.stringify(res)}`);
+    });
     this.userModel.isLogin = this.storage.get("isLogin");
-    this.storage.get("userInfo") &&
-      (this.userModel.cellphone = this.storage.get("userInfo").cellphone);
+    this.userModel.cellphone = this.storage.get("cellphone");
   },
   methods: {
     dropDownHandle(link) {

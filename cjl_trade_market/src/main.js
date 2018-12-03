@@ -72,6 +72,11 @@ import routeModel from './model/routeModel';
 import myStorage from './assets/js/myStorage';
 import apiCfg from './config/apiConfig';
 Vue.config.productionTip = false;
+// 公共方法
+const getDataFaild = function (errMsg) {
+  this.$message.error(msg || '获取数据失败');
+  return false;
+}
 /**
  * 拓展Vue实例
  */
@@ -83,6 +88,7 @@ Object.assign(Vue.prototype, {
   userModel: userModel,
   routeModel: routeModel,
   canvasId: 0,
+  getDataFaild: getDataFaild,
   redirectTo(pathName, params) {
     let data = {
       path: pathName,
@@ -121,12 +127,13 @@ router.beforeEach((to, from, next) => {
     if (myStorage.get("token")) {
       next();
     } else {
+      myStorage.set('isLogin', false);
       next({ path: "/user/login" });
-      userModel.isLogin = false;
     }
   } else {
     if (to.name == 'Login') {
       myStorage.remove("token");
+
     }
     next();
   }
