@@ -19,6 +19,8 @@ import locale from 'element-ui/lib/locale';
 import enLocale from 'element-ui/lib/locale/lang/en'
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
 import ElementUI from 'element-ui';
+import vueBus from 'vue-bus';
+Vue.use(vueBus);
 Vue.use(VueI18n);
 Vue.use(ElementUI, zhLocale);
 /**

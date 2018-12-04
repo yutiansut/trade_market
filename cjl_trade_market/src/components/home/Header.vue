@@ -188,12 +188,15 @@ export default {
       ]
     };
   },
+  destroyed() {
+    this.$bus.off("mianCoin");
+  },
   mounted() {
     this.showHead = this.showHeadTop;
     this.currentPath = this.$route.path;
     // 币币交易币种列表
     if (mainCoinModel.maincoin) {
-      this.mainCoin.subItem = mainCoinModel.mainCoin;
+      this.mainCoin.subItem = mainCoinModel.maincoin;
     } else {
       this.getMainCoin();
     }
@@ -212,6 +215,8 @@ export default {
           item.coinid && (item.i18nKey = `${item.coinid.toLowerCase()}Market`);
         });
         this.mainCoin.subItem = mainCoinModel.maincoin = list;
+        mainCoinModel.coinid = list[0].coinid;
+        this.$bus.emit("mainCoin");
       });
     }
   }

@@ -304,5 +304,7 @@ module.exports = {
     logoPlaceholder: "fill in logo url",
     sitePlaceholder: "fill in offical website link",
     distributionPlaceholder: "such as ICO distribution, team preservation and so on",
-    trade: "Trade"
+    trade: "Trade",
+    change: "Change",
+    changePwd: "Change password"
 }

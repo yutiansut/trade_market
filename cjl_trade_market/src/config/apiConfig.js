@@ -223,11 +223,22 @@ let apiCfg = (function () {
         //上传接口
         img: {
             url: 'img',
-
         },
         //问题中心
         getquest: {
             url: 'getquest'
+        },
+        // 查看用户绑定状态..
+        saftyState: {
+            url: "state"
+        },
+        //安全日志
+        logsafe: {
+            url: 'logsafe'
+        },
+        //登录日志
+        loglogin: {
+            url: 'loglogin'
         }
     }
 }());

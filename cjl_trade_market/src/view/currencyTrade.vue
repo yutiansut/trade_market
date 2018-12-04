@@ -422,13 +422,23 @@ export default {
       ]
     };
   },
-  mounted() {},
+  mounted() {
+    this.getEntrust();
+  },
   methods: {
     myCellStyle() {
       return "padding:6px 0 !important;border:none";
     },
     buyHandle() {},
-    sellHandle() {}
+    sellHandle() {},
+    //获取我的委托
+    getEntrust() {
+      this.request(this.api.getentrust).then(res => {
+        console.log(`我的委托：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.currentDeclareData = res.data.list);
+      });
+    }
   },
   watch: {
     buyFormData: {
@@ -492,7 +502,7 @@ $border: 1px solid #e5e5e5;
   }
 }
 .k-map {
-  height: auto;
+  height: 414px;
 }
 .form-wrap {
   width: 48%;

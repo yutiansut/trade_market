@@ -30,7 +30,7 @@
                 :label="$t('currencyPair')||'货币对'">
                 <div class="flex flex-v-center" slot-scope="scope">
                   <img class="thumb-30 m-right-10" :src="scope.row.logo" alt="">
-                  <span v-text="scope.row.coin"></span>
+                  <span>{{scope.row.coinid}}&nbsp;/&nbsp;<em class="color-999">{{scope.row.maincoinid}}</em></span>
                 </div>
               </el-table-column>
               <el-table-column width='150' :label="$t('status')||'状态'">
@@ -79,17 +79,21 @@ export default {
       grid: {
         show: false
       },
-      settings: {
-        area: true
-      },
       tableData: null
     };
   },
   mounted() {
-    this.getTradCoin(this.currentCoinId);
+    if (mainCoinModel.coinid) {
+      this.getTradCoin(mainCoinModel.coinid);
+      return;
+    }
+    this.$bus.on("mainCoin", () => {
+      this.getTradCoin(mainCoinModel.coinid);
+    });
   },
   methods: {
     onTabChange(e, index, coinid) {
+      if (index == this.currentCoinId) return;
       this.currentCoinId = index;
       this.getTradCoin(coinid);
     },
@@ -103,7 +107,7 @@ export default {
     },
     // 获取币种交易行情
     getTradCoin(coinid) {
-      this.request(this.api.getTradCoin, { coinid: coinid }).then(res => {
+      this.request(this.api.getTradCoin, { maincoin: coinid }).then(res => {
         console.log(`交易币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data && res.data.list && (this.tableData = res.data.list);

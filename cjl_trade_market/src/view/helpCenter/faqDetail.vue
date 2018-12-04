@@ -10,55 +10,68 @@
           <el-container>
             <el-aside width="360px">
               <ul class="list">
-                <li class="active">如何查询成交记录？</li>
-                <li>如何查询成交记录？</li>
+                <li
+                  v-for="item in qList"
+                  :key='item.id'
+                  v-text="item.title"
+                  :class="qid==item.id?'active':''">
+                </li>
               </ul>
             </el-aside>
             <el-main>
-              <h1>如何查询委托记录？</h1>
-              <p>下单后需要有匹配的价格才能成交，未成交的挂单可以查询操作撤单或等待成交。</p>
-              <p>一、网页版查询方式</p>
-              <p>下单后需要有匹配的价格才能成交，未成交的挂单可以查询操作撤单或等待成交。一、网页版查询方式</p>
-              <p>2、查询“我的挂单”，如果挂单一直没有成交，您可以点击撤单。</p>
-              <div class="warn">
-                注意：
-                <p>1、挂单没有时间限制，价格匹配就会成交；</p>
-                <p>2、下单后没有匹配的价格会在挂单状态，未成交的随时可以操作撤单，撤单无手续费；</p>
-                <p>3、撤单后资金返回账户，可在账户余额或账单明细进行查询。</p>
-              </div>
+              <h1 v-text="qItem ?qItem.title:''"></h1>
+              <p v-text="qItem?qItem.reply:''"></p>
             </el-main>
           </el-container>
         </div>
     </div>
 </template>
 <script>
+import questionModel from "@/model/questionModel";
+let { faqList } = questionModel;
 export default {
   data() {
     return {
       banner: require("@/assets/images/help/bangzhu_banner.png"),
       qList: null,
+      qItem: null,
+      qid: null,
       breadNavItem: {}
     };
   },
   mounted() {
-    this.breadNavItem = this.getParams();
+    let params = this.getParams();
+    if (params) {
+      this.breadNavItem = params;
+      this.qid = params.qid;
+    }
+    this.getQlist();
   },
   methods: {
     getParams() {
       return Object.assign({}, this.$route.query);
     },
     getQlist() {
-      let qList = this.storage.get("qList");
-      if (qList) {
-        this.qList = qList;
+      if (faqList) {
+        this.qList = faqList;
       } else {
-        this.request(this.api.getquest, { type: type }).then(res => {
+        this.request(this.api.getquest).then(res => {
           console.log(`问题列表:${JSON.stringify(res)}`);
           if (res && res.code != "0") return this.getDataFaild(res.msg);
-          res.data && res.data.list && (this.qList = res.data.list);
-          this.storage.set("qList", this.qList);
+          if (res.data && res.data.list) {
+            this.qList = questionModel.faqList = res.data.list;
+            this.getQItem(this.qList, this.qid);
+          }
         });
       }
+    },
+    // 获取问题详情
+    getQItem(arrList, id) {
+      arrList.map(item => {
+        if (item.id && item.id == id) {
+          this.qItem = item;
+        }
+      });
     }
   }
 };

@@ -3,10 +3,10 @@
         <!-- tab选项卡 -->
         <div class="tab-wrap p-rel">
           <ul>
-            <li @click="onTabChange(item.id,i)" v-for="(item,i) in tabConfig" 
+            <li @click="onTabChange(item.coinid,i)" v-for="(item,i) in mainCoinModel.maincoin" 
               :key="i"
-              :class='currentId==item.id?"active":""'
-              v-text='$t(item.i18nKey)||item.label'>
+              :class='currentId==i?"active":""'>
+              {{item.coinid}}&nbsp;{{$t('trade')}}
           </li>
         </ul>
         </div>
@@ -17,23 +17,25 @@
           <el-table-column :label='$t("coin")||"币种"' width='100px'>
               <template slot-scope="scope">
               <div class="operate">
-                  <img class="thumb-20" src="" alt="">
-                  <span v-text="scope.row.currency"></span>
+                  <img class="thumb-20 m-right-10" :src="scope.row.logo" alt="">
+                  <span>{{scope.row.coinid}}</span>
               </div>
               </template>
           </el-table-column>
-          <el-table-column :label='$t("latestPrice")||"最新价"' prop='latestPrize'></el-table-column>
+          <el-table-column
+            :label='$t("latestPrice")||"最新价"' 
+            prop='prise'>
+          </el-table-column>
           <el-table-column 
             :label='$t("increase")||"涨幅"'
-            prop='increase'
             width='100'>
             <template slot-scope="scope">
-              <span :class="scope.row.increase>0?'color-danger':'color-success'" v-text="scope.row.increase"></span>
+              <span :class="scope.row.rise*1>0?'color-danger':'color-success'" v-text="scope.row.rise"></span>
             </template>
           </el-table-column>
           <el-table-column
             :label='$t("optional")||"自选"'
-            width='100'>
+            width='80'>
               <template slot-scope="scope">
               <div class="operate">
                   <span v-text="scope.row.trend"></span>
@@ -45,66 +47,46 @@
     </div>
 </template>
 <script>
+import mainCoinModel from "@/model/allCoinModel.js";
 export default {
   name: "ce-aside-comp",
   data() {
     return {
-      tabConfig: [
-        {
-          i18nKey: "",
-          id: "1",
-          name: "USDT",
-          label: "USDT"
-        },
-        {
-          i18nKey: "",
-          id: "2",
-          name: "BTC",
-          label: "BTC"
-        },
-        {
-          i18nKey: "",
-          id: "3",
-          name: "ETH",
-          label: "ETH"
-        },
-        {
-          i18nKey: "optional",
-          id: "4",
-          name: "自选",
-          label: "自选"
-        }
-      ],
-      currentId: 1,
-      tableData: [
-        {
-          thumb: "",
-          currency: " BCD",
-          latestPrize: "124",
-          increase: "+6%"
-        },
-        {
-          thumb: "",
-          currency: " CNYT",
-          latestPrize: "421",
-          increase: "+6%"
-        }
-      ]
+      mainCoinModel: mainCoinModel,
+      currentId: 0,
+      tableData: null
     };
   },
+  mounted() {
+    if (mainCoinModel.coinid) {
+      this.getTradCoin(mainCoinModel.coinid);
+      return;
+    }
+    this.$bus.on("mainCoin", () => {
+      this.getTradCoin(mainCoinModel.coinid);
+    });
+  },
   methods: {
-    onTabChange(id, index) {
-      this.currentId = id;
+    onTabChange(coinid, index) {
+      if (index == this.currentId) return;
+      this.currentId = index;
+      this.getTradCoin(coinid);
+    },
+    // 获取币种交易行情
+    getTradCoin(coinid) {
+      this.request(this.api.getTradCoin, { maincoin: coinid }).then(res => {
+        console.log(`交易币种:${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.tableData = res.data.list);
+      });
     }
   }
 };
 </script>
-
 <style lang="scss" scoped>
 .el-input {
   margin-top: 10px;
 }
-
 .operate {
   cursor: pointer;
   display: flex;

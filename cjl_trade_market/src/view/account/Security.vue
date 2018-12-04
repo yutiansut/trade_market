@@ -5,23 +5,125 @@
         <div class="table-wrap bd-bottom">
             <div class="header" v-text="$t('security')||'安全认证'"></div>
             <ul class="safe-auth">
-              <li v-for="(item,key) in authConfig" :key='key'>
+              <!-- 修改密码 -->
+              <li>
                 <span>
-                  <i class="el-icon-warning color-danger"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t(item.i18nLabelKey)||item.label}}</em>
+                  <i class="el-icon-success color-success"></i>
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('loginPwd')||"登录密码"}}</em>
                 </span>
                 <span
-                  v-text="$t(item.i18nDespKey)||item.description"
+                  v-text="$t('loginPwdDesp')||'用于登录时的密码'"
                   class="txt-center color-999">
                 </span>
-                <span v-if='!item.isBind' class="txt-rt">
-                  <a @click="bindHandle(key)"
+                <span class="txt-rt">
+                  <a @click="bindHandle('loginPassword')"
                     class="color-danger"
                     href="javascript:"
-                    v-text="$t(item.i18nStatelabelKey)||item.stateLabel">
+                    v-text="$t('change')||'修改'">
                   </a>
                 </span>
-                <span v-else v-text="item.val"></span>
+              </li>
+              <!-- 绑定资金密码 -->
+              <li>
+                <span>
+                  <i :class="bindState.tradstate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>                  
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('fundPwd')||"资金密码"}}</em>
+                </span>
+                <span
+                  v-text="$t('fundPwdDesp')||'交易时密码，请谨慎保管'"
+                  class="txt-center color-999">
+                </span>
+                <span class="txt-rt">
+                  <a
+                    v-if="bindState.tradstate!='0'" 
+                    @click="bindHandle('financialPassword')"
+                    class="color-danger"
+                    href="javascript:"
+                    v-text="$t('bind')||'绑定'">
+                  </a>
+                  <em v-else class="color-999">已绑定</em>
+                </span>
+              </li>
+              <!-- 手机账户 -->
+              <li>
+                <span>
+                  <i class="el-icon-success color-success"></i>
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('mobileAccount')||"手机账户"}}</em>
+                </span>
+                <span
+                  v-text="$t('mobileAccountDesp')||'登录时唯一账号'"
+                  class="txt-center color-999">
+                </span>
+                <span class="txt-rt">
+                  <a 
+                    v-if="!bindState.tel"
+                    class="color-danger"
+                    href="javascript:"
+                    v-text="$t('bind')||'绑定'">
+                  </a>
+                  <em v-else v-text="bindState.tel" class="color-999"></em>
+                </span>
+              </li>
+              <!-- 邮箱 -->
+              <li>
+                <span>
+                  <i :class="bindState.emailstate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('email')||"电子邮箱"}}</em>
+                </span>
+                <span
+                  v-text="$t('emailDesp')||'安全通知、登录、安全设置时输入'"
+                  class="txt-center color-999">
+                </span>
+                <span class="txt-rt">
+                  <a v-if="bindState.emailstate!='0'"
+                    @click="bindHandle('email')"
+                    class="color-danger"
+                    href="javascript:"
+                    v-text="$t('bind')||'绑定'">
+                  </a>
+                  <em v-else v-text="bindState.email||'已绑定'" class="color-999"></em>
+                </span>
+              </li>
+              <!-- 银行账户 -->
+              <li>
+                <span>
+                  <i :class="bindState.bankstate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('bankAccount')||"银行账户"}}</em>
+                </span>
+                <span
+                  v-text="$t('bankAccountDesp')||'用户交易买入、卖出'"
+                  class="txt-center color-999">
+                </span>
+                <span class="txt-rt">
+                  <a v-if="bindState.bankstate!='0'"
+                    @click="bindHandle('bankAccount')"
+                    class="color-danger"
+                    href="javascript:"
+                    v-text="$t('bind')||'绑定'">
+                  </a>
+                  <em v-else class="color-999" v-text="bindState.bank||'已绑定'"></em>
+                </span>
+              </li>
+              <!-- google账户 -->
+              <li>
+                <span>
+                  <i :class="bindState.googlestate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('googleAuth')||"谷歌验证"}}</em>
+                </span>
+                <span
+                  v-text="$t('googleAuthDesp')||'用户交易买入、卖出'"
+                  class="txt-center color-999">
+                </span>
+                <span class="txt-rt">
+                  <a
+                    v-if="bindState.googlestate !='0'"
+                    @click="bindHandle('googleAccount')"
+                    class="color-danger"
+                    href="javascript:"
+                    v-text="$t('bind')||'绑定'">
+                  </a>
+                  <em v-else class="color-999" v-text="bindState.val||'已绑定'"></em>
+                </span>
               </li>
             </ul>
         </div>
@@ -42,7 +144,7 @@
             <div class="header" v-text="$t('loginLogs')"></div>
             <el-table :data='loginLogs'>
               <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
-              <el-table-column :label='$t("time")||"时间"' prop='date'></el-table-column>
+              <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
               <el-table-column label='IP' prop='ip'></el-table-column>
               <el-table-column :label='$t("status")||"状态"'>
                 <div slot-scope="scope" v-text="scope.row.state"></div>
@@ -53,7 +155,7 @@
         <!-- 绑定登录密码 -->
         <bind-password
           :show='dialogId=="loginPassword"?true:false'
-          :title='$t("bindLoginPwd")||"绑定登录密码"'
+          :title='$t("changePwd")||"修改登录密码"'
           @closeModal='onClose'>
         </bind-password>
         <!-- 绑定资金密码 -->
@@ -95,84 +197,15 @@ export default {
   data() {
     return {
       dialogId: null,
-      authConfig: {
-        loginPassword: {
-          i18nLabelKey: "loginPwd",
-          i18nDespKey: "loginPwdDesp",
-          i18nStatelabelKey: "bind",
-          label: "登录密码",
-          description: "用于登录时的密码",
-          stateLabel: "绑定",
-          isBind: false,
-          val: ""
-        },
-        financialPassword: {
-          i18nLabelKey: "fundPwd",
-          i18nDespKey: "fundPwdDesp",
-          i18nStatelabelKey: "bind",
-          label: "资金密码",
-          description: "交易时密码，请谨慎保管",
-          stateLabel: "绑定",
-          isBind: false,
-          val: ""
-        },
-        mobileAccount: {
-          i18nLabelKey: "mobileAccount",
-          i18nDespKey: "mobileAccountDesp",
-          i18nStatelabelKey: "bind",
-          label: "手机账户",
-          description: "登录时唯一账号",
-          stateLabel: "绑定",
-          isBind: false,
-          val: ""
-        },
-        email: {
-          i18nLabelKey: "email",
-          i18nDespKey: "emailDesp",
-          i18nStatelabelKey: "bind",
-          label: "电子邮箱",
-          description: "安全通知、登录、安全设置时输入",
-          stateLabel: "绑定",
-          isBind: false,
-          val: ""
-        },
-        bankAccount: {
-          i18nLabelKey: "bankAccount",
-          i18nDespKey: "bankAccountDesp",
-          i18nStatelabelKey: "bind",
-          label: "银行账户",
-          description: "用户交易买入、卖出",
-          stateLabel: "绑定",
-          isBind: false,
-          val: ""
-        },
-        googleAccount: {
-          i18nLabelKey: "googleAuth",
-          i18nDespKey: "googleAuthDesp",
-          i18nStatelabelKey: "bind",
-          label: "谷歌验证",
-          description: "交易、充值、提现时用谷歌验证",
-          stateLabel: "绑定",
-          isBind: false,
-          val: ""
-        }
-      },
-      authLogs: [
-        {
-          date: "2017-8-8",
-          operate: "登录密码",
-          state: "成功"
-        }
-      ],
-      loginLogs: [
-        {
-          date: "2017-8-8",
-          ip: "127.1.0.1",
-          state: "成功",
-          type: "网页登录"
-        }
-      ]
+      bindState: {},
+      authLogs: null,
+      loginLogs: null
     };
+  },
+  mounted() {
+    this.getState();
+    this.getSafeLogs();
+    this.getLoginLogs();
   },
   methods: {
     bindHandle(k, index) {
@@ -180,6 +213,27 @@ export default {
     },
     onClose() {
       this.dialogId = null;
+    },
+    getState() {
+      this.request(this.api.saftyState).then(res => {
+        console.log(`账号状态：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.bindState = res.data.list[0]);
+      });
+    },
+    getSafeLogs() {
+      this.request(this.api.logsafe).then(res => {
+        console.log(`安全日志：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.authLogs = res.data.list);
+      });
+    },
+    getLoginLogs() {
+      this.request(this.api.loglogin).then(res => {
+        console.log(`登录日志：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.loginLogs = res.data.list);
+      });
     }
   }
 };

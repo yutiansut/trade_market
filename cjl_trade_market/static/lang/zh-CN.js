@@ -304,5 +304,7 @@ module.exports = {
     onLinePlateform: "已上线交易平台",
     otherInfo: "其他信息说明",
     submitApplication: "提交上线申请",
-    trade: "交易"
+    trade: "交易",
+    change: "修改",
+    changePwd: "修改登录密码"
 }

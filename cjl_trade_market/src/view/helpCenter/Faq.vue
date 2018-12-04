@@ -24,6 +24,8 @@
     </div>
 </template>
 <script>
+import questionModel from "@/model/questionModel";
+let { faqList } = questionModel;
 export default {
   data() {
     return {
@@ -43,7 +45,7 @@ export default {
   },
   mounted() {
     this.currentTab = this.tabCfg[0];
-    this.getQuestionList(this.currentId);
+    this.getQuestionList();
   },
   methods: {
     onTabChange(id, index) {
@@ -51,15 +53,15 @@ export default {
       this.currentTab = this.tabCfg[index];
     },
     getQuestionList(type) {
-      let qList = this.storage.get("qList");
-      if (qList) {
-        this.qList = qList;
+      if (faqList) {
+        this.qList = faqList;
       } else {
-        this.request(this.api.getquest, { type: type }).then(res => {
+        this.request(this.api.getquest).then(res => {
           console.log(`问题列表:${JSON.stringify(res)}`);
           if (res && res.code != "0") return this.getDataFaild(res.msg);
-          res.data && res.data.list && (this.qList = res.data.list);
-          this.storage.set("qList", this.qList);
+          res.data &&
+            res.data.list &&
+            (this.qList = questionModel.faqList = res.data.list);
         });
       }
     }
