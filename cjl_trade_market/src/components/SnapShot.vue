@@ -24,8 +24,17 @@ export default {
 
 <style lang="scss" scoped>
 .snap-item {
+  margin-top: 15px;
+  padding-bottom: 20px;
+  border-bottom: $default-border;
   &:hover .title {
     color: $main-bg-color;
+  }
+  &:first-child {
+    margin-top: 0;
+  }
+  &:last-child {
+    border-bottom: none;
   }
 }
 .content {

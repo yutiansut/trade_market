@@ -12,14 +12,14 @@
           <!-- 币币交易 -->
           <li
             class="nav-item p-rel"
-            :class='currentPath==currencyTradeNav.link?"active":""'>
-            <router-link :to='currencyTradeNav.link'>
-              <span v-text="$t(currencyTradeNav.i18nKey)||item.currencyTradeNav"></span>&nbsp;
-              <i v-if='currencyTradeNav.subItem' class="iconfont icon-xiala"></i>
+            :class='currentPath==mainCoin.link?"active":""'>
+            <router-link :to='mainCoin.link'>
+              <span v-text="$t(mainCoin.i18nKey)||item.mainCoin"></span>&nbsp;
+              <i v-if='mainCoin.subItem' class="iconfont icon-xiala"></i>
             </router-link>
-            <ol class="sub-nav p-abs" v-if="currencyTradeNav.subItem">
+            <ol class="sub-nav p-abs" v-if="mainCoin.subItem">
               <li class="sub-nav-item p-rel"
-                v-for="(sItem,index) in currencyTradeNav.subItem"
+                v-for="(sItem,index) in mainCoin.subItem"
                 :key='index'>
                 <a href="javascript:void(0)">
                   <span>{{sItem.coinid}}&nbsp;{{$t('trade')}}</span>
@@ -59,7 +59,7 @@
 <script>
 import currencyNav from "@/components/other/currencyNav";
 import { Toast } from "vant";
-import mainCoinlist from "@/model/allCoinModel.js";
+import mainCoinModel from "@/model/allCoinModel.js";
 export default {
   name: "my-header",
   components: { currencyNav },
@@ -132,7 +132,7 @@ export default {
           }
         ]
       },
-      currencyTradeNav: {
+      mainCoin: {
         i18nKey: "marketTrade",
         label: "币币交易",
         link: "/currency_trade",
@@ -192,7 +192,11 @@ export default {
     this.showHead = this.showHeadTop;
     this.currentPath = this.$route.path;
     // 币币交易币种列表
-    this.getMainCoin();
+    if (mainCoinModel.maincoin) {
+      this.mainCoin.subItem = mainCoinModel.mainCoin;
+    } else {
+      this.getMainCoin();
+    }
   },
   methods: {
     handleSelect(index) {
@@ -207,7 +211,7 @@ export default {
         list.map(item => {
           item.coinid && (item.i18nKey = `${item.coinid.toLowerCase()}Market`);
         });
-        this.currencyTradeNav.subItem = mainCoinlist.list = list;
+        this.mainCoin.subItem = mainCoinModel.maincoin = list;
       });
     }
   }

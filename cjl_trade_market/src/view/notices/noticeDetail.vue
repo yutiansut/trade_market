@@ -10,6 +10,8 @@
     </div>
 </template>
 <script>
+import newsModel from "@/model/newsModel.js";
+let { newsList } = newsModel;
 export default {
   data() {
     return {
@@ -18,15 +20,31 @@ export default {
   },
   mounted() {
     let id = this.$route.params.id;
+    if (newsList) {
+      newsList.map(item => {
+        if (item.id == id) {
+          this.articleDetail = item;
+        }
+      });
+      return;
+    }
     this.getDetail(id);
+    this.addReadNum(id);
   },
   methods: {
     getDetail(id) {
       this.request(this.api.notice, { id: id }).then(res => {
         console.log(`公告列表:${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data &&
           res.data.result &&
           (this.articleDetail = res.data.result[0]);
+      });
+    },
+    addReadNum(id) {
+      this.request(this.api.addreadnum, { id: id }).then(res => {
+        console.log(`公告阅读数增加:${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
       });
     }
   }

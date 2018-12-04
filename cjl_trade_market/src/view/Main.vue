@@ -12,12 +12,12 @@
               <el-input suffix-icon="el-icon-search"></el-input>
               <ul class="tab-card">
                 <li class="p-rel"
-                  @click="onTabChange($event,item.coinid)"
-                  v-for="(item,i) in tabItem"
+                  v-for="(item,i) in mainCoinModel.maincoin"
                   :key="item.id"
-                  :class="currentCoinId==item.coinid?'active':''">
+                  :class="currentCoinId==i?'active':''"
+                  @click="onTabChange($event,i,item.coinid)">
                   {{item.coinid}}&nbsp;{{$t('trade')}}
-                  <span v-if='i<tabItem.length-1' class="dot abs-v-center"></span>
+                  <span v-if='i<mainCoinModel.length-1' class="dot abs-v-center"></span>
                 </li>
               </ul>
             </div>
@@ -63,7 +63,7 @@
 <script>
 import friendLink from "@/components/home/FriendLink";
 import AdvantageIntro from "@/components/home/AdvantageIntro";
-import mainCoinlist from "@/model/allCoinModel.js";
+import mainCoinModel from "@/model/allCoinModel.js";
 export default {
   components: { friendLink, AdvantageIntro },
   data() {
@@ -71,7 +71,7 @@ export default {
       logo: require("@/assets/images/home/pcew_logo.png"),
       currentTabId: 0,
       currentCoinId: "",
-      tabItem: null,
+      mainCoinModel: mainCoinModel,
       statusMap: {
         s_0: "交易中",
         s_1: "禁用"
@@ -86,28 +86,12 @@ export default {
     };
   },
   mounted() {
-    this.getMainCoin();
     this.getTradCoin(this.currentCoinId);
   },
   methods: {
-    onTabChange(e, coinid) {
-      console.log(coinid);
-      this.currentCoinId = coinid;
+    onTabChange(e, index, coinid) {
+      this.currentCoinId = index;
       this.getTradCoin(coinid);
-    },
-    //获取主币种
-    getMainCoin() {
-      this.request(this.api.getmaincoin).then(res => {
-        console.log(`主币种:${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
-        let list = null;
-        res.data && res.data.list && (list = res.data.list.slice(0));
-        list.map(item => {
-          item.coinid && (item.i18nKey = `${item.coinid.toLowerCase()}Market`);
-        });
-        this.tabItem = mainCoinlist.list = list;
-        this.currentCoinId = list[0].coinid;
-      });
     },
     // 获取所有币种列表
     getAllCoin() {

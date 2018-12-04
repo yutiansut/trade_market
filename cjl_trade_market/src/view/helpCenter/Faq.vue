@@ -5,19 +5,19 @@
             <ul class="tab-bar">
                 <li v-for="(item,i) in tabCfg" 
                     :key='item.id'
-                    v-text='$t(item.i18nKey)||item.label'
+                    v-text='$t(item.i18nKey)||item.title'
                     :class='currentId==item.id?"active":""'
                     @click='onTabChange(item.id,i)'>
                 </li>
             </ul>
             <ul class="q-list">
-                <template v-for="(item,i) in currentItem">
-                <li class="flex flex-between flex-v-center" 
-                  :key='i'
-                  @click='navigateTo("/help_center/faq_detail",{qList:currentItem,tabItem:currentTab})'>
-                  <span class="font-16" v-text="item.q"></span>
-                  <i class="el-icon-arrow-right font-16"></i>
-                </li>
+                <template v-for="(item,i) in qList">
+                  <li class="flex flex-between flex-v-center" 
+                    :key='i'
+                    @click='navigateTo("/help_center/faq_detail",{i18nKey:currentTab.i18nKey,type:currentId,qid:item.id})'>
+                    <span class="font-16" v-text="item.title"></span>
+                    <i class="el-icon-arrow-right font-16"></i>
+                  </li>
                 </template>
             </ul>
         </div>
@@ -32,38 +32,36 @@ export default {
       currentItem: null,
       tabCfg: [
         {
-          i18nKey: "userGuide",
-          id: "1",
-          label: "新手指导"
-        },
-        {
           i18nKey: "faq",
-          id: "2",
+          id: "1",
           label: "常见问题"
-        },
-        {
-          i18nKey: "ctcTrade",
-          id: "3",
-          label: "C2C交易"
         }
       ],
       currentTab: null,
-      qList: [
-        [{ q: "这是问题一" }, { q: "这里是问题二" }],
-        [{ q: "这是问题二" }, { q: "这里是问题三" }],
-        [{ q: "这是问题四" }, { q: "这里是问题五" }]
-      ]
+      qList: null
     };
   },
   mounted() {
-    this.currentItem = this.qList[this.currentId - 1];
     this.currentTab = this.tabCfg[0];
+    this.getQuestionList(this.currentId);
   },
   methods: {
     onTabChange(id, index) {
       this.currentId = id;
-      this.currentItem = this.qList[index];
       this.currentTab = this.tabCfg[index];
+    },
+    getQuestionList(type) {
+      let qList = this.storage.get("qList");
+      if (qList) {
+        this.qList = qList;
+      } else {
+        this.request(this.api.getquest, { type: type }).then(res => {
+          console.log(`问题列表:${JSON.stringify(res)}`);
+          if (res && res.code != "0") return this.getDataFaild(res.msg);
+          res.data && res.data.list && (this.qList = res.data.list);
+          this.storage.set("qList", this.qList);
+        });
+      }
     }
   }
 };

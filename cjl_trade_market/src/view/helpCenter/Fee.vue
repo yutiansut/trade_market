@@ -7,23 +7,23 @@
                   :label="$t('currencyType')||'币种'"
                   width='180'>
                   <div slot-scope="scope" class="flex flex-v-center">
-                    <img class="thumb-30" :src="scope.row.thumb" alt="">
-                    <span v-text="scope.row.currency"></span>
+                    <img class="thumb-30" :src="scope.row.logo" alt="">
+                    <span>{{scope.row.maincoinid}}/{{scope.row.coinid}}</span>
                   </div>
                 </el-table-column>
-                <el-table-column prop='tradeCommission'
+                <el-table-column prop='tradgas'
                   :label='$t("commision")+"(24"+$t("hour")+")"||"交易手续费(24H)"'>
                 </el-table-column>
-                <el-table-column prop='widthDrawCommission'
+                <el-table-column prop='outgas'
                   :label='$t("withdrawCommision")||"提币手续费"'>
                 </el-table-column>
-                <el-table-column prop='minumWithDraw'
+                <el-table-column prop='oneoutlow'
                   :label='$t("withdrawMin") ||"提币单笔最低"'>
                 </el-table-column>
-                <el-table-column prop='maxumWidthDraw'
+                <el-table-column prop='oneoutheight'
                   :label='$t("withdrawMax") ||"提币单笔最高"'>
                 </el-table-column>
-                <el-table-column prop='dailyMaxumWidthDraw'
+                <el-table-column prop='dayoutheight'
                   :label='$t("dayWidthDrawMax") ||"单日提币最高"'>
                 </el-table-column>
             </el-table>
@@ -34,18 +34,21 @@
 export default {
   data() {
     return {
-      formData: [
-        {
-          thumb: "",
-          currency: "BTC/CEC",
-          tradeCommission: "0.5 BTC",
-          widthDrawCommission: "0.005",
-          minumWithDraw: "0.1",
-          maxumWidthDraw: "2",
-          dailyMaxumWidthDraw: "800.00~30000.00"
-        }
-      ]
+      formData: null
     };
+  },
+  mounted() {
+    // 币种费率
+    this.getFee();
+  },
+  methods: {
+    getFee() {
+      this.request(this.api.gaslist).then(res => {
+        console.log(`费率：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.formData = res.data.list);
+      });
+    }
   }
 };
 </script>

@@ -23,6 +23,10 @@ let apiCfg = (function () {
         notice: {
             url: "notice"
         },
+        // 阅读数+1
+        addreadnum: {
+            url: 'addreadnum'
+        },
         // 友情链接
         friendlink: {
             url: 'link'
@@ -67,6 +71,10 @@ let apiCfg = (function () {
         //获取主币种
         getmaincoin: {
             url: 'getmaincoin'
+        },
+        // 费率列表
+        gaslist: {
+            url: "gaslist"
         },
         // 获取验证码
         bzcode: {
@@ -216,6 +224,10 @@ let apiCfg = (function () {
         img: {
             url: 'img',
 
+        },
+        //问题中心
+        getquest: {
+            url: 'getquest'
         }
     }
 }());

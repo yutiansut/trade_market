@@ -6,24 +6,21 @@
     </div>
 </template>
 <script>
+import newsModel from "@/model/newsModel.js";
+let { newsList } = newsModel;
 export default {
   name: "notice-bar",
   data() {
     return {
-      noticeItem: [
-        {
-          id: "1",
-          title: "公告1"
-        },
-        {
-          id: "2",
-          title: "公告1"
-        }
-      ]
+      noticeItem: null
     };
   },
   mounted() {
     //获取公告列表
+    if (newsList) {
+      this.noticeItem = newsList;
+      return;
+    }
     this.getNewsList();
   },
   methods: {
@@ -31,9 +28,8 @@ export default {
       this.request(this.api.notices).then(res => {
         console.log(`公告列表:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
-        res.data &&
-          res.data.list &&
-          (this.noticeItem = res.data.list.slice(0, 6));
+        res.data && res.data.list && (newsModel.newsList = res.data.list);
+        this.noticeItem = newsModel.newsList.slice(0, 6);
       });
     }
   }

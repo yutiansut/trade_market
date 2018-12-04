@@ -133,6 +133,19 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    this.getCoinInfo();
+  },
+  methods: {
+    getCoinInfo() {
+      this.request(this.api.getcoininfo).then(res => {
+        console.log(`币种资料：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        // res.data && res.data.list && (this.myData = res.data.list);
+      });
+    },
+    getCoinDetail(id) {}
   }
 };
 </script>

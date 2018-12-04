@@ -36,7 +36,6 @@ export default {
       console.log(`成交记录:${JSON.stringify(res)}`);
       if (res && res.code != "0") return this.getDataFaild(res.msg);
       res.data && res.data.list && (this.orderRecordData = res.data.list);
-      
     });
   }
 };

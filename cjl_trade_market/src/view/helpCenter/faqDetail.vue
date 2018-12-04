@@ -12,10 +12,6 @@
               <ul class="list">
                 <li class="active">如何查询成交记录？</li>
                 <li>如何查询成交记录？</li>
-                <li>如何查询成交记录？</li>
-                <li>如何查询成交记录？</li>
-                <li>如何查询成交记录？</li>
-                <li>如何查询成交记录？</li>
               </ul>
             </el-aside>
             <el-main>
@@ -40,15 +36,29 @@ export default {
   data() {
     return {
       banner: require("@/assets/images/help/bangzhu_banner.png"),
-      qList: {},
+      qList: null,
       breadNavItem: {}
     };
   },
   mounted() {
-    let q = Object.assign({}, this.$route.query);
-    if (JSON.stringify(q) != "{}") {
-      q.qList && (this.qList = q.qList);
-      q.tabItem && (this.breadNavItem = q.tabItem);
+    this.breadNavItem = this.getParams();
+  },
+  methods: {
+    getParams() {
+      return Object.assign({}, this.$route.query);
+    },
+    getQlist() {
+      let qList = this.storage.get("qList");
+      if (qList) {
+        this.qList = qList;
+      } else {
+        this.request(this.api.getquest, { type: type }).then(res => {
+          console.log(`问题列表:${JSON.stringify(res)}`);
+          if (res && res.code != "0") return this.getDataFaild(res.msg);
+          res.data && res.data.list && (this.qList = res.data.list);
+          this.storage.set("qList", this.qList);
+        });
+      }
     }
   }
 };

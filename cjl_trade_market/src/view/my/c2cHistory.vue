@@ -9,7 +9,7 @@
           <el-table-column width='80' :label='$t("type")||"类型"'>
             <span slot-scope="scope" v-text="scope.row.type=='买入'?$t('buy'):$t('sell')"></span>
           </el-table-column>
-          <el-table-column prop='currency' :label='$t("currency")||"币种"'></el-table-column>
+          <el-table-column prop='currency' :label='$t("currencyType")||"币种"'></el-table-column>
           <el-table-column prop='num' width='100' :label='$t("amount")||"数量"'></el-table-column>
           <el-table-column prop='price' :label='($t("price")||"价格")+"（CNY）"'></el-table-column>
           <el-table-column prop='amount' :label='($t("money")||"金额")+"（CNY）"'></el-table-column>
