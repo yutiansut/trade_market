@@ -416,9 +416,7 @@ export default {
       });
     },
     //校验
-    valideForm(val, name) {
-      
-    },
+    valideForm(val, name) {},
     buyHandle() {},
     sellHandle() {},
     //表格列点击
