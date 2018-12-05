@@ -126,7 +126,7 @@
                     <el-table-column width='80'
                       :label='$t("stalls")||"档位"'>
                       <span class="color-danger" slot-scope="scope">
-                        {{$t('buy')}}&nbsp;{{dataMaxLen-scope.$index}}
+                        {{$t('buy')}}&nbsp;{{scope.$index+1}}
                       </span>
                     </el-table-column>
                     <el-table-column width='150'
@@ -151,7 +151,7 @@
                     <el-table-column width='80'
                       :label='$t("stalls")||"档位"'>
                       <span class="color-success" slot-scope="scope">
-                        {{$t('sell')}}&nbsp;{{dataMaxLen-scope.$index}}
+                        {{$t('sell')}}&nbsp;{{scope.$index+1}}
                       </span>
                     </el-table-column>
                     <el-table-column width='150' 
@@ -348,8 +348,8 @@ export default {
         let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [...res];
         this.currentDeclareData = entrustData.data.list;
         this.historicalBuyData = orderData.data.list;
-        this.latestBuyData = buyOrder.data.list.slice(0, 5);
-        this.latestSoldData = sellOrder.data.list.slice(0, 5);
+        this.latestBuyData = buyOrder.data.list;
+        this.latestSoldData = sellOrder.data.list;
         this.historicalBuyData = allOrder.data.list;
       });
       // 获取可用
@@ -414,6 +414,10 @@ export default {
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         this.chargeAddress = res.data.address[0].address;
       });
+    },
+    //校验
+    valideForm(val, name) {
+      
     },
     buyHandle() {},
     sellHandle() {},
