@@ -109,6 +109,7 @@ module.exports = {
     date: "日期",
     time: "时间",
     avilable: "可用",
+    canExchange: "可兑换",
     currEnstrument: "当前委托",
     oldEnstrument: "历史委托",
     marketVol: "挂单量",

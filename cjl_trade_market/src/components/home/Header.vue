@@ -216,7 +216,7 @@ export default {
         });
         this.mainCoin.subItem = mainCoinModel.maincoin = list;
         mainCoinModel.coinid = list[0].coinid;
-        this.$bus.emit("mainCoin");
+        this.$bus.emit("mainCoinLoad", mainCoinModel.coinid);
       });
     }
   }

@@ -97,6 +97,7 @@ module.exports = {
     buyingRate: "Buying Rate",
     sellingRate: "Selling Rate",
     avilable: "Avilable",
+    canExchange: "exchangable",
     sell: "Sell",
     stalls: "Stalls",
     amount: "Num",

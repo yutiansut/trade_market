@@ -89,37 +89,16 @@
           </el-form>
         </dialog-box>
         <!-- 充币弹窗 -->
-        <dialog-box 
-          :showDialog='showChargeDialog'
-          :model='formData'
-          :dialogTitle='$t("rechargeCoin")||"充币"'
-          @onDialogClose='dialogClose(1)'>
-          <div class="slot-content">
-            <div class="mt-15 charge-label">
-              <template  v-if="$i18n.locale=='zh-CN'">请将ETH汇入如下地址</template>
-              <template  v-if="$i18n.locale=='en-US'">Please place ETH to the following address</template>
-              <router-link to="">
-                <template v-if="$i18n.locale=='zh-CN'">（点击这里查看区块链记录）</template>
-                <template v-if="$i18n.locale=='en-US'">(click to check block chain record)</template>
-              </router-link>
-            </div>
-            <input class="eth-addr" v-model="ETHAddress"/>
-            <div>{{$t('or')||"或"}}&nbsp;{{$t('scanCode')||"扫描二维码"}}</div>
-            <div class="qr-code p-rel"><img src="" alt=""></div>
-            <div class="warning color-666">
-              <template v-if="$i18n.locale=='en-US'">
-                Please send the number of ETHs you need to recharge to this address via the ETH client or online wallet. After the transmission is completed, the system will automatically recharge the virtual currency to your account on the site after 12 confirmations. 12 confirmations take about 0.5 to 1 hour, please be patient. The same address can be recharged multiple times without affecting the account. The minimum recharge amount is 0.0001.
-              </template>
-              <template v-if="$i18n.locale=='zh-CN'">请通过 ETH 客户端或在线钱包将您需要充值的ETH数目发送到该地址。
-              发送完成后，系统会自动在此交易获得 12 个确认后将该笔虚拟币充值到您在本站的账户，12 个确认需要大约 0.5 到 1 小时时间，请耐心等待。
-              同一个地址可多次充值，不影响到账。最小充值金额0.0001。</template>
-            </div>
-          </div>
-        </dialog-box>
+        <charge-box
+          :showCharge='showChargeDialog'
+          @closeModel='dialogClose(1)'>
+        </charge-box>
     </div>
 </template>
 <script>
+import chargeBox from "@/components/dialogContent/chargeBox";
 export default {
+  components: { chargeBox },
   data() {
     return {
       showChargeDialog: false,
@@ -142,7 +121,10 @@ export default {
         mobileCode: null,
         googleCode: null
       },
-      ETHAddress: "ajigeojagoejageaigjoew",
+      // 充币地址
+      chareAddress: "ajigeojagoejageaigjoew",
+      // 充币二维码
+      qrCode: null,
       myPropetyData: null
     };
   },
@@ -230,34 +212,6 @@ export default {
   }
   button {
     margin-top: 15px;
-  }
-}
-.slot-content {
-  .charge-label {
-    margin-bottom: 10px;
-  }
-  input {
-    @include textVcenter;
-    width: 100%;
-    border-color: $bd-color;
-    padding: 0 10px;
-    color: $color-danger;
-    margin-bottom: 15px;
-  }
-  .qr-code {
-    width: 23.2%;
-    padding-top: 23.2%;
-    margin: 10px 0;
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-    }
-  }
-  .warning {
-    line-height: 1.5;
-    text-align: justify;
   }
 }
 </style>

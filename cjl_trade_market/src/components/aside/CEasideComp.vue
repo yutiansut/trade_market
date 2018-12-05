@@ -13,6 +13,7 @@
         <el-input suffix-icon="el-icon-search"></el-input>
         <el-table style="font-size:14px;"
           :data='tableData'
+          @row-click='onTableRowClick'
           stripe>
           <el-table-column :label='$t("coin")||"币种"' width='100px'>
               <template slot-scope="scope">
@@ -62,9 +63,12 @@ export default {
       this.getTradCoin(mainCoinModel.coinid);
       return;
     }
-    this.$bus.on("mainCoin", () => {
-      this.getTradCoin(mainCoinModel.coinid);
+    this.$bus.on("mainCoinLoad", coinid => {
+      this.getTradCoin(coinid);
     });
+  },
+  destroyed() {
+    this.$bus.off("tradeCoinLoad");
   },
   methods: {
     onTabChange(coinid, index) {
@@ -78,7 +82,17 @@ export default {
         console.log(`交易币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data && res.data.list && (this.tableData = res.data.list);
+        mainCoinModel.tradecoinid = res.data.list[0].coinid;
+        this.$bus.emit("tradeCoinLoad", {
+          maincoin: res.data.list[0].maincoinid,
+          tradecoin: res.data.list[0].coinid,
+          currentSubCoin: res.data.list[0]
+        });
       });
+    },
+    //表格列点击
+    onTableRowClick(rowData) {
+      this.$emit("onRowClick", rowData);
     }
   }
 };

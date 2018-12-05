@@ -14,8 +14,7 @@ const ajaxRequest = (function () {
             if (config.showLoading) {
                 loadingMask = Loading.service({
                     text: "加载中...",
-                    spinner: "el-icon-loading",
-                    background: "rgba(0, 0, 0, 0.4)"
+                    background: "rgba(255, 255, 255, .4)"
                 });
             }
             return config;
@@ -115,7 +114,6 @@ const ajaxRequest = (function () {
             delete httpDefaultOpts.params;
         }
         httpDefaultOpts.showLoading = !(data && data.showLoading == '0')
-
         let promise = new Promise(function (resolve, reject) {
             axios(httpDefaultOpts)
                 .then(res => {
