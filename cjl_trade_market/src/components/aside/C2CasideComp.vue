@@ -2,12 +2,12 @@
     <ul class="list-container">
       <li class="flex flex-between flex-v-center"
         v-for="(item) in dataList" :key='item.id'
-        @click='onClick(id,i)'>
+        @click='onClick(item)'>
         <div class="currency flex flex-v-center">
-          <img v-if='item.thumb' 
-            :src="item.thumb" 
+          <img v-if='item.icon' 
+            :src="item.icon" 
             class="thumb-20" alt="">
-          <span v-text="item.currency"></span>
+          <span v-text="item.coinid"></span>
         </div>
         <i v-if="showIcon" class="el-icon-arrow-right"></i>
       </li>
@@ -30,15 +30,17 @@ export default {
     };
   },
   methods: {
-    onClick(id, index) {
-      this.$emit("onListClick", { id, index });
+    onClick(item) {
+      this.$emit("onListClick", item);
     }
   },
-  mounted() {
-    if (this.myData && Array.isArray(this.myData)) {
-      this.dataList = this.myData;
+  watch: {
+    myData() {
+      if (this.myData && Array.isArray(this.myData)) {
+        this.dataList = this.myData;
+      }
+      this.showIcon = this.showArrow;
     }
-    this.showIcon = this.showArrow;
   }
 };
 </script>

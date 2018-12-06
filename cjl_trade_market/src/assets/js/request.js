@@ -5,6 +5,7 @@ import { Loading } from 'element-ui';
 import api from '@/config/apiConfig.js';
 import Utils from './utils';
 import myStorage from '@/assets/js/myStorage';
+import userModel from '@/model/userData.js';
 axios.defaults.withCredentials = true;
 let loadingMask = null;
 const ajaxRequest = (function () {
@@ -53,25 +54,24 @@ const ajaxRequest = (function () {
         loadingMask.close();
         let code = response.data.code * 1 || null;
         let msg = null;
-        //统一判断后端返回的错误码
-        // switch (code) {
-        //     case 1:
-        //         msg = response.data.msg;
-        //         Toast({
-        //             message: msg,
-        //             position: 'bottom'
-        //         });
-        //         break;
-        //     case 2:
-        //         msg = "登录信息已失效！";
-        //         myStorage.remove('token');
-        //         myStorage.set('isLogin', false);
-        //         Toast({
-        //             message: msg,
-        //             position: 'bottom'
-        //         });
-        //         break;
-        // }
+        // 统一判断后端返回的错误码
+        switch (code) {
+            case 1:
+                msg = response.data.msg;
+                Toast({
+                    message: msg
+                });
+                break;
+            case -1:
+                msg = "您已经退出登录！";
+                myStorage.remove('token');
+                myStorage.set('isLogin', false);
+                userModel.isLogin = false;
+                Toast({
+                    message: msg,
+                });
+                break;
+        }
     };
     function createParam(data) {
         let params = '';

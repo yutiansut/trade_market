@@ -135,7 +135,6 @@ router.beforeEach((to, from, next) => {
   } else {
     if (to.name == 'Login') {
       myStorage.remove("token");
-
     }
     next();
   }

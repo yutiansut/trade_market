@@ -190,9 +190,6 @@ export default {
           !this.Util.isPassword(val) &&
             this.errMsg("密码必须是以英文字母开头的6-12位字符");
           break;
-        case "myGoogleCode":
-          val != this.myGoogleCode && this.errMsg("谷歌验证码不正确");
-          break;
         case "verCode":
           val != this.verCodeStr && this.errMsg("图形验证码不正确");
           break;
@@ -215,9 +212,10 @@ export default {
         }
         this.successMsg(res.msg);
         this.userModel.cellphone = this.checkLoginData.cellphone;
+        this.userModel.isLogin = true;
         this.storage.set("isLogin", true);
         this.storage.set("token", res.data.token);
-        this.storage.set("cellphone", this.this.checkLoginData.cellphone);
+        this.storage.set("cellphone", this.checkLoginData.cellphone);
         this.navigateTo("/");
       });
     },

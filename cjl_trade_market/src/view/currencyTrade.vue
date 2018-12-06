@@ -58,7 +58,7 @@
                     <div class="input-group">
                       <label v-text="$t('buyingRate')||'买入价'"></label>
                       <el-input v-model="buyFormData.price">
-                        <span class="unit" slot="suffix" v-text="maincoin+'/'+tradecoin"></span>
+                        <span class="unit" slot="suffix" v-text="maincoin"></span>
                       </el-input>
                       <em class="hint font-12">≈0.05</em>
                     </div>
@@ -71,7 +71,8 @@
                     <div class="total flex flex-between">
                       <span v-text="totalLabel"></span>0
                     </div>
-                    <button @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
+                    <button
+                      @click="buyHandle"
                       class="btn-block btn-large btn-danger btn-active"
                       v-html="buyingLabel">
                     </button>
@@ -90,7 +91,7 @@
                     <div class="input-group">
                       <label v-text="$t('sellingRate')||'卖出价'"></label>
                       <el-input v-model="sellFormData.price">
-                        <span class="unit" slot="suffix" v-text="maincoin+'/'+tradecoin"></span>
+                        <span class="unit" slot="suffix" v-text="maincoin"></span>
                       </el-input>
                       <em class="hint font-12">≈0.05</em>
                     </div>
@@ -103,7 +104,7 @@
                     <div class="total flex flex-between">
                       <span v-text="totalLabel"></span>0
                     </div>
-                    <button @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
+                    <button @click="sellHandle"
                       class="btn-block btn-large btn-success btn-active"
                       v-html="sellingLabel">
                     </button>
@@ -180,13 +181,13 @@
                         :data='currentDeclareData'>
                         <el-table-column width="140"
                           :label='$t("date")||"日期"'
-                          prop='date'>
+                          prop='writedate'>
                         </el-table-column>
                         <el-table-column width='100'
                           :label='$t("type")||"类型"'>
                           <span slot-scope="scope"
-                            v-text="scope.row.type=='买入'?$t('buy'):$t('sell')"
-                            :class="scope.row.type=='买入'?'color-danger':'color-success'">
+                            :class="scope.row.state=='0'?'color-danger':'color-success'"
+                            v-text="scope.row.state=='0'?$t('buy'):$t('sell')" >
                           </span>
                         </el-table-column>
                         <el-table-column
@@ -195,16 +196,17 @@
                         </el-table-column>
                         <el-table-column
                           :label='marketVolLabel'
-                          prop='order_vol'>
+                          prop='number'>
                         </el-table-column>
                         <el-table-column
                           :label='$t("volumn")||"成交量"'
-                          prop='complete_vol'>
+                          prop='dealnumber'>
                         </el-table-column>
                         <el-table-column
                           :width="$i18n.locale==='zh-CN'?'60':'120'"
                           :label='$t("operation")||"操作"'>
                           <span class="handle color-danger"
+                            @click='cancelOrder(scope.row.id)'
                             slot-scope="scope"
                             v-text="$t('withdrawed'||'撤单')">
                           </span>
@@ -217,13 +219,13 @@
                     <template v-if="userData.isLogin">
                       <el-table stripe :data='historicalDeclareData'>
                         <el-table-column width="140"
-                          :label='$t("date")||"日期"' prop='date'>
+                          :label='$t("date")||"日期"' prop='writedate'>
                         </el-table-column>
                         <el-table-column width='100'
                           :label='$t("type")||"类型"'>
                           <span slot-scope="scope"
-                            :class="scope.row.type=='买入'?'color-danger':'color-success'"
-                            v-text="scope.row.type=='买入'?$t('buy'):$t('sell')" >
+                            :class="scope.row.state=='0'?'color-danger':'color-success'"
+                            v-text="scope.row.state=='0'?$t('buy'):$t('sell')" >
                           </span>
                         </el-table-column>
                         <el-table-column
@@ -232,11 +234,11 @@
                         </el-table-column>
                         <el-table-column
                           :label='marketVolLabel'
-                          prop='order_vol'>
+                          prop='number'>
                         </el-table-column>
                         <el-table-column
                           :label='$t("volumn")||"成交量"'
-                          prop='complete_vol'>
+                          prop='dealnumber'>
                         </el-table-column>
                         <el-table-column
                           :width="$i18n.locale==='zh-CN'?'60':'120'"
@@ -334,10 +336,12 @@ export default {
       // 充币地址
       chargeAddress: "",
       // 充币二维码
-      qrCode: null
+      qrCode: null,
+      bindState: null
     };
   },
   mounted() {
+    this.getState();
     this.$bus.on("tradeCoinLoad", coinData => {
       this.currentCoinInfo = coinData.currentSubCoin;
       this.buyFormData.price = this.sellFormData.price = this.currentCoinInfo.prise;
@@ -352,14 +356,9 @@ export default {
         this.latestSoldData = sellOrder.data.list;
         this.historicalBuyData = allOrder.data.list;
       });
-      // 获取可用
-      Promise.all([
-        this.getAvailabel(this.tradecoin),
-        this.getAvailabel(this.maincoin)
-      ]).then(res => {
-        let [myBlance, myAvailable] = [...res];
-        myBlance && (this.myBlance = myBlance);
-        myAvailable && (this.myAvailable = myAvailable);
+      //获取可用;
+      this.getAvailabel(this.tradecoin).then(res => {
+        console.log(`可用：${JSON.stringify(res)}`);
       });
     });
   },
@@ -415,10 +414,86 @@ export default {
         this.chargeAddress = res.data.address[0].address;
       });
     },
+    // 交易操作
+    tradeHandle(api, params) {
+      return this.request(this.api.forbuy, {
+        maincoin: params.maincoin || "",
+        tradcoin: params.tradecoin || "",
+        prise: params.price || "",
+        number: params.number || ""
+      }).then(res => {
+        console.log(`操作结果：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        this.successMsg(res.msg);
+        Promise.resolve();
+      });
+    },
+    // 删除列表某一项
+    delItemFromList(id, listArr) {
+      listArr.map((item, index) => {
+        if (item.id == id) {
+          listArr.splice(index, 1);
+          return listArr;
+        }
+      });
+    },
+    // 取消订单
+    cancelOrder(id) {
+      this.request(this.api.clearentrust, { id: id }).then(res => {
+        console.log(`操作结果：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        this.successMsg(res.msg);
+        this.delItemFromList(id, this.currentDeclareData);
+      });
+    },
     //校验
-    valideForm(val, name) {},
-    buyHandle() {},
-    sellHandle() {},
+    valideForm(number, price) {
+      if (number == "") {
+        this.errMsg("买入量/卖出量不能为空");
+        return false;
+      }
+      if (!this.Util.isInt(number)) {
+        this.errMsg("买入量/卖出量必须是整数");
+        return false;
+      }
+      if (isNaN(price)) {
+        this.errMsg("请输入有效价格");
+        return false;
+      }
+      return true;
+    },
+    buyHandle() {
+      let price = this.buyFormData.price * 1;
+      let num = this.buyFormData.orderVol * 1;
+      if (!this.userData.isLogin) {
+        this.errMsg("请登录后操作");
+        return false;
+      } else if (!this.valideForm(num, price)) {
+        return false;
+      }
+      this.tradeHandle(this.api.forbuy, {
+        maincoin: this.maincoin,
+        tradecoin: this.tradecoin,
+        number: this.buyFormData.orderVol,
+        price: this.buyFormData.price
+      });
+    },
+    sellHandle() {
+      let price = this.sellFormData.price * 1;
+      let num = this.sellFormData.orderVol * 1;
+      if (!this.userData.isLogin) {
+        this.errMsg("请登录后操作");
+        return false;
+      } else if (!this.valideForm(num, price)) {
+        return false;
+      }
+      this.tradeHandle(this.api.forsell, {
+        maincoin: this.maincoin,
+        tradecoin: this.tradecoin,
+        number: this.sellFormData.orderVol,
+        price: this.sellFormData.price
+      });
+    },
     //表格列点击
     getRowData(data) {
       this.currentCoinInfo = data;
@@ -429,15 +504,37 @@ export default {
     onClose() {
       this.show = false;
     },
+    // 获取账户状态
+    getState() {
+      if (this.storage.get("bindState")) {
+        this.bindState = this.storage.get("bindState");
+        return;
+      }
+      this.request(this.api.saftyState).then(res => {
+        console.log(`账号状态：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        res.data && res.data.list && (this.bindState = res.data.list[0]);
+        this.storage.set("bindState", res.data.list[0]);
+      });
+    },
     // 打开弹窗
     showChargeBox() {
-      this.show = true;
-      if (
+      if (this.bindState.idcardstate != 0) {
+        this.$alert("您还没有绑定银行卡", "提示", {
+          confirmButtonText: "去绑定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          this.navigateTo("/account/security");
+        });
+        return;
+      } else if (
         this.chargeAddress == "" ||
         mainCoinModel.tradecoinid != this.tradecoin
       ) {
         this.getchargeAddress(this.tradecoin);
       }
+      this.show = true;
     }
   },
   computed: {
@@ -462,12 +559,12 @@ export default {
     //可用余额
     availabelBalance() {
       return `${this.$t("avilable") || "可用"}&nbsp;${this.myBlance ||
-        0}&nbsp;${this.tradecoin}`;
+        0}&nbsp;${this.maincoin}`;
     },
     //可兑换额度
     availabelAmount() {
       return `${this.$t("canExchange") || "可兑换"}&nbsp;${this.myAvailable ||
-        0}&nbsp;${this.maincoin}`;
+        0}&nbsp;${this.tradecoin}`;
     }
   },
   watch: {

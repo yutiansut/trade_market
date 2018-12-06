@@ -26,7 +26,7 @@
               <!-- 绑定资金密码 -->
               <li>
                 <span>
-                  <i :class="bindState.tradstate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>                  
+                  <i :class="bindState.tradstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>                  
                   <em>&nbsp;&nbsp;&nbsp;{{$t('fundPwd')||"资金密码"}}</em>
                 </span>
                 <span
@@ -35,7 +35,7 @@
                 </span>
                 <span class="txt-rt">
                   <a
-                    v-if="bindState.tradstate!='0'" 
+                    v-if="bindState.tradstate=='0'" 
                     @click="bindHandle('financialPassword')"
                     class="color-danger"
                     href="javascript:"
@@ -67,7 +67,7 @@
               <!-- 邮箱 -->
               <li>
                 <span>
-                  <i :class="bindState.emailstate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <i :class="bindState.emailstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
                   <em>&nbsp;&nbsp;&nbsp;{{$t('email')||"电子邮箱"}}</em>
                 </span>
                 <span
@@ -75,7 +75,7 @@
                   class="txt-center color-999">
                 </span>
                 <span class="txt-rt">
-                  <a v-if="bindState.emailstate!='0'"
+                  <a v-if="bindState.emailstate=='0'"
                     @click="bindHandle('email')"
                     class="color-danger"
                     href="javascript:"
@@ -87,7 +87,7 @@
               <!-- 银行账户 -->
               <li>
                 <span>
-                  <i :class="bindState.bankstate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <i :class="bindState.bankstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
                   <em>&nbsp;&nbsp;&nbsp;{{$t('bankAccount')||"银行账户"}}</em>
                 </span>
                 <span
@@ -95,7 +95,7 @@
                   class="txt-center color-999">
                 </span>
                 <span class="txt-rt">
-                  <a v-if="bindState.bankstate!='0'"
+                  <a v-if="bindState.bankstate=='0'"
                     @click="bindHandle('bankAccount')"
                     class="color-danger"
                     href="javascript:"
@@ -107,7 +107,7 @@
               <!-- google账户 -->
               <li>
                 <span>
-                  <i :class="bindState.googlestate=='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
                   <em>&nbsp;&nbsp;&nbsp;{{$t('googleAuth')||"谷歌验证"}}</em>
                 </span>
                 <span
@@ -116,7 +116,7 @@
                 </span>
                 <span class="txt-rt">
                   <a
-                    v-if="bindState.googlestate !='0'"
+                    v-if="bindState.googlestate =='0'"
                     @click="bindHandle('googleAccount')"
                     class="color-danger"
                     href="javascript:"
@@ -132,11 +132,11 @@
             <div class="header" v-text="$t('safeLogs')||'安全日志'"></div>
             <el-table :data='authLogs'>
               <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
-              <el-table-column :label='$t("time")||"时间"' prop='date'></el-table-column>
-              <el-table-column :label='$t("operation")||"操作"' prop='operate'></el-table-column>
-              <el-table-column :label='$t("status")||"状态"' width='100'>
+              <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
+              <el-table-column :label='$t("operation")||"操作"' prop='updatelog'></el-table-column>
+              <!-- <el-table-column :label='$t("status")||"状态"' width='100'>
                 <div slot-scope="scope" v-text="scope.row.state"></div>
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
         </div>
         <!-- 登录日志 -->
@@ -149,7 +149,9 @@
               <el-table-column :label='$t("status")||"状态"'>
                 <div slot-scope="scope" v-text="scope.row.state"></div>
               </el-table-column>
-              <el-table-column width='100' :label='$t("type")||"类型"' prop='type'></el-table-column>
+              <el-table-column width='100' :label='$t("type")||"类型"'>
+                <div slot-scope="scope" v-html="scope.row.type=='1'?'web&nbsp;登录':'Mobile&nbsp;登录'"></div>                
+              </el-table-column>
             </el-table>
         </div>
         <!-- 绑定登录密码 -->

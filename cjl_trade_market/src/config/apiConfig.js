@@ -200,6 +200,10 @@ let apiCfg = (function () {
         getc2ccoin: {
             url: 'getc2ccoin'
         },
+        //获取的trade记录
+        gettradorder: {
+            url: 'gettradorder'
+        },
         //获取c2c订单
         getc2corder: {
             url: 'getc2corder'
