@@ -260,8 +260,11 @@ module.exports = {
     success: "Success",
     webLogin: "Web login",
     buyingConfirm: "Purchase confirm",
+    sellingConfirm: "Selling confirm",
     buyingNum: "Buying number",
     buyingAmount: "Buying amount",
+    sellingAmount: "Selling amount",
+    sellingNum: "Selling number",
     cancel: "Cancel",
     tradeMethods: "Trade methods",
     username: "Username",
@@ -308,5 +311,10 @@ module.exports = {
     trade: "Trade",
     change: "Change",
     changePwd: "Change password",
-    avisalPrice: "Guide price"
+    avisalPrice: "Guide price",
+    buyMinNum: "Min number",
+    newPassword: "New password",
+    oldPassword: "Old password",
+    completed: "completed",
+    binded: "Binded"
 }

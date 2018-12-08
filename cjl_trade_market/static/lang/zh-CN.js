@@ -260,8 +260,11 @@ module.exports = {
     success: "成功",
     webLogin: "网页登录",
     buyingConfirm: "买入确认",
+    sellingConfirm:"卖出确认",
     buyingNum: "买入数量",
     buyingAmount: "买入金额",
+    sellingAmount: "卖出金额",
+    sellingNum: "卖出数量",
     cancel: "取消",
     tradeMethods: "交易方式",
     username: "用户名",
@@ -308,5 +311,10 @@ module.exports = {
     trade: "交易",
     change: "修改",
     changePwd: "修改登录密码",
-    avisalPrice: "指导价"
+    avisalPrice: "指导价",
+    buyMinNum: "最少",
+    newPassword: "新密码",
+    oldPassword: "旧密码",
+    completed: "已完成",
+    binded: "已绑定"
 }

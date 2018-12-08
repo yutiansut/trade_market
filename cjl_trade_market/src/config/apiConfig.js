@@ -64,6 +64,13 @@ let apiCfg = (function () {
         sendcodeuser: {
             url: 'sendcodeuser'
         },
+        updateloginpwd: {
+            url: 'updateloginpwd'
+        },
+        //设置资金密码
+        updatepaypassword: {
+            url: 'updatepaypassword'
+        },
         // 资金交易获取验证码
         sendcodetoken: {
             url: 'sendcodetoken'
@@ -272,6 +279,18 @@ let apiCfg = (function () {
         },
         getotccoin: {
             url: 'getotccoin'
+        },
+        //otc买入
+        otcbuy: {
+            url: 'otcbuy'
+        },
+        //otc卖出
+        otcsell: {
+            url: 'otcsell'
+        },
+        //c2c订单
+        getc2chistory: {
+            url: 'getc2chistory'
         }
     }
 }());

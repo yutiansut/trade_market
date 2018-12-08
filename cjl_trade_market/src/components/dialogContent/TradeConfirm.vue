@@ -6,19 +6,19 @@
         <div class="content">
             <div class="form-group">
                 <span class="label" v-text="numLabel"></span>
-                <el-input name='num' :value='num'></el-input>
-            </div>
-            <div class="form-group">
-                <span class="label" v-text="amountLabel"></span>
-                <el-input name='amount' :value='amount'>
-                    <span class="slot-text font-16 color-666" slot="suffix">CNY</span>
-                </el-input>
+                <el-input name='num' :value='number'></el-input>
             </div>
             <div class="form-group">
                 <span class="label" v-text="valuationLabel"></span>
                 <el-input name="valuation"
-                    :value='valuation'>
-                    <span class="slot-text font-16 color-666" slot="suffix">USDT</span>
+                    :value='price'>
+                    <span class="slot-text font-16 color-666" slot="suffix" v-text="coin"></span>
+                </el-input>
+            </div>
+            <div class="form-group">
+                <span class="label" v-text="amountLabel"></span>
+                <el-input name='amount' :value='total'>
+                    <span class="slot-text font-16 color-666" slot="suffix">CNY</span>
                 </el-input>
             </div>
             <div class="form-group">
@@ -37,14 +37,13 @@
                   @click='formSubmit' class="btn-block btn-large btn-danger btn-active"
                   v-text="$t('submit')||'提交'">
                 </button>
-                <button
+                <!-- <button
                   class="btn-block btn-large btn-bordered btn-active"
                   v-text="$t('cancel')||'取消'">
-                </button>
+                </button> -->
             </div>
         </div>
     </dialog-box>
-   
 </template>
 <script>
 export default {
@@ -57,23 +56,20 @@ export default {
     numLabel: String,
     amountLabel: String,
     valuationLabel: String,
-    tradeModeLabel: String
+    tradeModeLabel: String,
+    number: String,
+    total: String,
+    coin: String,
+    price: String
   },
   data() {
     return {
-      amount: null,
-      num: null,
-      valuation: null,
-      tradeMode: "选项1",
+      tradeMode: "银行卡",
       showModal: this.show,
       options: [
         {
-          value: "选项1",
+          value: "银行卡",
           label: "银行卡"
-        },
-        {
-          value: "选项2",
-          label: "支付宝"
         }
       ]
     };
@@ -85,14 +81,7 @@ export default {
   },
   methods: {
     formSubmit() {
-      this.$emit("onSubmit", {
-        formData: {
-          amount: this.amount,
-          num: this.num,
-          valuation: this.valuation,
-          tradeMode: this.tradeMode
-        }
-      });
+      this.$emit("onSubmit");
     },
     closeModal() {
       this.showModal = false;

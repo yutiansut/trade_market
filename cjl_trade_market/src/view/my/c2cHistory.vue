@@ -38,7 +38,7 @@ export default {
     };
   },
   mounted() {
-    this.getOrderRecord();
+    this.getOrderRecord(this.api.getc2chistory);
   },
   methods: {
     getOrderRecord() {

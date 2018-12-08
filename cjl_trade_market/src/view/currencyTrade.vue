@@ -68,7 +68,8 @@
                       </el-input>
                     </div>
                     <div class="total flex flex-between">
-                      <span v-text="totalLabel"></span>0
+                      <span v-text="totalLabel"></span>
+                      <i v-text="buyTotal"></i>
                     </div>
                     <button
                       @click="buyHandle"
@@ -100,7 +101,8 @@
                       </el-input>
                     </div>
                     <div class="total flex flex-between">
-                      <span v-text="totalLabel"></span>0
+                      <span v-text="totalLabel"></span>
+                      <i v-text="sellTotal"></i>
                     </div>
                     <button @click="sellHandle"
                       class="btn-block btn-large btn-success btn-active"
@@ -118,10 +120,35 @@
                     <!-- <router-link to=''>更多</router-link> -->
                   </div>
                   <div class="break-line"></div>
+                  <!-- 卖出五档图 -->
+                  <el-table style="font-weight:normal"
+                    :data='latestSoldData'
+                    :cell-style='myCellStyle'
+                    max-height='180' stripe>
+                    <el-table-column width='80'
+                      :label='$t("stalls")||"档位"'>
+                      <span class="color-success" slot-scope="scope">
+                        {{$t('sell')}}&nbsp;{{scope.$index+1}}
+                      </span>
+                    </el-table-column>
+                    <el-table-column width='150' 
+                      :label='priceLabel'
+                      prop='price'>
+                    </el-table-column>
+                    <el-table-column width='120'
+                      :label='amountLabel'
+                      prop='number'>
+                    </el-table-column>
+                    <el-table-column
+                      :label='totalLabel'>
+                      <div slot-scope="scope" v-text="scope.row.total"></div>
+                    </el-table-column>
+                  </el-table>
                   <!-- 买入五档图 -->
                   <el-table style="font-weight:normal"
                     :data='latestBuyData'
-                    :cell-style='myCellStyle' 
+                    :cell-style='myCellStyle'
+                    :show-header='false'
                     max-height='220' stripe>
                     <el-table-column width='80'
                       :label='$t("stalls")||"档位"'>
@@ -145,32 +172,6 @@
                       <div slot-scope="scope" v-text="scope.row.total"></div>
                     </el-table-column>
                   </el-table>
-                  <!-- 卖出五档图 -->
-                  <div class="m-top-10"></div>
-                  <el-table style="font-weight:normal"
-                    :data='latestSoldData'
-                    :cell-style='myCellStyle'
-                    :show-header='false'
-                    max-height='180' stripe>
-                    <el-table-column width='80'
-                      :label='$t("stalls")||"档位"'>
-                      <span class="color-success" slot-scope="scope">
-                        {{$t('sell')}}&nbsp;{{scope.$index+1}}
-                      </span>
-                    </el-table-column>
-                    <el-table-column width='150' 
-                      :label='priceLabel'
-                      prop='price'>
-                    </el-table-column>
-                    <el-table-column width='120'
-                      :label='amountLabel'
-                      prop='number'>
-                    </el-table-column>
-                    <el-table-column
-                      :label='totalLabel'>
-                      <div slot-scope="scope" v-text="scope.row.total"></div>
-                    </el-table-column>
-                  </el-table>
                 </div>
               </div>
               <div class="panel-container flex flex-between">
@@ -189,8 +190,8 @@
                         <el-table-column width='100'
                           :label='$t("type")||"类型"'>
                           <span slot-scope="scope"
-                            :class="scope.row.state=='0'?'color-danger':'color-success'"
-                            v-text="scope.row.state=='0'?$t('buy'):$t('sell')" >
+                            :class="scope.row.type=='0'?'color-danger':'color-success'"
+                            v-text="scope.row.type=='0'?$t('buy'):$t('sell')" >
                           </span>
                         </el-table-column>
                         <el-table-column
@@ -317,15 +318,14 @@ export default {
       show: false,
       userData: this.userModel,
       buyFormData: {
-        price: "",
-        orderVol: ""
+        price: 0,
+        orderVol: 0
       },
       sellFormData: {
-        price: "",
-        orderVol: ""
+        price: 0,
+        orderVol: 0
       },
       dataMaxLen: 5,
-      sellFormData: {},
       currentId: 1,
       tableData: null,
       //买入记录
@@ -468,16 +468,22 @@ export default {
     },
     // 交易操作
     tradeHandle(api, params) {
-      return this.request(this.api.forbuy, {
+      return this.request(api, {
         maincoin: params.maincoin || "",
         tradcoin: params.tradecoin || "",
         prise: params.price || "",
         number: params.number || ""
       }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
-        this.successMsg(res.msg);
-        Promise.resolve();
+        if (res.code == "0") {
+          this.successMsg(res.msg || "操作成功");
+          this.request(this.api.getentrust, {
+            maincoin: this.maincoin,
+            tradcoin: this.tradecoin
+          });
+        } else {
+          this.errMsg(res.msg);
+        }
       });
     },
     // 删除列表某一项
@@ -500,16 +506,16 @@ export default {
     },
     //校验
     valideForm(number, price) {
-      if (number == "") {
+      if (isNaN(price) || !price) {
+        this.errMsg("请输入有效价格");
+        return false;
+      }
+      if (!number) {
         this.errMsg("买入量/卖出量不能为空");
         return false;
       }
       if (!this.Util.isInt(number)) {
         this.errMsg("买入量/卖出量必须是整数");
-        return false;
-      }
-      if (isNaN(price)) {
-        this.errMsg("请输入有效价格");
         return false;
       }
       return true;
@@ -519,13 +525,13 @@ export default {
       let num = this.buyFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
-      } else if (!this.canTrade) {
-        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-          confirmButtonText: "去认证",
-          type: "warning"
-        }).then(() => {
-          this.navigateTo("/account/security");
-        });
+        // } else if (!this.canTrade) {
+        //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+        //     confirmButtonText: "去认证",
+        //     type: "warning"
+        //   }).then(() => {
+        //     this.navigateTo("/account/security");
+        //   });
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forbuy, {
           maincoin: this.maincoin,
@@ -540,13 +546,13 @@ export default {
       let num = this.sellFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
-      } else if (!this.canTrade) {
-        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-          confirmButtonText: "去认证",
-          type: "warning"
-        }).then(() => {
-          this.navigateTo("/account/security");
-        });
+        // } else if (!this.canTrade) {
+        //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+        //     confirmButtonText: "去认证",
+        //     type: "warning"
+        //   }).then(() => {
+        //     this.navigateTo("/account/security");
+        //   });
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forsell, {
           maincoin: this.maincoin,
@@ -610,7 +616,7 @@ export default {
         statesObj.tradstate > 0 &&
         statesObj.bankstate > 0 &&
         statesObj.idcardstate > 0 &&
-        stateObj.googlestate > 0
+        statesObj.googlestate > 0
       ) {
         return true;
       } else {
@@ -674,6 +680,14 @@ export default {
       return `${this.$t("latestPrice") || "最新价"}&nbsp;${
         this.currentCoinInfo.prise
       }`;
+    },
+    //总数
+    buyTotal() {
+      return this.buyFormData.price * this.buyFormData.orderVol;
+    },
+    //总数
+    sellTotal() {
+      return this.sellFormData.price * this.sellFormData.orderVol;
     }
   },
   watch: {

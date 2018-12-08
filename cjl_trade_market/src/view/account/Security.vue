@@ -35,13 +35,11 @@
                 </span>
                 <span class="txt-rt">
                   <a
-                    v-if="bindState.tradstate=='0'" 
                     @click="bindHandle('financialPassword')"
                     class="color-danger"
                     href="javascript:"
-                    v-text="$t('bind')||'绑定'">
+                    v-text="bindState.tradstate=='0'?$t('bind')||'绑定':$t('change')">
                   </a>
-                  <em v-else class="color-999">已绑定</em>
                 </span>
               </li>
               <!-- 手机账户 -->
@@ -81,7 +79,7 @@
                     href="javascript:"
                     v-text="$t('bind')||'绑定'">
                   </a>
-                  <em v-else v-text="bindState.email||'已绑定'" class="color-999"></em>
+                  <em v-else v-text="bindState.email||$t('binded')" class="color-999"></em>
                 </span>
               </li>
               <!-- 银行账户 -->
@@ -95,13 +93,12 @@
                   class="txt-center color-999">
                 </span>
                 <span class="txt-rt">
-                  <a v-if="bindState.bankstate=='0'"
+                  <a
                     @click="bindHandle('bankAccount')"
                     class="color-danger"
                     href="javascript:"
-                    v-text="$t('bind')||'绑定'">
+                    v-text="bindState.bankstate=='0'?$t('bind')||'绑定':$t('change')">
                   </a>
-                  <em v-else class="color-999" v-text="bindState.bank||'已绑定'"></em>
                 </span>
               </li>
               <!-- google账户 -->
@@ -146,24 +143,26 @@
               <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
               <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
               <el-table-column label='IP' prop='ip'></el-table-column>
-              <el-table-column :label='$t("status")||"状态"'>
+              <!-- <el-table-column :label='$t("status")||"状态"'>
                 <div slot-scope="scope" v-text="scope.row.state"></div>
-              </el-table-column>
+              </el-table-column> -->
               <el-table-column width='100' :label='$t("type")||"类型"'>
                 <div slot-scope="scope" v-html="scope.row.type=='1'?'web&nbsp;登录':'Mobile&nbsp;登录'"></div>                
               </el-table-column>
             </el-table>
         </div>
-        <!-- 绑定登录密码 -->
+        <!-- 修改登录密码 -->
         <bind-password
           :show='dialogId=="loginPassword"?true:false'
           :title='$t("changePwd")||"修改登录密码"'
+          apiKey='updateloginpwd'
           @closeModal='onClose'>
         </bind-password>
-        <!-- 绑定资金密码 -->
-        <bind-password 
+        <!-- 修改设置资金密码 -->
+        <bind-password
           :show='dialogId=="financialPassword"?true:false'
-          :title='$t("bindFundPwd")||"绑定资金密码"'
+          :title='fundPassTitle'
+          apiKey='updatepaypassword'
           :passwordLabel='$t("fundPwd")||"资金密码"'
           @closeModal='onClose'>
         </bind-password>
@@ -176,6 +175,7 @@
         <!-- 绑定银行卡号 -->
         <bind-bank 
           :show='dialogId=="bankAccount"?true:false'
+          :ownerName='this.bindState.username'
           @closeModal='onClose'>
         </bind-bank>
         <!-- 谷歌验证 -->
@@ -209,6 +209,13 @@ export default {
     this.getState();
     this.getSafeLogs();
     this.getLoginLogs();
+  },
+  computed: {
+    fundPassTitle() {
+      return this.bindState.tradstate == "0"
+        ? `${this.$t("bindFundPwd")}`
+        : `${this.$t("change")}${this.$t("fundPwd")}`;
+    }
   },
   methods: {
     bindHandle(k, index) {

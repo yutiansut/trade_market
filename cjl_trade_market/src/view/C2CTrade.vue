@@ -261,21 +261,30 @@
             </el-main>
         </el-container>
         <my-footer></my-footer>
-        <!-- 操作确认弹窗 -->
+        <!-- 卖出确认弹窗 -->
         <trade-confirm
           :show='dialogId==1?true:false'
-          :title="$t(confirmCfg.titlei18n)||confirmCfg.title"
-          :numLabel="$t(confirmCfg.numLabeli18n)||confirmCfg.numLabel"
-          :amountLabel="$t(confirmCfg.amountLabeli18n)||confirmCfg.amountLabel"
-          :valuationLabel='$t(confirmCfg.valuationLabeli18n)||confirmCfg.valuationLabel'
-          :tradeModeLabel='$t(confirmCfg.tradeModeLabeli18n)||confirmCfg.tradeModeLabel'>
+          :title="$t('sellingConfirm')"
+          :numLabel="$t('sellingNum')"
+          :amountLabel="$t('sellingAmount')"
+          :valuationLabel='$t("sellingValiation")'
+          :tradeModeLabel='$t("tradeMethods")'>
+        </trade-confirm>
+        <!-- 买入确认 -->
+        <trade-confirm
+          :show='dialogId==0?true:false'
+          :title="$t('buyingConfirm')"
+          :numLabel="$t('buyingNum')"
+          :amountLabel="$t('buyingAmount')"
+          :valuationLabel='$t("buyingValiation")'
+          :tradeModeLabel='$t("tradeMethods")'>
         </trade-confirm>
         <!-- 订单匹配弹窗 -->
-        <order-match
+        <!-- <order-match
           :show='dialogId==2?true:false'
           :myData='orderMatchList'
           :operateLable='$t(operateLabeli18n)||operateLable'>
-        </order-match>
+        </order-match> -->
         <!-- 挂单买入/卖出待确认弹窗 -->
         <order-confirm
           :show='dialogId==3?true:false'>
@@ -327,19 +336,7 @@ export default {
         number: "",
         total: ""
       },
-      // 订单匹配弹窗配置
-      confirmCfg: {
-        title: "买入确认",
-        titlei18n: "buyingConfirm",
-        numLabel: "买入数量",
-        numLabeli18n: "buyingNum",
-        amountLabel: "买入金额",
-        amountLabeli18n: "buyingAmount",
-        valuationLabel: "买入估价",
-        valuationLabeli18n: "buyingValiation",
-        tradeModeLabel: "交易方式",
-        tradeModeLabeli18n: "tradeMethods"
-      },
+      confirmData: {},
       //市场挂单弹窗配置
       marketOrderCfg: {
         title: "市挂单买入",
@@ -390,6 +387,7 @@ export default {
   },
   mounted() {
     this.getc2corder();
+    this.getState();
     this.getC2Ccoin()
       .then(res => {
         this.currencyList = res;
@@ -451,20 +449,37 @@ export default {
     }
   },
   methods: {
+    // 发布订单
+    publicOrder(apiKey, param) {
+      this.request(apiKey, param).then(res => {
+        console.log(`${JSON.stringify(res)}`);
+        if (res.code == "0") {
+          this.successMsg(res.msg);
+        }
+      });
+    },
     buyHandle() {
-      if (this.buyTotal != "NaN" && this.validation()) {
-        this.request(this.api.addbuyc2c, {
-          coin: this.coinInfo.coinid,
+      if (this.buyTotal != "NaN" && this.buyTotal > 0 && this.validation()) {
+        let param = {
           price: this.buyFormData.price,
-          number: this.sellFormData.number
-        }).then(res => {
-          console.log(`${JSON.stringify(res)}`);
-        });
+          number: this.buyFormData.number
+        };
+        this.publicOrder(this.api.addbuyc2c, param);
       } else {
-        this.errMsg("价格或者数量，必须是数字");
+        this.errMsg("请输入有效价格");
       }
     },
-    sellHandle() {},
+    sellHandle() {
+      if (this.sellTotal != "NaN" && this.sellTotal > 0 && this.validation()) {
+        let param = {
+          price: this.sellFormData.price,
+          number: this.sellFormData.number
+        };
+        this.publicOrder(this.api.addsellc2c, param);
+      } else {
+        this.errMsg("请输入有效价格");
+      }
+    },
     buyOrderHandle() {
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
@@ -515,7 +530,7 @@ export default {
         }
       });
     },
-    // 获取我c2c交易的订单
+    // 获取我的订单
     getc2corder() {
       return this.request(this.api.getc2corder).then(res => {
         console.log(`c2c我的订单：${JSON.stringify(res)}`);
@@ -525,7 +540,7 @@ export default {
         }
       });
     },
-    //获取我的c2c订单
+    //获取我c2c交易订单
     gettradorder(coin) {
       return this.request(this.api.gettradorder, {
         coin: coin
@@ -549,14 +564,14 @@ export default {
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
         return false;
-      } else if (!this.canTrade) {
-        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-          confirmButtonText: "去认证",
-          type: "warning"
-        }).then(() => {
-          this.navigateTo("/account/security");
-          return false;
-        });
+        // } else if (!this.canTrade) {
+        //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+        //     confirmButtonText: "去认证",
+        //     type: "warning"
+        //   }).then(() => {
+        //     this.navigateTo("/account/security");
+        //     return false;
+        //   });
       } else {
         return true;
       }
@@ -568,7 +583,7 @@ export default {
         statesObj.tradstate > 0 &&
         statesObj.bankstate > 0 &&
         statesObj.idcardstate > 0 &&
-        stateObj.googlestate > 0
+        statesObj.googlestate > 0
       ) {
         return true;
       } else {
@@ -582,7 +597,6 @@ export default {
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         if (res.data && res.data.list) {
           this.bindState = res.data.list[0];
-          this.canTrade = this.canTradeCheck(this.bindState);
         }
       });
     }

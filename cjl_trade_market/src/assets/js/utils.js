@@ -22,7 +22,7 @@ const Utils = (function () {
         },
         isIdCard(data) {
             let str = data;
-            let reg ='';
+            let reg = '';
             if (str == "") return false;
             let len = str.length;
             if (len == 15) {
@@ -53,7 +53,7 @@ const Utils = (function () {
             return (lastcode.charAt(sum % 11) == part[7].toUpperCase());
         },
         isBankNo(data) {
-            return /^\d{19}$/.test(data) || /^\d{16}$/.test(data);
+            return /^\d{18}$/.test(data) || /^\d{16}$/.test(data);
         },
         isPositiveNum(data) {
             return /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d{0,2})$/.test(data)

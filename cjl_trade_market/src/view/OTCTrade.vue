@@ -27,18 +27,18 @@
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyVol')||'买入量'"></label>
-                            <el-input>
+                            <el-input :placeholder="minNum" v-model="buyForm.number">
                                 <span class="unit" slot="suffix" v-text="coinInfo.coinid"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('money')||'金额'"></label>
-                            <el-input>
+                            <el-input disabled v-model="buyTotal">
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <button
-                            @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
+                            @click="buyHandle"
                             class="btn-block btn-large btn-danger btn-active"
                             v-html="buyingLabel">
                         </button>
@@ -59,18 +59,18 @@
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellVol')||'卖出量'"></label>
-                            <el-input>
+                            <el-input :placeholder='minNum' v-model="sellForm.number">
                                 <span class="unit" slot="suffix" v-text="coinInfo.coinid"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('money')||'金额'"></label>                            
-                            <el-input>
+                            <el-input disabled v-model="sellTotal">
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <button
-                            @click="userData.isLogin?sellHandle:errMsg('请登录后操作')"
+                            @click="sellHandle"
                             class="btn-block btn-large btn-success btn-active"
                             v-html="sellingLabel">
                         </button>
@@ -90,23 +90,32 @@
                     <div class="break-line"></div>
                     <el-table
                     :data='myOrderList'>
-                        <el-table-column prop='date'
+                        <el-table-column prop='wdate'
                             :label='$t("time")||"时间"'>
                         </el-table-column>
-                        <el-table-column prop='currency'
+                        <el-table-column prop='coinid'
                             :label='$t("currencyType")||"币种"'>
                         </el-table-column>
-                        <el-table-column prop='amount'
+                        <el-table-column
                            :label='$t("amount")||"数量"'>
+                           <template slot-scope="scope">
+                                {{scope.row.number*1}}
+                            </template>
                         </el-table-column>
-                        <el-table-column prop='unitPrice'
-                            :label='($t("unitPrice")||"单价")+"(CNY)"'>
+                        <el-table-column :label='($t("unitPrice")||"单价")+"(CNY)"'>
+                            <template slot-scope="scope">
+                                {{scope.row.price*1}}
+                            </template>
                         </el-table-column>
-                        <el-table-column prop='totalPrice'
-                            :label='($t("totalPrice")||"总价")+"(CNY)"'>
+                        <el-table-column :label='($t("totalPrice")||"总价")+"(CNY)"'>
+                            <template slot-scope="scope">
+                                {{scope.row.zj*1}}
+                            </template>
                         </el-table-column>
-                        <el-table-column prop='status'
-                            :label='($t("status")||"状态")'>
+                        <el-table-column :label='($t("status")||"状态")'>
+                            <template slot-scope="scope">
+                                <span v-text="scope.row.type=='0'?buyState:sellState"></span>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </div>
@@ -121,16 +130,18 @@ export default {
     return {
       currencyList: [],
       coinInfo: "",
-      myOrderList: [
-        {
-          date: "2018-09-07",
-          currency: "BTC",
-          amount: "30",
-          unitPrice: "20335.0000",
-          totalPrice: "800.00~30000.00",
-          status: "进行中"
-        }
-      ]
+      buyForm: {
+        number: "",
+        total: ""
+      },
+      sellForm: {
+        number: "",
+        total: ""
+      },
+      canTrade: false,
+      bindState: null,
+      myOrderList: [],
+      allOrderList: []
     };
   },
   computed: {
@@ -139,23 +150,153 @@ export default {
     },
     sellingLabel() {
       return `${this.$t("sell") || "卖出"}&nbsp;${this.coinInfo.coinid}`;
+    },
+    buyState() {
+      return `${this.$t("buy") || "买入"}`;
+    },
+    minNum() {
+      return `${this.$t("buyMinNum") || "最少买入"} ${this.coinInfo.minnum *
+        1}`;
+    },
+    sellState() {
+      return `${this.$t("sell") || "卖出"}`;
+    },
+    buyTotal() {
+      return this.buyForm.number * this.coinInfo.buycny;
+    },
+    sellTotal() {
+      return this.sellForm.number * this.coinInfo.sellcny;
     }
   },
   mounted() {
-    this.getOtcCoin();
+    this.getOtcCoin().then(coin => {});
+    this.getOtcOrder();
+    this.getState();
   },
   methods: {
     getOtcCoin() {
-      this.request(this.api.getotccoin).then(res => {
+      return this.request(this.api.getotccoin).then(res => {
         console.log(`OTC币种${JSON.stringify(res)}`);
         if (res.code == "0" && res.data && res.data.list && res.data.list[0]) {
           this.currencyList = res.data.list;
           this.coinInfo = res.data.list[0];
+          return Promise.resolve(this.coinInfo.coinid);
+        }
+      });
+    },
+    // 获取所有otc订单记录
+    getOtcOrder() {
+      this.request(this.api.getotcorder).then(res => {
+        console.log(`OTC订单${JSON.stringify(res)}`);
+        if (res.code == "0" && res.data && res.data.list && res.data.list[0]) {
+          let list = res.data.list.slice(0);
+          this.allOrderList = list;
+          this.myOrderList = this.getMyOrderlist(list, list[0].coinid);
+        }
+      });
+    },
+    getMyOrderlist(listArr, coinid) {
+      let arr = [];
+      if (listArr && this.Util.dataType(listArr) == "array") {
+        listArr.map(item => {
+          if (item.coinid == coinid) {
+            arr.push(item);
+          }
+        });
+        return arr;
+      }
+    },
+    // 获取状态
+    getState() {
+      this.request(this.api.saftyState).then(res => {
+        if (res.code == "0") {
+          this.bindState = res.data.list[0];
+          this.canTrade = this.canTradeCheck(this.bindState);
         }
       });
     },
     onListClick(data) {
       this.coinInfo = data;
+      this.myOrderList = this.getMyOrderlist(this.allOrderList, data.coinid);
+    },
+    // 是否能够交易
+    canTradeCheck(statesObj) {
+      if (
+        statesObj.tradstate > 0 &&
+        statesObj.bankstate > 0 &&
+        statesObj.idcardstate > 0 &&
+        statesObj.googlestate > 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    beforeTrade() {
+      if (!this.userModel.isLogin) {
+        this.errMsg("请登录后操作");
+        return false;
+      }
+      if (!this.canTrade) {
+        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+          confirmButtonText: "去认证",
+          type: "warning"
+        }).then(() => {
+          this.navigateTo("/account/security");
+        });
+        return false;
+      }
+      return true;
+    },
+    handleConfirm(api, param) {
+      this.request(api, {
+        coin: param.coin,
+        id: 1,
+        number: param.number,
+        jz: param.total
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg);
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
+    },
+    //卖出操作
+    sellHandle() {
+      if (!this.beforeTrade()) {
+        return false;
+      }
+      if (
+        isNaN(this.sellForm.number) ||
+        this.sellForm.number < this.coinInfo.minnum * 1
+      ) {
+        this.errMsg("请输入正确的数量");
+        return false;
+      }
+      this.handleConfirm(this.api.otcbuy, {
+        coin: this.coinInfo.coinid,
+        number: this.sellForm.number,
+        jz: this.sellTotal
+      });
+    },
+    // 买入操作
+    buyHandle() {
+      if (!this.beforeTrade()) {
+        return false;
+      }
+      if (
+        isNaN(this.buyForm.number) ||
+        this.buyForm.number < this.coinInfo.minnum * 1
+      ) {
+        this.errMsg("请输入正确的数量");
+        return false;
+      }
+      this.handleConfirm(this.api.otcbuy, {
+        coin: this.coinInfo.coinid,
+        number: this.buyForm.number,
+        jz: this.buyTotal
+      });
     }
   }
 };

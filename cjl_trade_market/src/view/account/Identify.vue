@@ -220,6 +220,7 @@ export default {
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
+          this.bindState.idcardstate = "1";
         }
       });
     },

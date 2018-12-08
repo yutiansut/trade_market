@@ -9,7 +9,8 @@
         <div class="content">
             <el-form label-position='top' @submit.native.prevent>
                 <el-form-item :label='$t("owner")||"户主"'>
-                    <el-input name='owner' v-model="owner"
+                    <el-input name='owner' :value='ownerName'
+                      disabled
                       :placeholder='$t("ownerPlaceholder")||"户主姓名"'>
                     </el-input>
                 </el-form-item>
@@ -27,6 +28,10 @@
                     <el-input name='bankBranches' v-model="bankBranches"
                       :placeholder='$t("bankBranchPlaceholder")||"请输入开户支行"'></el-input>
                 </el-form-item>
+                <el-form-item :label='$t("googleCode")||"谷歌验证码"'>
+                    <el-input name='googleCode' v-model="googleCode"
+                      :placeholder='$t("googleCode")||"请输入谷歌验证码"'></el-input>
+                </el-form-item>
                 <button style="margin-top: 1px;"
                   @click="formSubmit"
                   class="btn-block btn-large btn-danger btn-active"
@@ -42,15 +47,16 @@ export default {
     show: {
       type: Boolean,
       default: false
-    }
+    },
+    ownerName: ""
   },
   data() {
     return {
       showModal: this.show,
-      owner: "",
       cardNum: "",
       depositBank: "",
-      bankBranches: ""
+      bankBranches: "",
+      googleCode: ""
     };
   },
   watch: {
@@ -72,14 +78,30 @@ export default {
         this.owner == "" ||
         this.cardNum == "" ||
         this.depositBank == "" ||
-        this.bankBranches == ""
+        this.bankBranches == "" ||
+        this.googleCode == ""
       ) {
         this.errMsg("请填写完整信息");
         return false;
       }
-      // this.request(this.api.addbank, {
-
-      // });
+      if (!this.Util.isBankNo(this.cardNum)) {
+        this.errMsg("银行卡格式不正确");
+        return false;
+      }
+      this.request(this.api.addbank, {
+        hz: this.owner,
+        bankcard: this.cardNum,
+        bank1: this.depositBank,
+        bank2: this.bankBranches,
+        googlecode: this.googleCode
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg || "添加成功");
+          this.closeModal();
+        } else {
+          this.errMsg(res.msg || "添加失败");
+        }
+      });
     },
     closeModal() {
       this.showModal = false;

@@ -56,12 +56,6 @@ const ajaxRequest = (function () {
         let msg = null;
         // 统一判断后端返回的错误码
         switch (code) {
-            case 1:
-                msg = response.data.msg;
-                Toast({
-                    message: msg
-                });
-                break;
             case -1:
                 msg = "您已经退出登录！";
                 myStorage.remove('token');

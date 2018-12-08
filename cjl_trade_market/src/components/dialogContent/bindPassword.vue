@@ -8,17 +8,15 @@
         @onDialogClose='closeModal'>
         <div class="content">
             <el-form label-position='top' @submit.native.prevent>
-                <el-form-item :label='$t("cellphone")||mobileLabel'>
+                <!-- <el-form-item :label='$t("cellphone")||mobileLabel'>
                     <el-input name='mobile'
-                      @blur="validate(formData.cellphone,'cellphone')"
                       v-model="formData.cellphone"
                       :placeholder='$t("mobilePlaceholder")||"请输入手机号"'>
                     </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label='$t("mobileCode")||"手机验证码"'>
                     <div class="mobile-code-wrap p-rel">
                         <el-input name='mobileCode'
-                          @blur="validate(formData.mobileCode,'mobileCode')"
                           v-model="formData.mobileCode"
                           :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'>
                         </el-input>
@@ -27,9 +25,8 @@
                         </div>                        
                     </div>
                 </el-form-item>
-                <el-form-item :label='$t("loginPwd")||passwordLabel'>
+                <el-form-item :label='$t("newPassword")||passwordLabel'>
                     <el-input name='password' type='password'
-                      @blur="validate(formData.password,'password')"
                       v-model="formData.password"
                       :placeholder='$t("pwdPlaceholder")||"请输入密码"'>
                     </el-input>
@@ -37,7 +34,6 @@
                 <el-form-item :label='$t("imgCode")||"图形验证码"'>
                     <div class="code-wrap flex flex-between">
                         <el-input name='code'
-                          @blur="validate(formData.imgCode,'verCode')"
                           v-model="formData.imgCode"
                           :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'>
                         </el-input>
@@ -50,7 +46,7 @@
                     </div>
                 </el-form-item>
                 <button style="margin-top: 1px;"
-                  @click="formSubmit"
+                  @click="formSubmit(apiKey)"
                   class="btn-block btn-large btn-danger btn-active"
                   v-text="$t('submit')||'提交'">
                 </button>
@@ -68,13 +64,15 @@ export default {
       type: Boolean,
       default: false
     },
+    // 请求接口
+    apiKey: "",
     mobileLabel: {
       type: String,
       default: "手机号码"
     },
     passwordLabel: {
       type: String,
-      default: "登录密码"
+      default: "新密码"
     }
   },
   data() {
@@ -110,42 +108,46 @@ export default {
     initData() {
       this.getCodeTimes = 0;
       this.canGetCode = true;
-
+      this.codeTexti18n = "getMsgCode";
+      this.second = "";
       this.timer = null;
       this.myMobileCode = false;
       this.formData = {
-        cellphone: "",
         mobileCode: "",
         password: "",
         imgCode: ""
       };
     },
     validate(val, name) {
-      if (val == "") return;
-      switch (name) {
-        case "cellphone":
-          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
-          break;
-        case "password":
-          !this.Util.isPassword(val) &&
-            this.errMsg("密码必须是以英文字母开头的6-12位字符");
-          break;
-        case "mobileCode":
-          val != this.myMobileCode && this.errMsg("手机验证码不正确");
-          break;
-        case "verCode":
-          val != this.verCodeStr && this.errMsg("图形验证码不正确");
-          break;
+      if (val == "") {
+        this.errMsg("请填写完整信息");
+      } else if (name == "password" && !this.Util.isPassword(val)) {
+        this.errMsg("密码必须是以英文字母开头的6-12位字符");
+      } else if (
+        name == "imgCode" &&
+        this.formData.imgCode != this.verCodeStr
+      ) {
+        this.errMsg("图形验证码不正确");
+      } else {
+        return true;
       }
     },
-    formSubmit() {
+    formSubmit(api) {
       for (let key in this.formData) {
         let item = this.formData[key];
-        if (item == "") {
-          this.errMsg("请填写完整信息");
-          return;
-        }
+        if (!this.validate(item, key)) return;
       }
+      this.request(this.api[api], {
+        code: this.formData.mobileCode,
+        password: this.formData.password
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg);
+          this.closeModal();
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
     },
     countDown() {
       this.timer = this.Util.timerCounter({
@@ -166,9 +168,15 @@ export default {
       });
     },
     getMobileCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
-        return false;
+      if (!this.canGetCode) return false;
       this.countDown();
+      this.request(this.api.sendcodetoken).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg || "发送成功");
+        } else {
+          this.errMsg(res.msg || "发送失败");
+        }
+      });
     },
     createCode(arr, len) {
       let str = "";
