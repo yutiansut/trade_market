@@ -22,12 +22,13 @@ const Utils = (function () {
         },
         isIdCard(data) {
             let str = data;
+            let reg ='';
             if (str == "") return false;
             let len = str.length;
             if (len == 15) {
-                let reg = /^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/;
+                reg = /^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/;
             } else if (len == 18) {
-                let reg = /^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d|X|x)$/;
+                reg = /^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d|X|x)$/;
             } else {
                 return false;
             }
@@ -168,7 +169,19 @@ const Utils = (function () {
                 (config.onCounting && this.dataType(config.onCounting) === "function") && config.onCounting(n);
             }, config.duration);
             return timer;
-        }
+        },
+        //求和
+        //求和
+        sumCalc(arr, price, num) {
+            if (this.dataType(arr) == "array") {
+                arr.map(item => {
+                    if (item[price] && item[num]) {
+                        item.total = (item[price] * 1 * item[num] * 1).toFixed(4);
+                    }
+                });
+            }
+            return arr;
+        },
     }
 }());
 export default Utils;

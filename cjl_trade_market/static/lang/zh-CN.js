@@ -248,7 +248,7 @@ module.exports = {
     addressName: "地址名称",
     addressNamePlaceholder: "例如My address_1",
     withdrawAmount: "提现数额（币数）",
-    withdrawAmountPlaceholder: "最少60 USDT,一次最多1000000 USDT",
+    withdrawAmountPlaceholder: "最少60,一次最多1000000",
     commision: "手续费",
     btcAddress: "BTC格式地址",
     ethAddress: "ETH格式地址",
@@ -307,5 +307,6 @@ module.exports = {
     submitApplication: "提交上线申请",
     trade: "交易",
     change: "修改",
-    changePwd: "修改登录密码"
+    changePwd: "修改登录密码",
+    avisalPrice: "指导价"
 }

@@ -5,33 +5,34 @@
         </my-header>
         <el-container>
             <el-aside width='400px'>
-                <c2c-aside-comp :myData='currencyList'></c2c-aside-comp>
+                <c2c-aside-comp
+                    @onListClick="onListClick"
+                    :myData='currencyList'>
+                </c2c-aside-comp>
             </el-aside>
             <el-main>
                 <div class="panel-container p-rel flex flex-between">
                     <div class="form-wrap">
-                        <div class="font-18 font-bit-bold">
-                          {{$t('buy')||'买入'}}&nbsp;BTC
-                        </div>
+                        <div class="font-18 font-bit-bold" v-html="buyingLabel"></div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                             <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
-                            <a href="javascript:" v-text="$t('recharge')||'充值'"></a>
+                            <a href="/property" v-text="$t('recharge')||'充值'"></a>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyingValiation')||'买入估价'"></label>
-                            <el-input>
-                                <span class="unit" slot="suffix">BTC</span>
+                            <el-input disabled :value='coinInfo.buycny'>
+                                <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyVol')||'买入量'"></label>
                             <el-input>
-                                <span class="unit" slot="suffix">USDT</span>
+                                <span class="unit" slot="suffix" v-text="coinInfo.coinid"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label v-text="$t('balance')||'余额'"></label>
+                            <label v-text="$t('money')||'金额'"></label>
                             <el-input>
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
@@ -39,31 +40,31 @@
                         <button
                             @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
                             class="btn-block btn-large btn-danger btn-active"
-                            v-text="($t('buy')||'买入')+' BTC'">
+                            v-html="buyingLabel">
                         </button>
                     </div>
                     <div class="vertical-line p-abs abs-h-center"></div>
                     <div class="form-wrap">
-                        <div class="font-18 font-bit-bold">{{$t('sell')||'卖出'}}&nbsp;BTC</div>
+                        <div class="font-18 font-bit-bold" v-html="sellingLabel"></div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                           <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
-                          <a href="javascript:" v-text="$t('recharge')"></a>
+                          <a href="/property" v-text="$t('recharge')"></a>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellingValiation')||'卖出估价'"></label>
-                            <el-input>
-                                <span class="unit" slot="suffix">BTC</span>
+                            <el-input disabled :value='coinInfo.sellcny'>
+                                <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellVol')||'卖出量'"></label>
                             <el-input>
-                                <span class="unit" slot="suffix">USDT</span>
+                                <span class="unit" slot="suffix" v-text="coinInfo.coinid"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label v-text="$t('balance')||'余额'"></label>                            
+                            <label v-text="$t('money')||'金额'"></label>                            
                             <el-input>
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
@@ -71,7 +72,7 @@
                         <button
                             @click="userData.isLogin?sellHandle:errMsg('请登录后操作')"
                             class="btn-block btn-large btn-success btn-active"
-                            v-text="($t('sell')||'卖出')+' BTC'">
+                            v-html="sellingLabel">
                         </button>
                     </div>
                 </div>
@@ -118,18 +119,8 @@
 export default {
   data() {
     return {
-      currencyList: [
-        {
-          id: "1",
-          currency: "BTC / CNY",
-          thumb: ""
-        },
-        {
-          id: "2",
-          currency: "BTC / CNY",
-          thumb: ""
-        }
-      ],
+      currencyList: [],
+      coinInfo: "",
       myOrderList: [
         {
           date: "2018-09-07",
@@ -141,6 +132,31 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    buyingLabel() {
+      return `${this.$t("buy") || "买入"}&nbsp;${this.coinInfo.coinid}`;
+    },
+    sellingLabel() {
+      return `${this.$t("sell") || "卖出"}&nbsp;${this.coinInfo.coinid}`;
+    }
+  },
+  mounted() {
+    this.getOtcCoin();
+  },
+  methods: {
+    getOtcCoin() {
+      this.request(this.api.getotccoin).then(res => {
+        console.log(`OTC币种${JSON.stringify(res)}`);
+        if (res.code == "0" && res.data && res.data.list && res.data.list[0]) {
+          this.currencyList = res.data.list;
+          this.coinInfo = res.data.list[0];
+        }
+      });
+    },
+    onListClick(data) {
+      this.coinInfo = data;
+    }
   }
 };
 </script>

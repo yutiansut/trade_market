@@ -58,6 +58,7 @@ export default {
       title: this.$route.meta.title || "",
       path: this.$route.path
     };
+    //获取提币记录
     this.getRecord(this.api.getmyput);
   },
   beforeRouteLeave(to, from, next) {
@@ -74,7 +75,7 @@ export default {
     },
     getRecord(api, param) {
       this.request(api, param || {}).then(res => {
-        console.log(`充值记录:${JSON.stringify(res)}`);
+        console.log(`记录:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data && res.data.list && (this.myRecord = res.data.list);
       });

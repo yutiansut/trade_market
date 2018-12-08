@@ -77,6 +77,9 @@ export default {
         this.errMsg("请填写完整信息");
         return false;
       }
+      // this.request(this.api.addbank, {
+
+      // });
     },
     closeModal() {
       this.showModal = false;

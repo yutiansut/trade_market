@@ -54,6 +54,7 @@ export default {
     getQlist() {
       if (faqList) {
         this.qList = faqList;
+        this.getQItem(this.qList, this.qid);
       } else {
         this.request(this.api.getquest).then(res => {
           console.log(`问题列表:${JSON.stringify(res)}`);

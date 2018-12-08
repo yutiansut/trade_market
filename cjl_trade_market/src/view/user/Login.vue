@@ -74,12 +74,8 @@
                     :disabled="myGoogleCode?false:true"
                     @blur="validate(loginData.googleCode,'googleCode')">
                   </el-input>
-                  <div v-show="loginData.type==0"
+                  <div
                     @click='getMobileCode'
-                    class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
-                  </div>
-                  <div v-show="loginData.type==1"
-                    @click='getGoogleCode'
                     class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
                   </div>
                 </div>
@@ -120,8 +116,7 @@ export default {
       checkLogin: false,
       codeTexti18n: "getMsgCode",
       second: "",
-      myMobileCode: "123456",
-      myGoogleCode: "",
+      myMobileCode: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: ""
     };
@@ -139,11 +134,6 @@ export default {
         ];
       }
       this.verCodeStr = str;
-    },
-    // 获取google 验证码
-    getGoogleCode() {
-      if (!this.canGetCode) return false;
-      this.countDown();
     },
     // 获取手机验证码
     getMobileCode() {

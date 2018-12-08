@@ -248,7 +248,7 @@ module.exports = {
     addressName: "Address name",
     addressNamePlaceholder: "eg:My address_1",
     withdrawAmount: "Withdraw amount(coin amount)",
-    withdrawAmountPlaceholder: "at least 60 USDT,at most 1000000 USDT per time",
+    withdrawAmountPlaceholder: "at least 60,at most 1000000 per time",
     commision: "Commision",
     btcAddress: "BTC address",
     ethAddress: "ETH address",
@@ -307,5 +307,6 @@ module.exports = {
     distributionPlaceholder: "such as ICO distribution, team preservation and so on",
     trade: "Trade",
     change: "Change",
-    changePwd: "Change password"
+    changePwd: "Change password",
+    avisalPrice: "Guide price"
 }

@@ -15,7 +15,7 @@
                 <img class="currency-thumb thumb-30" src="" alt="">
                 <div class="heading">{{tradecoin}}/{{maincoin}}</div>
                 <div class="market-val flex flex-v-center">
-                  <span class="font-16" v-text="currentCoinInfo.prise"></span>
+                  <span class="font-16" >{{currentCoinInfo.prise|toFix()}}</span>
                   <span class="font-14 color-666">≈0.05 CNY </span>
                 </div>
                 <div class="market-condition font-12">
@@ -28,15 +28,15 @@
                   </span>
                   <span>
                     <em class="color-666" v-text="$t('high')||'高'"></em>
-                    <i v-text="currentCoinInfo.height"></i>
+                    <i>{{currentCoinInfo.height|toFix()}}</i>
                   </span>
                   <span>
                     <em class="color-666" v-text="$t('low')||'低'"></em>
-                    <i v-text="currentCoinInfo.low"></i>
+                    <i>{{currentCoinInfo.low|toFix()}}</i>
                   </span>
                   <span>
                     <em class="color-666" v-text="$t('dayVol')||'24H量'"></em>
-                    <i>{{currentCoinInfo.number}}&nbsp;{{tradecoin}}</i>
+                    <i>{{currentCoinInfo.number|toFix()}}&nbsp;{{tradecoin}}</i>
                   </span>
                 </div>
               </div>
@@ -50,8 +50,7 @@
                     <div class="break-line"></div>
                     <div class="account flex flex-between">
                       <span class="balance" v-html="availabelBalance"></span>
-                      <a href="javascript:"
-                        @click="showChargeBox"
+                      <a href="/property"
                         v-text="$t('recharge')||'充值'">
                       </a>
                     </div>
@@ -83,8 +82,7 @@
                     <div class="break-line"></div>
                     <div class="account flex flex-between">
                       <span class="balance" v-html="availabelAmount"></span>
-                      <a href="javascript:"
-                        @click="showChargeBox"
+                      <a href="/property"
                         v-text="$t('recharge')||'充值'">
                       </a>
                     </div>
@@ -113,7 +111,8 @@
                 <!-- 交易行情 -->
                 <div class="trade-market">
                   <div class="flex flex-between flex-v-center">
-                    <span class='font-18'>{{$t('latestPrice')||'最新价'}}&nbsp;0.0000011422&nbsp;BTC
+                    <span class='font-18'>
+                      <i v-html="latestPrice"></i>
                       <em class="font-12 color-666">≈ 0.05 CNY</em>
                     </span>
                     <!-- <router-link to=''>更多</router-link> -->
@@ -131,12 +130,16 @@
                       </span>
                     </el-table-column>
                     <el-table-column width='150'
-                      :label='priceLabel'
-                      prop='price'>
+                      :label='priceLabel'>
+                      <template slot-scope="scope">
+                        {{scope.row.price|toFix()}}
+                      </template>
                     </el-table-column>
                     <el-table-column width='120'
-                      :label='amountLabel'
-                      prop='number'>
+                      :label='amountLabel'>
+                      <template slot-scope="scope">
+                        {{scope.row.number|toFix()}}
+                      </template>
                     </el-table-column>
                     <el-table-column :label='totalLabel'>
                       <div slot-scope="scope" v-text="scope.row.total"></div>
@@ -229,16 +232,22 @@
                           </span>
                         </el-table-column>
                         <el-table-column
-                          :label='priceLabel'
-                          prop='price'>
+                          :label='priceLabel'>
+                          <template slot-scope="scope">
+                            {{scope.row.price|toFix()}}
+                          </template>
                         </el-table-column>
                         <el-table-column
-                          :label='marketVolLabel'
-                          prop='number'>
+                          :label='marketVolLabel'>
+                          <template slot-scope="scope">
+                            {{scope.row.number|toFix()}}
+                          </template>
                         </el-table-column>
                         <el-table-column
-                          :label='$t("volumn")||"成交量"'
-                          prop='dealnumber'>
+                          :label='$t("volumn")||"成交量"'>
+                          <template slot-scope="scope">
+                            {{scope.row.dealnumber|toFix()}}
+                          </template>
                         </el-table-column>
                         <el-table-column
                           :width="$i18n.locale==='zh-CN'?'60':'120'"
@@ -269,12 +278,16 @@
                         <span class="color-danger" slot-scope="scope" v-text="scope.row.writedate"></span>
                       </el-table-column>
                       <el-table-column width='150'
-                        :label='priceLabel'
-                        prop='price'>
+                        :label='priceLabel'>
+                        <template slot-scope="scope">
+                          {{scope.row.price|toFix()}}
+                        </template>
                       </el-table-column>
                       <el-table-column width='120'
-                        :label='amountLabel'
-                        prop='number'>
+                        :label='amountLabel'>
+                        <template slot-scope="scope">
+                          {{scope.row.number|toFix()}}
+                        </template>
                       </el-table-column>
                       <el-table-column :label='totalLabel'>
                         <div slot-scope="scope" v-text="scope.row.total"></div>
@@ -287,19 +300,18 @@
             </el-main>
         </el-container>
         <!-- 充币弹窗 -->
-        <charge-box
+        <!-- <charge-box
           :showCharge='show'
           :chargeAddress='chargeAddress' 
           @closeModel='onClose'>
-        </charge-box>
+        </charge-box> -->
         <my-footer></my-footer>
     </div>
 </template>
 <script>
 import mainCoinModel from "@/model/allCoinModel.js";
-import chargeBox from "@/components/dialogContent/chargeBox";
+import { Loading } from "element-ui";
 export default {
-  components: { chargeBox },
   data() {
     return {
       show: false,
@@ -337,28 +349,57 @@ export default {
       chargeAddress: "",
       // 充币二维码
       qrCode: null,
-      bindState: null
+      bindState: null,
+      // 是否能够交易
+      canTrade: false
     };
   },
   mounted() {
+    let loadingMask = Loading.service({
+      text: "加载中...",
+      background: "rgba(255, 255, 255, .4)"
+    });
     this.getState();
     this.$bus.on("tradeCoinLoad", coinData => {
       this.currentCoinInfo = coinData.currentSubCoin;
-      this.buyFormData.price = this.sellFormData.price = this.currentCoinInfo.prise;
       this.maincoin = coinData.maincoin;
       this.tradecoin = coinData.tradecoin;
       // 获取币种信息
       this.awaitResult(coinData.maincoin, coinData.tradecoin).then(res => {
         let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [...res];
-        this.currentDeclareData = entrustData.data.list;
+        this.currentDeclareData = this.Util.sumCalc(
+          entrustData.data.list,
+          "price",
+          "number"
+        );
         this.historicalBuyData = orderData.data.list;
-        this.latestBuyData = buyOrder.data.list;
-        this.latestSoldData = sellOrder.data.list;
-        this.historicalBuyData = allOrder.data.list;
+        this.latestBuyData = this.Util.sumCalc(
+          buyOrder.data.list,
+          "price",
+          "number"
+        );
+
+        this.latestSoldData = this.Util.sumCalc(
+          sellOrder.data.list,
+          "price",
+          "number"
+        );
+        this.historicalBuyData = this.Util.sumCalc(
+          allOrder.data.list,
+          "price",
+          "number"
+        );
+        loadingMask.close();
       });
       //获取可用;
-      this.getAvailabel(this.tradecoin).then(res => {
+      Promise.all([
+        this.getAvailabel(this.maincoin),
+        this.getAvailabel(this.tradecoin)
+      ]).then(res => {
         console.log(`可用：${JSON.stringify(res)}`);
+        this.myBlance = res[0].usable;
+        this.myAvailable = res[1].usable;
+        loadingMask.close();
       });
     });
   },
@@ -393,14 +434,25 @@ export default {
         console.log(err);
       });
     },
+    // 获取账户状态
+    getState() {
+      return this.request(this.api.saftyState).then(res => {
+        console.log(`账号状态：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res.data && res.data.list) {
+          this.bindState = res.data.list[0];
+          this.canTrade = this.canTradeCheck(this.bindState);
+        }
+      });
+    },
     // 获取可用
     getAvailabel(coin) {
-      return this.request(this.api.getdaynumber, {
-        coin: coin,
+      return this.request(this.api.getaccount, {
+        search: coin,
         showLoading: 0
       }).then(res => {
-        if (res && res.data && res.data.list.length > 0) {
-          Promise.resolve(res.data.list[0]);
+        if (res && res.data) {
+          return Promise.resolve(res.data.list[0]);
         } else {
           return null;
         }
@@ -467,60 +519,108 @@ export default {
       let num = this.buyFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
-        return false;
-      } else if (!this.valideForm(num, price)) {
-        return false;
+      } else if (!this.canTrade) {
+        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+          confirmButtonText: "去认证",
+          type: "warning"
+        }).then(() => {
+          this.navigateTo("/account/security");
+        });
+      } else if (this.valideForm(num, price)) {
+        this.tradeHandle(this.api.forbuy, {
+          maincoin: this.maincoin,
+          tradecoin: this.tradecoin,
+          number: this.buyFormData.orderVol,
+          price: this.buyFormData.price
+        });
       }
-      this.tradeHandle(this.api.forbuy, {
-        maincoin: this.maincoin,
-        tradecoin: this.tradecoin,
-        number: this.buyFormData.orderVol,
-        price: this.buyFormData.price
-      });
     },
     sellHandle() {
       let price = this.sellFormData.price * 1;
       let num = this.sellFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
-        return false;
-      } else if (!this.valideForm(num, price)) {
-        return false;
+      } else if (!this.canTrade) {
+        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+          confirmButtonText: "去认证",
+          type: "warning"
+        }).then(() => {
+          this.navigateTo("/account/security");
+        });
+      } else if (this.valideForm(num, price)) {
+        this.tradeHandle(this.api.forsell, {
+          maincoin: this.maincoin,
+          tradecoin: this.tradecoin,
+          number: this.sellFormData.orderVol,
+          price: this.sellFormData.price
+        });
       }
-      this.tradeHandle(this.api.forsell, {
-        maincoin: this.maincoin,
-        tradecoin: this.tradecoin,
-        number: this.sellFormData.orderVol,
-        price: this.sellFormData.price
-      });
     },
     //表格列点击
     getRowData(data) {
+      if (mainCoinModel.tradecoinid == data.coinid) return false;
       this.currentCoinInfo = data;
       mainCoinModel.coinid = data.maincoinid;
       mainCoinModel.tradecoinid = data.coinid;
-    },
-    // 打开充币
-    onClose() {
-      this.show = false;
-    },
-    // 获取账户状态
-    getState() {
-      if (this.storage.get("bindState")) {
-        this.bindState = this.storage.get("bindState");
-        return;
-      }
-      this.request(this.api.saftyState).then(res => {
-        console.log(`账号状态：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
-        res.data && res.data.list && (this.bindState = res.data.list[0]);
-        this.storage.set("bindState", res.data.list[0]);
+      let loadingMask = Loading.service({
+        text: "加载中...",
+        background: "rgba(255, 255, 255, .4)"
       });
+      this.awaitResult(coinData.maincoin, coinData.tradecoin).then(res => {
+        let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [...res];
+        this.currentDeclareData = this.Util.sumCalc(
+          entrustData.data.list,
+          "price",
+          "number"
+        );
+        this.historicalBuyData = orderData.data.list;
+        this.latestBuyData = this.Util.sumCalc(
+          buyOrder.data.list,
+          "price",
+          "number"
+        );
+
+        this.latestSoldData = this.Util.sumCalc(
+          sellOrder.data.list,
+          "price",
+          "number"
+        );
+        this.historicalBuyData = this.Util.sumCalc(
+          allOrder.data.list,
+          "price",
+          "number"
+        );
+        loadingMask.close();
+      });
+      //获取可用;
+      Promise.all([
+        this.getAvailabel(data.maincoinid),
+        this.getAvailabel(data.coinid)
+      ]).then(res => {
+        console.log(`可用：${JSON.stringify(res)}`);
+        this.myBlance = res[0].usable;
+        this.myAvailable = res[1].usable;
+        loadingMask.close();
+      });
+    },
+    // 是否能够交易
+    canTradeCheck(statesObj) {
+      if (!this.Util.dataType(statesObj) == "object") return false;
+      if (
+        statesObj.tradstate > 0 &&
+        statesObj.bankstate > 0 &&
+        statesObj.idcardstate > 0 &&
+        stateObj.googlestate > 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
     },
     // 打开弹窗
     showChargeBox() {
-      if (this.bindState.idcardstate != 0) {
-        this.$alert("您还没有绑定银行卡", "提示", {
+      if (this.bindState.bankstate == 0) {
+        this.$confirm("您还没有绑定银行卡", "提示", {
           confirmButtonText: "去绑定",
           cancelButtonText: "取消",
           type: "warning"
@@ -558,13 +658,22 @@ export default {
     },
     //可用余额
     availabelBalance() {
-      return `${this.$t("avilable") || "可用"}&nbsp;${this.myBlance ||
-        0}&nbsp;${this.maincoin}`;
+      let num = (this.myBlance * 1).toFixed(6);
+      return `${this.$t("avilable") || "可用"}&nbsp;${num || 0}&nbsp;${
+        this.maincoin
+      }`;
     },
     //可兑换额度
     availabelAmount() {
-      return `${this.$t("canExchange") || "可兑换"}&nbsp;${this.myAvailable ||
-        0}&nbsp;${this.tradecoin}`;
+      return `${this.$t("canExchange") || "可兑换"}&nbsp;${this.myAvailable *
+        1 || 0}&nbsp;${this.tradecoin}`;
+    },
+    // 最新价
+    latestPrice() {
+      // {{$t('latestPrice')||'最新价'}}&nbsp;0.0000011422&nbsp;BTC
+      return `${this.$t("latestPrice") || "最新价"}&nbsp;${
+        this.currentCoinInfo.prise
+      }`;
     }
   },
   watch: {

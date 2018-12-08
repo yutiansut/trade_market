@@ -16,12 +16,12 @@
                     :placeholder='$t("emailPlaceholder")||"请输入邮箱"'>
                   </el-input>
                 </el-form-item>
-                <el-form-item :label='$t("emailCode")||"邮箱验证码"'>
+                <!-- <el-form-item :label='$t("emailCode")||"邮箱验证码"'>
                   <el-input v-model="formData.emailCode" name='emailCode'
                     @blur="validate(formData.emailCode,'emailCode')"
                     :placeholder='$t("emailCodePlaceholder")||"请输入邮箱验证码"'>
                   </el-input>
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item :label='$t("cellphone")||mobileLabel'>
                   <el-input name='mobile'
                     @blur="validate(formData.cellphone,'cellphone')"
@@ -111,10 +111,16 @@ export default {
       this.formData = {
         cellphone: "",
         email: "",
-        emailCode: "",
         mobileCode: "",
         imgCode: ""
       };
+    },
+    bindEmail(data) {
+      this.request(this.api.bindemail, {
+        email: data.email || "",
+        code: data.code || "",
+        emailcode: data.emailcode || ""
+      });
     },
     createCode(arr, len) {
       let str = "";
@@ -133,6 +139,20 @@ export default {
           return;
         }
       }
+      this.request(this.api.bindemail, {
+        code: this.formData.mobileCode,
+        email: this.formData.email,
+        emailcode: this.formData.emailCode
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg || "绑定成功");
+          this.init();
+          this.showModal = false;
+          this.$emit("emailBind");
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
     },
     validate(val, name) {
       if (val == "") return;
@@ -142,12 +162,6 @@ export default {
           break;
         case "emailCode":
           val != this.myEmailCode && this.errMsg("邮箱验证码不正确");
-          break;
-        case "cellphone":
-          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
-          break;
-        case "mobileCode":
-          val != this.myMobileCode && this.errMsg("手机验证码不正确");
           break;
         case "verCode":
           val != this.verCodeStr && this.errMsg("图形验证码不正确");
@@ -176,6 +190,13 @@ export default {
           this.canGetCode = true;
           this.getCodeTimes > 0 &&
             (this.codeText = $t("tryAgain") || "重新获取");
+        }
+      });
+      this.request(this.api.sendcodetoken, {
+        tel: this.formData.cellphone
+      }).then(res => {
+        if (res.data.code == "0") {
+          this.successMsg(res.msg);
         }
       });
     }

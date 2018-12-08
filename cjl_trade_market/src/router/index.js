@@ -38,7 +38,7 @@ const routes = [
   {
     path: '/property',
     component: r => require(['@/view/property/Main'], r),
-    redirect: '/',
+    redirect: 'Property',
     children: [
       {
         path: '/',

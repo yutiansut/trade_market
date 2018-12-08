@@ -34,20 +34,18 @@
 export default {
   data() {
     return {
-      orderDetailData: [
-        {
-          orderId: "116166",
-          currency: "USDT",
-          type: "买入",
-          num: "46516",
-          price: "0.4849USDT",
-          amount: "48489.448 BOE",
-          createdTime: "2484-4-8",
-          paidDate: "2484-4-8",
-          confirmDate: "2484-4-8"
-        }
-      ]
+      orderDetailData: null
     };
+  },
+  mounted() {
+    this.getOrderRecord();
+  },
+  methods: {
+    getOrderRecord() {
+      this.request(this.api.getc2corder).then(res => {
+        console.log(`c2c交易订单：${JSON.stringify(res)}`);
+      });
+    }
   }
 };
 </script>

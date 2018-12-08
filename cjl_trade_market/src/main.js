@@ -39,6 +39,7 @@ const i18n = new VueI18n({
     'zh-CN': Object.assign(require('../static/lang/zh-CN'), zhLocale)
   }
 });
+
 // element UI 语言同步;
 locale.i18n((key, value) => i18n.t(key, value));
 /*
@@ -73,6 +74,10 @@ import userModel from './model/userData';
 import routeModel from './model/routeModel';
 import myStorage from './assets/js/myStorage';
 import apiCfg from './config/apiConfig';
+import filter from './assets/js/filter';
+Object.keys(filter).forEach(key => {
+  Vue.filter(key, filter[key])
+});
 Vue.config.productionTip = false;
 // 公共方法
 const getDataFaild = function (errMsg) {

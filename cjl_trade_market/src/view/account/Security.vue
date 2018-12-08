@@ -170,7 +170,8 @@
         <!-- 绑定邮箱 -->
         <bind-email 
           :show='dialogId=="email"?true:false'
-          @closeModal='onClose'>
+          @closeModal='onClose'
+          @emailBind="emailBind">
         </bind-email>
         <!-- 绑定银行卡号 -->
         <bind-bank 
@@ -211,7 +212,28 @@ export default {
   },
   methods: {
     bindHandle(k, index) {
+      let idState = this.bindState.idcardstate;
+      if (k == "bankAccount") {
+        if (idState == "0") {
+          this.$confirm("您还没有实名认证，无法操作", "提示", {
+            confirmButtonText: "去认证",
+            cancelButtonText: "取消",
+            type: "warning"
+          }).then(() => {
+            this.navigateTo("Identify");
+          });
+          return;
+        } else if (idState == "1") {
+          this.$alert("实名认证审核中，无法操作", "提示", {
+            confirmButtonText: "确定"
+          });
+          return;
+        }
+      }
       this.dialogId = k;
+    },
+    emailBind() {
+      this.bindState.emailstate = true;
     },
     onClose() {
       this.dialogId = null;

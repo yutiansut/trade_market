@@ -48,7 +48,7 @@
                     <button class="btn-inline abs-vh-center btn-large btn-danger"
                       v-text="$t('uploadPhoto')||'上传照片'">
                     </button>
-                    <img :style="defaultImg_1" class="image-preview" src="" alt="">
+                    <img :style="defaultImg_1" class="image-preview" :src="formData.faceIdPhoto" alt="">
                 </div>
             </el-col>
             <el-col :span="8">
@@ -62,7 +62,7 @@
                     <button class="btn-inline abs-vh-center btn-large btn-danger"
                       v-text="$t('uploadPhoto')||'上传照片'">
                     </button>
-                    <img :style="defaultImg_2" class="image-preview" src="" alt="">
+                    <img :style="defaultImg_2" class="image-preview" :src="formData.backIdPhoto" alt="">
                 </div>
             </el-col>
             <el-col :span="8">
@@ -76,7 +76,7 @@
                     <button class="btn-inline abs-vh-center btn-large btn-danger"
                       v-text="$t('uploadPhoto')||'上传照片'">
                     </button>
-                    <img :style="defaultImg_3" class="image-preview" src="" alt="">
+                    <img :style="defaultImg_3" class="image-preview" :src="formData.fullPhoto" alt="">
                 </div>
             </el-col>
         </el-row>
@@ -91,20 +91,34 @@
         <div style="margin-top:38px;" class="title font-18 font-bold"
           v-text="$t('fillIdInfo')||'填写您的身份信息'">
         </div>
-        <el-form label-position='top'>
+        <el-form
+          @submit.native.prevent
+          label-position='top'>
           <el-form-item :label='$t("fullname")||"您的姓名"'>
-            <el-input name='name' type='name' :placeholder='$t("fullname")||"请输入您的姓名"'></el-input>
+            <el-input name='name' type='name'
+              v-model="formData.name"
+              :placeholder='$t("fullname")||"请输入您的姓名"'>
+            </el-input>
           </el-form-item>
           <el-form-item :label='$t("fullNameAgain")||"再次输入您的姓名"'>
-            <el-input name='confirmName' type='text' :placeholder='$t("fullNameAgain")||"请在次输入您的姓名"'></el-input>
+            <el-input name='confirmName' type='text'
+              v-model="formData.confirmName"
+              :placeholder='$t("fullNameAgain")||"请在次输入您的姓名"'>
+            </el-input>
           </el-form-item>
           <el-form-item :label='$t("idType")||"你的证件类型"'>
-            <el-input name='cardType' type='text' :placeholder='$t("idType")||"请输入证件类型"'></el-input>
+            <el-input disabled='disabled' name='cardType' type='text' value='身份证' 
+            :placeholder='$t("idType")||"请输入证件类型"'>
+          </el-input>
           </el-form-item>
           <el-form-item :label='$t("idNumber")||"您的证件号码"'>
-            <el-input name='cardNo' type='text' :placeholder='$t("idNumber")||"请输入证件号码"'></el-input>
+            <el-input name='cardNo' type='text' v-model="formData.cardnumber"
+              :placeholder='$t("idNumber")||"请输入证件号码"'>
+            </el-input>
           </el-form-item>
-          <button class="btn-block btn-large btn-danger btn-active"
+          <button
+            @click="submitForm"
+            class="btn-block btn-large btn-danger btn-active"
             v-text="$t('confirmedSubmit')||'确认提交'">
           </button>
         </el-form>
@@ -118,15 +132,22 @@ export default {
     const bg_2 = require("@/assets/images/idauth/id_2.png");
     const bg_3 = require("@/assets/images/idauth/id_3.png");
     return {
-      faceIdPhoto: "",
-      backIdPhoto: "",
-      fullPhoto: "",
       defaultImg_1: `background-image:url(${bg_1})`,
       defaultImg_2: `background-image:url(${bg_2})`,
       defaultImg_3: `background-image:url(${bg_3})`,
-      name: "",
-      confirmName: ""
+      bindState: "",
+      formData: {
+        name: "",
+        faceIdPhoto: "",
+        backIdPhoto: "",
+        fullPhoto: "",
+        confirmName: "",
+        cardnumber: ""
+      }
     };
+  },
+  mounted() {
+    this.getState();
   },
   methods: {
     uploadId(id, e) {
@@ -136,8 +157,9 @@ export default {
       let formData = new FormData();
       let options = {
         headers: {
-          "Content-Type": "multipart/form-data"
-        }
+          "Content-Type": "MultipartFile/form-data"
+        },
+        method: "post"
       };
       if (!/\.(jpg|png)$/.test(name)) {
         this.$message.error("图片格式需为jpg或者png");
@@ -149,19 +171,78 @@ export default {
         );
         return;
       }
+      formData.append("imgurl", file);
+      options.data = formData;
       switch (id) {
-        case 1: // 传输正面
-          formData.append("file", file);
-
+        case "1": // 传输正面
+          options.url = `${this.api.baseURL}/zm`;
+          axios(options).then(res => {
+            if (res.data.code == "0") {
+              this.successMsg(res.msg || "上传成功");
+              this.formData.faceIdPhoto = res.data.data.result;
+            }
+          });
           break;
-        case 2: // 传输背面
+        case "2": // 传输背面
+          options.url = `${this.api.baseURL}/fm`;
+          axios(options).then(res => {
+            if (res.data.code == "0") {
+              this.successMsg(res.msg || "上传成功");
+              this.formData.backIdPhoto = res.data.data.result;
+            }
+          });
           break;
-        case 3: // 传输手持证件照
+        case "3": // 传输手持证件照
+          options.url = `${this.api.baseURL}/sc`;
+          axios(options).then(res => {
+            if (res.data.code == "0") {
+              this.successMsg(res.msg || "上传成功");
+              this.formData.fullPhoto = res.data.data.result;
+            }
+          });
           break;
       }
-      options.url = "";
-      options.data = formData;
-      axios(options).then(res => console.log(res));
+    },
+    getState() {
+      this.request(this.api.saftyState).then(res => {
+        if (res && res.code == "0") {
+          this.bindState = res.data.list[0];
+        }
+      });
+    },
+    verifyId() {
+      this.request(this.api.realynanme, {
+        cardzm: this.formData.faceIdPhoto,
+        cardfm: this.formData.backIdPhoto,
+        cardsc: this.formData.fullPhoto,
+        name: this.formData.name,
+        cardnumber: this.formData.cardnumber
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg || "操作成功");
+        }
+      });
+    },
+    submitForm() {
+      for (let key in this.formData) {
+        if (this.formData[key] == "") {
+          this.errMsg("请填写完整信息");
+          return;
+        }
+      }
+      if (this.formData.name != this.formData.confirmName) {
+        this.errMsg("两次输入姓名不匹配");
+        return false;
+      }
+      if (!this.Util.isIdCard(this.formData.cardnumber)) {
+        this.errMsg("身份证号格式不正确");
+        return false;
+      }
+      if (this.bindState.idcardstate == "1") {
+        this.$alert("请等待上次实名认证审核通过后，再进行操作");
+        return false;
+      }
+      this.verifyId();
     }
   }
 };

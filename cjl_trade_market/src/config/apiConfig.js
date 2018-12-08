@@ -188,6 +188,12 @@ let apiCfg = (function () {
         gethistoryorder: {
             url: 'gethistoryorder'
         },
+        getotcorder: {
+            url: 'getotcorder'
+        },
+        getotcorderbycoin: {
+            url: 'getotcorderbycoin'
+        },
         //买入
         forbuy: {
             url: 'forbuy'
@@ -243,6 +249,29 @@ let apiCfg = (function () {
         //登录日志
         loglogin: {
             url: 'loglogin'
+        },
+        //绑定邮箱
+        bindemail: {
+            url: "bindemail"
+        },
+        //绑定银行卡
+        addbank: {
+            url: 'addbank'
+        },
+        // 获取google验证码
+        getgooglekey: {
+            url: "getgooglekey"
+        },
+        //绑定谷歌验证码
+        addgoogle: {
+            url: 'addgoogle'
+        },
+        //实名认证
+        realynanme: {
+            url: 'realynanme'
+        },
+        getotccoin: {
+            url: 'getotccoin'
         }
     }
 }());

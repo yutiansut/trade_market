@@ -18,7 +18,7 @@
                     <div class="market-condition">
                         <span>
                           <em class="color-666" v-text="$t('livePrice')||'实时价'"></em>
-                          <i v-text="coinInfo.price"></i>
+                          <i v-text="'￥'+coinInfo.cny"></i>
                         </span>
                         <span>
                           <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
@@ -42,28 +42,28 @@
                         <div class="font-18 font-bit-bold" v-html="buyingLabel"></div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                            <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000{{coinInfo.coinid}}</span>
+                            <span class="balance" v-html="advisalPrice"></span>
                             <a href="/property" v-text="$t('recharge')||'充值'"></a>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyingValiation')||'买入估价'"></label>
-                            <el-input>
+                            <el-input v-model="buyFormData.price">
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyVol')||'买入量'"></label>
-                            <el-input>
+                            <el-input v-model="buyFormData.number">
                                 <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label v-text="$t('balance')||'余额'"></label>
-                            <el-input>
+                            <label v-text="$t('money')||'金额'"></label>
+                            <el-input disabled='disabled' :value="buyTotal">
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
-                        <button @click="userData.isLogin?buyHandle:errMsg('请登录后操作')"
+                        <button @click="buyHandle"
                           class="btn-block btn-large btn-danger btn-active"
                           v-html="buyingLabel">
                         </button>
@@ -73,28 +73,28 @@
                         <div class="font-18 font-bit-bold" v-html="sellingLabel"></div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                          <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                          <span class="balance" v-html="myAvailableLabel"></span>
                           <a href="javascript:" v-text="$t('recharge')"></a>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellingValiation')||'卖出估价'"></label>
-                            <el-input>
+                            <el-input v-model="sellFormData.price">
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellVol')||'卖出量'"></label>
-                            <el-input>
+                            <el-input v-model="sellFormData.number">
                                 <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
-                            <label v-text="$t('balance')||'余额'"></label>                            
-                            <el-input>
+                            <label v-text="$t('money')||'金额'"></label>                            
+                            <el-input disabled='disabled' :value="sellTotal">
                                 <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
-                        <button @click="userData.isLogin?sellHandle:errMsg('请登录后操作')"
+                        <button @click="sellHandle"
                           class="btn-block btn-large btn-success btn-active"
                           v-html="sellingLabel">
                         </button>
@@ -115,11 +115,16 @@
                             :class="scope.row.type=='0'?'color-danger':'color-success'">
                           </span>
                         </el-table-column>
-                        <el-table-column prop='price'
+                        <el-table-column
                           :label='($t("price")||"价格")+"(CNY)"'>
+                          <template slot-scope="scope">
+                            {{scope.row.price|toFix()}}
+                          </template>
                         </el-table-column>
-                        <el-table-column prop='number'
-                          :label='numberLabel'>
+                        <el-table-column :label='numberLabel'>
+                          <template slot-scope="scope">
+                            {{scope.row.number|toFix()}}
+                          </template>
                         </el-table-column>
                         <el-table-column prop='total'
                           :label='($t("total")||"总计")+"(CNY)"'>
@@ -142,9 +147,10 @@
                             <button v-if='scope.row.type=="1"'
                               class="btn-inline btn-mini btn-radius btn-danger"
                               v-text="$t('buy')"
-                              @click="userData.isLogin?buyOrderHandle:errMsg('请登录后操作')">
+                              @click="buyOrderHandle">
                             </button>
                             <button v-else
+                              @click='sellOrderHandle'
                               class="btn-inline btn-mini btn-radius btn-success"
                               v-text="$t('sell')">
                             </button>
@@ -173,13 +179,18 @@
                               :class="scope.row.type=='0'?'color-danger':'color-success'">
                             </span>
                           </el-table-column>
-                          <el-table-column prop='price'
+                          <el-table-column
                             :label='($t("price")||"价格")+"(CNY)"'>
+                            <template slot-scope="scope">
+                              {{scope.row.price|toFix()}}
+                            </template>
                           </el-table-column>
-                          <el-table-column prop='number'
-                            :label='numberLabel'>
+                          <el-table-column :label='numberLabel'>
+                            <template slot-scope="scope">
+                              {{scope.row.number|toFix()}}
+                            </template>
                           </el-table-column>
-                          <el-table-column prop='money'
+                          <el-table-column prop='total'
                             :label='amountLabel'>
                           </el-table-column>
                           <!-- <el-table-column width='150' prop='name'
@@ -217,13 +228,18 @@
                               :class="scope.row.type=='0'?'color-danger':'color-success'">
                             </span>
                           </el-table-column>
-                          <el-table-column prop='price'
+                          <el-table-column
                             :label='($t("price")||"价格")+"(CNY)"'>
+                            <template slot-scope="scope">
+                              {{scope.row.price|toFix()}}
+                            </template>
                           </el-table-column>
-                          <el-table-column prop='number'
-                            :label='numberLabel'>
+                          <el-table-column :label='numberLabel'>
+                            <template slot-scope="scope">
+                              {{scope.row.number|toFix()}}
+                            </template>
                           </el-table-column>
-                          <el-table-column prop='money'
+                          <el-table-column prop='total'
                             :label='amountLabel'>
                           </el-table-column>
                           <!-- <el-table-column width='150' prop='name'
@@ -292,14 +308,25 @@ export default {
   data() {
     return {
       dialogId: null,
+      bindState: null,
+      canTrade: false,
       userData: this.userModel,
       operateLable: "卖出",
       operateLabeli18n: "sell",
       coinid: "",
       coinInfo: "",
-      myBlance: 0,
       myAvailable: 0,
       accountInfo: null,
+      buyFormData: {
+        price: "",
+        number: "",
+        total: ""
+      },
+      sellFormData: {
+        price: "",
+        number: "",
+        total: ""
+      },
       // 订单匹配弹窗配置
       confirmCfg: {
         title: "买入确认",
@@ -371,12 +398,16 @@ export default {
       })
       .then(coin => {
         this.gettradorder(coin);
-        this.getMyAccount(coin);
+        this.getMyAccount(coin).then(res => {
+          this.myAvailable = res.usable;
+        });
         return this.getc2callorder(coin);
       })
       .then(result => {
-        result && (this.marketList = result);
-        // result && (this.coinInfo = result);
+        if (result) {
+          this.Util.sumCalc(result, "price", "number");
+          this.marketList = result;
+        }
       });
   },
   computed: {
@@ -395,14 +426,62 @@ export default {
     //金额文字
     amountLabel() {
       return `${this.$t("money") || "金额"}(CNY)`;
+    },
+    // 可用
+    myAvailableLabel() {
+      let num = this.$options.filters.toFix(this.myAvailable);
+      return `${this.$t("avilable") || "可用"}${num}&nbsp;${
+        this.coinInfo.coinid
+      }`;
+    },
+    //平台指导价
+    advisalPrice() {
+      // {{$t('avilable')||'可用'}}&nbsp;0.00000000{{coinInfo.coinid}}
+      return `${this.$t("avisalPrice") || "指导价"}&nbsp;￥${
+        this.coinInfo.cny
+      }`;
+    },
+    //买入总金额
+    buyTotal() {
+      return this.buyFormData.price * this.buyFormData.number;
+    },
+    //卖出总金额
+    sellTotal() {
+      return this.sellFormData.price * this.sellFormData.number;
     }
   },
   methods: {
-    buyHandle() {},
+    buyHandle() {
+      if (this.buyTotal != "NaN" && this.validation()) {
+        this.request(this.api.addbuyc2c, {
+          coin: this.coinInfo.coinid,
+          price: this.buyFormData.price,
+          number: this.sellFormData.number
+        }).then(res => {
+          console.log(`${JSON.stringify(res)}`);
+        });
+      } else {
+        this.errMsg("价格或者数量，必须是数字");
+      }
+    },
     sellHandle() {},
-    buyOrderHandle() {},
+    buyOrderHandle() {
+      if (!this.userData.isLogin) {
+        this.errMsg("请登录后操作");
+      } else {
+      }
+    },
+    sellOrderHandle() {
+      if (!this.userData.isLogin) {
+        this.errMsg("请登录后操作");
+      } else {
+      }
+    },
     onListClick(data) {
-      console.log(data);
+      this.coinInfo = data;
+      this.getc2corder();
+      this.getc2callorder(data.coinid);
+      this.gettradorder(data.coinid);
     },
     // 获取c2c币种
     getC2Ccoin() {
@@ -441,6 +520,7 @@ export default {
       return this.request(this.api.getc2corder).then(res => {
         console.log(`c2c我的订单：${JSON.stringify(res)}`);
         if (res.code == "0") {
+          this.Util.sumCalc(res.data.list, "price", "number");
           this.myOrderList = res.data.list;
         }
       });
@@ -451,13 +531,59 @@ export default {
         coin: coin
       }).then(res => {
         console.log(`c2c交易订单：${JSON.stringify(res)}`);
+        this.Util.sumCalc(res.data.result, "price", "number");
         this.myC2COrderList = res.data.result;
       });
     },
     //获取资产信息
     getMyAccount(coin) {
-      this.request(this.api.getaccount, { search: coin }).then(res => {
-        console.log(res);
+      return this.request(this.api.getaccount, { search: coin }).then(res => {
+        console.log(`我的资产：${JSON.stringify(res)}`);
+        if (res.code == "0") {
+          return Promise.resolve(res.data.list[0]);
+        }
+      });
+    },
+    // 操作校验
+    validation() {
+      if (!this.userData.isLogin) {
+        this.errMsg("请登录后操作");
+        return false;
+      } else if (!this.canTrade) {
+        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+          confirmButtonText: "去认证",
+          type: "warning"
+        }).then(() => {
+          this.navigateTo("/account/security");
+          return false;
+        });
+      } else {
+        return true;
+      }
+    },
+    //检测是否能够交易
+    canTradeCheck(statesObj) {
+      if (!this.Util.dataType(statesObj) == "object") return false;
+      if (
+        statesObj.tradstate > 0 &&
+        statesObj.bankstate > 0 &&
+        statesObj.idcardstate > 0 &&
+        stateObj.googlestate > 0
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    //获取的账户状态
+    getState() {
+      return this.request(this.api.saftyState).then(res => {
+        console.log(`账号状态：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res.data && res.data.list) {
+          this.bindState = res.data.list[0];
+          this.canTrade = this.canTradeCheck(this.bindState);
+        }
       });
     }
   }

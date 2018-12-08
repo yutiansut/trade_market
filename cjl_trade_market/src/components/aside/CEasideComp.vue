@@ -23,9 +23,10 @@
               </div>
               </template>
           </el-table-column>
-          <el-table-column
-            :label='$t("latestPrice")||"最新价"' 
-            prop='prise'>
+          <el-table-column :label='$t("latestPrice")||"最新价"' >
+            <template slot-scope="scope">
+              {{scope.row.prise | toFix()}}
+            </template>
           </el-table-column>
           <el-table-column 
             :label='$t("increase")||"涨幅"'
