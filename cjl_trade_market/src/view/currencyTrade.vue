@@ -6,10 +6,13 @@
         <el-container>
             <!-- 左侧表格栏目 -->
             <el-aside width="24%">
-              <ce-aside-comp @onRowClick='getRowData'></ce-aside-comp>
+              <ce-aside-comp
+                @onAsideTabChange='onAsideTabChange'
+                @onRowClick='getRowData'>
+              </ce-aside-comp>
             </el-aside>
             <!-- 主要body -->
-            <el-main>
+            <el-main v-loading='showLoading'>
               <!-- K线图头部 -->
               <div class="panel-head flex flex-v-center">
                 <img class="currency-thumb thumb-30" src="" alt="">
@@ -23,7 +26,7 @@
                     <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
                     <i
                       :class="currentCoinInfo.rise*1>0?'color-danger':'color-success'"
-                      v-text='currentCoinInfo.rise'>
+                      v-text='currentCoinInfo.rise*1'>
                     </i>
                   </span>
                   <span>
@@ -41,7 +44,9 @@
                 </div>
               </div>
               <!-- K线图占位 -->
-              <div id='kMap' class="k-map"></div>
+              <div id='kMap' class="k-map">
+                <iframe src="../static/kline.html" width="100%" height="100%" frameborder="0"></iframe>
+              </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf flex flex-between">
                   <!-- 买入 -->
@@ -115,63 +120,41 @@
                   <div class="flex flex-between flex-v-center">
                     <span class='font-18'>
                       <i v-html="latestPrice"></i>
-                      <em class="font-12 color-666">≈ 0.05 CNY</em>
+                      <!-- <em class="font-12 color-666">≈ 0.05 CNY</em> -->
                     </span>
                     <!-- <router-link to=''>更多</router-link> -->
                   </div>
                   <div class="break-line"></div>
-                  <!-- 卖出五档图 -->
-                  <el-table style="font-weight:normal"
-                    :data='latestSoldData'
-                    :cell-style='myCellStyle'
-                    max-height='180' stripe>
-                    <el-table-column width='80'
-                      :label='$t("stalls")||"档位"'>
-                      <span class="color-success" slot-scope="scope">
-                        {{$t('sell')}}&nbsp;{{scope.$index+1}}
-                      </span>
-                    </el-table-column>
-                    <el-table-column width='150' 
-                      :label='priceLabel'
-                      prop='price'>
-                    </el-table-column>
-                    <el-table-column width='120'
-                      :label='amountLabel'
-                      prop='number'>
-                    </el-table-column>
-                    <el-table-column
-                      :label='totalLabel'>
-                      <div slot-scope="scope" v-text="scope.row.total"></div>
-                    </el-table-column>
-                  </el-table>
-                  <!-- 买入五档图 -->
-                  <el-table style="font-weight:normal"
-                    :data='latestBuyData'
-                    :cell-style='myCellStyle'
-                    :show-header='false'
-                    max-height='220' stripe>
-                    <el-table-column width='80'
-                      :label='$t("stalls")||"档位"'>
-                      <span class="color-danger" slot-scope="scope">
-                        {{$t('buy')}}&nbsp;{{scope.$index+1}}
-                      </span>
-                    </el-table-column>
-                    <el-table-column width='150'
-                      :label='priceLabel'>
-                      <template slot-scope="scope">
-                        {{scope.row.price|toFix()}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column width='120'
-                      :label='amountLabel'>
-                      <template slot-scope="scope">
-                        {{scope.row.number|toFix()}}
-                      </template>
-                    </el-table-column>
-                    <el-table-column :label='totalLabel'>
-                      <div slot-scope="scope" v-text="scope.row.total"></div>
-                    </el-table-column>
-                  </el-table>
+                  <div class="table">
+                    <div class="thead">
+                      <span v-text='$t("stalls")||"档位"'></span>
+                      <span v-text='priceLabel'></span>
+                      <span v-text='amountLabel'></span>
+                      <span v-text='totalLabel'></span>
+                    </div>
+                    <div class="tbody">
+                      <div class="row flex flex-between"
+                        v-for="(item,index) in latestSoldData" :key='index'>
+                        <span class="column color-success">
+                          {{$t('sell')}}&nbsp;{{buyListLength-index}}
+                        </span>
+                        <span class="column" v-text="item.price"></span>
+                        <span class="column" v-text="item.number"></span>
+                        <span class="column" v-text="item.total"></span>
+                      </div>
+                    </div>
+                    <div class="tbody">
+                      <div class="row flex flex-between"
+                        v-for="(item,index) in latestBuyData" :key='index'>
+                        <span class="column color-success">
+                          {{$t('buy')}}&nbsp;{{index+1}}
+                        </span>
+                        <span class="column" v-text="item.price"></span>
+                        <span class="column" v-text="item.number"></span>
+                        <span class="column" v-text="item.total"></span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div class="panel-container flex flex-between">
@@ -316,6 +299,7 @@ export default {
   data() {
     return {
       show: false,
+      showLoading: false,
       userData: this.userModel,
       buyFormData: {
         price: 0,
@@ -329,8 +313,8 @@ export default {
       currentId: 1,
       tableData: null,
       //买入记录
-      latestBuyData: null,
-      latestSoldData: null,
+      latestBuyData: [],
+      latestSoldData: [],
       //当日委托
       currentDeclareData: null,
       //历史委托
@@ -351,46 +335,37 @@ export default {
       qrCode: null,
       bindState: null,
       // 是否能够交易
-      canTrade: false
+      canTrade: false,
+      routeParam: null
     };
   },
   mounted() {
-    let loadingMask = Loading.service({
-      text: "加载中...",
-      background: "rgba(255, 255, 255, .4)"
-    });
-    this.getState();
+    if (JSON.stringify(this.$route.query) != "{}") {
+      this.routeParam = JSON.parse(this.$route.query.data);
+    }
     this.$bus.on("tradeCoinLoad", coinData => {
-      this.currentCoinInfo = coinData.currentSubCoin;
-      this.maincoin = coinData.maincoin;
-      this.tradecoin = coinData.tradecoin;
-      // 获取币种信息
-      this.awaitResult(coinData.maincoin, coinData.tradecoin).then(res => {
-        let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [...res];
-        this.currentDeclareData = this.Util.sumCalc(
-          entrustData.data.list,
-          "price",
-          "number"
-        );
-        this.historicalBuyData = orderData.data.list;
-        this.latestBuyData = this.Util.sumCalc(
-          buyOrder.data.list,
-          "price",
-          "number"
-        );
-
-        this.latestSoldData = this.Util.sumCalc(
-          sellOrder.data.list,
-          "price",
-          "number"
-        );
-        this.historicalBuyData = this.Util.sumCalc(
-          allOrder.data.list,
-          "price",
-          "number"
-        );
-        loadingMask.close();
-      });
+      if (this.routeParam) {
+        this.loadData(this.routeParam);
+      } else {
+        this.loadData(coinData);
+      }
+    });
+  },
+  methods: {
+    myCellStyle() {
+      return "padding:6px 0 !important;border:none";
+    },
+    onAsideTabChange() {
+      this.showLoading = true;
+      this.routeParam = null;
+    },
+    loadData(data) {
+      this.showLoading = true;
+      this.currentCoinInfo = data;
+      this.maincoin = data.maincoinid;
+      this.tradecoin = data.coinid;
+      this.Util.setCookie("maincoinname", data.maincoinid);
+      this.Util.setCookie("tradcoinname", data.coinid);
       //获取可用;
       Promise.all([
         this.getAvailabel(this.maincoin),
@@ -399,20 +374,41 @@ export default {
         console.log(`可用：${JSON.stringify(res)}`);
         this.myBlance = res[0].usable;
         this.myAvailable = res[1].usable;
-        loadingMask.close();
+        this.showLoading = false;
       });
-    });
-  },
-  methods: {
-    myCellStyle() {
-      return "padding:6px 0 !important;border:none";
+      // 获取币种信息
+      this.awaitResult(this.maincoin, this.tradecoin).then(res => {
+        let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [...res];
+        this.currentDeclareData = this.Util.sumCalc(
+          entrustData.data.list,
+          "price",
+          "number"
+        );
+        this.historicalBuyData = orderData.data.list;
+        this.latestBuyData = this.Util.sumCalc(
+          buyOrder.data.list.slice(0, 5),
+          "price",
+          "number"
+        );
+
+        this.latestSoldData = this.Util.sumCalc(
+          sellOrder.data.list.slice(0, 5),
+          "price",
+          "number"
+        );
+        this.historicalBuyData = this.Util.sumCalc(
+          allOrder.data.list,
+          "price",
+          "number"
+        );
+        this.showLoading = false;
+      });
     },
     //页面请求
     awaitResult(maincoin, tradecoin) {
       let params = {
         maincoin: maincoin,
-        tradcoin: tradecoin,
-        showLoading: 0
+        tradcoin: tradecoin
       };
       // 获取历史委托
       const entrustData = this.request(this.api.getentrust, params);
@@ -448,8 +444,7 @@ export default {
     // 获取可用
     getAvailabel(coin) {
       return this.request(this.api.getaccount, {
-        search: coin,
-        showLoading: 0
+        search: coin
       }).then(res => {
         if (res && res.data) {
           return Promise.resolve(res.data.list[0]);
@@ -472,7 +467,8 @@ export default {
         maincoin: params.maincoin || "",
         tradcoin: params.tradecoin || "",
         prise: params.price || "",
-        number: params.number || ""
+        number: params.number || "",
+        showLoading: true
       }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
         if (res.code == "0") {
@@ -480,6 +476,8 @@ export default {
           this.request(this.api.getentrust, {
             maincoin: this.maincoin,
             tradcoin: this.tradecoin
+          }).then(res => {
+            this.currentDeclareData = res.data.list;
           });
         } else {
           this.errMsg(res.msg);
@@ -497,11 +495,13 @@ export default {
     },
     // 取消订单
     cancelOrder(id) {
+      this.showLoading = true;
       this.request(this.api.clearentrust, { id: id }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         this.successMsg(res.msg);
         this.delItemFromList(id, this.currentDeclareData);
+        this.showLoading = false;
       });
     },
     //校验
@@ -565,49 +565,9 @@ export default {
     //表格列点击
     getRowData(data) {
       if (mainCoinModel.tradecoinid == data.coinid) return false;
-      this.currentCoinInfo = data;
-      mainCoinModel.coinid = data.maincoinid;
       mainCoinModel.tradecoinid = data.coinid;
-      let loadingMask = Loading.service({
-        text: "加载中...",
-        background: "rgba(255, 255, 255, .4)"
-      });
-      this.awaitResult(coinData.maincoin, coinData.tradecoin).then(res => {
-        let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [...res];
-        this.currentDeclareData = this.Util.sumCalc(
-          entrustData.data.list,
-          "price",
-          "number"
-        );
-        this.historicalBuyData = orderData.data.list;
-        this.latestBuyData = this.Util.sumCalc(
-          buyOrder.data.list,
-          "price",
-          "number"
-        );
-
-        this.latestSoldData = this.Util.sumCalc(
-          sellOrder.data.list,
-          "price",
-          "number"
-        );
-        this.historicalBuyData = this.Util.sumCalc(
-          allOrder.data.list,
-          "price",
-          "number"
-        );
-        loadingMask.close();
-      });
-      //获取可用;
-      Promise.all([
-        this.getAvailabel(data.maincoinid),
-        this.getAvailabel(data.coinid)
-      ]).then(res => {
-        console.log(`可用：${JSON.stringify(res)}`);
-        this.myBlance = res[0].usable;
-        this.myAvailable = res[1].usable;
-        loadingMask.close();
-      });
+      mainCoinModel.coinid = data.maincoinid;
+      this.loadData(data);
     },
     // 是否能够交易
     canTradeCheck(statesObj) {
@@ -677,9 +637,8 @@ export default {
     // 最新价
     latestPrice() {
       // {{$t('latestPrice')||'最新价'}}&nbsp;0.0000011422&nbsp;BTC
-      return `${this.$t("latestPrice") || "最新价"}&nbsp;${
-        this.currentCoinInfo.prise
-      }`;
+      return `${this.$t("latestPrice") || "最新价"}&nbsp;${this.currentCoinInfo
+        .prise * 1}`;
     },
     //总数
     buyTotal() {
@@ -688,6 +647,28 @@ export default {
     //总数
     sellTotal() {
       return this.sellFormData.price * this.sellFormData.orderVol;
+    },
+    buyListLength() {
+      return this.latestBuyData.length;
+    },
+    sellListLength() {
+      return this.latestSoldData.length;
+    },
+    //最新买入总计
+    buyListTotal() {
+      let total = 0;
+      this.latestBuyData.map(item => {
+        total += item.total * 1;
+      });
+      return total;
+    },
+    //最新卖出总计
+    sellListTotal() {
+      let total = 0;
+      this.latestSoldData.map(item => {
+        total += item.total * 1;
+      });
+      return total;
     }
   },
   watch: {
@@ -696,6 +677,9 @@ export default {
         this.buyBtnDisabled = false;
       },
       deep: true
+    },
+    $route(to, from) {
+      this.loadData(JSON.parse(to.query.data));
     }
   }
 };
@@ -722,6 +706,31 @@ $border: 1px solid #e5e5e5;
   background: $bd-color;
   transform: scaleX(0.5);
   bottom: 0;
+}
+.table {
+  border-bottom: 1px solid #fcfcfc;
+  .thead {
+    height: 40px;
+    line-height: 40px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+  }
+  .tbody {
+    border-top: 1px solid #ebeef5;
+    height: 175px;
+  }
+  .row {
+    height: 35px;
+    line-height: 35px;
+    padding: 0 8px;
+    &:hover {
+      background: #f1f1f1 !important;
+    }
+    &:nth-child(2n) {
+      background: #fafafa;
+    }
+  }
 }
 .panel-head {
   @include textVcenter;
@@ -752,6 +761,7 @@ $border: 1px solid #e5e5e5;
 }
 .k-map {
   height: 414px;
+  margin-bottom: 25px;
 }
 .form-wrap {
   width: 48%;

@@ -291,6 +291,31 @@ let apiCfg = (function () {
         //c2c订单
         getc2chistory: {
             url: 'getc2chistory'
+        },
+        //撤销我发布的订单
+        clearc2c: {
+            url: "clearc2c"
+        },
+        setrealyok: {
+            url: "setrealyok"
+        },
+        setsendok: {
+            url: "setsendok"
+        },
+        getmyc2ctrad: {
+            url: "getmyc2ctrad"
+        },
+        //市场买入c2c
+        c2cbuytrad: {
+            url: "c2cbuytrad"
+        },
+        //市场卖出c2c
+        c2cselltrad: {
+            url: "c2cselltrad"
+        },
+        //上币申请
+        addvoterequest: {
+            url: 'addvoterequest'
         }
     }
 }());

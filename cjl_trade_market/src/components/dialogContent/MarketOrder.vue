@@ -5,12 +5,12 @@
         :dialogTitle="title"
         @onDialogClose='closeModal'>
         <div class="content">
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <span class="label" v-text="sellerLabel||$t('sellerOnline')"></span>
                 <el-input disabled name='seller'
                     :value='seller'>
                 </el-input>
-            </div>
+            </div> -->
             <div class="form-group">
                 <span class="label" v-text="priceLabel||$t('price')"></span>
                 <el-input disabled name='price'
@@ -22,30 +22,27 @@
                 <span class="label" v-text="volumnLabel||$t('buyVol')"></span>
                 <el-input disabled name='volumn'
                     :value='volumn'>
-                    <span class="slot-text font-16 color-666" slot="suffix">USDT</span>
+                    <span class="slot-text font-16 color-666" slot="suffix" v-text="coin"></span>
                 </el-input>
             </div>
             <div class="form-group">
-                <span class="label" v-text="amountLabel||$t('amount')"></span>
+                <span class="label" v-text="amountLabel||$t('money')"></span>
                 <el-input disabled name='amount'
                     :value='amount'>
                     <span class="slot-text font-16 color-666" slot="suffix">CNY</span>
                 </el-input>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <span class="label" v-text="limitLabel||$t('tradeLimit')"></span>
                 <el-input disabled name='limitAmount'
                     :value='limitAmount'>
-                    <span class="slot-text font-16 color-666" slot="suffix">USDT</span>
+                    <span class="slot-text font-16 color-666" slot="suffix" v-text="coin"></span>
                 </el-input>
-            </div>
+            </div> -->
             <div class="btn-group">
                 <button
                   @click='formSubmit' class="btn-block btn-large btn-danger btn-active"
                   v-text="$t('submit')||'提交'">
-                </button>
-                <button class="btn-block btn-large btn-bordered btn-active"
-                  v-text="$t('cancel')||'取消'">
                 </button>
             </div>
         </div>
@@ -63,16 +60,17 @@ export default {
     priceLabel: String,
     volumnLabel: String,
     amountLabel: String,
-    limitLabel: String
+    limitLabel: String,
+    seller: String,
+    price: String,
+    volumn: String,
+    amount: String,
+    limitAmount: String,
+    coin: String
   },
   data() {
     return {
-      showModal: this.show,
-      seller: "你好呀啊",
-      price: "",
-      volumn: "",
-      amount: "",
-      limitAmount: ""
+      showModal: this.show
     };
   },
   watch: {
@@ -81,9 +79,11 @@ export default {
     }
   },
   methods: {
-    formSubmit() {},
+    formSubmit() {
+      this.$emit("onSubmit");
+    },
     closeModal() {
-      this.showModal = false;
+      this.showModal = this.show;
       this.$emit("closeModal");
     }
   }

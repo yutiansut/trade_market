@@ -1,7 +1,6 @@
 import qs from 'qs';
 import axios from 'axios';
-import { Toast } from "vant";
-import { Loading } from 'element-ui';
+import { Loading, MessageBox } from 'element-ui';
 import api from '@/config/apiConfig.js';
 import Utils from './utils';
 import myStorage from '@/assets/js/myStorage';
@@ -14,7 +13,6 @@ const ajaxRequest = (function () {
         config => {
             if (config.showLoading) {
                 loadingMask = Loading.service({
-                    text: "加载中...",
                     background: "rgba(255, 255, 255, .4)"
                 });
             }
@@ -44,28 +42,24 @@ const ajaxRequest = (function () {
         ) {
             return response.data;
         };
-        Toast({
-            message: "网络不给力",
-            position: "bottom"
+        MessageBox.alert({
+            title: 'Warning',
+            message: "Network error"
         });
     };
 
     function successState(response) {
-        loadingMask.close();
+        loadingMask && loadingMask.close();
         let code = response.data.code * 1 || null;
         let msg = null;
         // 统一判断后端返回的错误码
-        switch (code) {
-            case -1:
-                msg = "您已经退出登录！";
-                myStorage.remove('token');
-                myStorage.set('isLogin', false);
-                userModel.isLogin = false;
-                Toast({
-                    message: msg,
-                });
-                break;
-        }
+        if (code == -1) {
+            myStorage.remove('token');
+            myStorage.set('isLogin', false);
+            userModel.isLogin = false;
+
+            return;
+        };
     };
     function createParam(data) {
         let params = '';
@@ -107,7 +101,11 @@ const ajaxRequest = (function () {
         } else {
             delete httpDefaultOpts.params;
         }
-        httpDefaultOpts.showLoading = !(data && data.showLoading == '0')
+        if (data && data.showLoading) {
+            httpDefaultOpts.showLoading = data.showLoading;
+        } else {
+            httpDefaultOpts.showLoading = false;
+        }
         let promise = new Promise(function (resolve, reject) {
             axios(httpDefaultOpts)
                 .then(res => {

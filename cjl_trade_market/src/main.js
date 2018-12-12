@@ -81,7 +81,7 @@ Object.keys(filter).forEach(key => {
 Vue.config.productionTip = false;
 // 公共方法
 const getDataFaild = function (errMsg) {
-  this.$message.error(msg || '获取数据失败');
+  this.$message.error(i18n.t(msg) || '获取数据失败');
   return false;
 }
 /**
@@ -113,11 +113,11 @@ Object.assign(Vue.prototype, {
     router.push(data);
   },
   errMsg(msg) {
-    this.$message.error(`${msg}`);
+    this.$message.error(i18n.t(msg));
   },
   successMsg(msg) {
     this.$message({
-      message: `${msg}`,
+      message: `${i18n.t(msg)}`,
       type: "success"
     });
   }

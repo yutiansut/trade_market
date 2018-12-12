@@ -89,7 +89,8 @@
                     </div>
                     <div class="break-line"></div>
                     <el-table
-                    :data='myOrderList'>
+                      v-loading='showLoading'
+                      :data='myOrderList'>
                         <el-table-column prop='wdate'
                             :label='$t("time")||"时间"'>
                         </el-table-column>
@@ -112,7 +113,9 @@
                                 {{scope.row.zj*1}}
                             </template>
                         </el-table-column>
-                        <el-table-column :label='($t("status")||"状态")'>
+                        <el-table-column
+                          width='100'
+                          :label='($t("status")||"状态")'>
                             <template slot-scope="scope">
                                 <span v-text="scope.row.type=='0'?buyState:sellState"></span>
                             </template>
@@ -138,6 +141,7 @@ export default {
         number: "",
         total: ""
       },
+      showLoading: false,
       canTrade: false,
       bindState: null,
       myOrderList: [],
@@ -155,8 +159,7 @@ export default {
       return `${this.$t("buy") || "买入"}`;
     },
     minNum() {
-      return `${this.$t("buyMinNum") || "最少买入"} ${this.coinInfo.minnum *
-        1}`;
+      return `${this.$t("minNum") || "最少"} ${this.coinInfo.minnum * 1}`;
     },
     sellState() {
       return `${this.$t("sell") || "卖出"}`;
@@ -169,7 +172,8 @@ export default {
     }
   },
   mounted() {
-    this.getOtcCoin().then(coin => {});
+    this.showLoading = true;
+    this.getOtcCoin();
     this.getOtcOrder();
     this.getState();
   },
@@ -189,9 +193,13 @@ export default {
       this.request(this.api.getotcorder).then(res => {
         console.log(`OTC订单${JSON.stringify(res)}`);
         if (res.code == "0" && res.data && res.data.list && res.data.list[0]) {
+          this.showLoading = false;
           let list = res.data.list.slice(0);
           this.allOrderList = list;
-          this.myOrderList = this.getMyOrderlist(list, list[0].coinid);
+          this.myOrderList = this.getMyOrderlist(
+            list,
+            this.coinInfo.coinid || list[0].coinid
+          );
         }
       });
     },
@@ -218,6 +226,14 @@ export default {
     onListClick(data) {
       this.coinInfo = data;
       this.myOrderList = this.getMyOrderlist(this.allOrderList, data.coinid);
+      this.buyForm = {
+        number: "",
+        total: ""
+      };
+      this.sellForm = {
+        number: "",
+        total: ""
+      };
     },
     // 是否能够交易
     canTradeCheck(statesObj) {
@@ -237,15 +253,15 @@ export default {
         this.errMsg("请登录后操作");
         return false;
       }
-      if (!this.canTrade) {
-        this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-          confirmButtonText: "去认证",
-          type: "warning"
-        }).then(() => {
-          this.navigateTo("/account/security");
-        });
-        return false;
-      }
+      // if (!this.canTrade) {
+      //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
+      //     confirmButtonText: "去认证",
+      //     type: "warning"
+      //   }).then(() => {
+      //     this.navigateTo("/account/security");
+      //   });
+      //   return false;
+      // }
       return true;
     },
     handleConfirm(api, param) {
@@ -253,10 +269,13 @@ export default {
         coin: param.coin,
         id: 1,
         number: param.number,
-        jz: param.total
+        jz: param.total,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg);
+          this.getOtcOrder();
+          this.buyForm.number = 0;
         } else {
           this.errMsg(res.msg);
         }
@@ -274,10 +293,10 @@ export default {
         this.errMsg("请输入正确的数量");
         return false;
       }
-      this.handleConfirm(this.api.otcbuy, {
+      this.handleConfirm(this.api.otcsell, {
         coin: this.coinInfo.coinid,
         number: this.sellForm.number,
-        jz: this.sellTotal
+        total: this.sellTotal
       });
     },
     // 买入操作
@@ -295,7 +314,7 @@ export default {
       this.handleConfirm(this.api.otcbuy, {
         coin: this.coinInfo.coinid,
         number: this.buyForm.number,
-        jz: this.buyTotal
+        total: this.buyTotal
       });
     }
   }

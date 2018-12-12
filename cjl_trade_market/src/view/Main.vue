@@ -24,6 +24,7 @@
             <el-table style="width:100%;font-size:14px;border-top:1px solid #eee;" 
               :data='tableData'
               :fit='true'
+              v-loading='loading'
               stripe>
               <el-table-column
                 width='200'
@@ -39,15 +40,23 @@
                   :class="'status_'+scope.row.state">
                 </span>
               </el-table-column>
-              <el-table-column :label="$t('price')||'价格'" prop='cny'></el-table-column>
-              <el-table-column :label="'24H '+$t('highestPrice')||'最高价'" prop='height'></el-table-column>
-              <el-table-column :label="'24H '+$t('lowestPrice')||'最低价'" prop='low'></el-table-column>
-              <el-table-column :label="'24H '+$t('volumn')||'成交量'" prop='number'></el-table-column>
+              <el-table-column :label="$t('price')||'价格'">
+                <template slot-scope="scope">{{scope.row.prise*1}}</template>
+              </el-table-column>
+              <el-table-column :label="'24H '+$t('highestPrice')||'最高价'">
+                <template slot-scope="scope">{{scope.row.height*1}}</template>
+              </el-table-column>
+              <el-table-column :label="'24H '+$t('lowestPrice')||'最低价'">
+                <template slot-scope="scope">{{scope.row.low*1}}</template>
+              </el-table-column>
+              <el-table-column :label="'24H '+$t('volumn')||'成交量'">
+                <template slot-scope="scope">{{scope.row.number*1}}</template>
+              </el-table-column>
               <!-- <el-table-column :label="$t('priceTrends')+'（3'+$t('day')+'）'"></el-table-column> -->
               <el-table-column :label="($t('priceChange')||'涨跌')+'（'+($t('day')||'日')+'）'" width='120px;'>
                 <template slot-scope="scope">
                   <div class="operate">
-                    <span v-text="scope.row.rise"></span>
+                    <span v-text="scope.row.rise*1"></span>
                     <i class="el-icon-star-off"></i>
                   </div>
                 </template>
@@ -71,6 +80,7 @@ export default {
       logo: require("@/assets/images/home/pcew_logo.png"),
       currentTabId: 0,
       currentCoinId: "",
+      loading: true,
       mainCoinModel: mainCoinModel,
       statusMap: {
         s_0: "交易中",
@@ -87,13 +97,14 @@ export default {
       this.getTradCoin(mainCoinModel.coinid);
       return;
     }
-    this.$bus.on("mainCoin", () => {
-      this.getTradCoin(mainCoinModel.coinid);
+    this.$bus.on("mainCoinLoad", coin => {
+      this.getTradCoin(coin);
     });
   },
   methods: {
     onTabChange(e, index, coinid) {
       if (index == this.currentCoinId) return;
+      this.loading = !this.loading;
       this.currentCoinId = index;
       this.getTradCoin(coinid);
     },
@@ -107,8 +118,11 @@ export default {
     },
     // 获取币种交易行情
     getTradCoin(coinid) {
-      this.request(this.api.getTradCoin, { maincoin: coinid }).then(res => {
+      this.request(this.api.getTradCoin, {
+        maincoin: coinid
+      }).then(res => {
         console.log(`交易币种:${JSON.stringify(res)}`);
+        this.loading = !this.loading;
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data && res.data.list && (this.tableData = res.data.list);
       });

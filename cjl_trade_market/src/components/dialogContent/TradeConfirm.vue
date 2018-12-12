@@ -58,7 +58,6 @@ export default {
     valuationLabel: String,
     tradeModeLabel: String,
     number: String,
-    total: String,
     coin: String,
     price: String
   },
@@ -73,6 +72,11 @@ export default {
         }
       ]
     };
+  },
+  computed: {
+    total() {
+      return this.price * 1 * this.number * 1;
+    }
   },
   watch: {
     show: function() {

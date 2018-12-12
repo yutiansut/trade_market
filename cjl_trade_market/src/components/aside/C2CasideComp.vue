@@ -4,10 +4,10 @@
         v-for="(item) in dataList" :key='item.id'
         @click='onClick(item)'>
         <div class="currency flex flex-v-center">
-          <img v-if='item.icon' 
-            :src="item.icon" 
+          <img v-if='item.icon||item.logo' 
+            :src="item.icon||item.logo"
             class="thumb-20" alt="">
-          <span v-text="item.coinid"></span>
+          <span v-text="item.coinid ||item.name"></span>
         </div>
         <i v-if="showIcon" class="el-icon-arrow-right"></i>
       </li>
@@ -17,7 +17,7 @@
 export default {
   name: "c2c-aside-comp",
   props: {
-    myData: Array,
+    myData: null,
     showArrow: {
       type: Boolean,
       default: true

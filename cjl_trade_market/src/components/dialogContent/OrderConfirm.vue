@@ -70,7 +70,7 @@ export default {
   },
   methods: {
     closeModal() {
-      this.showModal = false;
+      this.showModal = this.show;
       this.$emit("closeModal");
     }
   },

@@ -13,6 +13,7 @@
         <el-input suffix-icon="el-icon-search"></el-input>
         <el-table style="font-size:14px;"
           :data='tableData'
+          v-loading='showLoading'
           @row-click='onTableRowClick'
           stripe>
           <el-table-column :label='$t("coin")||"币种"' width='100px'>
@@ -56,7 +57,8 @@ export default {
     return {
       mainCoinModel: mainCoinModel,
       currentId: 0,
-      tableData: null
+      tableData: null,
+      showLoading: true
     };
   },
   mounted() {
@@ -76,19 +78,20 @@ export default {
       if (index == this.currentId) return;
       this.currentId = index;
       this.getTradCoin(coinid);
+      this.$emit("onAsideTabChange");
     },
     // 获取币种交易行情
     getTradCoin(coinid) {
-      this.request(this.api.getTradCoin, { maincoin: coinid }).then(res => {
+      this.showLoading = true;
+      this.request(this.api.getTradCoin, {
+        maincoin: coinid
+      }).then(res => {
         console.log(`交易币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data && res.data.list && (this.tableData = res.data.list);
         mainCoinModel.tradecoinid = res.data.list[0].coinid;
-        this.$bus.emit("tradeCoinLoad", {
-          maincoin: res.data.list[0].maincoinid,
-          tradecoin: res.data.list[0].coinid,
-          currentSubCoin: res.data.list[0]
-        });
+        this.$bus.emit("tradeCoinLoad", res.data.list[0]);
+        this.showLoading = false;
       });
     },
     //表格列点击

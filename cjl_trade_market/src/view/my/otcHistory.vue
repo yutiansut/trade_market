@@ -3,6 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('otcRecord')||'OTC记录'"></div>
       <div class="table-wrap">
         <el-table
+          v-loading='showLoading'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderDetailData'>
           <el-table-column prop='wdate' :label='$t("time")||"时间"'></el-table-column>
@@ -46,6 +47,7 @@ export default {
   data() {
     return {
       orderDetailData: null,
+      showLoading: false,
       statusMap: {
         status_0: {
           i18nKey: "",
@@ -59,6 +61,7 @@ export default {
     };
   },
   mounted() {
+    this.showLoading = true;
     this.getOrderRecord();
   },
   methods: {
@@ -68,6 +71,7 @@ export default {
           console.log(`otc币种记录：${JSON.stringify(res)}`);
           this.orderDetailData = res.data.list;
         }
+        this.showLoading = false;
       });
     }
   }

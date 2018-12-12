@@ -197,6 +197,8 @@ export default {
       }).then(res => {
         if (res.data.code == "0") {
           this.successMsg(res.msg);
+        } else {
+          this.errMsg(res.msg);
         }
       });
     }

@@ -44,6 +44,8 @@ export default {
     getOrderRecord() {
       this.request(this.api.getc2corder).then(res => {
         console.log(`c2c交易订单：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        this.orderDetailData = res.data.list;
       });
     }
   }

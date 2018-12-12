@@ -53,8 +53,10 @@
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyVol')||'买入量'"></label>
-                            <el-input v-model="buyFormData.number">
-                                <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
+                            <el-input
+                              :placeholder='minNum'
+                              v-model="buyFormData.number">
+                              <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
                             </el-input>
                         </div>
                         <div class="input-group">
@@ -79,12 +81,14 @@
                         <div class="input-group">
                             <label v-text="$t('sellingValiation')||'卖出估价'"></label>
                             <el-input v-model="sellFormData.price">
-                                <span class="unit" slot="suffix">CNY</span>
+                               <span class="unit" slot="suffix">CNY</span>
                             </el-input>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellVol')||'卖出量'"></label>
-                            <el-input v-model="sellFormData.number">
+                            <el-input
+                              :placeholder='minNum'
+                              v-model="sellFormData.number">
                                 <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
                             </el-input>
                         </div>
@@ -144,21 +148,17 @@
                         <el-table-column width='100'
                           :label='$t("operation")||"操作"'>
                           <template slot-scope="scope">
-                            <button v-if='scope.row.type=="1"'
-                              class="btn-inline btn-mini btn-radius btn-danger"
-                              v-text="$t('buy')"
-                              @click="buyOrderHandle">
-                            </button>
-                            <button v-else
-                              @click='sellOrderHandle'
-                              class="btn-inline btn-mini btn-radius btn-success"
-                              v-text="$t('sell')">
+                            <button
+                              class="btn-inline btn-mini btn-radius"
+                              :class='scope.row.type=="1"?"btn-danger":"btn-success"'
+                              v-text="scope.row.type=='1'?$t('buy'):$t('sell')"
+                              @click="tradeConfirmHandle(scope.row)">
                             </button>
                           </template>
                         </el-table-column>
                     </el-table>
                 </div>
-                <!-- 我的订单 -->
+                <!-- 我发布的订单 -->
                 <div class="panel-container">
                     <div class="panel-header font-18 font-bit-bold"
                       v-text="$t('myOrder')">
@@ -201,9 +201,11 @@
                           </el-table-column>
                           <el-table-column width="100"
                             :label='$t("operation")||"操作"'>
-                            <span slot-scope="scope"
-                            v-text='"进行中"'
-                            :class='"status-"+scope.row.status'></span>
+                            <a slot-scope="scope"
+                              v-text='"撤单"'
+                              class="color-danger"
+                              @click="cancelMyc2cOrder(scope.row.autoid)">
+                            </a>
                           </el-table-column>
                       </el-table>
                     </template>
@@ -250,9 +252,22 @@
                           </el-table-column>
                           <el-table-column width="100"
                             :label='$t("operation")||"操作"'>
-                            <span slot-scope="scope" 
-                            v-text='statusMap["status_"+scope.row.state].label'
-                            :class='"status-"+scope.row.state'></span>
+                            <template slot-scope="scope">
+                              <span class="color-danger"
+                                @click="confirmHandle(scope.row)"
+                                v-if="scope.row.type==0&&scope.row.state==0">待付款
+                              </span>
+                              <span class="color-success"
+                                v-if="scope.row.type==1&&scope.row.state==0">待对方打款
+                              </span>
+                              <span class="color-success"
+                                v-if="scope.row.type==0&&scope.row.state==1">待对方收款
+                              </span>
+                              <span class="color-999" v-if="scope.row.type<2&&scope.row.state==2">已完成</span>
+                              <span class="color-danger" v-if="scope.row.type==1&&scope.row.state==1"
+                                @click="confirmHandle(scope.row)">待收款
+                              </span>
+                            </template>
                           </el-table-column>
                       </el-table>
                     </template>
@@ -261,23 +276,31 @@
             </el-main>
         </el-container>
         <my-footer></my-footer>
-        <!-- 卖出确认弹窗 -->
+        <!-- 卖出发布确认弹窗 -->
         <trade-confirm
           :show='dialogId==1?true:false'
           :title="$t('sellingConfirm')"
           :numLabel="$t('sellingNum')"
           :amountLabel="$t('sellingAmount')"
           :valuationLabel='$t("sellingValiation")'
-          :tradeModeLabel='$t("tradeMethods")'>
+          :tradeModeLabel='$t("tradeMethods")'
+          :number='confirmData.number'
+          :price='confirmData.price'
+          @onSubmit='publicOrder(api.addsellc2c,confirmData)'
+          @closeModel='onModelClose'>
         </trade-confirm>
-        <!-- 买入确认 -->
+        <!-- 买入发布确认 -->
         <trade-confirm
           :show='dialogId==0?true:false'
           :title="$t('buyingConfirm')"
           :numLabel="$t('buyingNum')"
           :amountLabel="$t('buyingAmount')"
           :valuationLabel='$t("buyingValiation")'
-          :tradeModeLabel='$t("tradeMethods")'>
+          :tradeModeLabel='$t("tradeMethods")'
+          :number='confirmData.number'
+          :price='confirmData.price'
+          @onSubmit='publicOrder(api.addbuyc2c,confirmData)'
+          @closeModel='onModelClose'>
         </trade-confirm>
         <!-- 订单匹配弹窗 -->
         <!-- <order-match
@@ -289,14 +312,25 @@
         <order-confirm
           :show='dialogId==3?true:false'>
         </order-confirm>
+        <!-- 挂单买入/卖出订单 -->
         <market-order
           :show='dialogId==4?true:false'
-          :title='$t("buyPendingOrder")||marketOrderCfg.title'
-          :volumnLabel='$t("buyVol")||marketOrderCfg.volumnLabel'>
+          :title='$t(marketOrderCfg.titlei18nkey)'
+          :volumnLabel='$t(marketOrderCfg.volumnLabeli18nkey)'
+          :volumn="marketOrderDetail.number"
+          :price="marketOrderDetail.price"
+          :amount="marketOrderDetail.total"
+          @onSubmit='tradeFromMarket(marketOrderDetail.type,marketOrderDetail.autoid)'
+          @closeModal='onModelClose'
+          :coin='marketOrderDetail.coinid'>
         </market-order>
+        <!-- 待收/付款 -->
         <order-paid
           :show='dialogId==5?true:false'
-          :title="$t('orderDetail')||'订单详情'">
+          :title="$t('orderDetail')||'订单详情'"
+          :formData='orderDetail'
+          @onSubmit='dealOrder(orderDetail.type,orderId)'
+          @closeModal='onModelClose'>
         </order-paid>
     </div>
 </template>
@@ -339,50 +373,27 @@ export default {
       confirmData: {},
       //市场挂单弹窗配置
       marketOrderCfg: {
+        titlei18nkey: "",
+        volumnLabeli18nkey: "",
         title: "市挂单买入",
         volumnLabel: "买入量"
       },
-      // 状态映射表
-      statusMap: {
-        status_1: {
-          label: "进行中"
-        },
-        status_2: {
-          label: "已完成"
-        },
-        status_3: {
-          label: "待付款"
-        },
-        status_4: {
-          label: "待收款"
-        },
-        status_5: {
-          label: "撤单"
-        }
-      },
       // 市场挂单
       marketList: null,
-      //正在进行中订单
+      //我发布的订单
       myOrderList: null,
-      // 我的C2C订单
+      // 我的c2c交易订单
       myC2COrderList: [],
       // 侧栏列表
       currencyList: [],
       // 订单匹配列表
-      orderMatchList: [
-        {
-          id: "1",
-          name: "李先生",
-          price: "100",
-          amount: "10"
-        },
-        {
-          id: "2",
-          name: "李先生",
-          price: "100",
-          amount: "10"
-        }
-      ]
+      orderMatchList: "",
+      //订单详情信息
+      orderDetail: {},
+      //挂单详情
+      marketOrderDetail: {},
+      // 订单id
+      orderId: ""
     };
   },
   mounted() {
@@ -399,7 +410,9 @@ export default {
         this.getMyAccount(coin).then(res => {
           this.myAvailable = res.usable;
         });
-        return this.getc2callorder(coin);
+        return this.getc2callorder(coin).then(list => {
+          this.marketList = list;
+        });
       })
       .then(result => {
         if (result) {
@@ -427,10 +440,8 @@ export default {
     },
     // 可用
     myAvailableLabel() {
-      let num = this.$options.filters.toFix(this.myAvailable);
-      return `${this.$t("avilable") || "可用"}${num}&nbsp;${
-        this.coinInfo.coinid
-      }`;
+      return `${this.$t("avilable") || "可用"}&nbsp;${this.myAvailable *
+        1}&nbsp;${this.coinInfo.coinid}`;
     },
     //平台指导价
     advisalPrice() {
@@ -446,52 +457,117 @@ export default {
     //卖出总金额
     sellTotal() {
       return this.sellFormData.price * this.sellFormData.number;
+    },
+    //最少限制
+    minNum() {
+      return `${this.$t("minNum") || "最少"} ${this.coinInfo.minnum * 1}`;
     }
   },
   methods: {
     // 发布订单
     publicOrder(apiKey, param) {
-      this.request(apiKey, param).then(res => {
+      this.request(apiKey, {
+        coin: this.coinInfo.coinid,
+        price: param.price || "",
+        number: param.number || ""
+      }).then(res => {
         console.log(`${JSON.stringify(res)}`);
         if (res.code == "0") {
+          this.onModelClose();
           this.successMsg(res.msg);
+          this.getc2callorder(this.coinInfo.coinid).then(list => {
+            this.marketList = list;
+          });
+          this.getc2corder();
+        } else {
+          this.errMsg(res.msg || "操作失败");
         }
       });
     },
+    // 撤销我的c2c订单
+    cancelMyc2cOrder(autoid) {
+      this.request(this.api.clearc2c, { autoid: autoid }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg || "操作成功");
+          this.delItemFromList(autoid, this.myOrderList);
+          this.delItemFromList(autoid, this.marketList);
+        } else {
+          this.errMsg(res.msg || "操作失败");
+        }
+      });
+    },
+    // 删除列表某一项
+    delItemFromList(id, listArr) {
+      listArr.map((item, index) => {
+        console.log(item);
+        if (item.autoid == id) {
+          listArr.splice(index, 1);
+          return listArr;
+        }
+      });
+    },
+    // 发布买入
     buyHandle() {
       if (this.buyTotal != "NaN" && this.buyTotal > 0 && this.validation()) {
-        let param = {
-          price: this.buyFormData.price,
-          number: this.buyFormData.number
+        this.confirmData = {
+          number: this.buyFormData.number,
+          price: this.buyFormData.price
         };
-        this.publicOrder(this.api.addbuyc2c, param);
+        this.dialogId = 0;
       } else {
         this.errMsg("请输入有效价格");
       }
     },
+    // 发布卖出
     sellHandle() {
       if (this.sellTotal != "NaN" && this.sellTotal > 0 && this.validation()) {
-        let param = {
-          price: this.sellFormData.price,
-          number: this.sellFormData.number
+        this.confirmData = {
+          number: this.sellFormData.number,
+          price: this.sellFormData.price
         };
-        this.publicOrder(this.api.addsellc2c, param);
+        this.dialogId = 1;
+        // this.publicOrder(this.api.addsellc2c, param);
       } else {
         this.errMsg("请输入有效价格");
       }
     },
-    buyOrderHandle() {
+    // 挂单买入/卖出弹窗
+    tradeConfirmHandle(rowData) {
       if (!this.userData.isLogin) {
         this.errMsg("请登录后操作");
-      } else {
+        return false;
       }
+      this.dialogId = 4;
+      let type = rowData.type;
+      this.marketOrderDetail = {
+        type: rowData.type,
+        autoid: rowData.autoid,
+        coinid: rowData.coinid,
+        number: rowData.number,
+        price: rowData.price,
+        total: rowData.total,
+        limitAmount: 0
+      };
+      this.marketOrderCfg = {
+        titlei18nkey: type == 0 ? "sellPendingOrder" : "buyPendingOrder",
+        volumnLabeli18nkey: type == 0 ? "sellVol" : "buyVol"
+      };
     },
-    sellOrderHandle() {
-      if (!this.userData.isLogin) {
-        this.errMsg("请登录后操作");
-      } else {
-      }
+    // 从市场买入/卖出c2c
+    tradeFromMarket(type, autoid) {
+      if (!type || !autoid) return false;
+      this.request(type == 0 ? this.api.c2cselltrad : this.api.c2cbuytrad, {
+        autoid: autoid
+      }).then(res => {
+        if (res.code == "0") {
+          this.onModelClose();
+          this.successMsg(res.msg || "操作成功");
+        } else {
+          this.errMsg(res.msg || "操作失败");
+        }
+      });
     },
+    // 侧栏点击
     onListClick(data) {
       this.coinInfo = data;
       this.getc2corder();
@@ -516,17 +592,8 @@ export default {
       }).then(res => {
         console.log(`市场挂单:${JSON.stringify(res)}`);
         if (res.code == "0") {
-          return Promise.resolve(res.data.list);
-        }
-      });
-    },
-    getCoinbyCoin(coinid) {
-      return this.request(this.api.getCoinbyCoin, {
-        coin: coinid
-      }).then(res => {
-        console.log(`用户币种信息：${JSON.stringify(res)}`);
-        if (res.code == "0") {
-          return Promise.resolve(res.data.list[0]);
+          let list = this.Util.sumCalc(res.data.list, "price", "number");
+          return Promise.resolve(list);
         }
       });
     },
@@ -542,12 +609,12 @@ export default {
     },
     //获取我c2c交易订单
     gettradorder(coin) {
-      return this.request(this.api.gettradorder, {
+      return this.request(this.api.getmyc2ctrad, {
         coin: coin
       }).then(res => {
         console.log(`c2c交易订单：${JSON.stringify(res)}`);
-        this.Util.sumCalc(res.data.result, "price", "number");
-        this.myC2COrderList = res.data.result;
+        this.Util.sumCalc(res.data.list, "price", "number");
+        this.myC2COrderList = res.data.list;
       });
     },
     //获取资产信息
@@ -599,6 +666,43 @@ export default {
           this.bindState = res.data.list[0];
         }
       });
+    },
+    //确认收付款弹窗
+    confirmHandle(rowData) {
+      // this.dialogId = rowData.type == "0" ? 6 : 5;
+      this.orderId = rowData.autoid;
+      this.orderDetail = {
+        type: rowData.type,
+        owner: rowData.type == "0" ? rowData.sellname : rowData.buyname,
+        bankCardNo:
+          rowData.type == "0" ? rowData.sellbannkcard : rowData.buybannkcard,
+        depositBank: rowData.type == "0" ? rowData.sellkhyh : rowData.buykhyh,
+        bankBranches: rowData.type == "0" ? rowData.sellkhzh : rowData.buykhzh,
+        transferAmount: rowData.zj * 1
+      };
+    },
+    //弹窗关闭
+    onModelClose() {
+      this.dialogId = null;
+    },
+    // 处理订单
+    dealOrder(type, id) {
+      if (type && id) {
+        let api = type == "0" ? this.api.setsendok : this.api.setrealyok;
+        this.request(api, {
+          autoid: id
+        }).then(res => {
+          if (res.code == "0") {
+            this.successMsg(res.msg);
+            this.getc2corder();
+            this.getc2callorder(this.coinInfo.coinid);
+            this.gettradorder(this.coinInfo.coinid);
+          } else {
+            this.errMsg(res.msg);
+          }
+          this.onModelClose();
+        });
+      }
     }
   }
 };

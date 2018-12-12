@@ -119,13 +119,13 @@ export default {
           i18nKey: "identify",
           link: "/account/identify",
           icon: ""
-        },
-        {
-          i18nKey: "apiAdmin",
-          label: "API管理",
-          link: "",
-          icon: ""
         }
+        // {
+        //   i18nKey: "apiAdmin",
+        //   label: "API管理",
+        //   link: "",
+        //   icon: ""
+        // }
       ],
       langList: {
         id: 0,
@@ -148,9 +148,6 @@ export default {
   mounted() {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
-    this.request(this.api.userinfo).then(res => {
-      console.log(`个人信息:${JSON.stringify(res)}`);
-    });
     this.userModel.isLogin = this.storage.get("isLogin");
     this.userModel.cellphone = this.storage.get("cellphone");
   },

@@ -4,8 +4,8 @@
             <login-bar></login-bar>
         </my-header>
         <el-container>
-            <el-aside width="400px">
-                <c2c-aside-comp></c2c-aside-comp>
+            <el-aside width="24%">
+                <ce-aside-comp @onRowClick='getRowData'></ce-aside-comp>
             </el-aside>
             <el-main>
                 <router-view></router-view>
@@ -15,7 +15,13 @@
     </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    getRowData(data) {
+      this.navigateTo("/currency_trade", { data: JSON.stringify(data) });
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 .el-container {

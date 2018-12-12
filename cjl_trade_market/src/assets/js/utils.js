@@ -171,7 +171,6 @@ const Utils = (function () {
             return timer;
         },
         //求和
-        //求和
         sumCalc(arr, price, num) {
             if (this.dataType(arr) == "array") {
                 arr.map(item => {
@@ -182,6 +181,28 @@ const Utils = (function () {
             }
             return arr;
         },
+        setCookie(name, value) {
+            var Days = 30;
+            var exp = new Date();
+            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";path=/;expires=" + exp.toGMTString();
+        },
+        //读取cookies
+        getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+            if (arr = document.cookie.match(reg))
+                return unescape(arr[2]);
+            else
+                return null;
+        },
+        //删除cookies
+        delCookie(name) {
+            var exp = new Date();
+            exp.setTime(exp.getTime() - 1);
+            var cval = getCookie(name);
+            if (cval != null)
+                document.cookie = name + "=" + cval + ";path=/;expires=" + exp.toGMTString();
+        }
     }
 }());
 export default Utils;

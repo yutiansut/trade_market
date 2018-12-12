@@ -223,7 +223,7 @@ export default {
         password: this.checkLoginData.password
       }).then(res => {
         if (res && res.code * 1 != 1) {
-          res.code == 4 && (this.bindGoogleAuth = false);
+          res.code == 10000 && (this.bindGoogleAuth = false);
           res.code == 0 && (this.bindGoogleAuth = true);
           this.checkLogin = true;
         } else {

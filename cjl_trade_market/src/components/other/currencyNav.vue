@@ -9,18 +9,18 @@
                   type="text">
             </div>
         </div>
-        <ul v-if="myLists&&myLists.length>0" class="list-container">
+        <ul v-show="myLists.length>0" class="list-container">
             <li v-for='(item,i) in myLists'
                 :key='i'
-                @click="navigateTo(item)">
+                @click="toPage(item)">
                 <div class="list-item wh-full abs-v-center">
-                    <img v-if='item.thumb' class="thumb-20"
-                        :src="item.thumb" alt=""/>
-                    <span v-text="item.label"></span>
+                    <img v-if='item.logo' class="thumb-20"
+                        :src="item.logo" alt=""/>
+                    <span v-text="item.coinid"></span>
                 </div>
             </li>
         </ul>
-        <div v-else class="result txt-center" v-text="$t('noResult')"></div>
+        <div v-show='myLists.length==0' class="result txt-center" v-text="$t('noResult')"></div>
     </div>
 </template>
 <script>
@@ -30,30 +30,28 @@ export default {
     width: {
       type: String,
       default: "780px"
-    },
-    myKey: {
-      type: String,
-      default: ""
-    },
-    myValue: {
-      type: Array,
-      default() {
-        return [];
-      }
     }
   },
   data() {
     return {
-      myLists: Object.assign([], this.myValue),
-      searchVal: ""
+      myLists: [],
+      searchVal: "",
+      coinid: null
     };
   },
+  mounted() {
+    this.$bus.on("navChange", data => {
+      this.myLists = data;
+    });
+  },
   methods: {
-    navigateTo: function(item) {},
+    toPage: function(data) {
+      this.navigateTo("/currency_trade", { data: JSON.stringify(data) });
+    },
     matchSearch: function(v) {
       let data = [];
       this.myValue.map(item => {
-        if (item.name && item.name.match(new RegExp(v, "i"))) {
+        if (item.coinid && item.coinid.match(new RegExp(v, "i"))) {
           data.push({ ...item });
         }
       });

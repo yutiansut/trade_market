@@ -49,6 +49,7 @@ export default {
           placeholderi18n: "mobilePlaceholder",
           placeholder: "登录时手机号",
           name: "email",
+          require: true,
           val: ""
         },
         contact: {
@@ -56,6 +57,7 @@ export default {
           placeholderi18n: "email",
           label: "团队联系方式",
           placeholder: "Email等",
+          require: true,
           name: "contact",
           val: ""
         },
@@ -64,6 +66,7 @@ export default {
           placeholderi18n: "coinNamePlaceholderEn",
           label: "币种英文名称",
           placeholder: "比如Bitcoin",
+          require: true,
           name: "currencyNameEn",
           val: ""
         },
@@ -72,6 +75,7 @@ export default {
           placeholderi18n: "coinNamePlaceholderZh",
           label: "币种中文名称",
           placeholder: "比如比特币",
+          require: true,
           name: "currencyNameCn",
           val: ""
         },
@@ -80,12 +84,14 @@ export default {
           placeholderi18n: "symbolPlacehoder",
           label: "币种交易符号",
           placeholder: "比如BTC",
+          require: true,
           name: "currencySymbol",
           val: ""
         },
         icoDate: {
           labeli18n: "icoDate",
           label: "ICO日期",
+          require: true,
           placeholder: "YYYY/MM/DD",
           name: "icoDate",
           val: ""
@@ -94,6 +100,7 @@ export default {
           labeli18n: "transferableDate",
           label: "可流通日期",
           placeholder: "YYYY/MM/DD",
+          require: true,
           name: "flowableDate",
           val: ""
         },
@@ -103,6 +110,7 @@ export default {
           label: "币种区块网络类型",
           placeholder: "ETH，QTUM，NEO，XML，BTS或者独立链",
           name: "blockType",
+          require: true,
           val: ""
         },
         contractAddr: {
@@ -126,6 +134,7 @@ export default {
           placeholderi18n: "sitePlaceholder",
           label: "币种官方网站",
           placeholder: "请输入币种官方网站",
+          require: true,
           name: "officalSite",
           val: ""
         },
@@ -134,6 +143,7 @@ export default {
           label: "币种白皮书网址",
           placeholderi18n: "whitePaperPlaceholder",
           placeholder: "请输入币种白皮书网址",
+          require: true,
           name: "whiteBook",
           val: ""
         },
@@ -150,27 +160,31 @@ export default {
           placeholderi18n: "logoPlaceholder",
           label: "Logo图片链接",
           placeholder: "请输入Logo图片链接",
+          require: true,
           name: "logoLink",
           val: ""
         },
-        twitterLink: {
-          labeli18n: "twitterLink",
-          label: "Twitter链接",
-          placeholder: "请输入Twitter链接",
-          name: "twitterLink",
-          val: ""
-        },
-        telegramLink: {
-          labeli18n: "telegramLink",
-          label: "Telegram链接",
-          placeholder: "请输入Telegram链接",
-          name: "telegramLink",
-          val: ""
-        },
+        // twitterLink: {
+        //   labeli18n: "twitterLink",
+        //   label: "Twitter链接",
+        //   placeholder: "请输入Twitter链接",
+        //   placeholderi18n: "label100",
+        //   name: "twitterLink",
+        //   val: ""
+        // },
+        // telegramLink: {
+        //   labeli18n: "telegramLink",
+        //   label: "Telegram链接",
+        //   placeholder: "请输入Telegram链接",
+        //   placeholderi18n: "label101",
+        //   name: "telegramLink",
+        //   val: ""
+        // },
         currentIntroCn: {
           labeli18n: "chineseIntro",
           label: "币种简短中文介绍",
           placeholder: "请输入币种简短中文介绍",
+          placeholderi18n: "label102",
           name: "currentIntroCn",
           val: ""
         },
@@ -178,20 +192,25 @@ export default {
           labeli18n: "englishIntro",
           label: "币种简短英文介绍",
           placeholder: "请输入币种简短英文介绍",
+          placeholderi18n: "label103",
           name: "currencyIntroEn",
           val: ""
         },
         currencyVol: {
           labeli18n: "totalSupply",
           label: "币种总量",
+          placeholderi18n: "label104",
           placeholder: "请输入币种总量",
+          require: true,
           name: "currencyVol",
           val: ""
         },
         currencyFlowVol: {
           labeli18n: "circulatingSupply",
           label: "币种流通量",
+          placeholderi18n: "label105",
           placeholder: "请输入币种流通量",
+          require: true,
           name: "currencyFlowVol",
           val: ""
         },
@@ -200,13 +219,16 @@ export default {
           placeholderi18n: "distributionPlaceholder",
           label: "币种分配比例",
           placeholder: "如ICO分发比例，团队预留等",
+          require: true,
           name: "currencyShareRate",
           val: ""
         },
         costPrice: {
           labeli18n: "initialPrice",
           label: "成本价格",
+          placeholderi18n: "label106",
           placeholder: "presale,private sale,public sale等",
+          require: true,
           name: "costPrice",
           val: ""
         },
@@ -220,6 +242,7 @@ export default {
         },
         otherInstruction: {
           labeli18n: "otherInfo",
+          placeholderi18n: "label107",
           label: "其他信息说明",
           placeholder: "请输入其他信息说明",
           name: "otherInstruction",
@@ -239,11 +262,55 @@ export default {
           title: "这里是标题",
           content: "这里是内容"
         }
-      ]
+      ],
+      canSubmit: true
     };
   },
   methods: {
-    onSubmit(e) {}
+    onSubmit() {
+      for (let key in this.formData) {
+        if (this.formData[key].val == "") {
+          this.errMsg("请填写完整信息");
+          this.canSubmit = false;
+          return;
+        } else {
+          this.canSubmit = true;
+        }
+      }
+      if (this.canSubmit) {
+        this.request(this.api.addvoterequest, {
+          showLoading: true,
+          tel: this.formData.email.val,
+          email: this.formData.contact.val,
+          coinenglish: this.formData.currencyNameEn.val,
+          coinchinese: this.formData.currentIntroCn.val,
+          coinname: this.formData.currencySymbol.val,
+          icodate: this.formData.icoDate.val,
+          firstdate: this.formData.flowableDate.val,
+          blockchain: this.formData.blockType.val,
+          cointx: this.formData.contractAddr.val,
+          coindecimal: this.formData.decimalNum.val,
+          web: this.formData.officalSite.val,
+          bookweb: this.formData.whiteBook.val,
+          blockweb: this.formData.blockExplorer.val,
+          logo: this.formData.logoLink.val,
+          infochinese: this.formData.currentIntroCn.val,
+          infoenglish: this.formData.currencyIntroEn.val,
+          allnumber: this.formData.currencyVol.val,
+          tradnumber: this.formData.currencyFlowVol,
+          fpb: this.formData.currencyShareRate.val,
+          cbjg: this.formData.costPrice.val,
+          tradweb: this.formData.onlinePlat.val,
+          otherinfo: this.formData.otherInstruction.val
+        }).then(res => {
+          if (res.code == "") {
+            this.successMsg(res.msg);
+          } else {
+            this.errMsg(res.msg);
+          }
+        });
+      }
+    }
   }
 };
 </script>
@@ -277,7 +344,6 @@ export default {
     }
   }
 }
-
 .form-wrap {
   margin-top: -140px;
   .title {

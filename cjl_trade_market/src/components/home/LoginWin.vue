@@ -147,6 +147,20 @@ export default {
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
+    this.request(this.api.userinfo).then(res => {
+      console.log(`个人信息:${JSON.stringify(res)}`);
+      if (res.code == "0" && res.data && res.data.list) {
+        let balance = 0;
+        res.data.list.map(item => {
+          balance += item.account * 1;
+        });
+        this.userData = Object.assign({}, this.userData, {
+          balance: balance
+        });
+      } else {
+        this.errMsg(res.msg);
+      }
+    });
   },
   methods: {
     countDown() {
@@ -167,7 +181,6 @@ export default {
         }
       });
     },
-    getGoogleCode() {},
     getMobileCode() {
       if (!this.canGetCode || !this.Util.isPhone(this.checkLoginData.cellphone))
         return false;
@@ -178,7 +191,7 @@ export default {
         if (res.code == "0") {
           this.myMobileCode = true;
         } else {
-          this.errMsg(res.msg || "获取验证码失败");
+          this.errMsg(res.msg);
         }
       });
     },
@@ -196,7 +209,7 @@ export default {
         password: this.checkLoginData.password
       }).then(res => {
         if (res && res.code != 1) {
-          res.code == 4 && (this.bindGoogleAuth = false);
+          res.code == 10000 && (this.bindGoogleAuth = false);
           res.code == 0 && (this.bindGoogleAuth = true);
           this.checkLogin = true;
         } else {
@@ -222,7 +235,7 @@ export default {
           this.storage.set("token", res.data.token);
           this.storage.set("cellphone", this.checkLoginData.cellphone);
         } else {
-          this.errMsg(res.msg || "登录失败");
+          this.errMsg(res.msg);
         }
       });
     },

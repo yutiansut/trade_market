@@ -8,46 +8,45 @@
             <div class="form-group">
                 <span class="label" v-text="ownerLabel||$t('owner')||'户主'"></span>
                 <el-input disabled name='owner'
-                    :value='owner'>
+                    :value='myData.owner'>
                 </el-input>
             </div>
             <div class="form-group">
                 <span class="label" v-text="bankCardNoLabel||$t('bankCardNo')||'银行卡号'"></span>
                 <el-input disabled name='bankCardNo'
-                    :value='bankCardNo'>
+                    :value='myData.bankCardNo'>
                 </el-input>
             </div>
             <div class="form-group">
                 <span class="label" v-text="depositBankLabel||$t('depositBank')||'开户银行'"></span>
                 <el-input disabled name='depositBank'
-                    :value='depositBank'>
+                    :value='myData.depositBank'>
                 </el-input>
             </div>
             <div class="form-group">
                 <span class="label" v-text="branchesLabel||$t('bankBranch')||'开户支行'"></span>
                 <el-input disabled name='bankBranches'
-                    :value='bankBranches'>
+                    :value='myData.bankBranches'>
                 </el-input>
             </div>
             <div class="form-group">
                 <span class="label" v-text="transAmountLabel||$t('transferAmount')||'转账金额'"></span>
                 <el-input disabled name='transferAmount'
-                    :value='transferAmount'>
+                    :value='myData.transferAmount'>
                 </el-input>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <span class="label" v-text="noteLabel||$t('note')||'备注'"></span>
                 <el-input disabled name='note'
-                    :value='note'>
+                    :value='myData.note'>
                 </el-input>
-            </div>
+            </div> -->
             <div class="btn-group">
                 <button
                   @click='formSubmit'
                   class="btn-block btn-large btn-danger btn-active"
                   v-text="$t('submit')||'提交'">
                 </button>
-                <button class="btn-block btn-large btn-bordered btn-active" v-text="$t('cancel')||'取消'"></button>
             </div>
         </div>
     </dialog-box>
@@ -65,28 +64,32 @@ export default {
     depositBankLabel: String,
     branchesLabel: String,
     transAmountLabel: String,
-    noteLabel: String
+    noteLabel: String,
+    formData: {
+      type: Object
+    }
   },
   data() {
     return {
       showModal: this.show,
-      owner: "",
-      bankCardNo: "",
-      depositBank: "",
-      bankBranches: "",
-      transferAmount: "",
-      note: ""
+      myData: {}
     };
   },
+
   watch: {
     show: function() {
       this.showModal = this.show;
+    },
+    formData: function() {
+      this.myData = this.formData;
     }
   },
   methods: {
-    formSubmit() {},
+    formSubmit() {
+      this.$emit("onSubmit");
+    },
     closeModal() {
-      this.showModal = false;
+      this.showModal = this.show;
       this.$emit("closeModal");
     }
   }

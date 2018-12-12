@@ -3,33 +3,30 @@
         <el-container>
           <el-aside width="400px">
             <div class="list-tree">
-                <template v-for="(item,i) in myData">
-                  <div class="list-head font-bold" :key='i' v-text="item.typeName"></div>
-                  <c2c-aside-comp 
-                    :key='item.typeName'
-                    :myData='item.lists'
-                    :showArrow='false'>
-                  </c2c-aside-comp>
-                </template>
+                <c2c-aside-comp 
+                    :myData='myData'
+                    :showArrow='false'
+                    @onListClick='onListClick'>
+                </c2c-aside-comp>
             </div>
             </el-aside>
             <el-main>
               <div class="intro-detail">
                 <div class="heading flex flex-v-center flex-h-center">
                   <img class="thumb-50" src="" alt="">
-                  <span class="font-bold">【BTC】Bitcoin 比特币 钱包下载与资料</span>
+                  <span class="font-bold" v-text="coinInfo.chinaname"></span>
                 </div>
                 <dl>
                   <dt class="font-bold" v-text="$t('currencyIntro')||'币种简介'"></dt>
-                  <dd class="mt-20">Bitcoin是点对点的基于SHA-256算法的网络数字货币，到2140年之前总额达到2100万。</dd>
+                  <dd class="mt-20" v-text="coinInfo.chinaname"></dd>
                   <dt class="font-bold" v-text="$t('currencyProp')||'币种参数'"></dt>
                   <dd>
                     <ul class="properties">
-                      <li>{{$t("publishDate")||"推出日期"}}：&nbsp;&nbsp;2009-01-03</li>
+                      <li>{{$t("publishDate")||"推出日期"}}：&nbsp;&nbsp;{{coinInfo.sdate}}</li>
                       <li>{{$t("publishVol")||"发行总量"}}：&nbsp;&nbsp;21000000</li>
                       <li>{{$t("marketVal")||"市值"}}：&nbsp;&nbsp;$ 106,364,261,880</li>
-                      <li>{{$t("currencyAlgorithm")||"币种算法"}}：&nbsp;&nbsp;$ SHA-256</li>
-                      <li>{{$t("blockSize")||"区块大小"}}：&nbsp;&nbsp;25</li>
+                      <li>{{$t("currencyAlgorithm")||"币种算法"}}：&nbsp;&nbsp;{{coinInfo.coinscrypt}}</li>
+                      <li>{{$t("blockSize")||"区块大小"}}：&nbsp;&nbsp;{{coinInfo.blocksize}}</li>
                       <li>{{$t("currencyDifficulty")||"区块大小"}}：&nbsp;&nbsp;2016 Blocks</li>
                     </ul>
                   </dd>
@@ -56,38 +53,7 @@
 export default {
   data() {
     return {
-      myData: [
-        {
-          typeName: "BTC",
-          lists: [
-            {
-              id: "1",
-              thumb: "",
-              currency: "BTC/CEC"
-            },
-            {
-              id: "2",
-              thumb: "",
-              currency: "BTC/CEC"
-            }
-          ]
-        },
-        {
-          typeName: "BTC1",
-          lists: [
-            {
-              id: "1",
-              thumb: "",
-              currency: "BTC/CEC"
-            },
-            {
-              id: "2",
-              thumb: "",
-              currency: "BTC/CEC"
-            }
-          ]
-        }
-      ],
+      myData: "",
       links: [
         {
           href: "1",
@@ -131,7 +97,8 @@ export default {
           label: "交易",
           icon: "icon-jiaoyi"
         }
-      ]
+      ],
+      coinInfo: ""
     };
   },
   mounted() {
@@ -142,10 +109,14 @@ export default {
       this.request(this.api.getcoininfo).then(res => {
         console.log(`币种资料：${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
-        // res.data && res.data.list && (this.myData = res.data.list);
+        res.data && res.data.list && (this.myData = res.data.list);
+        this.coinInfo = res.data.list[0];
       });
     },
-    getCoinDetail(id) {}
+    onListClick(data) {
+      this.coinInfo = data;
+    }
+    // getCoinDetail(id) {}
   }
 };
 </script>

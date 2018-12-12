@@ -4,7 +4,7 @@
             <div class="panel-head flex flex-v-center flex-between">
                 <span class="font-16 font-bit-bold">
                     <em>{{$t('assetsEquivalent')||"资产折合"}}：</em>
-                    <em>0.0000202 BTC <i class="color-999 font-12">≈ 0 CNY</i></em>
+                    <em class="color-danger font-bold">{{total*1}}&nbsp;CNY<i class="color-999 font-12"></i></em>
                 </span>
                 <div class="nav-link">
                     <router-link
@@ -21,14 +21,27 @@
             <el-table :data='myPropetyData' :header-cell-style='changeStyle'>
                 <el-table-column :label="$t('currencyType')||'币种'">
                     <div class="flex flex-v-center" slot-scope="scope">
-                        <img class="currency-thumb thumb-20" src="" alt="">
+                        <img v-if="scope.row.logo" class="currency-thumb thumb-20"
+                          :src="scope.row.logo" alt="">
                         <span v-text="scope.row.name"></span>
                     </div>
                 </el-table-column>
-                <el-table-column prop="usable" :label="$t('avaliableBalance')||'可用余额'"></el-table-column>
+                <el-table-column :label="$t('avaliableBalance')||'可用余额'">
+                  <template slot-scope='scope'>
+                    {{scope.row.usable*1}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop="islock" :label="$t('marketMoney')||'挂单金额'"></el-table-column>
-                <el-table-column prop="allnumber" :label="$t('total')||'总计'"></el-table-column>
-                <el-table-column prop="usdt" :label="$t('equivalentRmb')||'估算为人民币'"></el-table-column>
+                <el-table-column :label="$t('total')||'累计'">
+                  <template slot-scope='scope'>
+                    {{scope.row.allnumber*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label="$t('equivalentRmb')||'估算为人民币'">
+                  <template slot-scope='scope'>
+                    {{scope.row.total*1}}
+                  </template>
+                </el-table-column>
                 <el-table-column width='150' :label="$t('operation')||'操作'">
                     <div class="operation"  slot-scope="scope">
                         <span @click="showDialog(0,scope.row)" class="color-danger" v-text="$t('rechargeCoin')||'充币'"></span>
@@ -146,6 +159,7 @@ export default {
         code: "手机验证码不能为空",
         google: "谷歌验证码不能为空"
       },
+      total: 0,
       codeTexti18n: "getMsgCode",
       second: "",
       myMobileCode: false,
@@ -177,7 +191,6 @@ export default {
     }
   },
   mounted() {
-    // this.getState();
     this.getAccount().then(coin => {
       this.getDayNumber(coin);
     });
@@ -190,13 +203,13 @@ export default {
     },
     getAccount() {
       return this.request(this.api.getaccount, {
-        search: null,
-        showLoading: 0
+        search: null
       }).then(res => {
         console.log(`我的资产:${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") return this.getDataFaild(res.code);
         if (res.data && res.data.list) {
           this.myPropetyData = res.data.list;
+          this.total = res.data.total;
           this.coinInfo = res.data.list[0];
           return Promise.resolve(this.coinInfo.name);
         }
@@ -223,11 +236,12 @@ export default {
     },
     getDayNumber(coin) {
       this.request(this.api.getdaynumber, {
-        coin: coin,
-        showLoading: 0
+        coin: coin
       }).then(res => {
         if (res.code == "0" && res.data.list && res.data.list[0]) {
           this.myAccount = res.data.list[0];
+        } else {
+          this.errMsg(res.code);
         }
       });
     },
@@ -258,8 +272,10 @@ export default {
         search: coin,
         showLoading: 0
       }).then(res => {
-        if (res.code == "0" && res.data.list.length > 0) {
+        if (res.code == "0") {
           this.usdtAddr = res.data.list;
+        } else {
+          this.errMsg(res.code);
         }
       });
     },
@@ -267,6 +283,8 @@ export default {
       this.request(this.api.getaddress, { coin: coin }).then(res => {
         if (res.code == "0") {
           this.chargeAddress = res.data.address[0].address;
+        } else {
+          this.errMsg(res.code);
         }
       });
     },
@@ -278,7 +296,7 @@ export default {
         if (res.code == "0") {
           this.myMobileCode = true;
         } else {
-          this.errMsg(res.msg || "获取验证码失败");
+          this.errMsg(res.code || "获取验证码失败");
         }
       });
     },

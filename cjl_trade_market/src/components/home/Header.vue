@@ -19,17 +19,20 @@
             </router-link>
             <ol class="sub-nav p-abs" v-if="mainCoin.subItem">
               <li class="sub-nav-item p-rel"
+                @mouseenter='getTradeCoin(sItem.coinid,index)'
                 v-for="(sItem,index) in mainCoin.subItem"
                 :key='index'>
-                <a href="javascript:void(0)">
+                <a 
+                  href="javascript:void(0)">
                   <span>{{sItem.coinid}}&nbsp;{{$t('trade')}}</span>
                   <i class="iconfont icon-arrow-right abs-v-center rt-0"></i>
                 </a>
-                <div v-if="currencyConfig[sItem.type]" class="nav-container p-abs">
-                  <currency-nav
-                    :myValue='currencyConfig[sItem.type]'
-                    :myKey='sItem.type'>
-                  </currency-nav>
+                <!-- 二级导航 -->
+                <div v-loading='showLoading'
+                  element-loading-spinner='el-icon-loading'
+                  element-loading-background='rgba(0,0,0,.4)'
+                  class="nav-container p-abs">
+                  <currency-nav></currency-nav>
                 </div>
               </li>
             </ol>
@@ -76,68 +79,14 @@ export default {
       currentPath: "",
       showHead: false,
       // 币种类型
-      currencyConfig: {
-        USDT: [
-          {
-            name: "ABC",
-            label: "ABC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          },
-          {
-            name: "BBC",
-            label: "BBC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          },
-          {
-            name: "CBC",
-            label: "CBC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          },
-          {
-            name: "DBC",
-            label: "DBC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          },
-          {
-            name: "CCC",
-            label: "CCC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          },
-          {
-            name: "EFF",
-            label: "EFF",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          }
-        ],
-        BTC: [
-          {
-            name: "ABC",
-            label: "ABC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          }
-        ],
-        ETH: [
-          {
-            name: "ABC",
-            label: "ABC",
-            thumb:
-              "http://www.ebtc2c.com/back/images/cmsimg/logo/1536059645650.jpg"
-          }
-        ]
-      },
+      currencyConfig: [],
       mainCoin: {
         i18nKey: "marketTrade",
         label: "币币交易",
         link: "/currency_trade",
         subItem: null
       },
+      showLoading: true,
       navBarCfg: [
         {
           i18nKey: "ctcTrade",
@@ -185,12 +134,13 @@ export default {
             }
           ]
         }
-      ]
+      ],
+      subNavIndex: ""
     };
   },
-  destroyed() {
-    this.$bus.off("mianCoin");
-  },
+  // destroyed() {
+  //   this.$bus.off("mainCoinLoad");
+  // },
   mounted() {
     this.showHead = this.showHeadTop;
     this.currentPath = this.$route.path;
@@ -206,7 +156,7 @@ export default {
       this.activeIndex = index;
     },
     getMainCoin() {
-      this.request(this.api.getmaincoin).then(res => {
+      this.request(this.api.getmaincoin, { showLoading: true }).then(res => {
         console.log(`主币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         let list = null;
@@ -217,6 +167,26 @@ export default {
         this.mainCoin.subItem = mainCoinModel.maincoin = list;
         mainCoinModel.coinid = list[0].coinid;
         this.$bus.emit("mainCoinLoad", mainCoinModel.coinid);
+      });
+    },
+    getTradeCoin(coin, index) {
+      if (this.storage.get(`sub_${index}`)) {
+        this.currencyConfig = this.storage.get(`sub_${index}`);
+        this.$bus.emit("navChange", this.currencyConfig);
+        return false;
+      }
+      if (this.subNavIndex && this.subNavIndex == index) return false;
+      this.subNavIndex = index;
+      this.showLoading = true;
+      this.request(this.api.getTradCoin, {
+        maincoin: coin
+      }).then(res => {
+        if (res.code == "0") {
+          this.currencyConfig = res.data.list;
+        }
+        this.storage.set(`sub_${index}`, res.data.list);
+        this.$bus.emit("navChange", this.currencyConfig);
+        this.showLoading = false;
       });
     }
   }

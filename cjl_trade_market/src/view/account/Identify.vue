@@ -207,6 +207,8 @@ export default {
       this.request(this.api.saftyState).then(res => {
         if (res && res.code == "0") {
           this.bindState = res.data.list[0];
+        } else {
+          this.errMsg(res.msg);
         }
       });
     },
