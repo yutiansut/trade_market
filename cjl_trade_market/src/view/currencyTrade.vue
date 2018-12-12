@@ -26,7 +26,7 @@
                     <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
                     <i
                       :class="currentCoinInfo.rise*1>0?'color-danger':'color-success'"
-                      v-text='currentCoinInfo.rise*1'>
+                      v-text='currentCoinInfo.rise*1+"%"'>
                     </i>
                   </span>
                   <span>
@@ -45,7 +45,7 @@
               </div>
               <!-- K线图占位 -->
               <div id='kMap' class="k-map">
-                <iframe src="../static/kline.html" width="100%" height="100%" frameborder="0"></iframe>
+                <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe>
               </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf flex flex-between">
@@ -130,30 +130,41 @@
                       <span v-text='$t("stalls")||"档位"'></span>
                       <span v-text='priceLabel'></span>
                       <span v-text='amountLabel'></span>
-                      <span v-text='totalLabel'></span>
+                      <span class="txt-rt" v-text='totalLabel'></span>
                     </div>
-                    <div class="tbody">
-                      <div class="row flex flex-between"
-                        v-for="(item,index) in latestSoldData" :key='index'>
-                        <span class="column color-success">
-                          {{$t('sell')}}&nbsp;{{buyListLength-index}}
-                        </span>
-                        <span class="column" v-text="item.price"></span>
-                        <span class="column" v-text="item.number"></span>
-                        <span class="column" v-text="item.total"></span>
-                      </div>
+                    <!-- 卖出五档图 -->
+                    <div class="tbody" v-if="latestSoldData&&latestSoldData[0]">
+                      <template v-for="(item,index) in latestSoldData">
+                        <div @click="onLatestClick(item)" class="row flex p-rel"
+                          :key='index'>
+                          <div :style='{width:(item.total/sellListTotal)*100+"%"}' class="progress p-abs"></div>
+                          <span class="column color-success">
+                            {{$t('sell')}}&nbsp;{{latestSoldData.length-index}}
+                          </span>
+                          <span style="width:25%;" class="column" v-text="item.price"></span>
+                          <span class="column" v-text="item.number"></span>
+                          <span class="column txt-rt" v-text="item.total"></span>
+                        </div>
+                      </template>
                     </div>
-                    <div class="tbody">
-                      <div class="row flex flex-between"
-                        v-for="(item,index) in latestBuyData" :key='index'>
-                        <span class="column color-success">
-                          {{$t('buy')}}&nbsp;{{index+1}}
-                        </span>
-                        <span class="column" v-text="item.price"></span>
-                        <span class="column" v-text="item.number"></span>
-                        <span class="column" v-text="item.total"></span>
-                      </div>
+                    <div class="no-data" v-else v-text="$t('label108')"></div>
+                  </div>
+                  <div class="break-line m-top-10 m-bottom-10"></div>
+                  <div class="table">
+                    <!-- 买入五档图 -->
+                    <div class="tbody" v-if="latestBuyData&&latestBuyData[0]">
+                      <template v-for="(item,index) in latestBuyData">
+                        <div @click="onLatestClick(item)" class="row flex flex-between p-rel" :key='index'>
+                          <div :style='{width:(item.total/sellListTotal)*100+"%"}' class="progress p-abs"></div>
+                          <span class="column color-danger" v-html="$t('buy')+'&nbsp;'+(index+1)">
+                          </span>
+                          <span class="column" v-text="item.price"></span>
+                          <span class="column" v-text="item.number"></span>
+                          <span class="column txt-rt" v-text="item.total"></span>
+                        </div>
+                      </template>
                     </div>
+                    <div class="no-data" v-else v-text="$t('label108')"></div>
                   </div>
                 </div>
               </div>
@@ -312,8 +323,9 @@ export default {
       dataMaxLen: 5,
       currentId: 1,
       tableData: null,
-      //买入记录
+      //最新买入
       latestBuyData: [],
+      //最新卖出
       latestSoldData: [],
       //当日委托
       currentDeclareData: null,
@@ -336,7 +348,8 @@ export default {
       bindState: null,
       // 是否能够交易
       canTrade: false,
-      routeParam: null
+      routeParam: null,
+      iframUrl: "/static/kline.html?"
     };
   },
   mounted() {
@@ -350,10 +363,26 @@ export default {
         this.loadData(coinData);
       }
     });
+    this.request("http://192.168.5.151:8080/api").then(res => {});
   },
+
   methods: {
+    // 刷新最新买入
+    updateList() {
+      setInterval(() => {
+        this.loadData({
+          maincoinid: this.maincoin,
+          coinid: this.tradecoin
+        });
+      }, 3000);
+    },
+    // 单列样式
     myCellStyle() {
       return "padding:6px 0 !important;border:none";
+    },
+    onLatestClick(data) {
+      this.buyFormData.price = data.price * 1;
+      this.sellFormData.price = data.price * 1;
     },
     onAsideTabChange() {
       this.showLoading = true;
@@ -366,6 +395,7 @@ export default {
       this.tradecoin = data.coinid;
       this.Util.setCookie("maincoinname", data.maincoinid);
       this.Util.setCookie("tradcoinname", data.coinid);
+      this.iframUrl = `${this.iframUrl}t=${new Date().getTime()}`;
       //获取可用;
       Promise.all([
         this.getAvailabel(this.maincoin),
@@ -386,13 +416,13 @@ export default {
         );
         this.historicalBuyData = orderData.data.list;
         this.latestBuyData = this.Util.sumCalc(
-          buyOrder.data.list.slice(0, 5),
+          buyOrder.data.list.slice(0, 10),
           "price",
           "number"
         );
 
         this.latestSoldData = this.Util.sumCalc(
-          sellOrder.data.list.slice(0, 5),
+          sellOrder.data.list.slice(0, 10),
           "price",
           "number"
         );
@@ -401,9 +431,11 @@ export default {
           "price",
           "number"
         );
+        // this.updateList();
         this.showLoading = false;
       });
     },
+
     //页面请求
     awaitResult(maincoin, tradecoin) {
       let params = {
@@ -477,7 +509,9 @@ export default {
             maincoin: this.maincoin,
             tradcoin: this.tradecoin
           }).then(res => {
-            this.currentDeclareData = res.data.list;
+            if (res.code == "0") {
+              this.currentDeclareData = res.data.list;
+            }
           });
         } else {
           this.errMsg(res.msg);
@@ -624,7 +658,7 @@ export default {
     },
     //可用余额
     availabelBalance() {
-      let num = (this.myBlance * 1).toFixed(6);
+      let num = this.myBlance * 1;
       return `${this.$t("avilable") || "可用"}&nbsp;${num || 0}&nbsp;${
         this.maincoin
       }`;
@@ -647,12 +681,6 @@ export default {
     //总数
     sellTotal() {
       return this.sellFormData.price * this.sellFormData.orderVol;
-    },
-    buyListLength() {
-      return this.latestBuyData.length;
-    },
-    sellListLength() {
-      return this.latestSoldData.length;
     },
     //最新买入总计
     buyListTotal() {
@@ -707,28 +735,59 @@ $border: 1px solid #e5e5e5;
   transform: scaleX(0.5);
   bottom: 0;
 }
+.no-data {
+  line-height: 60px;
+  text-align: center;
+  color: #999;
+}
 .table {
-  border-bottom: 1px solid #fcfcfc;
   .thead {
     height: 40px;
     line-height: 40px;
     display: flex;
     justify-content: space-between;
     font-size: 16px;
+    padding: 0 8px;
+    span {
+      display: block;
+      flex: 2;
+      &:first-child {
+        flex: 1;
+      }
+      &:last-child {
+        flex: 1;
+      }
+    }
   }
   .tbody {
-    border-top: 1px solid #ebeef5;
-    height: 175px;
+    max-height: 175px;
+    overflow: auto;
+    .column {
+      position: relative;
+      display: block;
+      flex: 2;
+      &:nth-child(2) {
+        flex: 1;
+      }
+      &:last-child {
+        flex: 1;
+      }
+    }
   }
   .row {
     height: 35px;
     line-height: 35px;
     padding: 0 8px;
+    justify-content: space-between;
     &:hover {
       background: #f1f1f1 !important;
     }
-    &:nth-child(2n) {
-      background: #fafafa;
+    .progress {
+      background: rgba(239, 253, 244, 1);
+      opacity: 0.4;
+      top: 0;
+      right: 0;
+      height: 100%;
     }
   }
 }

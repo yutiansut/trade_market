@@ -141,7 +141,8 @@ export default {
         return false;
       this.countDown();
       this.request(this.api.sendcodeuser, {
-        tel: this.checkLoginData.cellphone
+        tel: this.checkLoginData.cellphone,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.myMobileCode = true;
@@ -194,7 +195,8 @@ export default {
       this.request(this.api.login, {
         type: this.loginData.type,
         tel: this.checkLoginData.cellphone,
-        code: this.loginData.mobileCode || this.loginData.googleCode
+        code: this.loginData.mobileCode || this.loginData.googleCode,
+        showLoading: true
       }).then(res => {
         if (res && res.code != "0") {
           this.errMsg(res.msg || "登录失败");
@@ -220,7 +222,8 @@ export default {
       }
       this.request(this.api.checklogin, {
         tel: this.checkLoginData.cellphone,
-        password: this.checkLoginData.password
+        password: this.checkLoginData.password,
+        showLoading: true
       }).then(res => {
         if (res && res.code * 1 != 1) {
           res.code == 10000 && (this.bindGoogleAuth = false);

@@ -17,8 +17,10 @@
                   :class="currentCoinId==i?'active':''"
                   @click="onTabChange($event,i,item.coinid)">
                   {{item.coinid}}&nbsp;{{$t('trade')}}
-                  <span v-if='i<mainCoinModel.length-1' class="dot abs-v-center"></span>
+                  <!-- <span v-if='i<mainCoinModel.maincoin.length-1' class="dot abs-v-center"></span> -->
+                  <span class="dot abs-v-center"></span>
                 </li>
+                <li v-show="mainCoinModel.maincoin">{{$t('optMarket')}}</li>
               </ul>
             </div>
             <el-table style="width:100%;font-size:14px;border-top:1px solid #eee;" 
@@ -55,11 +57,20 @@
               <!-- <el-table-column :label="$t('priceTrends')+'（3'+$t('day')+'）'"></el-table-column> -->
               <el-table-column :label="($t('priceChange')||'涨跌')+'（'+($t('day')||'日')+'）'" width='120px;'>
                 <template slot-scope="scope">
-                  <div class="operate">
-                    <span v-text="scope.row.rise*1"></span>
-                    <i class="el-icon-star-off"></i>
-                  </div>
+                  <span
+                    :class="scope.row.rise>0?'color-danger':'color-success'"
+                    v-text="scope.row.rise*1+'%'">
+                  </span>
                 </template>
+              </el-table-column>
+              <el-table-column :label='$t("optMarket")' width='60'>
+                <div
+                  @click="addMylist(scope.row,scope.$index)"
+                  :title="$t('label109')" class="option wh-full" slot-scope="scope">
+                  <i class="icon-star font-18 color-danger"
+                    :class="scope.row.isMyLike?'el-icon-star-on':'el-icon-star-off'">
+                  </i>
+                </div>
               </el-table-column>
             </el-table>
           </div>
@@ -73,6 +84,11 @@
 import friendLink from "@/components/home/FriendLink";
 import AdvantageIntro from "@/components/home/AdvantageIntro";
 import mainCoinModel from "@/model/allCoinModel.js";
+import {
+  addCustomList,
+  removeCustomList,
+  matchCustomList
+} from "@/assets/js/common.js";
 export default {
   components: { friendLink, AdvantageIntro },
   data() {
@@ -89,7 +105,7 @@ export default {
       grid: {
         show: false
       },
-      tableData: null
+      tableData: []
     };
   },
   mounted() {
@@ -102,9 +118,20 @@ export default {
     });
   },
   methods: {
+    // 添加自选
+    addMylist(rowData, index) {
+      let data = rowData;
+      this.$set(this.tableData, index, data);
+      data.isMyLike = !data.isMyLike;
+      if (data.isMyLike) {
+        addCustomList(data);
+      } else {
+        removeCustomList(data);
+      }
+    },
     onTabChange(e, index, coinid) {
       if (index == this.currentCoinId) return;
-      this.loading = !this.loading;
+      this.loading = true;
       this.currentCoinId = index;
       this.getTradCoin(coinid);
     },
@@ -122,9 +149,11 @@ export default {
         maincoin: coinid
       }).then(res => {
         console.log(`交易币种:${JSON.stringify(res)}`);
-        this.loading = !this.loading;
+        this.loading = false;
         if (res && res.code != "0") return this.getDataFaild(res.msg);
-        res.data && res.data.list && (this.tableData = res.data.list);
+        if (res.data && res.data.list && res.data.list[0]) {
+          this.tableData = matchCustomList(res.data.list);
+        }
       });
     }
   }
@@ -139,6 +168,7 @@ export default {
   background: #666;
   right: -40px;
 }
+
 span.status_0 {
   color: $color-success;
 }
@@ -148,6 +178,10 @@ span.status_1 {
 .content {
   width: $content-width;
   @include hCenter;
+  .option {
+    text-align: center;
+    cursor: pointer;
+  }
   .list-table {
     margin-top: 40px;
     .status {

@@ -1,5 +1,4 @@
-﻿
-<html>
+﻿<html>
 
 <head>
     <meta name="renderer" content="webkit" />
@@ -661,7 +660,7 @@
         <script src="./js/kline.assistant.js"></script>
         <script>
             //币种id
-            var biType = "carc_eth";
+            var biType = "carc1_eth";
             var theme = "0";
             if (theme == "0") {
                 setTimeout(function () {
@@ -674,7 +673,7 @@
             }
             var kline = new Kline();
             //var klineUrl = "http://192.168.5.112/trade/kline?needTickers=1&symbol=BTC_USDT&type=15min&size=1000";
-            var klineUrl = "https://192.168.5.151/api/kline";
+            var klineUrl = "http://192.168.5.151:8080/API/kline";
             setInterval(function () {
                 biType = "btc_usdt";
                 var d = new Date();

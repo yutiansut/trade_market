@@ -33,16 +33,20 @@
             :label='$t("increase")||"涨幅"'
             width='100'>
             <template slot-scope="scope">
-              <span :class="scope.row.rise*1>0?'color-danger':'color-success'" v-text="scope.row.rise"></span>
+              <span :class="scope.row.rise*1>0?'color-danger':'color-success'" v-text="scope.row.rise*1+'%'"></span>
             </template>
           </el-table-column>
           <el-table-column
             :label='$t("optional")||"自选"'
             width='80'>
               <template slot-scope="scope">
-              <div class="operate">
-                  <span v-text="scope.row.trend"></span>
-                  <i class="el-icon-star-off"></i>
+              <div
+                @click="addMylist(scope.row,scope.$index)"
+                class="operate">
+                <span v-text="scope.row.trend"></span>
+                <i class="font-18 color-danger"
+                  :class="scope.row.isMyLike?'el-icon-star-on':'el-icon-star-off'">
+                </i>
               </div>
               </template>
           </el-table-column>
@@ -51,6 +55,7 @@
 </template>
 <script>
 import mainCoinModel from "@/model/allCoinModel.js";
+import { addCustomList, removeCustomList } from "@/assets/js/common.js";
 export default {
   name: "ce-aside-comp",
   data() {
@@ -80,6 +85,17 @@ export default {
       this.getTradCoin(coinid);
       this.$emit("onAsideTabChange");
     },
+    // 添加自选
+    addMylist(rowData, index) {
+      let data = rowData;
+      this.$set(this.tableData, index, data);
+      data.isMyLike = !data.isMyLike;
+      if (data.isMyLike) {
+        addCustomList(data);
+      } else {
+        removeCustomList(data);
+      }
+    },
     // 获取币种交易行情
     getTradCoin(coinid) {
       this.showLoading = true;
@@ -88,7 +104,20 @@ export default {
       }).then(res => {
         console.log(`交易币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
-        res.data && res.data.list && (this.tableData = res.data.list);
+        let customList = this.storage.get("customList");
+        if (res.data && res.data.list && res.data.list[0]) {
+          customList.map((cItem, i) => {
+            res.data.list.map((dItem, j) => {
+              if (
+                dItem.coinid == cItem.coinid &&
+                dItem.maincoinid == cItem.maincoinid
+              ) {
+                res.data.list[j] = customList[i];
+              }
+            });
+          });
+        }
+        this.tableData = res.data.list;
         mainCoinModel.tradecoinid = res.data.list[0].coinid;
         this.$bus.emit("tradeCoinLoad", res.data.list[0]);
         this.showLoading = false;

@@ -326,6 +326,8 @@ module.exports = {
     label105: "请输入币种流通量",
     label106: "presale,private sale,public sale等",
     label107: "其他信息说明",
+    label108: "暂无数据",
+    label109:"添加自选",
     "添加成功": "添加成功",
     '默认未知错误': "默认未知错误",
     "Token失效": "Token失效",

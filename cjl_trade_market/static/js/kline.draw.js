@@ -8969,6 +8969,7 @@ var RequestData = function (showLoading) {
             this.market = GLOBAL_VAR.market_from
         },
         success: function (json) {
+
             if (GLOBAL_VAR.G_HTTP_REQUEST) {
                 if (this.time != GLOBAL_VAR.time_type || this.market != GLOBAL_VAR.market_from) {
                     GLOBAL_VAR.TimeOutId = setTimeout(RequestData, 1000);

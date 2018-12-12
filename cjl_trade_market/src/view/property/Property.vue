@@ -282,7 +282,9 @@ export default {
     getAddress(coin) {
       this.request(this.api.getaddress, { coin: coin }).then(res => {
         if (res.code == "0") {
-          this.chargeAddress = res.data.address[0].address;
+          this.chargeAddress = res.data.address[0]
+            ? res.data.address[0].address
+            : "";
         } else {
           this.errMsg(res.code);
         }

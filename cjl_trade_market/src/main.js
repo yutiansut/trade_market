@@ -120,7 +120,7 @@ Object.assign(Vue.prototype, {
       message: `${i18n.t(msg)}`,
       type: "success"
     });
-  }
+  },
 });
 /**全局路由守卫 */
 router.beforeEach((to, from, next) => {

@@ -175,7 +175,7 @@ const Utils = (function () {
             if (this.dataType(arr) == "array") {
                 arr.map(item => {
                     if (item[price] && item[num]) {
-                        item.total = (item[price] * 1 * item[num] * 1).toFixed(4);
+                        item.total = (item[price] * 1 * item[num] * 1);
                     }
                 });
             }

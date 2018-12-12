@@ -14,7 +14,13 @@
             </div>
             <input class="eth-addr" disabled='disabled' :value="chargeAddress"/>
             <div>{{$t('or')||"或"}}&nbsp;{{$t('scanCode')||"扫描二维码"}}</div>
-            <div class="qr-code p-rel"><img :src="qrCode||''" alt=""></div>
+            <div v-if="chargeAddress" class="qr-code">
+              <vue-qr class="img"
+                :text="chargeAddress"
+                :margin="0"
+                :size="120">
+              </vue-qr>
+            </div>
             <div class="warning color-666">
               <template v-if="$i18n.locale=='en-US'">
                 Please send the number of ETHs you need to recharge to this address via the ETH client or online wallet. After the transmission is completed, the system will automatically recharge the virtual currency to your account on the site after 12 confirmations. 12 confirmations take about 0.5 to 1 hour, please be patient. The same address can be recharged multiple times without affecting the account. The minimum recharge amount is 0.0001.
@@ -27,7 +33,9 @@
         </dialog-box>
 </template>
 <script>
+import VueQr from "vue-qr";
 export default {
+  components: { VueQr },
   props: {
     showCharge: {
       type: Boolean,
@@ -70,15 +78,11 @@ export default {
     margin-bottom: 15px;
   }
   .qr-code {
-    width: 23.2%;
-    padding-top: 23.2%;
+    // width: 23.2%;
+    // padding-top: 23.2%;
+    width: 120px;
+    height: 120px;
     margin: 10px 0;
-    img {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-    }
   }
   .warning {
     line-height: 1.5;

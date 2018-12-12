@@ -326,6 +326,8 @@ module.exports = {
     label105: "Input coin circulation",
     label106: "presale,private sale,public sale.etc",
     label107: "Other infomation",
+    label108: "No data",
+    label109: "Add to my list",
     "添加成功": "Add success",
     '默认未知错误': "Unknown error",
     "Token失效": "Invalid token",
