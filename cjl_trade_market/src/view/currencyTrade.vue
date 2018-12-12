@@ -370,9 +370,32 @@ export default {
     // 刷新最新买入
     updateList() {
       setInterval(() => {
-        this.loadData({
-          maincoinid: this.maincoin,
-          coinid: this.tradecoin
+        this.awaitResult(this.maincoin, this.tradecoin).then(res => {
+          let [entrustData, orderData, buyOrder, sellOrder, allOrder] = [
+            ...res
+          ];
+          this.currentDeclareData = this.Util.sumCalc(
+            entrustData.data.list,
+            "price",
+            "number"
+          );
+          this.historicalBuyData = orderData.data.list;
+          this.latestBuyData = this.Util.sumCalc(
+            buyOrder.data.list.slice(0, 10),
+            "price",
+            "number"
+          );
+
+          this.latestSoldData = this.Util.sumCalc(
+            sellOrder.data.list.slice(0, 10),
+            "price",
+            "number"
+          );
+          this.historicalBuyData = this.Util.sumCalc(
+            allOrder.data.list,
+            "price",
+            "number"
+          );
         });
       }, 3000);
     },
@@ -431,8 +454,8 @@ export default {
           "price",
           "number"
         );
-        // this.updateList();
         this.showLoading = false;
+        this.updateList();
       });
     },
 
