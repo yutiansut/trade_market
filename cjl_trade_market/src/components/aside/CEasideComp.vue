@@ -2,13 +2,18 @@
     <div class="side">
         <!-- tab选项卡 -->
         <div class="tab-wrap p-rel">
-          <ul>
-            <li @click="onTabChange(item.coinid,i)" v-for="(item,i) in mainCoinModel.maincoin" 
+          <el-tabs v-model="currentId" type="card" @tab-click="onTabChange">
+            <el-tab-pane 
+              v-for="(item,i) in mainCoinModel.maincoin"
               :key="i"
-              :class='currentId==i?"active":""'>
-              {{item.coinid}}&nbsp;{{$t('trade')}}
-          </li>
-        </ul>
+              :label="item.coinid+' '+$t('trade')"
+              :name="item.coinid">
+            </el-tab-pane>
+            <el-tab-pane v-show="mainCoinModel.maincoin"
+              :label="$t('optMarket')"
+              name='opt'>
+            </el-tab-pane>
+          </el-tabs>
         </div>
         <el-input suffix-icon="el-icon-search"></el-input>
         <el-table style="font-size:14px;"
@@ -69,9 +74,11 @@ export default {
   mounted() {
     if (mainCoinModel.coinid) {
       this.getTradCoin(mainCoinModel.coinid);
+      this.currentId = mainCoinModel.coinid;
       return;
     }
     this.$bus.on("mainCoinLoad", coinid => {
+      this.currentId = coinid;
       this.getTradCoin(coinid);
     });
   },
@@ -79,11 +86,24 @@ export default {
     this.$bus.off("tradeCoinLoad");
   },
   methods: {
-    onTabChange(coinid, index) {
-      if (index == this.currentId) return;
-      this.currentId = index;
-      this.getTradCoin(coinid);
+    onTabChange() {
+      if (this.currentId == "opt") {
+        let customList = this.storage.get("customList");
+        this.tableData =
+          (customList && customList.length) > 0 ? customList : [];
+        if (!customList[0]) return false;
+        mainCoinModel.tradecoinid = customList[0].coinid;
+        this.$bus.emit("tradeCoinLoad", customList[0]);
+      } else {
+        this.getTradCoin(this.currentId);
+      }
       this.$emit("onAsideTabChange");
+    },
+    // 获取自选
+    getCustomList() {
+      let customList = this.storage.get("customList");
+      this.currentId = "opt";
+      customList && customList.length > 0 && (this.tableData = customList);
     },
     // 添加自选
     addMylist(rowData, index) {
@@ -105,7 +125,7 @@ export default {
         console.log(`交易币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         let customList = this.storage.get("customList");
-        if (res.data && res.data.list && res.data.list[0]) {
+        if (res.data && customList && res.data.list && res.data.list[0]) {
           customList.map((cItem, i) => {
             res.data.list.map((dItem, j) => {
               if (

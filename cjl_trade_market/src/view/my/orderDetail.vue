@@ -4,18 +4,24 @@
       <div class="table-wrap">
         <div class="filter-bar flex flex-v-center">
             <el-input v-model="seachVal" suffix-icon='el-icon-search' size='small'></el-input>
-            <button class="btn-inline btn-small btn-danger btn-active m-left-10"
+            <button
+              @click="searchCoin"
+              class="btn-inline btn-small btn-danger btn-active m-left-10"
               v-text="$t('inquire')||'查询'">
             </button>
         </div>
         <el-table :data='orderDetailData'>
           <el-table-column :label='$t("orderNum")||"序号"' width='200' type='index'></el-table-column>
-          <el-table-column :label='$t("time")||"时间"' prop='date'></el-table-column>
+          <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
           <el-table-column :label='$t("type")||"类型"'>
             <span slot-scope="scope" v-text="scope.row.type=='买入'?$t('buy'):$t('sell')"></span>
           </el-table-column>
-          <el-table-column :label='$t("currencyType")||"币种"' prop='currency'></el-table-column>
-          <el-table-column :label='$t("amount")||"数量"' prop='num'></el-table-column>
+          <el-table-column :label='$t("currencyType")||"币种"' prop='coin'></el-table-column>
+          <el-table-column :label='$t("amount")||"数量"'>
+            <template slot-scope="scope">
+              {{scope.row.number*1}}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>
@@ -42,7 +48,8 @@
 export default {
   data() {
     return {
-      orderDetailData: null,
+      orderDetailRawData: [],
+      orderDetailData: [],
       seachVal: ""
     };
   },
@@ -51,7 +58,23 @@ export default {
       console.log(`订单详情:${JSON.stringify(res)}`);
       if (res && res.code != "0") return this.getDataFaild(res.msg);
       res.data && res.data.list && (this.orderDetailData = res.data.list);
+      this.orderDetailRawData = this.orderDetailData.slice(0);
     });
+  },
+  methods: {
+    searchCoin() {
+      if (this.seachVal == "") {
+        this.orderDetailData = this.orderDetailRawData;
+        return false;
+      }
+      let result = [];
+      this.orderDetailData.map(item => {
+        if (item.coin && item.coin.indexOf(this.seachVal) != -1) {
+          result.push(item);
+        }
+      });
+      this.orderDetailData = result;
+    }
   }
 };
 </script>

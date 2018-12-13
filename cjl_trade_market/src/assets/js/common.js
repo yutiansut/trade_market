@@ -20,11 +20,13 @@ function addCustomList(data) {
 // 移除自选
 function removeCustomList(data) {
     let customList = myStorage.get("customList");
-    customList.map((item, i) => {
-        if (item.coinid == data.coinid && item.maincoinid == item.maincoinid) {
-            customList.splice(i, 1);
-        }
-    });
+    if (customList) {
+        customList.map((item, i) => {
+            if (item.coinid == data.coinid && item.maincoinid == item.maincoinid) {
+                customList.splice(i, 1);
+            }
+        });
+    }
     myStorage.set("customList", customList);
 };
 //加载自选
@@ -49,4 +51,14 @@ function matchCustomList(rawData) {
     }
     return rawData;
 }
-export { addCustomList, removeCustomList, matchCustomList }
+function randomString(len) {
+    len = len || 32;
+    let $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678';    /****默认去掉了容易混淆的字符oOLl,9gq,Vv,Uu,I1****/
+    let maxPos = $chars.length;
+    let pwd = '';
+    for (i = 0; i < len; i++) {
+        pwd += $chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return pwd;
+}
+export { addCustomList, removeCustomList, matchCustomList, randomString }

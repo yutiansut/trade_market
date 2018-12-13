@@ -5,12 +5,24 @@
         <el-table
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderRecordData'>
-          <el-table-column prop='date' :label='$t("date")||"日期"'></el-table-column>
-          <el-table-column prop='type' :label='$t("type")||"交易类型"'></el-table-column>
-          <el-table-column prop='tradePair' :label='$t("tradePair")||"交易对"'></el-table-column>
+          <el-table-column prop='writedate' :label='$t("date")||"日期"'></el-table-column>
+          <el-table-column :label='$t("type")||"交易类型"'>
+            <template slot-scope="scope">
+              {{scope.row.type=='0'?$t('buy'):$t('sell')}}
+            </template>
+          </el-table-column>
+          <el-table-column :label='$t("tradePair")||"交易对"'>
+            <template slot-scope="scope">
+              {{scope.row.tradcoin+'/'+scope.row.maincoin}}
+            </template>
+          </el-table-column>
           <el-table-column prop='price' :label='$t("finalPrice")||"成交价"'></el-table-column>
-          <el-table-column prop='volumn' :label='$t("volumn"||"成交量")'></el-table-column>
-          <el-table-column prop='total' :label='$t("total")||"总计"'></el-table-column>
+          <el-table-column prop='number' :label='$t("volumn"||"成交量")'></el-table-column>
+          <el-table-column :label='$t("total")||"总计"'>
+            <template slot-scope="scope">
+              {{scope.row.price*scope.row.number}}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>

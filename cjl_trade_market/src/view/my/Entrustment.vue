@@ -5,14 +5,22 @@
         <el-table
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='myEnstrumentData'>
-          <el-table-column prop='date' :label='$t("date")||"下单日期"'></el-table-column>
+          <el-table-column prop='writedate' :label='$t("date")||"下单日期"'></el-table-column>
           <el-table-column :label='$t("type")||"类型"'>
             <span slot-scope="scope" v-text="scope.row.type=='买入'?$t('buy'):$t('sell')"></span>
           </el-table-column>
-          <el-table-column prop='tradePair' :label='$t("tradePair")||"交易对"'></el-table-column>
+          <el-table-column :label='$t("tradePair")||"交易对"'>
+            <template slot-scope="scope">
+              {{scope.row.tradcoin+'/'+scope.row.maincoin}}
+            </template>
+          </el-table-column>
           <el-table-column prop='price' :label='$t("tradePrice")||"交易价"'></el-table-column>
-          <el-table-column prop='volumn' :label='$t("marketVol")+"("+$t("locked")+")"||"挂单量（锁定）"'></el-table-column>
-          <el-table-column width='150' prop='total' :label='$t("total")||"总计"'></el-table-column>
+          <el-table-column prop='dealnumber' :label='$t("marketVol")+"("+$t("locked")+")"||"挂单量（锁定）"'></el-table-column>
+          <el-table-column width='150' :label='$t("total")||"总计"'>
+            <template slot-scope="scope">
+              {{scope.row.dealnumber*scope.row.price}}
+            </template>
+          </el-table-column>
         </el-table>
       </div>
     </div>

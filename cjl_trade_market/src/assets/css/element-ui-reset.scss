@@ -57,3 +57,12 @@ $color-primary: #ab1e24;
   line-height: normal;
   margin-bottom: 10px;
 }
+.el-tabs__item {
+  font-size: 16px;
+  &:hover {
+    color: $color-primary;
+  }
+  &.is-active {
+    color: $color-primary;
+  }
+}

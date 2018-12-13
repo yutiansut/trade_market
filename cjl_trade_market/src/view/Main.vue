@@ -20,7 +20,11 @@
                   <!-- <span v-if='i<mainCoinModel.maincoin.length-1' class="dot abs-v-center"></span> -->
                   <span class="dot abs-v-center"></span>
                 </li>
-                <li v-show="mainCoinModel.maincoin">{{$t('optMarket')}}</li>
+                <li
+                  @click="getCustomList"
+                  :class="currentCoinId=='opt'?'active':''"
+                  v-show="mainCoinModel.maincoin">{{$t('optMarket')}}
+                </li>
               </ul>
             </div>
             <el-table style="width:100%;font-size:14px;border-top:1px solid #eee;" 
@@ -142,6 +146,12 @@ export default {
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         res.data && res.data.list && (this.tableData = res.data.list);
       });
+    },
+    // 获取我的自选
+    getCustomList() {
+      let customList = this.storage.get("customList");
+      this.currentCoinId = "opt";
+      customList && customList.length > 0 && (this.tableData = customList);
     },
     // 获取币种交易行情
     getTradCoin(coinid) {

@@ -175,11 +175,18 @@ const Utils = (function () {
             if (this.dataType(arr) == "array") {
                 arr.map(item => {
                     if (item[price] && item[num]) {
-                        item.total = (item[price] * 1 * item[num] * 1);
+                        item.total = this.accMul(item[price], item[num]);
                     }
                 });
             }
             return arr;
+        },
+        //乘积精度处理
+        accMul(arg1, arg2) {
+            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+            try { m += s1.split(".")[1].length } catch (e) { }
+            try { m += s2.split(".")[1].length } catch (e) { }
+            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
         },
         setCookie(name, value) {
             var Days = 30;

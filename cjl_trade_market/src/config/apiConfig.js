@@ -1,6 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "/API",
+        baseURL: process.env.NODE_ENV === 'production' ? "http://192.168.5.130:8080/API/" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "ws://192.168.5.51:8080/newtrad/echo/",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner

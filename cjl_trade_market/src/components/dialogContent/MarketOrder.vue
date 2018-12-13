@@ -62,11 +62,11 @@ export default {
     amountLabel: String,
     limitLabel: String,
     seller: String,
-    price: String,
-    volumn: String,
-    amount: String,
-    limitAmount: String,
-    coin: String
+    price: null,
+    volumn: null,
+    amount: null,
+    limitAmount: null,
+    coin: null
   },
   data() {
     return {
