@@ -52,6 +52,11 @@
                   <i v-if='sItem.type' class="iconfont icon-arrow-right abs-v-center rt-0"></i>
                 </router-link>
               </li>
+              <li class="sub-nav-item p-rel">
+                <a target="_blank" :href="agreementUrl">
+                  <span v-text="$t('agreement')"></span>
+                </a>
+              </li>
             </ol>
           </li>
         </ul>
@@ -86,6 +91,8 @@ export default {
         link: "/currency_trade",
         subItem: null
       },
+      // 用户协议地址
+      agreementUrl: `http://localhost:80/pdf/services.pdf`,
       showLoading: true,
       navBarCfg: [
         {
@@ -126,12 +133,12 @@ export default {
               i18nKey: "faqCenter",
               label: "问题中心",
               link: "/help_center/faq"
-            },
-            {
-              i18nKey: "agreement",
-              label: "用户协议",
-              link: "/help_center/agreement"
             }
+            // {
+            //   i18nKey: "agreement",
+            //   label: "用户协议",
+            //   link: `${window.location.host}/pdf/services.pdf`
+            // }
           ]
         }
       ],
@@ -158,7 +165,10 @@ export default {
     getMainCoin() {
       this.request(this.api.getmaincoin, { showLoading: true }).then(res => {
         console.log(`主币种:${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
         let list = null;
         res.data && res.data.list && (list = res.data.list.slice(0));
         list.map(item => {

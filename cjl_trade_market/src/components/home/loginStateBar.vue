@@ -119,13 +119,13 @@ export default {
           i18nKey: "identify",
           link: "/account/identify",
           icon: ""
+        },
+        {
+          i18nKey: "apiAdmin",
+          label: "提交工单",
+          link: "",
+          icon: ""
         }
-        // {
-        //   i18nKey: "apiAdmin",
-        //   label: "API管理",
-        //   link: "",
-        //   icon: ""
-        // }
       ],
       langList: {
         id: 0,
@@ -172,7 +172,12 @@ export default {
     },
     logout() {
       this.request(this.api.logout).then(res => {
-        console.log(res);
+        if (res.code == "0") {
+          this.storage.remove("token");
+          this.storage.set("isLogin", false);
+          this.userModel.isLogin = false;
+          this.navigateTo("Main");
+        }
       });
     }
   }

@@ -17,7 +17,7 @@
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                             <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
-                            <a href="/property" v-text="$t('recharge')||'充值'"></a>
+                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyingValiation')||'买入估价'"></label>
@@ -49,7 +49,7 @@
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                           <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
-                          <a href="/property" v-text="$t('recharge')"></a>
+                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>                          
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellingValiation')||'卖出估价'"></label>
@@ -192,8 +192,8 @@ export default {
     getOtcOrder() {
       this.request(this.api.getotcorder).then(res => {
         console.log(`OTC订单${JSON.stringify(res)}`);
+        this.showLoading = false;
         if (res.code == "0" && res.data && res.data.list && res.data.list[0]) {
-          this.showLoading = false;
           let list = res.data.list.slice(0);
           this.allOrderList = list;
           this.myOrderList = this.getMyOrderlist(

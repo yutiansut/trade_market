@@ -3,9 +3,9 @@
         <div class="win-title" v-text="$t('welcome')"></div>
         <div v-if="userData.isLogin">
             <div class="user-info">
-                <h3 class="nick-name" v-text="userData.cellphone"></h3>
+                <h3 class="nick-name" v-text="userData.tel"></h3>
                 <div class="cellphone">
-                    <span><em v-text="$t('accountId')"></em> ：</span>
+                    <span><em v-text="$t('accountId')"></em> ：{{userData.username||userData.tel}}</span>
                     <span class="color-primary"></span>
                 </div>
                 <div><em v-text="$t('totalEstimate')"></em>：</div>
@@ -100,7 +100,6 @@
                 class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
               </div>
               <div v-show="loginData.type==1"
-                @click='getGoogleCode'
                 class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
               </div>
             </div>
@@ -147,20 +146,20 @@ export default {
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
-    this.request(this.api.userinfo).then(res => {
-      console.log(`个人信息:${JSON.stringify(res)}`);
-      if (res.code == "0" && res.data && res.data.list) {
-        let balance = 0;
-        res.data.list.map(item => {
-          balance += item.account * 1;
-        });
-        this.userData = Object.assign({}, this.userData, {
-          balance: balance
-        });
-      } else {
-        this.errMsg(res.msg);
-      }
-    });
+    if (this.storage.get("isLogin")) {
+      this.request(this.api.userinfo).then(res => {
+        console.log(`个人信息:${JSON.stringify(res)}`);
+        if (res.code == "0" && res.data) {
+          this.userData = Object.assign({}, this.userData, {
+            balance: res.data.amount * 1,
+            tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
+            username: res.data.userinfo[0] && res.data.userinfo[0].username
+          });
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
+    }
   },
   methods: {
     countDown() {
@@ -231,6 +230,7 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg);
           this.userModel.cellphone = this.checkLoginData.cellphone;
+          this.userModel.isLogin = true;
           this.storage.set("isLogin", true);
           this.storage.set("token", res.data.token);
           this.storage.set("cellphone", this.checkLoginData.cellphone);

@@ -3,7 +3,7 @@
         <el-carousel :interval="5000" :height='bannerHeight'>
             <el-carousel-item v-for="(item,index) in bannerList" :key="index">
                 <router-link :to='item.link'>
-                    <img class="banner-image" :src="item.bannerurl||item.url">
+                    <img class="banner-image" :src='item.bannerurl||item.url'>
                 </router-link>
             </el-carousel-item>
         </el-carousel>
@@ -29,7 +29,7 @@ export default {
   },
   mounted() {
     this.request(this.api.banner).then(res => {
-      if (!res.code && res.data.list.length > 0) {
+      if (res.code == "0") {
         this.bannerList = res.data.list;
       }
     });

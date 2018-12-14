@@ -23,10 +23,10 @@ module.exports = {
     cssSourceMap: true
   },
   build: {
-    index: path.resolve(__dirname, 'F:/nodeapp/apitest/public/index.html'),
-    assetsRoot: path.resolve(__dirname, 'F:/nodeapp/apitest/public'),
+    index: path.resolve(__dirname, '../dist/index.html'),
+    assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
     productionSourceMap: false,
     devtool: '#source-map',
     productionGzip: false,

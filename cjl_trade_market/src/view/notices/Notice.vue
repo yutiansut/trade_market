@@ -18,7 +18,10 @@
 export default {
   methods: {
     getRowData(data) {
-      this.navigateTo("/currency_trade", { data: JSON.stringify(data) });
+      this.navigateTo("/currency_trade", {
+        maincoinid: data.maincoinid,
+        coinid: data.coinid
+      });
     }
   }
 };

@@ -1,12 +1,16 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "http://192.168.5.130:8080/API/" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "ws://192.168.5.51:8080/newtrad/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "http://47.95.213.181:80/newtrad/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "ws://47.95.213.181:80/newtrad/echo/" : "ws://192.168.5.51:8080/newtrad/echo/",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner
         banner: {
             url: "banner",
+        },
+        //根据主币种和交易币种获取币种信息(最新交易信息)
+        getCoinInfo: {
+            url: 'getcoininfoByCoinType '
         },
         //所有币种
         allcoin: {
@@ -35,22 +39,22 @@ let apiCfg = (function () {
         // 用户注册
         register: {
             url: 'register',
-            method: 'post'
         },
         // 钱包注册
         registeruser: {
             url: "registeruser",
-
         },
         //手机登录
         signin: {
             url: "signin",
-            methed: "post"
         },
         //pc登录
         login: {
             url: "login",
-
+        },
+        // 退出
+        logout: {
+            url: "logout"
         },
         // 登录验证
         checklogin: {

@@ -5,7 +5,7 @@
         </my-header>
         <img class="banner" :src="banner" alt="">
         <div class="form-wrap p-rel">
-            <div class="title font-bold">请填写以下项目资料（请务必提供最详细准确信息，获得审核批准后将有权利参与投票上币）</div>
+            <div class="title font-bold" v-html="$t('label110')"></div>
             <div class="form">
                 <el-form label-position='top' @submit.native.prevent>
                   <template v-for="(item,key) in formData">
@@ -349,6 +349,9 @@ export default {
   .title {
     text-align: center;
     font-size: $font-middile;
+    width: 750px;
+    margin: 0 auto;
+    text-align: justify;
   }
   .form {
     padding: 0 235px;

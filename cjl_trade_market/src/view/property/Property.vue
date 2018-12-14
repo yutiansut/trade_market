@@ -273,9 +273,9 @@ export default {
         showLoading: 0
       }).then(res => {
         if (res.code == "0") {
-          this.usdtAddr = res.data.list;
+          res.data.list[0] && (this.usdtAddr = res.data.list);
         } else {
-          this.errMsg(res.code);
+          this.errMsg(res.msg);
         }
       });
     },

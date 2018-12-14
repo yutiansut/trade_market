@@ -3,7 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('billDetail')||'账单明细'"></div>
       <div class="table-wrap">
         <div class="filter-bar flex flex-v-center">
-            <el-input v-model="seachVal" suffix-icon='el-icon-search' size='small'></el-input>
+            <el-input v-model="searchVal" suffix-icon='el-icon-search' size='small'></el-input>
             <button
               @click="searchCoin"
               class="btn-inline btn-small btn-danger btn-active m-left-10"
@@ -50,7 +50,7 @@ export default {
     return {
       orderDetailRawData: [],
       orderDetailData: [],
-      seachVal: ""
+      searchVal: ""
     };
   },
   mounted() {
@@ -63,13 +63,16 @@ export default {
   },
   methods: {
     searchCoin() {
-      if (this.seachVal == "") {
+      if (this.searchVal == "") {
         this.orderDetailData = this.orderDetailRawData;
         return false;
       }
       let result = [];
-      this.orderDetailData.map(item => {
-        if (item.coin && item.coin.indexOf(this.seachVal) != -1) {
+      this.orderDetailRawData.map(item => {
+        if (
+          item.coin &&
+          item.coin.toLowerCase().indexOf(this.searchVal.toLowerCase()) != -1
+        ) {
           result.push(item);
         }
       });

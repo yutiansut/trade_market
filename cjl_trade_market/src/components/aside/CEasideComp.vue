@@ -93,11 +93,26 @@ export default {
           (customList && customList.length) > 0 ? customList : [];
         if (!customList[0]) return false;
         mainCoinModel.tradecoinid = customList[0].coinid;
-        this.$bus.emit("tradeCoinLoad", customList[0]);
+        // this.$bus.emit("tradeCoinLoad", customList[0]);
+        this.passCoinInfo(customList);
       } else {
         this.getTradCoin(this.currentId);
       }
       this.$emit("onAsideTabChange");
+    },
+    // 向父组件传递币种信息
+    passCoinInfo(listArr, maincoinid, tradecoind) {
+      if (!listArr) return false;
+      let data = listArr[0];
+      if (maincoinid && tradecoind) {
+        listArr.map(item => {
+          if (!item.maincoinid || !item.coinid) return;
+          if (item.maincoinid == maincoinid && item.coinid == tradecoind) {
+            data = item;
+          }
+        });
+      }
+      this.$bus.emit("tradeCoinLoad", data);
     },
     // 获取自选
     getCustomList() {
@@ -113,7 +128,11 @@ export default {
       if (data.isMyLike) {
         addCustomList(data);
       } else {
-        removeCustomList(data);
+        if (this.currentId == "opt") {
+          this.tableData = removeCustomList(data);
+        } else {
+          removeCustomList(data);
+        }
       }
     },
     // 获取币种交易行情
@@ -122,10 +141,14 @@ export default {
       this.request(this.api.getTradCoin, {
         maincoin: coinid
       }).then(res => {
+        this.showLoading = false;
         console.log(`交易币种:${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
         let customList = this.storage.get("customList");
-        if (res.data && customList && res.data.list && res.data.list[0]) {
+        if (res.data && customList && res.data.list) {
           customList.map((cItem, i) => {
             res.data.list.map((dItem, j) => {
               if (
@@ -136,11 +159,16 @@ export default {
               }
             });
           });
+          this.tableData = res.data.list;
+          if (res.data.list[0]) {
+            mainCoinModel.tradecoinid = res.data.list[0].coinid;
+            this.passCoinInfo(
+              res.data.list,
+              this.$route.query.maincoinid,
+              this.$route.query.coinid
+            );
+          }
         }
-        this.tableData = res.data.list;
-        mainCoinModel.tradecoinid = res.data.list[0].coinid;
-        this.$bus.emit("tradeCoinLoad", res.data.list[0]);
-        this.showLoading = false;
       });
     },
     //表格列点击

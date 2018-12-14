@@ -103,15 +103,15 @@ export default {
       top: 1px;
       left: -1px;
       float: left;
-      width: 6.666%;
-      padding-top: calc(6.666% - 1px);
+      width: 10%;
+      padding-top: calc(6.6% - 1px);
       border-right: 1px solid #444;
       border-bottom: 1px solid #444;
       box-sizing: border-box;
       color: #fff;
       cursor: pointer;
       transition: all 0.3s;
-      &:nth-child(15n) {
+      &:nth-child(10n) {
         border-right-color: transparent;
       }
       &:hover {
@@ -127,6 +127,9 @@ export default {
       font-size: $font-default;
       span {
         line-height: normal;
+      }
+      img {
+        margin-bottom: 4px;
       }
     }
   }

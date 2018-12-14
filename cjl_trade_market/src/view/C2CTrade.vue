@@ -43,7 +43,7 @@
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                             <span class="balance" v-html="advisalPrice"></span>
-                            <a href="/property" v-text="$t('recharge')||'充值'"></a>
+                            <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('buyingValiation')||'买入估价'"></label>
@@ -76,7 +76,7 @@
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
                           <span class="balance" v-html="myAvailableLabel"></span>
-                          <a href="javascript:" v-text="$t('recharge')"></a>
+                          <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
                         </div>
                         <div class="input-group">
                             <label v-text="$t('sellingValiation')||'卖出估价'"></label>
@@ -401,14 +401,19 @@ export default {
     this.getState();
     this.getC2Ccoin()
       .then(res => {
-        this.currencyList = res;
-        this.coinInfo = res[0];
-        return Promise.resolve(res[0].coinid);
+        if (res) {
+          this.currencyList = res;
+          this.coinInfo = res[0];
+          return Promise.resolve(res[0].coinid);
+        }
       })
       .then(coin => {
         this.gettradorder(coin);
         this.getMyAccount(coin).then(res => {
-          this.myAvailable = res.usable;
+          
+          if (res && res.code == "0") {
+            this.myAvailable = res.usable;
+          }
         });
         return this.getc2callorder(coin).then(list => {
           this.marketList = list;
@@ -594,6 +599,8 @@ export default {
         if (res.code == "0") {
           let list = this.Util.sumCalc(res.data.list, "price", "number");
           return Promise.resolve(list);
+        } else {
+          return Promise.reject(res);
         }
       });
     },

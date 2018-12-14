@@ -41,11 +41,8 @@ const ajaxRequest = (function () {
                 response.status === 400)
         ) {
             return response.data;
-        };
-        MessageBox.alert({
-            title: 'Warning',
-            message: "Network error"
-        });
+        }
+        return false;
     };
 
     function successState(response) {
@@ -57,8 +54,6 @@ const ajaxRequest = (function () {
             myStorage.remove('token');
             myStorage.set('isLogin', false);
             userModel.isLogin = false;
-
-            return;
         };
     };
     function createParam(data) {

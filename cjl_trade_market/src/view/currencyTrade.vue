@@ -55,9 +55,7 @@
                     <div class="break-line"></div>
                     <div class="account flex flex-between">
                       <span class="balance" v-html="availabelBalance"></span>
-                      <a href="/property"
-                        v-text="$t('recharge')||'充值'">
-                      </a>
+                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
                     </div>
                     <div class="input-group">
                       <label v-text="$t('buyingRate')||'买入价'"></label>
@@ -88,9 +86,7 @@
                     <div class="break-line"></div>
                     <div class="account flex flex-between">
                       <span class="balance" v-html="availabelAmount"></span>
-                      <a href="/property"
-                        v-text="$t('recharge')||'充值'">
-                      </a>
+                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
                     </div>
                     <div class="input-group">
                       <label v-text="$t('sellingRate')||'卖出价'"></label>
@@ -247,11 +243,11 @@
                           </template>
                         </el-table-column>
                         <el-table-column
-                          :width="$i18n.locale==='zh-CN'?'60':'120'"
+                          :width="$i18n.locale=='zh-CN'?'100':'120'"
                           :label='$t("operation")||"操作"'>
                           <span class="handle color-danger"
                             slot-scope="scope"
-                            v-text="$t('withdrawed'||'撤单')">
+                            v-text="$t('completed'||'已完成')">
                           </span>
                         </el-table-column>
                       </el-table>
@@ -357,19 +353,20 @@ export default {
       canTrade: false,
       routeParam: null,
       isGetSocketMsg: false,
-      iframUrl: "/static/kline.html?"
+      iframUrl: "./static/kline.html?"
     };
   },
   mounted() {
-    if (JSON.stringify(this.$route.query) != "{}") {
-      this.routeParam = JSON.parse(this.$route.query.data);
-    }
+    // if (JSON.stringify(this.$route.query) != "{}") {
+    //   this.routeParam = JSON.parse(this.$route.query.data);
+    // }
     this.$bus.on("tradeCoinLoad", coinData => {
-      if (this.routeParam) {
-        this.loadData(this.routeParam);
-      } else {
-        this.loadData(coinData);
-      }
+      // if (this.routeParam) {
+      //   this.loadData(this.routeParam);
+      // } else {
+      //   this.loadData(coinData);
+      // };
+      this.loadData(coinData);
     });
   },
   beforeRouteLeave(to, from, next) {
@@ -498,7 +495,6 @@ export default {
       this.sellFormData.price = data.price * 1;
     },
     onAsideTabChange() {
-      this.showLoading = true;
       this.routeParam = null;
     },
     loadData(data) {
@@ -513,22 +509,31 @@ export default {
       Promise.all([
         this.getAvailabel(this.maincoin),
         this.getAvailabel(this.tradecoin)
-      ]).then(res => {
-        console.log(`可用：${JSON.stringify(res)}`);
-        this.myBlance = res[0].usable;
-        this.myAvailable = res[1].usable;
-        this.showLoading = false;
-      });
-      // 获取币种信息
-      this.awaitResult(this.maincoin, this.tradecoin).then(res => {
-        let [entrustData, orderData] = [...res];
-        this.currentDeclareData = this.Util.sumCalc(
-          entrustData.data.list,
-          "price",
-          "number"
-        );
-        this.historicalDeclareData = orderData.data.list;
-      });
+      ])
+        .then(res => {
+          console.log(`可用：${JSON.stringify(res)}`);
+          this.myBlance = res[0].usable;
+          this.myAvailable = res[1].usable;
+        })
+        .catch(err => {
+          this.errMsg(err);
+        });
+      // 获取币种交易信息
+      this.awaitResult(this.maincoin, this.tradecoin)
+        .then(res => {
+          let [entrustData, orderData] = [...res];
+          if (entrustData) {
+            this.currentDeclareData = this.Util.sumCalc(
+              entrustData.data.list,
+              "price",
+              "number"
+            );
+          }
+          orderData && (this.historicalDeclareData = orderData.data.list);
+        })
+        .catch(err => {
+          console.log(err);
+        });
       this.updateLastestData(
         this.storage.get("token"),
         this.maincoin,
@@ -543,18 +548,35 @@ export default {
         tradcoin: tradecoin
       };
       // 获取当前委托
-      const entrustData = this.request(this.api.getentrust, params);
+      const entrustData = this.request(this.api.getentrust, params).then(
+        res => {
+          if (res.code == "0") {
+            return Promise.resolve(res);
+          } else {
+            return Promise.reject(res.mg);
+          }
+        }
+      );
       // 获取历史委托
-      const orderData = this.request(this.api.gethistoryorder, params);
-      return Promise.all([entrustData, orderData]).catch(err => {
-        console.log(err);
-      });
+      const orderData = this.request(this.api.gethistoryorder, params).then(
+        res => {
+          if (res.code == "0") {
+            return Promise.resolve(res);
+          } else {
+            return Promise.reject(res.mg);
+          }
+        }
+      );
+      return Promise.all([entrustData, orderData]);
     },
     // 获取账户状态
     getState() {
       return this.request(this.api.saftyState).then(res => {
         console.log(`账号状态：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
         if (res.data && res.data.list) {
           this.bindState = res.data.list[0];
           this.canTrade = this.canTradeCheck(this.bindState);
@@ -563,13 +585,14 @@ export default {
     },
     // 获取可用
     getAvailabel(coin) {
-      return this.request(this.api.getaccount, {
-        search: coin
+      return this.request(this.api.getdaynumber, {
+        coin: coin
       }).then(res => {
-        if (res && res.data) {
+        this.showLoading = false;
+        if (res.code == "0") {
           return Promise.resolve(res.data.list[0]);
         } else {
-          return null;
+          return Promise.reject(res.msg);
         }
       });
     },
@@ -686,7 +709,7 @@ export default {
     },
     //表格列点击
     getRowData(data) {
-      if (mainCoinModel.tradecoinid == data.coinid) return false;
+      // if (mainCoinModel.tradecoinid == data.coinid) return false;
       mainCoinModel.tradecoinid = data.coinid;
       mainCoinModel.coinid = data.maincoinid;
       this.loadData(data);
@@ -796,10 +819,10 @@ export default {
         this.buyBtnDisabled = false;
       },
       deep: true
-    },
-    $route(to, from) {
-      this.loadData(JSON.parse(to.query.data));
     }
+    // $route(to, from) {
+    //   this.loadData(JSON.parse(to.query.data));
+    // }
   }
 };
 </script>

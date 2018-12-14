@@ -27,9 +27,12 @@ export default {
     getNewsList() {
       this.request(this.api.notices).then(res => {
         console.log(`公告列表:${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
-        res.data && res.data.list && (newsModel.newsList = res.data.list);
-        this.noticeItem = newsModel.newsList.slice(0, 6);
+        if (res && res.code == "0") {
+          res.data && res.data.list && (newsModel.newsList = res.data.list);
+          this.noticeItem = newsModel.newsList.slice(0, 6);
+        } else {
+          this.getDataFaild(res.msg);
+        }
       });
     }
   }

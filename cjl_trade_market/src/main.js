@@ -81,7 +81,7 @@ Object.keys(filter).forEach(key => {
 Vue.config.productionTip = false;
 // 公共方法
 const getDataFaild = function (errMsg) {
-  this.$message.error(i18n.t(msg) || '获取数据失败');
+  this.$message.error(i18n.t(errMsg) || '获取数据失败');
   return false;
 }
 /**

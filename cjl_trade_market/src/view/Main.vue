@@ -9,12 +9,16 @@
         <div class="content">
           <div class="list-table">
             <div class="panel m-bottom-10">
-              <el-input suffix-icon="el-icon-search"></el-input>
+              <el-input
+                v-model="searchVal"
+                @input="searchCoin"
+                :placeholder='searchLabel' suffix-icon="el-icon-search">
+              </el-input>
               <ul class="tab-card">
                 <li class="p-rel"
                   v-for="(item,i) in mainCoinModel.maincoin"
                   :key="item.id"
-                  :class="currentCoinId==i?'active':''"
+                  :class="currentCoinId==item.coinid?'active':''"
                   @click="onTabChange($event,i,item.coinid)">
                   {{item.coinid}}&nbsp;{{$t('trade')}}
                   <!-- <span v-if='i<mainCoinModel.maincoin.length-1' class="dot abs-v-center"></span> -->
@@ -29,9 +33,7 @@
             </div>
             <el-table style="width:100%;font-size:14px;border-top:1px solid #eee;" 
               :data='tableData'
-              :fit='true'
-              v-loading='loading'
-              stripe>
+              v-loading='loading'>
               <el-table-column
                 width='200'
                 :label="$t('currencyPair')||'货币对'">
@@ -67,19 +69,27 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column :label='$t("optMarket")' width='60'>
+              <el-table-column width='180'>
+                <div class="flex flex-between" slot-scope="scope">
+                  <button @click="goTrade('/currency_trade',scope.row)" class="trade-btn btn-small btn-danger btn-hover">普通交易</button>
+                  <button @click="goTrade('Main',scope.row)" class="trade-btn btn-small btn-success btn-hover">K线交易</button>
+                </div>
+              </el-table-column>
+              <el-table-column :label='$t("optMarket")' width='80'>
                 <div
                   @click="addMylist(scope.row,scope.$index)"
                   :title="$t('label109')" class="option wh-full" slot-scope="scope">
                   <i class="icon-star font-18 color-danger"
                     :class="scope.row.isMyLike?'el-icon-star-on':'el-icon-star-off'">
                   </i>
+                  
                 </div>
               </el-table-column>
             </el-table>
+            
           </div>
-          <advantage-intro></advantage-intro>
-          <friend-link></friend-link>
+          <!-- <advantage-intro></advantage-intro> -->
+          <!-- <friend-link></friend-link> -->
         </div>
         <my-footer></my-footer>
     </div>
@@ -98,7 +108,6 @@ export default {
   data() {
     return {
       logo: require("@/assets/images/home/pcew_logo.png"),
-      currentTabId: 0,
       currentCoinId: "",
       loading: true,
       mainCoinModel: mainCoinModel,
@@ -106,18 +115,24 @@ export default {
         s_0: "交易中",
         s_1: "禁用"
       },
-      grid: {
-        show: false
-      },
-      tableData: []
+      searchVal: "",
+      tableData: [],
+      rawData: []
     };
+  },
+  computed: {
+    searchLabel() {
+      return `${this.$t("currencySearch")}(${this.currentCoinId})`;
+    }
   },
   mounted() {
     if (mainCoinModel.coinid) {
       this.getTradCoin(mainCoinModel.coinid);
+      this.currentCoinId = mainCoinModel.coinid;
       return;
     }
     this.$bus.on("mainCoinLoad", coin => {
+      this.currentCoinId = coin;
       this.getTradCoin(coin);
     });
   },
@@ -130,13 +145,16 @@ export default {
       if (data.isMyLike) {
         addCustomList(data);
       } else {
-        removeCustomList(data);
+        if (this.currentCoinId == "opt") {
+          this.tableData = removeCustomList(data);
+        } else {
+          removeCustomList(data);
+        }
       }
     },
     onTabChange(e, index, coinid) {
-      if (index == this.currentCoinId) return;
-      this.loading = true;
-      this.currentCoinId = index;
+      if (coinid == this.currentCoinId) return;
+      this.currentCoinId = coinid;
       this.getTradCoin(coinid);
     },
     // 获取所有币种列表
@@ -151,10 +169,15 @@ export default {
     getCustomList() {
       let customList = this.storage.get("customList");
       this.currentCoinId = "opt";
-      customList && customList.length > 0 && (this.tableData = customList);
+      if (customList) {
+        this.tableData = customList;
+      } else {
+        this.tableData = [];
+      }
     },
     // 获取币种交易行情
     getTradCoin(coinid) {
+      this.loading = true;
       this.request(this.api.getTradCoin, {
         maincoin: coinid
       }).then(res => {
@@ -163,7 +186,32 @@ export default {
         if (res && res.code != "0") return this.getDataFaild(res.msg);
         if (res.data && res.data.list && res.data.list[0]) {
           this.tableData = matchCustomList(res.data.list);
+          this.rawData = res.data.list.slice(0);
         }
+      });
+    },
+    //搜索币种
+    searchCoin() {
+      if (this.searchVal == "") {
+        this.tableData = this.rawData;
+        return false;
+      }
+      let result = [];
+      this.rawData.map(item => {
+        if (
+          item.coinid &&
+          item.coinid.toLowerCase().indexOf(this.searchVal.toLowerCase()) != -1
+        ) {
+          result.push(item);
+        }
+      });
+      this.tableData = result;
+    },
+    //跳转
+    goTrade(api, data) {
+      this.navigateTo(api, {
+        maincoinid: data.maincoinid,
+        coinid: data.coinid
       });
     }
   }
@@ -178,7 +226,9 @@ export default {
   background: #666;
   right: -40px;
 }
-
+.trade-btn {
+  margin: 0 6px;
+}
 span.status_0 {
   color: $color-success;
 }

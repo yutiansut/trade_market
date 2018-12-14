@@ -2,12 +2,13 @@
     <ul class="list-container">
       <li class="flex flex-between flex-v-center"
         v-for="(item) in dataList" :key='item.id'
+        :class="(item.name==currentId||item.coinid==currentId)?'color-danger':''"
         @click='onClick(item)'>
         <div class="currency flex flex-v-center">
           <img v-if='item.icon||item.logo' 
             :src="item.icon||item.logo"
             class="thumb-20" alt="">
-          <span v-text="item.coinid ||item.name"></span>
+          <span class="font-bold" v-html="item.coinid||item.name+'&nbsp;/&nbsp;'+item.chinaname"></span>
         </div>
         <i v-if="showIcon" class="el-icon-arrow-right"></i>
       </li>
@@ -26,11 +27,13 @@ export default {
   data() {
     return {
       showIcon: true,
-      dataList: []
+      dataList: [],
+      currentId: ""
     };
   },
   methods: {
     onClick(item) {
+      this.currentId = item.name || item.coinid;
       this.$emit("onListClick", item);
     }
   },
@@ -38,6 +41,7 @@ export default {
     myData() {
       if (this.myData && Array.isArray(this.myData)) {
         this.dataList = this.myData;
+        this.currentId = this.myData[0] && this.myData[0].name;
       }
       this.showIcon = this.showArrow;
     }

@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
 Vue.use(Router)
 const routes = [
   {
@@ -190,4 +189,4 @@ const routes = [
     ]
   }
 ]
-export default new Router({ routes, mode: "history" });
+export default new Router({ routes });
