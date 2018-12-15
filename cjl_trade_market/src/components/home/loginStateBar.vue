@@ -121,9 +121,9 @@ export default {
           icon: ""
         },
         {
-          i18nKey: "apiAdmin",
+          i18nKey: "label111",
           label: "提交工单",
-          link: "",
+          link: "/account/work_order",
           icon: ""
         }
       ],

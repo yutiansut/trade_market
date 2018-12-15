@@ -19,7 +19,7 @@
                 <div class="heading">{{tradecoin}}/{{maincoin}}</div>
                 <div class="market-val flex flex-v-center">
                   <span class="font-16" >{{currentCoinInfo.prise|toFix()}}</span>
-                  <span class="font-14 color-666">≈0.05 CNY </span>
+                  <!-- <span class="font-14 color-666">≈0.05 CNY </span> -->
                 </div>
                 <div class="market-condition font-12">
                   <span>
@@ -45,7 +45,7 @@
               </div>
               <!-- K线图占位 -->
               <div id='kMap' class="k-map">
-                <!-- <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe> -->
+                <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe>
               </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf flex flex-between">
@@ -357,15 +357,7 @@ export default {
     };
   },
   mounted() {
-    // if (JSON.stringify(this.$route.query) != "{}") {
-    //   this.routeParam = JSON.parse(this.$route.query.data);
-    // }
     this.$bus.on("tradeCoinLoad", coinData => {
-      // if (this.routeParam) {
-      //   this.loadData(this.routeParam);
-      // } else {
-      //   this.loadData(coinData);
-      // };
       this.loadData(coinData);
     });
   },

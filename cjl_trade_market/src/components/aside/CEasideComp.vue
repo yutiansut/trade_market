@@ -60,7 +60,11 @@
 </template>
 <script>
 import mainCoinModel from "@/model/allCoinModel.js";
-import { addCustomList, removeCustomList } from "@/assets/js/common.js";
+import {
+  addCustomList,
+  removeCustomList,
+  matchCustomList
+} from "@/assets/js/common.js";
 export default {
   name: "ce-aside-comp",
   data() {
@@ -93,7 +97,6 @@ export default {
           (customList && customList.length) > 0 ? customList : [];
         if (!customList[0]) return false;
         mainCoinModel.tradecoinid = customList[0].coinid;
-        // this.$bus.emit("tradeCoinLoad", customList[0]);
         this.passCoinInfo(customList);
       } else {
         this.getTradCoin(this.currentId);
@@ -114,12 +117,12 @@ export default {
       }
       this.$bus.emit("tradeCoinLoad", data);
     },
-    // 获取自选
-    getCustomList() {
-      let customList = this.storage.get("customList");
-      this.currentId = "opt";
-      customList && customList.length > 0 && (this.tableData = customList);
-    },
+    // // 获取自选
+    // getCustomList() {
+    //   let customList = this.storage.get("customList");
+    //   this.currentId = "opt";
+    //   customList && customList.length > 0 && (this.tableData = customList);
+    // },
     // 添加自选
     addMylist(rowData, index) {
       let data = rowData;
@@ -147,19 +150,8 @@ export default {
           this.getDataFaild(res.msg);
           return false;
         }
-        let customList = this.storage.get("customList");
-        if (res.data && customList && res.data.list) {
-          customList.map((cItem, i) => {
-            res.data.list.map((dItem, j) => {
-              if (
-                dItem.coinid == cItem.coinid &&
-                dItem.maincoinid == cItem.maincoinid
-              ) {
-                res.data.list[j] = customList[i];
-              }
-            });
-          });
-          this.tableData = res.data.list;
+        if (res.data && res.data.list) {
+          this.tableData = matchCustomList(res.data.list);
           if (res.data.list[0]) {
             mainCoinModel.tradecoinid = res.data.list[0].coinid;
             this.passCoinInfo(

@@ -178,7 +178,7 @@ const Utils = (function () {
                         item.total = this.accMul(item[price], item[num]);
                     }
                 });
-            }
+            };
             return arr;
         },
         //乘积精度处理

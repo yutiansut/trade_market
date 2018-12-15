@@ -329,7 +329,17 @@ module.exports = {
     label108: "No data",
     label109: "Add to my list",
     label110: "Please fullfill the following information(Make sure that the information is specified and real. You will gain the right to join in the coin application once it is approved)",
+    label111: "Submit work order",
+    label112: "Submit content",
+    label113: "Other",
+    label114: "Question type",
+    label115: "Description",
+    label116: "Work order record",
+    label117: "Submit screen shot",
+    label118: "Please wait for our customer service staff replay when submited",
+    label119: "Limit price",
     "添加成功": "Add success",
+    "上传成功": "upload success",
     "获取验证码失败": "Send mobile code failed",
     '默认未知错误': "Unknown error",
     "Token失效": "Invalid token",
@@ -368,5 +378,7 @@ module.exports = {
     "文件类型错误": "File type error",
     "文件路径错误": "File path error",
     "银行卡绑定失败": 'Bank card bind failed',
-    "请填写完整信息": "Complete the information"
+    "请填写完整信息": "Complete the information",
+    "请登录后操作": "Plase login",
+    "请输入有效的数量或价格": 'Invalid price or number'
 }

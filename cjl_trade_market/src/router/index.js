@@ -75,6 +75,11 @@ const routes = [
         name: 'Identify',
         component: r => require(['@/view/account/Identify'], r),
         meta: { auth: true, title: "身份认证" }
+      }, {
+        path: "/account/work_order",
+        name: "workOrder",
+        component: r => require(['@/view/account/workOrder'], r),
+        meta: { auth: true, title: "提交工单" }
       }
     ]
   },
@@ -187,6 +192,12 @@ const routes = [
         meta: { title: "帮助中心-问题中心" }
       }
     ]
+  },
+  {
+    path: "/kline_trade",
+    name: "klineTrade",
+    component: r => require(['@/view/klineTrade'], r),
+    meta: { auth: false, title: 'K线交易' }
   }
 ]
 export default new Router({ routes });

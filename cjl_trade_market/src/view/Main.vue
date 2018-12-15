@@ -3,6 +3,7 @@
         <my-header class="header-white" 
           :show-head-top='true'
           :headLogo='logo'>
+          <span slot='top-slot' class="mr-25">ETH/CNY  ￥4000.36 <i class="iconfont icon-up-arrow"></i></span>
         </my-header>
         <index-banner></index-banner>
         <notice-bar></notice-bar>
@@ -72,7 +73,7 @@
               <el-table-column width='180'>
                 <div class="flex flex-between" slot-scope="scope">
                   <button @click="goTrade('/currency_trade',scope.row)" class="trade-btn btn-small btn-danger btn-hover">普通交易</button>
-                  <button @click="goTrade('Main',scope.row)" class="trade-btn btn-small btn-success btn-hover">K线交易</button>
+                  <button @click="goTrade('/kline_trade',scope.row)" class="trade-btn btn-small btn-success btn-hover">K线交易</button>
                 </div>
               </el-table-column>
               <el-table-column :label='$t("optMarket")' width='80'>
@@ -82,7 +83,6 @@
                   <i class="icon-star font-18 color-danger"
                     :class="scope.row.isMyLike?'el-icon-star-on':'el-icon-star-off'">
                   </i>
-                  
                 </div>
               </el-table-column>
             </el-table>

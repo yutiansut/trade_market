@@ -2,12 +2,12 @@
     <div class="w-full">
       <div v-if='showHead' class="hd-top">
         <div class="hd-top-lf">
-          <span class="mr-25">ETH/CNY  ￥4000.36 <i class="iconfont icon-up-arrow"></i></span>
+          <slot name="top-slot"></slot>
         </div>
         <login-bar></login-bar>
       </div>
-      <div class="hd-body">
-        <router-link to="/"><img class="logo p-rel" :src="headLogo" alt=""></router-link>
+      <div v-if="showHeadBody" class="hd-body">
+        <router-link to="./main"><img class="logo p-rel" :src="headLogo" alt=""></router-link>
         <ul class="nav-bar">
           <!-- 币币交易 -->
           <li
@@ -73,6 +73,10 @@ export default {
   components: { currencyNav },
   props: {
     showHeadTop: Boolean,
+    showHeadBody: {
+      default: true,
+      type: Boolean
+    },
     headLogo: {
       type: String,
       default: require("@/assets/images/footer/bottom_logo.png")
@@ -202,6 +206,11 @@ export default {
   }
 };
 </script>
+<style lang="scss">
+.hd-top {
+  background: $main-bg-color;
+}
+</style>
 <style lang="scss" scoped>
 .ml-25 {
   margin-left: 25px;
@@ -209,9 +218,7 @@ export default {
 .mr-25 {
   margin-right: 25px;
 }
-
 .hd-top {
-  background: $main-bg-color;
   font-size: $font-mini;
   @include textVcenter;
   span {
@@ -222,7 +229,6 @@ export default {
     @include float;
     box-sizing: border-box;
     height: inherit;
-    width: 65%;
     padding-left: 30px;
     .iconfont {
       font-size: 12px;

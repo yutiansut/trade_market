@@ -53,7 +53,7 @@
                   class="txt-center color-999">
                 </span>
                 <span class="txt-rt">
-                  <a 
+                  <a
                     v-if="!bindState.tel"
                     class="color-danger"
                     href="javascript:"
