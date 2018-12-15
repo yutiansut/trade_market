@@ -727,7 +727,12 @@ span.color-danger{
     }
   }
 }
+.entr-content{
+        height: calc(100% - 31px);
+    }
 .entr-body{
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
     .no-data{
         line-height: 60px;
         text-align: center;
