@@ -610,13 +610,17 @@ export default {
         console.log(`操作结果：${JSON.stringify(res)}`);
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
-          this.request(this.api.getentrust, {
-            maincoin: this.maincoin,
-            tradcoin: this.tradecoin
-          }).then(res => {
-            if (res.code == "0") {
-              this.currentDeclareData = res.data.list;
+          // 获取交易信息
+          this.awaitResult(this.maincoin, this.tradecoin).then(res => {
+            let [entrustData, orderData] = [...res];
+            if (entrustData) {
+              this.currentDeclareData = this.Util.sumCalc(
+                entrustData.data.list,
+                "price",
+                "number"
+              );
             }
+            orderData && (this.historicalDeclareData = orderData.data.list);
           });
         } else {
           this.errMsg(res.msg);

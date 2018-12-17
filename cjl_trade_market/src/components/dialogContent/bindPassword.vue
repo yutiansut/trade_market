@@ -139,7 +139,8 @@ export default {
       }
       this.request(this.api[api], {
         code: this.formData.mobileCode,
-        password: this.formData.password
+        password: this.formData.password,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg);
@@ -170,7 +171,7 @@ export default {
     getMobileCode() {
       if (!this.canGetCode) return false;
       this.countDown();
-      this.request(this.api.sendcodetoken).then(res => {
+      this.request(this.api.sendcodetoken, { showLoading: true }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "发送成功");
         } else {

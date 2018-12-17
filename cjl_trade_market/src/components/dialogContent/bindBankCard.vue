@@ -93,7 +93,8 @@ export default {
         bankcard: this.cardNum,
         bank1: this.depositBank,
         bank2: this.bankBranches,
-        googlecode: this.googleCode
+        googlecode: this.googleCode,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "添加成功");

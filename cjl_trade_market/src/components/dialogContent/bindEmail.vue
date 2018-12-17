@@ -119,7 +119,8 @@ export default {
       this.request(this.api.bindemail, {
         email: data.email || "",
         code: data.code || "",
-        emailcode: data.emailcode || ""
+        emailcode: data.emailcode || "",
+        showLoading: true
       });
     },
     createCode(arr, len) {
@@ -139,7 +140,7 @@ export default {
           return;
         }
       }
-      this.request(this.api.bindemail, {
+      this.bindEmail({
         code: this.formData.mobileCode,
         email: this.formData.email,
         emailcode: this.formData.emailCode
@@ -193,7 +194,8 @@ export default {
         }
       });
       this.request(this.api.sendcodetoken, {
-        tel: this.formData.cellphone
+        tel: this.formData.cellphone,
+        showLoading: true
       }).then(res => {
         if (res.data.code == "0") {
           this.successMsg(res.msg);
