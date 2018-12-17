@@ -152,7 +152,7 @@ export default {
         }
       ],
       logo: require("@/assets/images/home/pcew_logo.png"),
-      qrcode: ""
+      qrcode: "http://192.168.5.51:8080/web/img/qr.png"
     };
   },
   created() {},
@@ -222,6 +222,8 @@ $footer-font-color: #fff;
       text-align: center;
       font-size: $font-default;
       img {
+        display: block;
+        margin: 12px auto;
         width: 100px;
         height: 100px;
       }

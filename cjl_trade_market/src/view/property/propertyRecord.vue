@@ -31,13 +31,11 @@
             :data='myRecord'
             :header-cell-style='changeStyle'
             :fit='true'>
-            <el-table-column :label="$t('time')||'时间'"></el-table-column>
-            <el-table-column :label="$t('currencyType')||'币种'"></el-table-column>
-            <el-table-column :label="$t('type')||'类型'"></el-table-column>
-            <el-table-column :label="$t('amount')||'数量'"></el-table-column>
-            <el-table-column :label="$t('status')||'状态'"></el-table-column>
-            <el-table-column width='120' :label="$t('operation')||'操作'">
-              <span slot-scope="scope"></span>
+            <el-table-column prop='wdate' :label="$t('time')||'时间'"></el-table-column>
+            <el-table-column prop='coin' :label="$t('currencyType')||'币种'"></el-table-column>
+            <el-table-column prop='number' :label="$t('amount')||'数量'"></el-table-column>
+            <el-table-column :label="$t('status')||'状态'">
+              <span slot-scope="scope" v-text="$t('completed')"></span>
             </el-table-column>
           </el-table>
         </div>

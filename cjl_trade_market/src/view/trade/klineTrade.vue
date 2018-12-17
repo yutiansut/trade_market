@@ -339,6 +339,10 @@ import {
   matchCustomList,
   randomString
 } from "@/assets/js/common.js";
+let ajaxDone = false;
+window.onbeforeunload = () => {
+  webSocket.close();
+};
 export default {
   data() {
     return {
@@ -370,6 +374,7 @@ export default {
         price: "",
         number: ""
       },
+      timer: null,
       iframUrl: "./static/kline.html?"
     };
   },
@@ -401,6 +406,15 @@ export default {
       return total;
     }
   },
+  beforeRouteLeave(to, from, next) {
+    if (webSocket) {
+      webSocket.close();
+      webSocket = null;
+    }
+    clearInterval(this.timer);
+    this.timer = null;
+    next();
+  },
   mounted() {
     this.getMainCoin();
   },
@@ -430,6 +444,8 @@ export default {
     updateLastestData(token, maincoin, tradecoin) {
       if ("WebSocket" in window) {
         this.updateListBySocket(token, maincoin, tradecoin);
+      } else {
+        this.updateListByAjax();
       }
     },
     // 通过socket 刷新数据
@@ -462,6 +478,22 @@ export default {
         console.log("socket 连接关闭");
       };
     },
+    //通过ajax更新数据
+    updateListByAjax(maincoin, tradecoin) {
+      this.timer = setInterval(() => {
+        if (ajaxDone) {
+          Promise.all([
+            this.getEntrustData(maincoinid, coinid),
+            this.getHistoryData(maincoinid, coinid)
+          ]).then(res => {
+            ajaxDone = true;
+            this.myEntrustList = res[0];
+            this.myHistoryEntrustList = res[1];
+          });
+        }
+        ajaxDone = false;
+      }, 3000);
+    },
     // 获取主币种
     getMainCoin() {
       this.request(this.api.getmaincoin)
@@ -493,6 +525,7 @@ export default {
               this.getEntrustData(maincoinid, coinid),
               this.getHistoryData(maincoinid, coinid)
             ]).then(res => {
+              ajaxDone = true;
               this.showLoading_1 = false;
               this.myEntrustList = res[0];
               this.myHistoryEntrustList = res[1];

@@ -10,7 +10,7 @@ let apiCfg = (function () {
         },
         //根据主币种和交易币种获取币种信息(最新交易信息)
         getCoinInfo: {
-            url: 'getcoininfoByCoinType '
+            url: 'getcoininfoByCoinType'
         },
         //所有币种
         allcoin: {

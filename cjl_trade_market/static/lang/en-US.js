@@ -353,6 +353,7 @@ module.exports = {
     label132: "General trade",
     label133: "Kline trade",
     label134: "Plase pay the bill to the following account",
+    label135: "Invalid card number",
     "添加成功": "Add success",
     "上传成功": "upload success",
     "获取验证码失败": "Send mobile code failed",

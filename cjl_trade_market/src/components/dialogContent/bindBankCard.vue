@@ -69,7 +69,8 @@ export default {
       if (val == "") return false;
       switch (name) {
         case "cardNum":
-          !this.Util.isBankNo(val) && this.errMsg("银行卡号格式不正确");
+          !this.Util.isBankNo(val) &&
+            this.errMsg(this.$t("label135") || "银行卡号格式不正确");
           break;
       }
     },
@@ -85,7 +86,7 @@ export default {
         return false;
       }
       if (!this.Util.isBankNo(this.cardNum)) {
-        this.errMsg("银行卡格式不正确");
+        this.errMsg(this.$t("label135") || "银行卡号格式不正确");
         return false;
       }
       this.request(this.api.addbank, {

@@ -8,7 +8,7 @@
                 :style='{"top":dropDownTop}'
                 class="drop-down-item abs-h-center">
                 <span v-text="$t('scanToDownLoad')"></span>
-                <img src="" alt="">
+                <img src="http://192.168.5.51:8080/web/img/qr.png" alt="">
               </div>
             </span>
           </div>

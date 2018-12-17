@@ -45,7 +45,7 @@
               </div>
               <!-- K线图占位 -->
               <div id='kMap' class="k-map">
-                <!-- <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe> -->
+                <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe>
               </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf flex flex-between">
@@ -312,6 +312,7 @@ import mainCoinModel from "@/model/allCoinModel.js";
 import { Loading } from "element-ui";
 import { randomString } from "@/assets/js/common.js";
 let webSocket = null;
+let ajaxDone = true;
 window.onbeforeunload = () => {
   webSocket.close();
 };
@@ -358,7 +359,8 @@ export default {
       // 是否能够交易
       canTrade: false,
       isGetSocketMsg: false,
-      iframUrl: "./static/kline.html?"
+      iframUrl: "./static/kline.html?",
+      timer: null
     };
   },
   mounted() {
@@ -370,6 +372,8 @@ export default {
     if (webSocket) {
       webSocket.close();
       webSocket = null;
+      clearInterval(this.timer);
+      this.timer = null;
     }
     next();
   },
@@ -442,12 +446,11 @@ export default {
     },
     // 通过轮询刷新数据
     updateListByAjax(maincoin, tradecoin) {
-      let ajaxDone = true;
       let params = {
         maincoin: maincoin,
         tradcoin: tradecoin
       };
-      setInterval(() => {
+      this.timer = setInterval(() => {
         if (ajaxDone) {
           // 买入五档
           const buyOrder = this.request(this.api.buyorder, params);
