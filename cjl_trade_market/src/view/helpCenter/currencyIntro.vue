@@ -18,7 +18,7 @@
                 </div>
                 <dl>
                   <dt class="font-bold" v-text="$t('currencyIntro')||'币种简介'"></dt>
-                  <dd class="mt-20" v-text="coinInfo.chinaname"></dd>
+                  <dd class="mt-20" v-text="coinInfo.info"></dd>
                   <dt class="font-bold" v-text="$t('currencyProp')||'币种参数'"></dt>
                   <dd>
                     <ul class="properties">

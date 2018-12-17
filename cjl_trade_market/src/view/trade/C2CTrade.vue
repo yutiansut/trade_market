@@ -255,17 +255,17 @@
                             <template slot-scope="scope">
                               <span class="color-danger"
                                 @click="confirmHandle(scope.row)"
-                                v-if="scope.row.type==0&&scope.row.state==0">待付款
+                                v-if="scope.row.type==0&&scope.row.state==0">{{$t('label128')}}
                               </span>
                               <span class="color-success"
-                                v-if="scope.row.type==1&&scope.row.state==0">待对方打款
+                                v-if="scope.row.type==1&&scope.row.state==0">{{$t('label129')}}
                               </span>
                               <span class="color-success"
-                                v-if="scope.row.type==0&&scope.row.state==1">待对方收款
+                                v-if="scope.row.type==0&&scope.row.state==1">{{$t('label128')}}
                               </span>
-                              <span class="color-999" v-if="scope.row.type<2&&scope.row.state==2">已完成</span>
+                              <span class="color-999" v-if="scope.row.type<2&&scope.row.state==2">{{$t('completed')}}</span>
                               <span class="color-danger" v-if="scope.row.type==1&&scope.row.state==1"
-                                @click="confirmHandle(scope.row)">待收款
+                                @click="confirmHandle(scope.row)">{{$t('label131')}}
                               </span>
                             </template>
                           </el-table-column>
@@ -402,6 +402,7 @@ export default {
     this.getC2Ccoin()
       .then(res => {
         if (res) {
+          console.log(res);
           this.currencyList = res;
           this.coinInfo = res[0];
           return Promise.resolve(res[0].coinid);
@@ -410,7 +411,6 @@ export default {
       .then(coin => {
         this.gettradorder(coin);
         this.getMyAccount(coin).then(res => {
-          
           if (res && res.code == "0") {
             this.myAvailable = res.usable;
           }
@@ -520,7 +520,7 @@ export default {
         };
         this.dialogId = 0;
       } else {
-        this.errMsg("请输入有效价格");
+        this.errMsg("label121" || "请输入有效价格");
       }
     },
     // 发布卖出
@@ -533,13 +533,13 @@ export default {
         this.dialogId = 1;
         // this.publicOrder(this.api.addsellc2c, param);
       } else {
-        this.errMsg("请输入有效价格");
+        this.errMsg("label121" || "请输入有效价格");
       }
     },
     // 挂单买入/卖出弹窗
     tradeConfirmHandle(rowData) {
       if (!this.userData.isLogin) {
-        this.errMsg("请登录后操作");
+        this.errMsg("label120" || "请登录后操作");
         return false;
       }
       this.dialogId = 4;
@@ -636,7 +636,7 @@ export default {
     // 操作校验
     validation() {
       if (!this.userData.isLogin) {
-        this.errMsg("请登录后操作");
+        this.errMsg("label120" || "请登录后操作");
         return false;
         // } else if (!this.canTrade) {
         //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {

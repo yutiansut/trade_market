@@ -7,7 +7,6 @@
             <!-- 左侧表格栏目 -->
             <el-aside width="24%">
               <ce-aside-comp
-                @onAsideTabChange='onAsideTabChange'
                 @onRowClick='getRowData'>
               </ce-aside-comp>
             </el-aside>
@@ -15,10 +14,10 @@
             <el-main v-loading='showLoading'>
               <!-- K线图头部 -->
               <div class="panel-head flex flex-v-center">
-                <img class="currency-thumb thumb-30" src="" alt="">
+                <img class="currency-thumb thumb-30" :src="currentCoinInfo.logo" alt="">
                 <div class="heading">{{tradecoin}}/{{maincoin}}</div>
                 <div class="market-val flex flex-v-center">
-                  <span class="font-16" >{{currentCoinInfo.prise|toFix()}}</span>
+                  <span class="font-16" >{{currentCoinInfo.prise*1}}</span>
                   <!-- <span class="font-14 color-666">≈0.05 CNY </span> -->
                 </div>
                 <div class="market-condition font-12">
@@ -31,21 +30,22 @@
                   </span>
                   <span>
                     <em class="color-666" v-text="$t('high')||'高'"></em>
-                    <i>{{currentCoinInfo.height|toFix()}}</i>
+                    <i>{{currentCoinInfo.height*1}}</i>
                   </span>
                   <span>
                     <em class="color-666" v-text="$t('low')||'低'"></em>
-                    <i>{{currentCoinInfo.low|toFix()}}</i>
+                    <i>{{currentCoinInfo.low*1}}</i>
                   </span>
                   <span>
                     <em class="color-666" v-text="$t('dayVol')||'24H量'"></em>
-                    <i>{{currentCoinInfo.number|toFix()}}&nbsp;{{tradecoin}}</i>
+                    <i>{{currentCoinInfo.number*1}}&nbsp;{{tradecoin}}</i>
                   </span>
                 </div>
+                <button @click="navigateTo('/kline_trade',{maincoinid: maincoin,coinid: tradecoin})" style="margin-left:20%;" class="btn-inline btn-hover btn-success btn-small">K线交易</button>
               </div>
               <!-- K线图占位 -->
               <div id='kMap' class="k-map">
-                <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe>
+                <!-- <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe> -->
               </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf flex flex-between">
@@ -122,7 +122,7 @@
                   </div>
                   <div class="break-line"></div>
                   <div class="table">
-                    <div class="thead">
+                    <div class="thead font-16">
                       <span v-text='$t("stalls")||"档位"'></span>
                       <span v-text='priceLabel'></span>
                       <span v-text='amountLabel'></span>
@@ -137,9 +137,9 @@
                           <span class="column color-success">
                             {{$t('sell')}}&nbsp;{{latestSoldData.length-index}}
                           </span>
-                          <span style="width:25%;" class="column" v-text="item.price"></span>
-                          <span class="column" v-text="item.number"></span>
-                          <span class="column txt-rt" v-text="item.total"></span>
+                          <span style="width:25%;" class="column" v-text="item.price*1"></span>
+                          <span class="column" v-text="item.number*1"></span>
+                          <span class="column txt-rt" v-text="item.total*1"></span>
                         </div>
                       </template>
                     </div>
@@ -154,8 +154,8 @@
                           <div :style='{width:(item.total/sellListTotal)*100+"%"}' class="progress p-abs"></div>
                           <span class="column color-danger" v-html="$t('buy')+'&nbsp;'+(index+1)">
                           </span>
-                          <span class="column" v-text="item.price"></span>
-                          <span class="column" v-text="item.number"></span>
+                          <span class="column" v-text="item.price*1"></span>
+                          <span class="column" v-text="item.number*1"></span>
                           <span class="column txt-rt" v-text="item.total"></span>
                         </div>
                       </template>
@@ -185,16 +185,22 @@
                           </span>
                         </el-table-column>
                         <el-table-column
-                          :label='priceLabel'
-                          prop='price'>
+                          :label='priceLabel'>
+                          <template slot-scope="scope">
+                            {{scope.row.price*1}}
+                          </template>
                         </el-table-column>
                         <el-table-column
-                          :label='marketVolLabel'
-                          prop='number'>
+                          :label='marketVolLabel'>
+                          <template slot-scope="scope">
+                            {{scope.row.number*1}}
+                          </template>
                         </el-table-column>
                         <el-table-column
-                          :label='$t("volumn")||"成交量"'
-                          prop='dealnumber'>
+                          :label='$t("volumn")||"成交量"'>
+                          <template slot-scope="scope">
+                            {{scope.row.dealnumber*1}}
+                          </template>
                         </el-table-column>
                         <el-table-column
                           :width="$i18n.locale==='zh-CN'?'60':'120'"
@@ -227,19 +233,19 @@
                         <el-table-column
                           :label='priceLabel'>
                           <template slot-scope="scope">
-                            {{scope.row.price|toFix()}}
+                            {{scope.row.price*1}}
                           </template>
                         </el-table-column>
                         <el-table-column
                           :label='marketVolLabel'>
                           <template slot-scope="scope">
-                            {{scope.row.number|toFix()}}
+                            {{scope.row.number*1}}
                           </template>
                         </el-table-column>
                         <el-table-column
                           :label='$t("volumn")||"成交量"'>
                           <template slot-scope="scope">
-                            {{scope.row.dealnumber|toFix()}}
+                            {{scope.row.dealnumber*1}}
                           </template>
                         </el-table-column>
                         <el-table-column
@@ -273,13 +279,13 @@
                       <el-table-column width='150'
                         :label='priceLabel'>
                         <template slot-scope="scope">
-                          {{scope.row.price|toFix()}}
+                          {{scope.row.price*1}}
                         </template>
                       </el-table-column>
                       <el-table-column width='120'
                         :label='amountLabel'>
                         <template slot-scope="scope">
-                          {{scope.row.number|toFix()}}
+                          {{scope.row.number*1}}
                         </template>
                       </el-table-column>
                       <el-table-column :label='totalLabel'>
@@ -351,7 +357,6 @@ export default {
       bindState: null,
       // 是否能够交易
       canTrade: false,
-      routeParam: null,
       isGetSocketMsg: false,
       iframUrl: "./static/kline.html?"
     };
@@ -485,9 +490,6 @@ export default {
     onLatestClick(data) {
       this.buyFormData.price = data.price * 1;
       this.sellFormData.price = data.price * 1;
-    },
-    onAsideTabChange() {
-      this.routeParam = null;
     },
     loadData(data) {
       this.showLoading = true;
@@ -661,7 +663,7 @@ export default {
       let price = this.buyFormData.price * 1;
       let num = this.buyFormData.orderVol * 1;
       if (!this.userData.isLogin) {
-        this.errMsg("请登录后操作");
+        this.errMsg("label120" || "请登录后操作");
         // } else if (!this.canTrade) {
         //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
         //     confirmButtonText: "去认证",
@@ -682,7 +684,7 @@ export default {
       let price = this.sellFormData.price * 1;
       let num = this.sellFormData.orderVol * 1;
       if (!this.userData.isLogin) {
-        this.errMsg("请登录后操作");
+        this.errMsg("label120" || "请登录后操作");
         // } else if (!this.canTrade) {
         //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
         //     confirmButtonText: "去认证",
@@ -722,16 +724,7 @@ export default {
     },
     // 打开弹窗
     showChargeBox() {
-      if (this.bindState.bankstate == 0) {
-        this.$confirm("您还没有绑定银行卡", "提示", {
-          confirmButtonText: "去绑定",
-          cancelButtonText: "取消",
-          type: "warning"
-        }).then(() => {
-          this.navigateTo("/account/security");
-        });
-        return;
-      } else if (
+      if (
         this.chargeAddress == "" ||
         mainCoinModel.tradecoinid != this.tradecoin
       ) {
@@ -848,11 +841,9 @@ $border: 1px solid #e5e5e5;
 }
 .table {
   .thead {
-    height: 40px;
-    line-height: 40px;
+    @include textVcenter();
     display: flex;
     justify-content: space-between;
-    font-size: 16px;
     padding: 0 8px;
     span {
       display: block;
@@ -915,7 +906,6 @@ $border: 1px solid #e5e5e5;
     }
   }
   .market-condition {
-    font-size: 14px;
     span {
       padding-left: 23px;
     }

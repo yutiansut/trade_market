@@ -18,7 +18,10 @@
                     </router-link>
                 </div>
             </div>
-            <el-table :data='myPropetyData' :header-cell-style='changeStyle'>
+            <el-table
+              :data='myPropetyData'
+              :fit='true'
+              :header-cell-style='changeStyle'>
                 <el-table-column :label="$t('currencyType')||'币种'">
                     <div class="flex flex-v-center" slot-scope="scope">
                         <img v-if="scope.row.logo" class="currency-thumb thumb-20"
@@ -42,9 +45,9 @@
                     {{scope.row.total*1}}
                   </template>
                 </el-table-column>
-                <el-table-column width='150' :label="$t('operation')||'操作'">
+                <el-table-column :width='$i18n.locale=="zh-CN"?"120":"230"' :label="$t('operation')||'操作'">
                     <div class="operation"  slot-scope="scope">
-                        <span @click="showDialog(0,scope.row)" class="color-danger" v-text="$t('rechargeCoin')||'充币'"></span>
+                        <span @click="showDialog(0,scope.row)" class="color-danger" v-text="$t('recharge')||'充值'"></span>|
                         <span @click="showDialog(1,scope.row)" class="color-success" v-text="$t('withdrawCoin')||'提币'"></span>
                     </div>
                 </el-table-column>
@@ -281,6 +284,7 @@ export default {
     },
     getAddress(coin) {
       this.request(this.api.getaddress, { coin: coin }).then(res => {
+        console.log(res);
         if (res.code == "0") {
           this.chargeAddress = res.data.address[0]
             ? res.data.address[0].address
@@ -392,11 +396,8 @@ export default {
     text-align: right;
     span {
       display: inline-block;
-      margin-left: 12px;
+      margin: 0 6px;
       cursor: pointer;
-      &:first-child {
-        margin-left: 0;
-      }
     }
   }
   .currency-thumb {

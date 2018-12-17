@@ -10,7 +10,9 @@
               v-text="$t('inquire')||'查询'">
             </button>
         </div>
-        <el-table :data='orderDetailData'>
+        <el-table
+          max-height='500'
+          :data='orderDetailData'>
           <el-table-column :label='$t("orderNum")||"序号"' width='200' type='index'></el-table-column>
           <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
           <el-table-column :label='$t("type")||"类型"'>

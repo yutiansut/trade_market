@@ -46,7 +46,7 @@
             width='80'>
               <template slot-scope="scope">
               <div
-                @click="addMylist(scope.row,scope.$index)"
+                @click.stop="addMylist(scope.row,scope.$index)"
                 class="operate">
                 <span v-text="scope.row.trend"></span>
                 <i class="font-18 color-danger"
@@ -77,6 +77,9 @@ export default {
   },
   mounted() {
     if (mainCoinModel.coinid) {
+      if (this.$route.query.maincoinid) {
+        mainCoinModel.coinid = this.$route.query.maincoinid;
+      }
       this.getTradCoin(mainCoinModel.coinid);
       this.currentId = mainCoinModel.coinid;
       return;
@@ -96,12 +99,11 @@ export default {
         this.tableData =
           (customList && customList.length) > 0 ? customList : [];
         if (!customList[0]) return false;
-        mainCoinModel.tradecoinid = customList[0].coinid;
         this.passCoinInfo(customList);
       } else {
         this.getTradCoin(this.currentId);
       }
-      this.$emit("onAsideTabChange");
+      // this.$emit("onAsideTabChange");
     },
     // 向父组件传递币种信息
     passCoinInfo(listArr, maincoinid, tradecoind) {
@@ -150,10 +152,10 @@ export default {
           this.getDataFaild(res.msg);
           return false;
         }
+        mainCoinModel.coinid = coinid;
         if (res.data && res.data.list) {
           this.tableData = matchCustomList(res.data.list);
           if (res.data.list[0]) {
-            mainCoinModel.tradecoinid = res.data.list[0].coinid;
             this.passCoinInfo(
               res.data.list,
               this.$route.query.maincoinid,

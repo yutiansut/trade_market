@@ -97,9 +97,9 @@ export default {
       });
     },
     delLocalAddr(id) {
-      this.addrList.map((item, index, arr) => {
+      this.addrList.map((item, index) => {
         if (item.autoid == id) {
-          arr.splice(index);
+          this.addrList.splice(index, 1);
         }
       });
     },

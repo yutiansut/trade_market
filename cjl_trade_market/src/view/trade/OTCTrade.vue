@@ -89,6 +89,7 @@
                     </div>
                     <div class="break-line"></div>
                     <el-table
+                      max-height='350'
                       v-loading='showLoading'
                       :data='myOrderList'>
                         <el-table-column prop='wdate'
@@ -96,6 +97,13 @@
                         </el-table-column>
                         <el-table-column prop='coinid'
                             :label='$t("currencyType")||"币种"'>
+                        </el-table-column>
+                        <el-table-column
+                           :label='$t("type")||"类型"'>
+                           <span slot-scope="scope"
+                           :class='scope.row.type=="0"?"color-danger":"color-success"'
+                           v-text="scope.row.type=='0'?$t('buy'):$t('sell')">
+                        </span>
                         </el-table-column>
                         <el-table-column
                            :label='$t("amount")||"数量"'>
@@ -117,13 +125,70 @@
                           width='100'
                           :label='($t("status")||"状态")'>
                             <template slot-scope="scope">
-                                <span v-text="scope.row.type=='0'?buyState:sellState"></span>
+                                <span @click="showOrderDetail(scope.row)"
+                                  :class="scope.row.state=='0'?'color-danger':'color-success'"
+                                  v-text="scope.row.state=='0'?'待付款':'已完成'"></span>
                             </template>
                         </el-table-column>
                     </el-table>
                 </div>
             </el-main>
         </el-container>
+        <!-- 购买弹窗 -->
+        <dialog-box
+          width='25%'
+          :dialogTitle='$t("orderDetail")'
+          :showDialog='showDialog'
+          @onDialogClose='dialogClose'>
+          <div v-show="orderStatus==0" class="row">
+            <div class="column color-danger txt-center flex flex-between" v-text="$t('label134')"></div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf" v-text="$t('owner')"></span>
+              <span class="span-rt" v-text="bankInfo.hz"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf"  v-text="$t('bankCardNo')"></span>
+              <span class="span-rt" v-text="bankInfo.bankcard">jogjgioejao</span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf"  v-text="$t('depositBank')"></span>
+              <span class="span-rt" v-text="bankInfo.khyh"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf"  v-text="$t('bankBranch')"></span>
+              <span class="span-rt" v-text="bankInfo.khzh"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf"  v-text="$t('transferAmount')"></span>
+              <span class="span-rt font-bold color-danger" v-text="'￥'+bankInfo.amount*1"></span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf"  v-text="$t('status')"></span>
+              <span class="span-rt"
+                :class="orderStatus=='0'?'color-danger':'color-success'"
+                v-text="orderStatus==0?$t('label128'):$t('completed')">
+              </span>
+            </div>
+          </div>
+          <div class="row">
+            <div class="column flex flex-between">
+              <span class="span-lf"  v-text="$t('note')"></span>
+              <span class="span-rt" v-text="noteStr"></span>
+            </div>
+          </div>
+        </dialog-box>
         <my-footer></my-footer>
     </div>
 </template>
@@ -131,6 +196,7 @@
 export default {
   data() {
     return {
+      showDialog: false,
       currencyList: [],
       coinInfo: "",
       buyForm: {
@@ -145,7 +211,11 @@ export default {
       canTrade: false,
       bindState: null,
       myOrderList: [],
-      allOrderList: []
+      allOrderList: [],
+      bankInfo: "",
+      orderStatus: 0,
+      //随机生成的备注字符串
+      noteStr: ""
     };
   },
   computed: {
@@ -176,8 +246,28 @@ export default {
     this.getOtcCoin();
     this.getOtcOrder();
     this.getState();
+    this.getotcbank();
   },
   methods: {
+    // 生成随机备注信息
+    getNote() {
+      let str = "";
+      for (let i = 0; i < 6; i++) {
+        str += this.Util.randomNum(0, 9);
+      }
+      this.noteStr = str;
+    },
+    //系统银行信息
+    getotcbank() {
+      this.request(this.api.getotcbank).then(res => {
+        if (res.code == "0") {
+          this.bankInfo = res.data.list[0] || "";
+        } else {
+          this.errMsg(res.msg || "操作失败");
+        }
+      });
+    },
+    // otc币种
     getOtcCoin() {
       return this.request(this.api.getotccoin).then(res => {
         console.log(`OTC币种${JSON.stringify(res)}`);
@@ -250,7 +340,7 @@ export default {
     },
     beforeTrade() {
       if (!this.userModel.isLogin) {
-        this.errMsg("请登录后操作");
+        this.errMsg("label120" || "请登录后操作");
         return false;
       }
       // if (!this.canTrade) {
@@ -264,10 +354,18 @@ export default {
       // }
       return true;
     },
+    // 获取订单备注
+    showOrderDetail(data) {
+      this.orderStatus = data.state;
+      this.showDialog = true;
+      this.bankInfo.amount = data.zj;
+      this.getNote();
+    },
     handleConfirm(api, param) {
-      this.request(api, {
+      return this.request(api, {
         coin: param.coin,
-        id: 1,
+        id: this.bankInfo.autoid,
+        bz: this.noteStr,
         number: param.number,
         jz: param.total,
         showLoading: true
@@ -275,9 +373,10 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg);
           this.getOtcOrder();
-          this.buyForm.number = 0;
+          return Promise.resolve(res);
         } else {
           this.errMsg(res.msg);
+          return Promise.reject(res);
         }
       });
     },
@@ -290,7 +389,7 @@ export default {
         isNaN(this.sellForm.number) ||
         this.sellForm.number < this.coinInfo.minnum * 1
       ) {
-        this.errMsg("请输入正确的数量");
+        this.errMsg("label122" || "请输入正确的数量");
         return false;
       }
       this.handleConfirm(this.api.otcsell, {
@@ -301,6 +400,7 @@ export default {
     },
     // 买入操作
     buyHandle() {
+      this.getNote();
       if (!this.beforeTrade()) {
         return false;
       }
@@ -308,14 +408,22 @@ export default {
         isNaN(this.buyForm.number) ||
         this.buyForm.number < this.coinInfo.minnum * 1
       ) {
-        this.errMsg("请输入正确的数量");
+        this.errMsg("label122" || "请输入正确的数量");
         return false;
       }
       this.handleConfirm(this.api.otcbuy, {
         coin: this.coinInfo.coinid,
         number: this.buyForm.number,
         total: this.buyTotal
+      }).then(res => {
+        if (res.code == "0") {
+          this.showDialog = true;
+          this.bankInfo.amount = this.buyTotal;
+        }
       });
+    },
+    dialogClose() {
+      this.showDialog = false;
     }
   }
 };
@@ -326,6 +434,23 @@ export default {
 }
 $mr: 11px;
 $border: 1px solid #e5e5e5;
+.row {
+  @include textVcenter();
+  span {
+    display: block;
+    box-sizing: border-box;
+  }
+  .span-lf {
+    flex: 4;
+    padding-right: 15px;
+    text-align: right;
+  }
+
+  .span-rt {
+    flex: 5;
+    padding-left: 15px;
+  }
+}
 .el-container {
   border-bottom: $border;
   .form-wrap {

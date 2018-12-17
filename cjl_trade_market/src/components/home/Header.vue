@@ -7,7 +7,7 @@
         <login-bar></login-bar>
       </div>
       <div v-if="showHeadBody" class="hd-body">
-        <router-link to="./main"><img class="logo p-rel" :src="headLogo" alt=""></router-link>
+        <router-link to="/main"><img class="logo p-rel" :src="headLogo" alt=""></router-link>
         <ul class="nav-bar">
           <!-- 币币交易 -->
           <li

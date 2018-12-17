@@ -3,6 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('transRecord')||'交易记录'"></div>      
       <div class="table-wrap">
         <el-table
+          max-height='500'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderRecordData'>
           <el-table-column prop='writedate' :label='$t("date")||"日期"'></el-table-column>

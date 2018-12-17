@@ -12,6 +12,10 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 /**
+ * 处理promise 兼容
+ */
+require('es6-promise').polyfill();
+/**
  * 注册并使用第三方类/库
  */
 import VueI18n from 'vue-i18n';

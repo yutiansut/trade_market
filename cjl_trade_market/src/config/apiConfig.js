@@ -206,6 +206,10 @@ let apiCfg = (function () {
         getotcorderbycoin: {
             url: 'getotcorderbycoin'
         },
+        // otc 账号信息
+        getotcbank: {
+            url: 'getotcbank'
+        },
         //买入
         forbuy: {
             url: 'forbuy'

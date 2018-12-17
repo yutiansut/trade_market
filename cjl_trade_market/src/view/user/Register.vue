@@ -131,18 +131,18 @@ export default {
       if (val == "") return;
       switch (name) {
         case "cellphone":
-          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
+          !this.Util.isPhone(val) && this.errMsg("label123" | "手机号码格式不正确");
           break;
         case "password":
           !this.Util.isPassword(val) &&
-            this.errMsg("密码必须是以英文字母开头的6-12位字符");
+            this.errMsg("label124" || "密码必须是以英文字母开头的6-12位字符");
           break;
         case "repassword":
           val != this.registerData.password &&
             this.errMsg("两次输入密码不一致");
           break;
         case "verCode":
-          val != this.verCodeStr && this.errMsg("图形验证码不正确");
+          val != this.verCodeStr && this.errMsg("label126" || "图形验证码不正确");
           break;
       }
     },
@@ -179,7 +179,8 @@ export default {
         return false;
       this.countDown();
       this.request(this.api.sendcode, {
-        tel: this.registerData.cellphone
+        tel: this.registerData.cellphone,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.myMobileCode = true;
@@ -200,6 +201,7 @@ export default {
         tel: this.registerData.cellphone,
         password: this.registerData.password,
         code: this.registerData.mobileCode,
+        showLoading: true,
         parent: this.registerData.recommender || ""
       };
       this.request(this.api.register, postData).then(res => {

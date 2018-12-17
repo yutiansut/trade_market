@@ -3,6 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('otcRecord')||'OTC记录'"></div>
       <div class="table-wrap">
         <el-table
+          max-height='500'
           v-loading='showLoading'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderDetailData'>

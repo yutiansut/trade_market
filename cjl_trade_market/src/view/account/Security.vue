@@ -127,7 +127,7 @@
         <!-- 安全日志 -->
         <div class="table-wrap bd-bottom-none mt-20">
             <div class="header" v-text="$t('safeLogs')||'安全日志'"></div>
-            <el-table :data='authLogs'>
+            <el-table max-height='350' :data='authLogs'>
               <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
               <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
               <el-table-column :label='$t("operation")||"操作"' prop='updatelog'></el-table-column>
@@ -139,7 +139,9 @@
         <!-- 登录日志 -->
         <div class="table-wrap bd-bottom-none mt-20">
             <div class="header" v-text="$t('loginLogs')"></div>
-            <el-table :data='loginLogs'>
+            <el-table
+              max-height='350'
+              :data='loginLogs'>
               <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
               <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
               <el-table-column label='IP' prop='ip'></el-table-column>

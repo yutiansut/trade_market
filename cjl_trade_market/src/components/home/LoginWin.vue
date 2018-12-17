@@ -185,7 +185,8 @@ export default {
         return false;
       this.countDown();
       this.request(this.api.sendcodeuser, {
-        tel: this.checkLoginData.cellphone
+        tel: this.checkLoginData.cellphone,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.myMobileCode = true;
@@ -205,7 +206,8 @@ export default {
       }
       this.request(this.api.checklogin, {
         tel: this.checkLoginData.cellphone,
-        password: this.checkLoginData.password
+        password: this.checkLoginData.password,
+        showLoading: true
       }).then(res => {
         if (res && res.code != 1) {
           res.code == 10000 && (this.bindGoogleAuth = false);
@@ -225,12 +227,14 @@ export default {
       this.request(this.api.login, {
         type: this.loginData.type,
         tel: this.checkLoginData.cellphone,
+        showLoading: true,
         code: this.loginData.mobileCode || this.loginData.googleCode
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg);
           this.userModel.cellphone = this.checkLoginData.cellphone;
           this.userModel.isLogin = true;
+          this.userData = this.userModel;
           this.storage.set("isLogin", true);
           this.storage.set("token", res.data.token);
           this.storage.set("cellphone", this.checkLoginData.cellphone);
@@ -253,17 +257,20 @@ export default {
       if (val == "") return;
       switch (name) {
         case "cellphone":
-          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
+          !this.Util.isPhone(val) &&
+            this.errMsg("label123" | "手机号码格式不正确");
           break;
         case "password":
           !this.Util.isPassword(val) &&
-            this.errMsg("密码必须是以英文字母开头的6-12位字符");
+            this.errMsg("label124" || "密码必须是以英文字母开头的6-12位字符");
           break;
         case "myGoogleCode":
-          val != this.myGoogleCode && this.errMsg("谷歌验证码不正确");
+          val != this.myGoogleCode &&
+            this.errMsg("label125" || "谷歌验证码不正确");
           break;
         case "verCode":
-          val != this.verCodeStr && this.errMsg("图形验证码不正确");
+          val != this.verCodeStr &&
+            this.errMsg("label126" || "图形验证码不正确");
           break;
       }
     },

@@ -41,7 +41,8 @@ export default {
     myData() {
       if (this.myData && Array.isArray(this.myData)) {
         this.dataList = this.myData;
-        this.currentId = this.myData[0] && this.myData[0].name;
+        this.currentId =
+          (this.myData[0] && this.myData[0].name) || this.myData[0].coinid;
       }
       this.showIcon = this.showArrow;
     }

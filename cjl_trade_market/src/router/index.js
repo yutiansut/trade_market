@@ -123,19 +123,19 @@ const routes = [
   {
     path: '/currency_trade',
     name: 'currencyTrade',
-    component: r => require(['@/view/currencyTrade'], r),
+    component: r => require(['@/view/trade/currencyTrade'], r),
     meta: { auth: false, title: "币币交易" }
   },
   {
     path: '/c2c_trade',
     name: 'c2cTrade',
-    component: r => require(['@/view/C2CTrade'], r),
+    component: r => require(['@/view/trade/C2CTrade'], r),
     meta: { auth: false, title: "C2C交易" }
   },
   {
     path: '/otc_trade',
     name: 'otcTrade',
-    component: r => require(['@/view/OTCTrade'], r),
+    component: r => require(['@/view/trade/OTCTrade'], r),
     meta: { auth: false, title: "OTC交易" }
   },
   {
@@ -196,7 +196,7 @@ const routes = [
   {
     path: "/kline_trade",
     name: "klineTrade",
-    component: r => require(['@/view/klineTrade'], r),
+    component: r => require(['@/view/trade/klineTrade'], r),
     meta: { auth: false, title: 'K线交易' }
   }
 ]

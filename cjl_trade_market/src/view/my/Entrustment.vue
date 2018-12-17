@@ -3,6 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('myList')||'我的挂单'"></div>
       <div class="table-wrap">
         <el-table
+          max-height='500'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='myEnstrumentData'>
           <el-table-column prop='writedate' :label='$t("date")||"下单日期"'></el-table-column>

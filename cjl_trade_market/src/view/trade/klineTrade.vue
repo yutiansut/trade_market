@@ -190,6 +190,7 @@
                                 <div style="flex:1.5;" v-text="$t('amount')"></div>                                
                                 <div style="flex:1.5;" v-text="$t('volumn')"></div>
                                 <div style="flex:1.5;" v-text="$t('total')"></div>
+                                <div style="flex:0.5;" v-text="$t('operation')"></div>
                             </div>
                             <div class="entr-body">
                                 <div
@@ -203,6 +204,9 @@
                                     <div style="flex:1.5;" v-text="item.number*1"></div>
                                     <div style="flex:1.5;" v-text="item.dealnumber*1"></div>
                                     <div style="flex:1.5;" v-text="item.number*item.price"></div>
+                                    <div @click="cancelOrder(item.id)"
+                                      style="flex:0.5;cursor:pointer"
+                                      class="color-danger" v-text="$t('withdrawed')"></div>   
                                 </div>
                                 <div v-if="myEntrustList.length==0" class="no-data" v-text="$t('label108')"></div>
                             </div>
@@ -332,7 +336,8 @@ import mainCoinModel from "@/model/allCoinModel.js";
 import {
   addCustomList,
   removeCustomList,
-  matchCustomList
+  matchCustomList,
+  randomString
 } from "@/assets/js/common.js";
 export default {
   data() {
@@ -400,6 +405,27 @@ export default {
     this.getMainCoin();
   },
   methods: {
+    // 撤单
+    cancelOrder(id) {
+      console.log(id);
+      this.showLoading = true;
+      this.request(this.api.clearentrust, { id: id }).then(res => {
+        console.log(`操作结果：${JSON.stringify(res)}`);
+        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        this.successMsg(res.msg);
+        this.delItemFromList(id, this.myEntrustList);
+        this.showLoading = false;
+      });
+    },
+    // 删除列表某一项
+    delItemFromList(id, listArr) {
+      listArr.map((item, index) => {
+        if (item.id == id) {
+          listArr.splice(index, 1);
+          return listArr;
+        }
+      });
+    },
     //  更新最新列表
     updateLastestData(token, maincoin, tradecoin) {
       if ("WebSocket" in window) {

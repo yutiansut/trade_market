@@ -40,6 +40,125 @@
       </div>
     </div>
 </template>
+<script>
+export default {
+  name: "my-footer",
+  data() {
+    return {
+      footerNavList: [
+        {
+          i18nKey: "aboutUs",
+          title: "关于XX网",
+          items: [
+            {
+              i18nKey: "aboutCompany",
+              label: "关于公司",
+              link: ""
+            },
+            {
+              i18nKey: "contact",
+              label: "联系我们",
+              link: ""
+            },
+            {
+              i18nKey: "ruleOfTrans",
+              label: "交易规则",
+              link: ""
+            },
+            {
+              i18nKey: "userAuth",
+              label: "用户认证",
+              link: ""
+            }
+          ]
+        },
+        {
+          i18nKey: "currencyIntro",
+          title: "资产介绍",
+          items: [
+            {
+              i18nKey: "USDT",
+              label: "USDT（太达币）",
+              link: "/help_center/currency_intro"
+            },
+            {
+              i18nKey: "ETH",
+              label: "ETH（以太坊）",
+              link: "/help_center/currency_intro"
+            },
+            {
+              i18nKey: "BTC",
+              label: "BTC（比特币）",
+              link: "/help_center/currency_intro"
+            },
+            {
+              i18nKey: "BTH",
+              label: "BTH（比特现金）",
+              link: "/help_center/currency_intro"
+            }
+          ]
+        },
+        {
+          i18nKey: "faqCenter",
+          title: "问题中心",
+          items: [
+            {
+              i18nKey: "rate",
+              label: "费率标准",
+              link: "/help_center/fee"
+            },
+            {
+              i18nKey: "faqCenter",
+              label: "常见问题",
+              link: "/help_center/faq"
+            },
+            {
+              i18nKey: "agreement",
+              label: "用户协议",
+              link: ""
+            },
+            {
+              i18nKey: "currencyProfile",
+              label: "币种资料",
+              link: "/help_center/currency_intro"
+            }
+          ]
+        },
+        {
+          i18nKey: "helpCenter",
+          title: "帮助中心",
+          items: [
+            {
+              i18nKey: "legalStatement",
+              label: "法律声明",
+              link: ""
+            },
+            {
+              i18nKey: "termOfUse",
+              label: "使用条款",
+              link: ""
+            },
+            {
+              i18nKey: "privacy",
+              label: "隐私政策",
+              link: ""
+            },
+            {
+              i18nKey: "riskStament",
+              label: "风险披露声明",
+              link: ""
+            }
+          ]
+        }
+      ],
+      logo: require("@/assets/images/home/pcew_logo.png"),
+      qrcode: ""
+    };
+  },
+  created() {},
+  mounted() {}
+};
+</script>
 <style lang="scss" scoped>
 $footer-font-color: #fff;
 .footer {
@@ -134,122 +253,3 @@ $footer-font-color: #fff;
   }
 }
 </style>
-<script>
-export default {
-  name: "my-footer",
-  data() {
-    return {
-      footerNavList: [
-        {
-          i18nKey: "aboutUs",
-          title: "关于XX网",
-          items: [
-            {
-              i18nKey: "aboutCompany",
-              label: "关于公司",
-              link: ""
-            },
-            {
-              i18nKey: "contact",
-              label: "联系我们",
-              link: ""
-            },
-            {
-              i18nKey: "ruleOfTrans",
-              label: "交易规则",
-              link: ""
-            },
-            {
-              i18nKey: "userAuth",
-              label: "用户认证",
-              link: ""
-            }
-          ]
-        },
-        {
-          i18nKey: "currencyIntro",
-          title: "资产介绍",
-          items: [
-            {
-              i18nKey: "USDT",
-              label: "USDT（太达币）",
-              link: ""
-            },
-            {
-              i18nKey: "ETH",
-              label: "ETH（以太坊）",
-              link: ""
-            },
-            {
-              i18nKey: "BTC",
-              label: "BTC（比特币）",
-              link: ""
-            },
-            {
-              i18nKey: "BTH",
-              label: "BTH（比特现金）",
-              link: ""
-            }
-          ]
-        },
-        {
-          i18nKey: "faqCenter",
-          title: "问题中心",
-          items: [
-            {
-              i18nKey: "rate",
-              label: "费率标准",
-              link: ""
-            },
-            {
-              i18nKey: "faqCenter",
-              label: "常见问题",
-              link: ""
-            },
-            {
-              i18nKey: "agreement",
-              label: "用户协议",
-              link: ""
-            },
-            {
-              i18nKey: "apiDoc",
-              label: "API文档",
-              link: ""
-            }
-          ]
-        },
-        {
-          i18nKey: "helpCenter",
-          title: "帮助中心",
-          items: [
-            {
-              i18nKey: "legalStatement",
-              label: "法律声明",
-              link: ""
-            },
-            {
-              i18nKey: "termOfUse",
-              label: "使用条款",
-              link: ""
-            },
-            {
-              i18nKey: "privacy",
-              label: "隐私政策",
-              link: ""
-            },
-            {
-              i18nKey: "riskStament",
-              label: "风险披露声明",
-              link: ""
-            }
-          ]
-        }
-      ],
-      logo: require("@/assets/images/home/pcew_logo.png"),
-      qrcode: ""
-    };
-  },
-  created() {},
-  mounted() {}
-};
-</script>

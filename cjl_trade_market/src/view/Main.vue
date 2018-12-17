@@ -70,10 +70,18 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column width='180'>
+              <el-table-column>
                 <div class="flex flex-between" slot-scope="scope">
-                  <button @click="goTrade('/currency_trade',scope.row)" class="trade-btn btn-small btn-danger btn-hover">普通交易</button>
-                  <button @click="goTrade('/kline_trade',scope.row)" class="trade-btn btn-small btn-success btn-hover">K线交易</button>
+                  <button
+                    v-text="$t('label132')"
+                    @click="goTrade('/currency_trade',scope.row)"
+                    class="trade-btn btn-small btn-danger btn-hover">
+                  </button>
+                  <button
+                    v-text="$t('label133')"
+                    @click="goTrade('/kline_trade',scope.row)"
+                    class="trade-btn btn-small btn-success btn-hover">
+                  </button>
                 </div>
               </el-table-column>
               <el-table-column :label='$t("optMarket")' width='80'>
