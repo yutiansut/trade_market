@@ -39,7 +39,9 @@
         <el-row :gutter='15'>
             <el-col :span="8">
                 <span v-text="$t('idFront')||'拍摄身份证人像面'"></span>
-                <div class="p-rel upload-zone">
+                <div
+                  element-loading-background="rgba(0, 0, 0, 0.4)"
+                  v-loading='showLoading_1' class="p-rel upload-zone">
                     <input class="upload-input abs-vh-center"
                       type="file"
                       @change="uploadId('1',$event)"
@@ -53,7 +55,9 @@
             </el-col>
             <el-col :span="8">
                 <span v-text="$t('idBack')||'拍摄身份证国徽面'"></span>
-                <div class="p-rel upload-zone">
+                <div
+                  element-loading-background="rgba(0, 0, 0, 0.4)"
+                  v-loading='showLoading_2' class="p-rel upload-zone">
                     <input class="upload-input abs-vh-center"
                       type="file"
                       accept="image/png,image/gif,image/jpeg"
@@ -67,7 +71,9 @@
             </el-col>
             <el-col :span="8">
                 <span v-text="$t('halfBodyPhoto')||'拍摄手持身份证件'"></span>
-                <div class="p-rel upload-zone">
+                <div
+                element-loading-background="rgba(0, 0, 0, 0.4)"
+                  v-loading='showLoading_3' class="p-rel upload-zone">
                     <input class="upload-input abs-vh-center"
                       type="file"
                       accept="image/png,image/gif,image/jpeg"
@@ -143,7 +149,10 @@ export default {
         fullPhoto: "",
         confirmName: "",
         cardnumber: ""
-      }
+      },
+      showLoading_1: false,
+      showLoading_2: false,
+      showLoading_3: false
     };
   },
   mounted() {
@@ -176,7 +185,9 @@ export default {
       switch (id) {
         case "1": // 传输正面
           options.url = `${this.api.baseURL}/zm`;
+          this.showLoading_1 = true;
           axios(options).then(res => {
+            this.showLoading_1 = false;
             if (res.data.code == "0") {
               this.successMsg(res.msg || "上传成功");
               this.formData.faceIdPhoto = res.data.data.result;
@@ -185,7 +196,9 @@ export default {
           break;
         case "2": // 传输背面
           options.url = `${this.api.baseURL}/fm`;
+          this.showLoading_2 = true;
           axios(options).then(res => {
+            this.showLoading_2 = false;
             if (res.data.code == "0") {
               this.successMsg(res.msg || "上传成功");
               this.formData.backIdPhoto = res.data.data.result;
@@ -194,7 +207,9 @@ export default {
           break;
         case "3": // 传输手持证件照
           options.url = `${this.api.baseURL}/sc`;
+          this.showLoading_3 = true;
           axios(options).then(res => {
+            this.showLoading_3 = false;
             if (res.data.code == "0") {
               this.successMsg(res.msg || "上传成功");
               this.formData.fullPhoto = res.data.data.result;
@@ -223,6 +238,8 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
           this.bindState.idcardstate = "1";
+        } else {
+          this.errMsg(res.msg || "操作失败");
         }
       });
     },

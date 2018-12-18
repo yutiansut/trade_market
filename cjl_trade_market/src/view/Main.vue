@@ -157,7 +157,7 @@ export default {
       this.getTradCoin(coin);
     });
   },
-  beforeRouteLeave() {
+  beforeDestroy() {
     this.timer && clearInterval(this.timer);
   },
   methods: {

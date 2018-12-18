@@ -41,12 +41,34 @@ export default {
   },
   mounted() {
     this.$bus.on("navChange", data => {
-      this.myLists = data;
+      if (data) {
+        this.myLists = data;
+      }
     });
+  },
+  beforeDestroy() {
+    this.$bus.off("tradeCoinLoad");
   },
   methods: {
     toPage: function(data) {
-      this.navigateTo("/currency_trade", { data: JSON.stringify(data) });
+      this.navigateTo("/currency_trade", {
+        maincoinid: data.maincoinid,
+        coinid: data.coinid
+      });
+      this.$bus.emit("tradeCoinLoad", data);
+    },
+    passCoinInfo(listArr, maincoinid, tradecoind) {
+      if (!listArr) return false;
+      let data = listArr[0];
+      if (maincoinid && tradecoind) {
+        listArr.map(item => {
+          if (!item.maincoinid || !item.coinid) return;
+          if (item.maincoinid == maincoinid && item.coinid == tradecoind) {
+            data = item;
+          }
+        });
+      }
+      this.$bus.emit("tradeCoinLoad", data);
     },
     matchSearch: function(v) {
       let data = [];
