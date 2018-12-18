@@ -3,10 +3,22 @@
         <my-header class="header-white" 
           :show-head-top='true'
           :headLogo='logo'>
-          <span slot='top-slot' class="mr-25">ETH/CNY  ￥4000.36 <i class="iconfont icon-up-arrow"></i></span>
+          <div slot='top-slot' class="mr-25">
+            <span class="fl">[公告]</span>
+            <ul class="swip">
+               <transition-group name="el-fade-in">
+                <li 
+                  v-show="newIndex==index"
+                  v-for="(item,index) in newsList"
+                  :key='index'>
+                  <router-link  :to='"/notice/detail/"+item.id' v-text="item.title"></router-link>
+                </li>
+              </transition-group>
+            </ul>
+          </div>
         </my-header>
         <index-banner></index-banner>
-        <notice-bar></notice-bar>
+        <notice-bar @onNewsLoad='onNewsLoad'></notice-bar>
         <div class="content">
           <div class="list-table">
             <div class="panel m-bottom-10">
@@ -123,7 +135,10 @@ export default {
       },
       searchVal: "",
       tableData: [],
-      rawData: []
+      rawData: [],
+      newsList: [],
+      newIndex: 0,
+      timer: null
     };
   },
   computed: {
@@ -142,7 +157,25 @@ export default {
       this.getTradCoin(coin);
     });
   },
+  beforeRouteLeave() {
+    this.timer && clearInterval(this.timer);
+  },
   methods: {
+    onNewsLoad(data) {
+      this.newsList = data;
+      this.newSwip();
+    },
+    newSwip() {
+      let i = 0;
+      this.timer = setInterval(() => {
+        let len = this.newsList.length;
+        if (i > len - 1) {
+          i = 0;
+        }
+        this.newIndex = i;
+        i++;
+      }, 3000);
+    },
     // 添加自选
     addMylist(rowData, index) {
       let data = rowData;
@@ -231,6 +264,11 @@ export default {
   border-radius: 4px;
   background: #666;
   right: -40px;
+}
+.swip {
+  display: inline-block;
+  margin-left: 15px;
+  color: #fff;
 }
 .trade-btn {
   margin: 0 6px;

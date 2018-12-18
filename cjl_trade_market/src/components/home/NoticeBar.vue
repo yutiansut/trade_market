@@ -30,6 +30,7 @@ export default {
         if (res && res.code == "0") {
           res.data && res.data.list && (newsModel.newsList = res.data.list);
           this.noticeItem = newsModel.newsList.slice(0, 6);
+          this.$emit("onNewsLoad", newsModel.newsList);
         } else {
           this.getDataFaild(res.msg);
         }
