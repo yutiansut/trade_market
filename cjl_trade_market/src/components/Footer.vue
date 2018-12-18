@@ -6,7 +6,13 @@
             :key='i' class="ft-nav">
             <dt v-text="$t(item.i18nKey)||item.title"></dt>
             <dd v-for="(itemIn,j) in item.items" :key='j'>
+              <a v-if="itemIn.label=='用户协议'"
+                target="_blank"
+                :href="itemIn.link"
+                v-text="$t(itemIn.i18nKey)||itemIn.label">
+              </a>
               <router-link
+                v-else
                 :to='itemIn.link'
                 v-text="$t(itemIn.i18nKey)||itemIn.label">
               </router-link>
@@ -53,22 +59,22 @@ export default {
             {
               i18nKey: "aboutCompany",
               label: "关于公司",
-              link: ""
+              link: "/help_center/about"
             },
             {
               i18nKey: "contact",
               label: "联系我们",
-              link: ""
+              link: "/help_center/contact"
             },
             {
               i18nKey: "ruleOfTrans",
               label: "交易规则",
-              link: ""
+              link: "/help_center/rules"
             },
             {
               i18nKey: "userAuth",
               label: "用户认证",
-              link: ""
+              link: "/account/identify"
             }
           ]
         },
@@ -115,7 +121,7 @@ export default {
             {
               i18nKey: "agreement",
               label: "用户协议",
-              link: ""
+              link: "http://localhost/pdf/services.pdf"
             },
             {
               i18nKey: "currencyProfile",
@@ -131,22 +137,17 @@ export default {
             {
               i18nKey: "legalStatement",
               label: "法律声明",
-              link: ""
-            },
-            {
-              i18nKey: "termOfUse",
-              label: "使用条款",
-              link: ""
+              link: "/help_center/law"
             },
             {
               i18nKey: "privacy",
-              label: "隐私政策",
-              link: ""
+              label: "隐私条款",
+              link: "/help_center/privacy"
             },
             {
               i18nKey: "riskStament",
               label: "风险披露声明",
-              link: ""
+              link: "/help_center/risk"
             }
           ]
         }
@@ -154,9 +155,7 @@ export default {
       logo: require("@/assets/images/home/pcew_logo.png"),
       qrcode: "http://192.168.5.51:8080/web/img/qr.png"
     };
-  },
-  created() {},
-  mounted() {}
+  }
 };
 </script>
 <style lang="scss" scoped>

@@ -166,6 +166,7 @@
           :title='fundPassTitle'
           apiKey='updatepaypassword'
           :passwordLabel='$t("fundPwd")||"资金密码"'
+          @fundPasswordUpdated='fundPasswordUpdated'
           @closeModal='onClose'>
         </bind-password>
         <!-- 绑定邮箱 -->
@@ -178,10 +179,12 @@
         <bind-bank 
           :show='dialogId=="bankAccount"?true:false'
           :ownerName='this.bindState.username'
+          @bankCardBind='bankCardBind'
           @closeModal='onClose'>
         </bind-bank>
         <!-- 谷歌验证 -->
-        <google-auth 
+        <google-auth
+          @onGoogleBind='onGoogleBind'
           :show='dialogId=="googleAccount"?true:false'
           @closeModal='onClose'>
         </google-auth>
@@ -224,17 +227,17 @@ export default {
       let idState = this.bindState.idcardstate;
       if (k == "bankAccount") {
         if (idState == "0") {
-          this.$confirm("您还没有实名认证，无法操作", "提示", {
-            confirmButtonText: "去认证",
-            cancelButtonText: "取消",
+          this.$confirm(this.$t("label137"), this.$t("label140"), {
+            confirmButtonText: this.$t("label138"),
+            cancelButtonText: this.$t("label139"),
             type: "warning"
           }).then(() => {
             this.navigateTo("Identify");
           });
           return;
         } else if (idState == "1") {
-          this.$alert("实名认证审核中，无法操作", "提示", {
-            confirmButtonText: "确定"
+          this.$alert(this.$t("label141"), this.$t("label140"), {
+            confirmButtonText: this.$t("label138")
           });
           return;
         }
@@ -242,7 +245,16 @@ export default {
       this.dialogId = k;
     },
     emailBind() {
-      this.bindState.emailstate = true;
+      this.bindState.emailstate = "1";
+    },
+    onGoogleBind() {
+      this.bindState.googlestate = "1";
+    },
+    bankCardBind() {
+      this.bindState.googlestate = "1";
+    },
+    fundPasswordUpdated() {
+      this.bindState.tradstate = "1";
     },
     onClose() {
       this.dialogId = null;
@@ -250,14 +262,20 @@ export default {
     getState() {
       this.request(this.api.saftyState).then(res => {
         console.log(`账号状态：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg || "获取数据失败");
+          return false;
+        }
         res.data && res.data.list && (this.bindState = res.data.list[0]);
       });
     },
     getSafeLogs() {
       this.request(this.api.logsafe).then(res => {
         console.log(`安全日志：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg || "获取数据失败");
+          return false;
+        }
         res.data && res.data.list && (this.authLogs = res.data.list);
       });
     },

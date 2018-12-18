@@ -15,7 +15,7 @@
             <input class="eth-addr" disabled='disabled' :value="chargeAddress"/>
             <div>{{$t('or')||"或"}}&nbsp;{{$t('scanCode')||"扫描二维码"}}</div>
             <div v-if="chargeAddress" class="qr-code">
-              <vue-qr class="img"
+              <vue-qr
                 :text="chargeAddress"
                 :margin="0"
                 :size="120">

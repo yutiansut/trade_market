@@ -16,7 +16,7 @@
                         <div class="font-18 font-bit-bold" v-html="buyingLabel"></div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                            <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                            <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
                       <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
                         </div>
                         <div class="input-group">
@@ -48,7 +48,7 @@
                         <div class="font-18 font-bit-bold" v-html="sellingLabel"></div>
                         <div class="break-line"></div>
                         <div class="account flex flex-between">
-                          <span class="balance">{{$t('avilable')||'可用'}}&nbsp;0.00000000 BTC</span>
+                          <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
                       <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>                          
                         </div>
                         <div class="input-group">
@@ -214,6 +214,8 @@ export default {
       allOrderList: [],
       bankInfo: "",
       orderStatus: 0,
+      myBalance: 0,
+
       //随机生成的备注字符串
       noteStr: ""
     };
@@ -243,7 +245,11 @@ export default {
   },
   mounted() {
     this.showLoading = true;
-    this.getOtcCoin();
+    this.getOtcCoin().then(coin => {
+      if (coin) {
+        this.getAvailable(coin);
+      }
+    });
     this.getOtcOrder();
     this.getState();
     this.getotcbank();
@@ -256,6 +262,16 @@ export default {
         str += this.Util.randomNum(0, 9);
       }
       this.noteStr = str;
+    },
+    //获取可用
+    getAvailable(coin) {
+      this.request(this.api.getdaynumber, {
+        coin: coin
+      }).then(res => {
+        if (res.code == "0" && res.data.list && res.data.list.length > 0) {
+          this.myBalance = res.data.list[0].usable * 1;
+        }
+      });
     },
     //系统银行信息
     getotcbank() {
@@ -316,6 +332,7 @@ export default {
     onListClick(data) {
       this.coinInfo = data;
       this.myOrderList = this.getMyOrderlist(this.allOrderList, data.coinid);
+      this.getAvailable(data.coinid);
       this.buyForm = {
         number: "",
         total: ""
@@ -396,6 +413,8 @@ export default {
         coin: this.coinInfo.coinid,
         number: this.sellForm.number,
         total: this.sellTotal
+      }).catch(err => {
+        console.log(res.msg);
       });
     },
     // 买入操作
@@ -415,12 +434,16 @@ export default {
         coin: this.coinInfo.coinid,
         number: this.buyForm.number,
         total: this.buyTotal
-      }).then(res => {
-        if (res.code == "0") {
-          this.showDialog = true;
-          this.bankInfo.amount = this.buyTotal;
-        }
-      });
+      })
+        .then(res => {
+          if (res.code == "0") {
+            this.showDialog = true;
+            this.bankInfo.amount = this.buyTotal;
+          }
+        })
+        .catch(err => {
+          console.log(res.msg);
+        });
     },
     dialogClose() {
       this.showDialog = false;
@@ -454,7 +477,7 @@ $border: 1px solid #e5e5e5;
 .el-container {
   border-bottom: $border;
   .form-wrap {
-    width: 720px;
+    width: 48.65%;
     .break-line {
       margin-top: 12px;
     }

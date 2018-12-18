@@ -18,15 +18,18 @@ require('es6-promise').polyfill();
 /**
  * 注册并使用第三方类/库
  */
+import VueClipboard from 'vue-clipboard2';
 import VueI18n from 'vue-i18n';
 import locale from 'element-ui/lib/locale';
-import enLocale from 'element-ui/lib/locale/lang/en'
-import zhLocale from 'element-ui/lib/locale/lang/zh-CN'
+import enLocale from 'element-ui/lib/locale/lang/en';
+import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
 import ElementUI from 'element-ui';
 import vueBus from 'vue-bus';
+VueClipboard.config.autoSetContainer = true;
 Vue.use(vueBus);
 Vue.use(VueI18n);
 Vue.use(ElementUI, zhLocale);
+Vue.use(VueClipboard);
 /**
  * 方法
  */
@@ -98,7 +101,6 @@ Object.assign(Vue.prototype, {
   api: apiCfg,
   userModel: userModel,
   routeModel: routeModel,
-  canvasId: 0,
   getDataFaild: getDataFaild,
   redirectTo(pathName, params) {
     let data = {

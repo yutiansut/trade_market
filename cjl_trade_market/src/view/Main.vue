@@ -103,8 +103,7 @@
     </div>
 </template>
 <script>
-import friendLink from "@/components/home/FriendLink";
-import AdvantageIntro from "@/components/home/AdvantageIntro";
+// import friendLink from "@/components/home/FriendLink";
 import mainCoinModel from "@/model/allCoinModel.js";
 import {
   addCustomList,
@@ -112,7 +111,6 @@ import {
   matchCustomList
 } from "@/assets/js/common.js";
 export default {
-  components: { friendLink, AdvantageIntro },
   data() {
     return {
       logo: require("@/assets/images/home/pcew_logo.png"),

@@ -52,7 +52,7 @@
               <template v-else>
                 <el-form-item :label="$t('loginAuth')||'登录验证'">
                   <el-radio-group v-model="loginData.type">
-                    <el-radio label="0">{{$t('mobileCode')||'手机验证码'}}</el-radio>
+                    <el-radio label="2">{{$t('mobileCode')||'手机验证码'}}</el-radio>
                     <el-radio label='1' :disabled='bindGoogleAuth?false:true'>
                       {{$t('googleCode')||'谷歌验证码'}}
                     </el-radio>
@@ -60,7 +60,7 @@
                 </el-form-item>
                 <div class="mobile-code-wrap p-rel">
                   <el-input
-                    v-show="loginData.type==0"
+                    v-show="loginData.type==2"
                     v-model="loginData.mobileCode"
                     name='mobileCode'
                     :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
@@ -70,11 +70,9 @@
                     v-show="loginData.type==1"
                     v-model="loginData.googleCode"
                     name='googleCode'
-                    :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
-                    :disabled="myGoogleCode?false:true"
-                    @blur="validate(loginData.googleCode,'googleCode')">
+                    :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'>
                   </el-input>
-                  <div
+                  <div v-show="loginData.type==2"
                     @click='getMobileCode'
                     class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
                   </div>
@@ -108,7 +106,7 @@ export default {
       },
       canGetCode: true,
       loginData: {
-        type: "0", //1 是google验证，0手机验证
+        type: "2", //1 是google验证，0手机验证
         mobileCode: "",
         googleCode: ""
       },
@@ -119,12 +117,14 @@ export default {
       second: "",
       myMobileCode: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      verCodeStr: ""
+      verCodeStr: "",
+      oldPath: ""
     };
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
   },
+
   methods: {
     // 生成图片验证码
     createCode(arr, len) {
@@ -243,6 +243,7 @@ export default {
       this.loginData.googleCode = "";
       this.second = "";
       this.canGetCode = true;
+      this.navigateTo("/");
     }
   },
   watch: {

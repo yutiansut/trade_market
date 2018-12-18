@@ -772,7 +772,7 @@ $mr: 11px;
     }
   }
   .form-wrap {
-    width: 720px;
+    width: 48.65%;
     margin-top: 30px;
     .break-line {
       margin-top: 12px;

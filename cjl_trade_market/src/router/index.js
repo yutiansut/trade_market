@@ -190,6 +190,42 @@ const routes = [
         name: 'faqDetail',
         component: r => require(['@/view/helpCenter/faqDetail'], r),
         meta: { title: "帮助中心-问题中心" }
+      },
+      {
+        path: '/help_center/law',
+        name: "Law",
+        component: r => require(['@/view/helpCenter/Law'], r),
+        meta: { title: "帮助中心-法律声明" }
+      },
+      {
+        path: '/help_center/privacy',
+        name: "Privacy",
+        component: r => require(['@/view/helpCenter/privacy'], r),
+        meta: { title: "帮助中心-隐私条款" }
+      },
+      {
+        path: '/help_center/rules',
+        component: r => require(['@/view/helpCenter/Rules'], r),
+        name: "Rules",
+        meta: { title: "帮助中心-交易须知" }
+      },
+      {
+        path: '/help_center/risk',
+        component: r => require(['@/view/helpCenter/Risk'], r),
+        name: "Risk",
+        meta: { title: "帮助中心-风险声明" }
+      },
+      {
+        path: '/help_center/about',
+        component: r => require(['@/view/helpCenter/About'], r),
+        name: "About",
+        meta: { title: "帮助中心-企业优势" }
+      },
+      {
+        path: '/help_center/contact',
+        component: r => require(['@/view/helpCenter/Contact'], r),
+        name: "Contact",
+        meta: { title: "帮助中心-联系我们" }
       }
     ]
   },

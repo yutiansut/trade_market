@@ -175,7 +175,7 @@ export default {
         if (res.code == "0") {
           this.storage.remove("token");
           this.storage.set("isLogin", false);
-          this.userModel.isLogin = false;
+          this.$bus.emit("onLogout");
           this.navigateTo("Main");
         }
       });
@@ -221,7 +221,10 @@ $ml: 25px;
     margin: 0;
   }
   i {
-    font-size: $font-middile;
+    font-size: $font-normal;
+    @media screen and (max-width: 1366px) {
+      font-size: $font-default;
+    }
   }
   &:hover {
     .drop-down-item {
@@ -230,6 +233,9 @@ $ml: 25px;
   }
   .drop-down-item {
     font-size: $font-default;
+    @media screen and (max-width: 1366px) {
+      font-size: $font-mini;
+    }
     position: absolute;
     z-index: 999;
     white-space: nowrap;

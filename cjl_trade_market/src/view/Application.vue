@@ -26,14 +26,14 @@
                 </button>
             </div>
         </div>
-        <div class="requirement">
+        <!-- <div class="requirement">
             <template v-for='(item,i) in rules'>
             <dl :key='i'>
                 <dt v-text="item.title"></dt>
                 <dd v-text="item.content"></dd>
             </dl>
             </template>
-        </div>
+        </div> -->
         <my-footer></my-footer>
     </div>
 </template>

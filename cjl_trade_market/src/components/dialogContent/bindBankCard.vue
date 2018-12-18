@@ -100,6 +100,7 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg || "添加成功");
           this.closeModal();
+          this.$emit("bankCardBind");
         } else {
           this.errMsg(res.msg || "添加失败");
         }

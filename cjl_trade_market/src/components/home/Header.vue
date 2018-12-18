@@ -245,11 +245,14 @@ export default {
 .nav-bar {
   float: left;
   height: 100%;
-  margin-left: 46px;
+  margin-left: 2%;
   .nav-item {
     @include float;
     font-size: $font-normal;
-    transition: all 0.4s;
+    @media screen and (max-width: 1440px) {
+      font-size: $font-default;
+    }
+
     &:hover {
       .sub-nav {
         display: block;
@@ -260,8 +263,12 @@ export default {
     font-size: $font-normal;
   }
   li {
-    padding: 0 23px;
     transition: all 0.4s;
+    padding: 0 20px;
+    @media screen and (max-width: 1440px) {
+      font-size: $font-default;
+      padding: 0 10px;
+    }
     a {
       display: inline-block;
       height: inherit;
@@ -289,6 +296,9 @@ export default {
     }
     a {
       margin-left: -10px;
+      @media screen and (max-width: 1440px) {
+        margin-left: -5px;
+      }
     }
     &:hover {
       .nav-container {

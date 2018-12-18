@@ -10,16 +10,23 @@
             <div class="panel">
                 <span class="font-16">1.{{$t('download')||"下载安装"}}</span>
                 <div class="down-load flex flex-between">
-                    <a href=""></a>
-                    <a href=""></a>
-                    <a href=""></a>
+                    <a :style="{backgroundImage:'url('+downLoad_1+')'}" href=""></a>
+                    <a :style="{backgroundImage:'url('+downLoad_2+')'}" href=""></a>
+                    <a :style="{backgroundImage:'url('+downLoad_3+')'}" href=""></a>
                 </div>
             </div>
             <div style="margin-top:15px;" class="panel">
                 <span class="font-16">2.{{$t("scanCode")||"扫描二维码"}}</span>
                 <el-row :gutter='10'>
                     <el-col :span='6'>
-                        <div class="qr-code p-rel"><img src="" alt=""></div>
+                        <div class="qr-code p-rel">
+                          <vue-qr
+                            class="img"
+                            :text="qrUrl"
+                            :margin="0"
+                            :size="106">
+                          </vue-qr>
+                        </div>
                     </el-col>
                     <el-col :span='18'>
                       <template v-if="$i18n.locale=='zh-CN'">
@@ -44,7 +51,11 @@
                 <el-form-item :label='$t("key")||"秘钥"'>
                     <div class="input-inner">
                         <el-input name='googleKey' v-model="googleKey"></el-input>
-                        <button class="btn-danger btn-large btn-block fr" v-text="$t('copy')||'复制'"></button>
+                        <button class="btn-danger btn-large btn-block fr"
+                          v-clipboard:copy="googleKey"
+                          v-clipboard:success="onCopy"
+                          v-text="$t('copy')||'复制'">
+                        </button>
                     </div>
                 </el-form-item>
                 <div style="margin-bottom:5px" class="font-16">3.{{$t('finishBinding')||"完成绑定"}}</div>
@@ -54,7 +65,9 @@
                 <el-form-item :label='$t("fillGoogleCode")||"填写谷歌验证码"'>
                     <el-input name='googleCode' :placeholder='$t("fillGoogleCode")||"填写谷歌验证码"' v-model="googleCode"></el-input>
                 </el-form-item>
-                <button class="confirm-btn btn-block btn-large btn-danger btn-active"
+                <button
+                  @click="submitForm"
+                  class="confirm-btn btn-block btn-large btn-danger btn-active"
                   v-text="$t('submit')||'确认'">
                 </button>
             </el-form>
@@ -62,7 +75,10 @@
     </dialog-box>
 </template>
 <script>
+import VueQr from "vue-qr";
+
 export default {
+  components: { VueQr },
   props: {
     title: { type: String, default: "谷歌验证" },
     show: {
@@ -73,10 +89,21 @@ export default {
   data() {
     return {
       showModal: this.show,
-      googleKey: "",
+      qrUrl: "",
       password: "",
-      googleCode: ""
+      googleCode: "",
+      downLoad_1: require("@/assets/images/user/download_1.jpg"),
+      downLoad_2: require("@/assets/images/user/download_2.jpg"),
+      downLoad_3: require("@/assets/images/user/download_3.jpg")
     };
+  },
+  computed: {
+    googleKey() {
+      return this.qrUrl.substr(this.qrUrl.indexOf("=") + 1);
+    }
+  },
+  created() {
+    this.getGoogleKey();
   },
   watch: {
     show: function() {
@@ -84,10 +111,45 @@ export default {
     }
   },
   methods: {
-    formSubmit() {},
+    submitForm() {
+      if (
+        this.googleKey == "" ||
+        this.password == "" ||
+        this.googleCode == ""
+      ) {
+        this.errMsg("请填写完整信息");
+        return false;
+      }
+      this.request(this.api.addgoogle, {
+        googlekey: this.googleKey,
+        password: this.password,
+        googlecode: this.googleCode,
+        showLoading: true
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg || "操作成功");
+          this.showModal = false;
+          this.$emit("onGoogleBind");
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
+    },
+    onCopy() {
+      this.successMsg("label136");
+    },
     closeModal() {
       this.showModal = false;
       this.$emit("closeModal");
+    },
+    getGoogleKey() {
+      this.request(this.api.getgooglekey).then(res => {
+        if (res.code == "0") {
+          this.qrUrl = res.data.result;
+        } else {
+          this.errMsg(res.msg || "获取数据失败");
+        }
+      });
     }
   }
 };
@@ -116,7 +178,6 @@ export default {
     }
     button {
       width: 85px;
-      margin-left: 15px;
     }
   }
 }
@@ -130,14 +191,14 @@ export default {
     height: 40px;
     border: 1px solid #b72022;
     width: 30%;
+    background-repeat: no-repeat;
+    background-position: center;
   }
 }
 .qr-code {
   display: block;
   padding-top: 100%;
-  img {
-    width: 100%;
-    height: 100%;
+  .img {
     position: absolute;
     left: 0;
     top: 0;

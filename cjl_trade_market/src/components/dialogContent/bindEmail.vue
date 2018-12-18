@@ -190,14 +190,14 @@ export default {
         onComplete: () => {
           this.canGetCode = true;
           this.getCodeTimes > 0 &&
-            (this.codeText = $t("tryAgain") || "重新获取");
+            (this.codeText = this.$t("tryAgain") || "重新获取");
         }
       });
       this.request(this.api.sendcodetoken, {
         tel: this.formData.cellphone,
         showLoading: true
       }).then(res => {
-        if (res.data.code == "0") {
+        if (res.code == "0") {
           this.successMsg(res.msg);
         } else {
           this.errMsg(res.msg);

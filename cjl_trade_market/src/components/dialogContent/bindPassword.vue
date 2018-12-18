@@ -145,6 +145,9 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg);
           this.closeModal();
+          if (this.apiKey != "updateloginpwd") {
+            this.$emit("fundPasswordUpdated");
+          }
         } else {
           this.errMsg(res.msg);
         }

@@ -76,12 +76,12 @@
           <!-- 登录验证 -->
           <template v-else>
             <el-radio-group v-model="loginData.type">
-              <el-radio label="0">{{$t('mobileCode')||'短信验证码'}}</el-radio>
+              <el-radio label="2">{{$t('mobileCode')||'短信验证码'}}</el-radio>
               <el-radio label='1' :disabled='bindGoogleAuth?false:true'>{{$t('googleCode')||'谷歌验证码'}}</el-radio>
             </el-radio-group>
             <div class="mobile-code-wrap p-rel">
               <el-input
-                v-show="loginData.type==0"
+                v-show="loginData.type==2"
                 v-model="loginData.mobileCode"
                 name='mobileCode'
                 :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
@@ -91,15 +91,10 @@
                 v-show="loginData.type==1"
                 v-model="loginData.googleCode"
                 name='googleCode'
-                :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
-                :disabled="myGoogleCode?false:true"
-                @blur="validate(loginData.googleCode,'googleCode')">
+                :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'>
               </el-input>
-              <div v-show="loginData.type==0"
+              <div v-show="loginData.type==2"
                 @click='getMobileCode'
-                class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
-              </div>
-              <div v-show="loginData.type==1"
                 class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
               </div>
             </div>
@@ -129,7 +124,7 @@ export default {
         code: ""
       },
       loginData: {
-        type: "0", //1 是google验证，0手机验证
+        type: "2", //1 是google验证，2手机验证
         mobileCode: "",
         googleCode: ""
       },
@@ -147,6 +142,15 @@ export default {
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
     if (this.storage.get("isLogin")) {
+      this.getUserInfo();
+    }
+    this.$bus.on("onLogout", () => {
+      this.initData();
+    });
+  },
+  methods: {
+    // 获取用户信息
+    getUserInfo() {
       this.request(this.api.userinfo).then(res => {
         console.log(`个人信息:${JSON.stringify(res)}`);
         if (res.code == "0" && res.data) {
@@ -159,9 +163,25 @@ export default {
           this.errMsg(res.msg);
         }
       });
-    }
-  },
-  methods: {
+    },
+    initData() {
+      this.userData.isLogin = false;
+      this.userModel.isLogin = false;
+      this.canGetCode = true;
+      this.checkLogin = false;
+      this.loginData = {
+        type: "2",
+        mobileCode: "",
+        googleCode: ""
+      };
+      this.checkLoginData = {
+        cellphone: "",
+        password: "",
+        code: ""
+      };
+      this.codeTexti18n = "getMsgCode";
+      this.timer && clearInterval(this.timer);
+    },
     countDown() {
       this.timer = this.Util.timerCounter({
         onStart: t => {
@@ -231,13 +251,14 @@ export default {
         code: this.loginData.mobileCode || this.loginData.googleCode
       }).then(res => {
         if (res.code == "0") {
-          this.successMsg(res.msg);
-          this.userModel.cellphone = this.checkLoginData.cellphone;
-          this.userModel.isLogin = true;
-          this.userData = this.userModel;
           this.storage.set("isLogin", true);
           this.storage.set("token", res.data.token);
           this.storage.set("cellphone", this.checkLoginData.cellphone);
+          this.successMsg(res.msg);
+          this.userModel.cellphone = this.checkLoginData.cellphone;
+          this.userData.isLogin = true;
+          this.getUserInfo();
+          this.userModel = this.userData;
         } else {
           this.errMsg(res.msg);
         }
@@ -258,15 +279,11 @@ export default {
       switch (name) {
         case "cellphone":
           !this.Util.isPhone(val) &&
-            this.errMsg("label123" | "手机号码格式不正确");
+            this.errMsg("label123" || "手机号码格式不正确");
           break;
         case "password":
           !this.Util.isPassword(val) &&
             this.errMsg("label124" || "密码必须是以英文字母开头的6-12位字符");
-          break;
-        case "myGoogleCode":
-          val != this.myGoogleCode &&
-            this.errMsg("label125" || "谷歌验证码不正确");
           break;
         case "verCode":
           val != this.verCodeStr &&

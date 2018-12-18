@@ -48,7 +48,7 @@ export default {
   padding: 0 72px;
   .box-panel {
     overflow: hidden;
-    margin-top: 160px;
+    margin-top: 60px;
     dl {
       dt {
         font-size: 28px;

@@ -21,6 +21,7 @@
             <el-table
               :data='myPropetyData'
               :fit='true'
+              max-height='500'
               :header-cell-style='changeStyle'>
                 <el-table-column :label="$t('currencyType')||'币种'">
                     <div class="flex flex-v-center" slot-scope="scope">
@@ -284,7 +285,6 @@ export default {
     },
     getAddress(coin) {
       this.request(this.api.getaddress, { coin: coin }).then(res => {
-        console.log(res);
         if (res.code == "0") {
           this.chargeAddress = res.data.address[0]
             ? res.data.address[0].address
