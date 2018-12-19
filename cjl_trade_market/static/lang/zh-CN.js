@@ -25,7 +25,7 @@ module.exports = {
     registerNow: "立即注册",
     appDownLoad: "APP下载",
     scanToDownLoad: "扫码下载App",
-    welcome: "欢迎使用极币网PCWE",
+    welcome: "欢迎使用Binmark",
     assets: "资产",
     order: "订单",
     orderDetail: "订单详情",

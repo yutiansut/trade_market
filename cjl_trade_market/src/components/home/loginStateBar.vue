@@ -8,7 +8,11 @@
                 :style='{"top":dropDownTop}'
                 class="drop-down-item abs-h-center">
                 <span v-text="$t('scanToDownLoad')"></span>
-                <img src="http://192.168.5.51:8080/web/img/qr.png" alt="">
+                <vue-qr
+                  :text="qrUrl"
+                  :margin="0"
+                  :size="150">
+                </vue-qr>
               </div>
             </span>
           </div>
@@ -74,12 +78,15 @@
         </div>
 </template>
 <script>
+import VueQr from "vue-qr";
 export default {
   name: "login-bar",
+  components: { VueQr },
   data() {
     return {
       userData: this.userModel,
       dropDownTop: 0,
+      qrUrl: "",
       myOrderDropdown: [
         {
           label: "账单明细",
@@ -150,6 +157,7 @@ export default {
     this.dropDownTop = h;
     this.userModel.isLogin = this.storage.get("isLogin");
     this.userModel.cellphone = this.storage.get("cellphone");
+    this.getVersion();
   },
   methods: {
     dropDownHandle(link) {
@@ -181,7 +189,19 @@ export default {
           this.navigateTo("Main");
         }
       });
+    },
+    //获取二维码
+    getVersion(type) {
+      this.request(this.api.version, { type: type || 0 }).then(res => {
+        if (res.code == "0" && res.data && res.data.result) {
+          this.qrUrl = res.data.result[0].url;
+          this.$bus.emit("qrCodeLoad", this.qrUrl);
+        }
+      });
     }
+  },
+  beforeDestroy() {
+    this.$bus.off("qrCodeLoad");
   }
 };
 </script>

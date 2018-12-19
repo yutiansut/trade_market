@@ -7,7 +7,7 @@
             <dt v-text="$t(item.i18nKey)||item.title"></dt>
             <dd v-for="(itemIn,j) in item.items" :key='j'>
               <a v-if="itemIn.label=='用户协议'"
-                target="_blank"
+                target="view_window"
                 :href="itemIn.link"
                 v-text="$t(itemIn.i18nKey)||itemIn.label">
               </a>
@@ -37,7 +37,11 @@
             <li>
               <div class="warning" v-text="$t('riskWarning')"></div>
               <div class="qr-code">
-                <img wx:if='qrcode' :src="qrcode" alt="">
+                <vue-qr v-if="qrcode"
+                  :text="qrcode"
+                  :margin="0"
+                  :size="150">
+                </vue-qr>
                 <span v-text="$t('appDownLoad')||'扫码下载App'"></span>
               </div>
             </li>
@@ -47,8 +51,10 @@
     </div>
 </template>
 <script>
+import VueQr from "vue-qr";
 export default {
   name: "my-footer",
+  components: { VueQr },
   data() {
     return {
       footerNavList: [
@@ -121,7 +127,7 @@ export default {
             {
               i18nKey: "agreement",
               label: "用户协议",
-              link: "http://localhost/pdf/services.pdf"
+              link: "http://47.95.213.181/binmark/static/services.pdf"
             },
             {
               i18nKey: "currencyProfile",
@@ -152,9 +158,15 @@ export default {
           ]
         }
       ],
-      logo: require("@/assets/images/home/pcew_logo.png"),
-      qrcode: "http://192.168.5.51:8080/web/img/qr.png"
+      logo: require("@/assets/images/footer/bottom_logo.png"),
+      qrcode: ""
     };
+  },
+  mounted() {
+    this.$bus.on("qrCodeLoad", url => {
+      console.log(url);
+      url && (this.qrcode = url);
+    });
   }
 };
 </script>
@@ -223,8 +235,8 @@ $footer-font-color: #fff;
       img {
         display: block;
         margin: 12px auto;
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
       }
     }
   }

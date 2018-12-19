@@ -8,6 +8,10 @@ let apiCfg = (function () {
         banner: {
             url: "banner",
         },
+        //获取app地址
+        version: {
+            url: "version"
+        },
         //根据主币种和交易币种获取币种信息(最新交易信息)
         getCoinInfo: {
             url: 'getcoininfoByCoinType'

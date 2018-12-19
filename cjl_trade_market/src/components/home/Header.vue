@@ -53,7 +53,7 @@
                 </router-link>
               </li>
               <li class="sub-nav-item p-rel">
-                <a target="_blank" :href="agreementUrl">
+                <a target="view_window" :href="agreementUrl">
                   <span v-text="$t('agreement')"></span>
                 </a>
               </li>
@@ -96,7 +96,7 @@ export default {
         subItem: null
       },
       // 用户协议地址
-      agreementUrl: `http://localhost:80/pdf/services.pdf`,
+      agreementUrl: "http://47.95.213.181/binmark/static/services.pdf",
       showLoading: true,
       navBarCfg: [
         {
@@ -318,8 +318,8 @@ export default {
   }
 }
 .logo {
-  width: 73px;
+  width: 100px;
   float: left;
-  margin-top: 22px;
+  margin-top: 18px;
 }
 </style>

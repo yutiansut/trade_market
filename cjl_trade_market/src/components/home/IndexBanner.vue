@@ -38,6 +38,20 @@ export default {
   },
   mounted() {
     let img = null;
+    window.onresize = () => {
+      this.request(this.api.banner).then(res => {
+        if (res.code == "0" && res.data.list) {
+          img = new Image();
+          img.src = res.data.list[0].bannerurl;
+          let width = window.innerWidth;
+          img.onload = () => {
+            let r = width / img.width;
+            this.bannerHeight = `${img.height * r}px`;
+          };
+          this.bannerList = res.data.list;
+        }
+      });
+    };
     this.request(this.api.banner).then(res => {
       if (res.code == "0" && res.data.list) {
         img = new Image();
