@@ -31,15 +31,20 @@
         <div class="table-panel">
             <div class="panel-head" v-text="$t('addressList')||'地址列表'"></div>
             <el-table
+                v-loading='showLoading'
                 :data='addrList' 
                 :header-cell-style='changeStyle'>
-                <el-table-column prop='coinid' :label="$t('currencyType')||'币种'"></el-table-column>
+                <el-table-column :label="$t('currencyType')||'币种'">
+                  <template slot-scope="scope">
+                    {{scope.row.coin||scope.row.coinid}}
+                  </template>
+                </el-table-column>
                 <el-table-column prop='address' :label="$t('withdrawAddress')||'提币地址'"></el-table-column>
                 <el-table-column prop='title' :label="$t('note')||'备注'"></el-table-column>
                 <el-table-column width='150'
                     :label="$t('operation')||'操作'">
                     <div class="operation color-danger txt-rt"
-                      @click="delAddr(scope.row.autoid)"
+                      @click="delAddr(scope.row.autoid,scope.$index)"
                       slot-scope="scope"
                       v-text="$t('delete')||'删除'">
                     </div>
@@ -59,7 +64,8 @@ export default {
         address: "",
         title: ""
       },
-      addrList: null
+      showLoading: false,
+      addrList: []
     };
   },
   mounted() {
@@ -81,36 +87,45 @@ export default {
       }
     },
     getMyAddress() {
+      this.showLoading = true;
       this.request(this.api.getoutaddress).then(res => {
         console.log(`我的地址列表：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        this.showLoading = false;
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
         res.data && res.data.list && (this.addrList = res.data.list);
       });
     },
     addMyAddress(param) {
-      this.request(this.api.addoutaddress, param).then(res => {
+      this.request(this.api.addoutaddress, {
+        ...param,
+        showLoading: true
+      }).then(res => {
         console.log(`添加地址：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
         this.successMsg(res.msg || "添加成功");
-        this.getMyAddress();
+        let obj = Object.assign({}, this.formData);
+        this.addrList.unshift(obj);
         return Promise.resolve();
       });
     },
-    delLocalAddr(id) {
-      this.addrList.map((item, index) => {
-        if (item.autoid == id) {
-          this.addrList.splice(index, 1);
-        }
-      });
+    delLocalAddr(index) {
+      this.addrList.splice(index, 1);
     },
     // 删除地址
-    delAddr(id) {
+    delAddr(id, index) {
       this.request(this.api.deloutaaddress, {
-        autoid: id
+        autoid: id,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "删除成功");
-          this.delLocalAddr(id);
+          this.delLocalAddr(index);
         }
       });
     }
@@ -146,6 +161,9 @@ export default {
     padding: 0 15px;
     border-bottom: $default-border;
     background-color: #fcfcfc;
+  }
+  .operation {
+    cursor: pointer;
   }
 }
 </style>

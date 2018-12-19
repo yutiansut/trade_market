@@ -48,7 +48,10 @@ export default {
   text-align: center;
   .text-wrap {
     display: inline-block;
-    padding: 0 20px;
+    padding: 0 15px;
+    max-width: 20%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     color: #fff;
     &:first-child:before {
       content: "";

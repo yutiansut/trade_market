@@ -116,7 +116,7 @@ export default {
       };
     },
     bindEmail(data) {
-      this.request(this.api.bindemail, {
+      return this.request(this.api.bindemail, {
         email: data.email || "",
         code: data.code || "",
         emailcode: data.emailcode || "",

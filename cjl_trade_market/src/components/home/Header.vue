@@ -167,7 +167,7 @@ export default {
       this.activeIndex = index;
     },
     getMainCoin() {
-      this.request(this.api.getmaincoin, { showLoading: true }).then(res => {
+      this.request(this.api.getmaincoin).then(res => {
         console.log(`主币种:${JSON.stringify(res)}`);
         if (res && res.code != "0") {
           this.getDataFaild(res.msg);
@@ -296,6 +296,7 @@ export default {
     }
     a {
       margin-left: -10px;
+      width: 100%;
       @media screen and (max-width: 1440px) {
         margin-left: -5px;
       }

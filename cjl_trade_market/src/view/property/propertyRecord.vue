@@ -18,11 +18,11 @@
         </div>
         <div class="table-panel">
           <div class="panel-head font-16">
-            <a @click="onTabClick(0,'getmyput')" href="javascript:"
+            <a @click="onTabClick(0,'getmyrecharge')" href="javascript:"
               :class="currentIndex==0?'active':''"
               v-text="$t('rechargeRecord')||'充币记录'">
             </a>
-            <a @click="onTabClick(1,'getmyrecharge')" href="javascript:"
+            <a @click="onTabClick(1,'getmyput')" href="javascript:"
               :class="currentIndex==1?'active':''"
               v-text="$t('withdrawRecord')||'提币记录'">
             </a>

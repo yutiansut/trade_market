@@ -2,7 +2,9 @@
     <div class="fee">
         <div class="title font-18 font-bit-bold" v-text="$t('rate')||'费率标准'"></div>
         <div class="table-wrap">
-            <el-table :data='formData'>
+            <el-table
+              max-height='600'
+              :data='formData'>
                 <el-table-column
                   :label="$t('currencyType')||'币种'"
                   width='180'>
@@ -11,20 +13,35 @@
                     <span>{{scope.row.maincoinid}}/{{scope.row.coinid}}</span>
                   </div>
                 </el-table-column>
-                <el-table-column prop='tradgas'
+                <el-table-column
                   :label='$t("commision")+"(24"+$t("hour")+")"||"交易手续费(24H)"'>
+                  <template slot-scope="scope">
+                    {{scope.row.tradgas*1+'%'}}
+                  </template>
                 </el-table-column>
-                <el-table-column prop='outgas'
+                <el-table-column
                   :label='$t("withdrawCommision")||"提币手续费"'>
+                  <template slot-scope="scope">
+                    {{scope.row.outgas*1+'%'}}
+                  </template>
                 </el-table-column>
-                <el-table-column prop='oneoutlow'
+                <el-table-column
                   :label='$t("withdrawMin") ||"提币单笔最低"'>
+                  <template slot-scope="scope">
+                    {{scope.row.oneoutlow*1}}
+                  </template>
                 </el-table-column>
-                <el-table-column prop='oneoutheight'
+                <el-table-column
                   :label='$t("withdrawMax") ||"提币单笔最高"'>
+                  <template slot-scope="scope">
+                    {{scope.row.oneoutheight*1}}
+                  </template>
                 </el-table-column>
-                <el-table-column prop='dayoutheight'
+                <el-table-column
                   :label='$t("dayWidthDrawMax") ||"单日提币最高"'>
+                  <template slot-scope="scope">
+                    {{scope.row.dayoutheight*1}}
+                  </template>
                 </el-table-column>
             </el-table>
         </div>

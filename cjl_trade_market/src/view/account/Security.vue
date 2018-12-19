@@ -122,6 +122,28 @@
                   <em v-else class="color-999" v-text="bindState.val||'已绑定'"></em>
                 </span>
               </li>
+              <!-- 实名认证 -->
+              <li>
+                <span>
+                  <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+                  <em>&nbsp;&nbsp;&nbsp;{{$t('identify')||"身份认证"}}</em>
+                </span>
+                <span
+                  v-text="$t('identifyDesp')||'用户交易买入、卖出银行卡绑定'"
+                  class="txt-center color-999">
+                </span>
+                <span class="txt-rt">
+                  <a
+                    v-if="bindState.idcardstate =='0'"
+                    class="color-danger"
+                    href="javascript:"
+                    @click="navigateTo('/account/identify')"
+                    v-text="$t('label138')||'去认证'">
+                  </a>
+                  <em v-else-if="bindState.idcardstate =='1'" class="color-success" v-text="$t('label146')||'审核中'"></em>
+                  <em v-else class="color-999" v-text="bindState.val||'已绑定'"></em>
+                </span>
+              </li>
             </ul>
         </div>
         <!-- 安全日志 -->

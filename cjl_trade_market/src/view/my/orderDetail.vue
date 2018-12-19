@@ -11,6 +11,7 @@
             </button>
         </div>
         <el-table
+          v-loading='showLoading'
           max-height='500'
           :data='orderDetailData'>
           <el-table-column :label='$t("orderNum")||"序号"' width='200' type='index'></el-table-column>
@@ -52,13 +53,18 @@ export default {
     return {
       orderDetailRawData: [],
       orderDetailData: [],
-      searchVal: ""
+      searchVal: "",
+      showLoading: true
     };
   },
   mounted() {
     this.request(this.api.getbill).then(res => {
+      this.showLoading = false;
       console.log(`订单详情:${JSON.stringify(res)}`);
-      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      if (res && res.code != "0") {
+        this.getDataFaild(res.msg);
+        return false;
+      }
       res.data && res.data.list && (this.orderDetailData = res.data.list);
       this.orderDetailRawData = this.orderDetailData.slice(0);
     });

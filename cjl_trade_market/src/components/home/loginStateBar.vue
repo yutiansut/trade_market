@@ -171,7 +171,9 @@ export default {
       }, 800);
     },
     logout() {
-      this.request(this.api.logout).then(res => {
+      this.request(this.api.logout, {
+        showLoading: true
+      }).then(res => {
         if (res.code == "0") {
           this.storage.remove("token");
           this.storage.set("isLogin", false);

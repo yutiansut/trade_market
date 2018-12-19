@@ -233,7 +233,8 @@ export default {
         cardfm: this.formData.backIdPhoto,
         cardsc: this.formData.fullPhoto,
         name: this.formData.name,
-        cardnumber: this.formData.cardnumber
+        cardnumber: this.formData.cardnumber,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
@@ -255,11 +256,11 @@ export default {
         return false;
       }
       if (!this.Util.isIdCard(this.formData.cardnumber)) {
-        this.errMsg("身份证号格式不正确");
+        this.errMsg("label147");
         return false;
       }
       if (this.bindState.idcardstate == "1") {
-        this.$alert("请等待上次实名认证审核通过后，再进行操作");
+        this.$alert(this.$t("label148"));
         return false;
       }
       this.verifyId();

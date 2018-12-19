@@ -4,6 +4,7 @@
       <div class="table-wrap">
         <el-table
           max-height='500'
+          v-loading='showLoading'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderRecordData'>
           <el-table-column prop='writedate' :label='$t("date")||"日期"'></el-table-column>
@@ -41,13 +42,18 @@
 export default {
   data() {
     return {
-      orderRecordData: null
+      showLoading: true,
+      orderRecordData: []
     };
   },
   mounted() {
     this.request(this.api.getmyrecord).then(res => {
       console.log(`成交记录:${JSON.stringify(res)}`);
-      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      this.showLoading = false;
+      if (res && res.code != "0") {
+        this.getDataFaild(res.msg);
+        return false;
+      }
       res.data && res.data.list && (this.orderRecordData = res.data.list);
     });
   }

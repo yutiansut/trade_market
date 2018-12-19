@@ -122,12 +122,12 @@
                         <el-table-column
                           :label='($t("price")||"价格")+"(CNY)"'>
                           <template slot-scope="scope">
-                            {{scope.row.price|toFix()}}
+                            {{scope.row.price*1}}
                           </template>
                         </el-table-column>
                         <el-table-column :label='numberLabel'>
                           <template slot-scope="scope">
-                            {{scope.row.number|toFix()}}
+                            {{scope.row.number*1}}
                           </template>
                         </el-table-column>
                         <el-table-column prop='total'
@@ -317,9 +317,9 @@
           :show='dialogId==4?true:false'
           :title='$t(marketOrderCfg.titlei18nkey)'
           :volumnLabel='$t(marketOrderCfg.volumnLabeli18nkey)'
-          :volumn="marketOrderDetail.number"
-          :price="marketOrderDetail.price"
-          :amount="marketOrderDetail.total"
+          :volumn="marketOrderDetail.number*1"
+          :price="marketOrderDetail.price*1"
+          :amount="marketOrderDetail.total*1"
           @onSubmit='tradeFromMarket(marketOrderDetail.type,marketOrderDetail.autoid)'
           @closeModal='onModelClose'
           :coin='marketOrderDetail.coinid'>
@@ -474,7 +474,8 @@ export default {
       this.request(apiKey, {
         coin: this.coinInfo.coinid,
         price: param.price || "",
-        number: param.number || ""
+        number: param.number || "",
+        showLoading: true
       }).then(res => {
         console.log(`${JSON.stringify(res)}`);
         if (res.code == "0") {
@@ -491,7 +492,10 @@ export default {
     },
     // 撤销我的c2c订单
     cancelMyc2cOrder(autoid) {
-      this.request(this.api.clearc2c, { autoid: autoid }).then(res => {
+      this.request(this.api.clearc2c, {
+        autoid: autoid,
+        showLoading: true
+      }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
           this.delItemFromList(autoid, this.myOrderList);
@@ -562,7 +566,8 @@ export default {
     tradeFromMarket(type, autoid) {
       if (!type || !autoid) return false;
       this.request(type == 0 ? this.api.c2cselltrad : this.api.c2cbuytrad, {
-        autoid: autoid
+        autoid: autoid,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.onModelClose();
@@ -697,7 +702,8 @@ export default {
       if (type && id) {
         let api = type == "0" ? this.api.setsendok : this.api.setrealyok;
         this.request(api, {
-          autoid: id
+          autoid: id,
+          showLoading: true
         }).then(res => {
           if (res.code == "0") {
             this.successMsg(res.msg);

@@ -1,7 +1,7 @@
 <template>
     <div v-if='userData.isLogin==false' class="content font-16">
-        <span>请先</span>
-        <router-link to='/user/login'>登录</router-link>
+        <span v-text="$t('label145')"></span>
+        <router-link to='/user/login' v-text="$t('login')"></router-link>
     </div>
 </template>
 <script>

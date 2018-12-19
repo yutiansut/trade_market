@@ -3,6 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('ctcRecord')||'CTC记录'"></div>
       <div class="table-wrap">
         <el-table
+          v-loading='showLoading'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='orderDetailData'>
           <el-table-column prop='orderId' :label='$t("orderId")||"单号"'></el-table-column>
@@ -34,7 +35,8 @@
 export default {
   data() {
     return {
-      orderDetailData: null
+      orderDetailData: [],
+      showLoading: true
     };
   },
   mounted() {
@@ -43,8 +45,12 @@ export default {
   methods: {
     getOrderRecord() {
       this.request(this.api.getc2corder).then(res => {
+        this.showLoading = false;
         console.log(`c2c交易订单：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
         this.orderDetailData = res.data.list;
       });
     }

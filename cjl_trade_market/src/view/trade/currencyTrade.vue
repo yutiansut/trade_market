@@ -45,7 +45,7 @@
               </div>
               <!-- K线图占位 -->
               <div id='kMap' class="k-map">
-                <!-- <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe> -->
+                <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe>
               </div>
               <div class="panel-container flex flex-between">
                 <div class="content-lf flex flex-between">

@@ -25,7 +25,7 @@
                     <i class="el-icon-plus p-abs abs-vh-center"></i>
                     <input @change="upLoadFunc" class="wh-full" type="file">
                 </div>
-                <span class="upload-tip">图片要求：文件大小不能超过4M!文件格式必须为jpg或者png!请确保图像清晰，无水印，无污渍</span>
+                <span class="upload-tip" v-html="$t('label151')"></span>
             </el-form-item>
             <el-form-item style="width:50%;" :label="$t('label115')" prop="desc">
                 <textarea v-model="formData.desc"></textarea>
@@ -117,12 +117,12 @@ export default {
         method: "post"
       };
       if (!/\.(jpg|png)$/.test(name)) {
-        this.$message.error("图片格式需为jpg或者png");
+        this.$message.error(this.$t("label149"));
         return;
       }
       if (size > 4 * Math.pow(1024)) {
         this.$message.error(
-          `图片大小不可超过4M,当前图片大小${size / Math.pow(1024, 2)}M`
+          `${this.$t("label150")}${size / Math.pow(1024, 2)}M`
         );
         return;
       }
@@ -151,7 +151,6 @@ export default {
   margin-left: 15px;
   width: 150px;
   line-height: 1.5;
-  text-align: justify;
 }
 .upload-box {
   width: 200px;

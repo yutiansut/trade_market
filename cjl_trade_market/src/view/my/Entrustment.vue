@@ -3,6 +3,7 @@
       <div class="title font-16 font-bold" v-text="$t('myList')||'我的挂单'"></div>
       <div class="table-wrap">
         <el-table
+          v-loading='showLoading'
           max-height='500'
           :header-cell-style="{'background-color':'#fcfcfc','font-weight':'bold'}"
           :data='myEnstrumentData'>
@@ -39,13 +40,18 @@
 export default {
   data() {
     return {
-      myEnstrumentData: null
+      showLoading: true,
+      myEnstrumentData: []
     };
   },
   mounted() {
     this.request(this.api.getmyentru).then(res => {
       console.log(`我的委托:${JSON.stringify(res)}`);
-      if (res && res.code != "0") return this.getDataFaild(res.msg);
+      this.showLoading = false;
+      if (res && res.code != "0") {
+        this.getDataFaild(res.msg);
+        return false;
+      }
       res.data && res.data.list && (this.myEnstrumentData = res.data.list);
     });
   }

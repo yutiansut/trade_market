@@ -421,15 +421,16 @@ export default {
   methods: {
     // 撤单
     cancelOrder(id) {
-      console.log(id);
       this.showLoading = true;
-      this.request(this.api.clearentrust, { id: id }).then(res => {
-        console.log(`操作结果：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
-        this.successMsg(res.msg);
-        this.delItemFromList(id, this.myEntrustList);
-        this.showLoading = false;
-      });
+      this.request(this.api.clearentrust, { id: id, showLoading: true }).then(
+        res => {
+          console.log(`操作结果：${JSON.stringify(res)}`);
+          if (res && res.code != "0") return this.getDataFaild(res.msg);
+          this.successMsg(res.msg);
+          this.delItemFromList(id, this.myEntrustList);
+          this.showLoading = false;
+        }
+      );
     },
     // 删除列表某一项
     delItemFromList(id, listArr) {
@@ -948,12 +949,12 @@ span.color-danger{
   }
 }
 .tb-left {
-  height: 260px;
-  overflow-y: scroll;
+  max-height: 260px;
+  overflow-y: auto;
 }
 .tb-right {
   max-height: calc(100% - 28px);
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .tr-mPrice {
   flex: 1;

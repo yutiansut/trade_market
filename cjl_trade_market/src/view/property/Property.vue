@@ -18,7 +18,7 @@
                     </router-link>
                 </div>
             </div>
-            <el-table
+            <el-table v-loading='showLoading'
               :data='myPropetyData'
               :fit='true'
               max-height='500'
@@ -66,6 +66,9 @@
           </div>
           <div class="font-bold mt-15">
             {{$t('todayMaxiumnWithdraw')+':'||'当日提现上限：'}}<span v-html="outLimit"></span>
+          </div>
+          <div class="font-bold mt-15">
+            {{$t('withdrawMax')+':'||'单次提币上限：'}}<span v-html="oneOutLimit"></span>
           </div>
           <el-form label-position='top' @submit.native.prevent>
             <el-form-item :label="coinInfo.name+($t('withdrawAddress')||'提现地址')">
@@ -176,6 +179,7 @@ export default {
       getCodeTimes: 0,
       timer: null,
       myAccount: "",
+      showLoading: false,
       //我的地址
       myPropetyData: null
     };
@@ -192,12 +196,14 @@ export default {
       // {{myAccount.outLimit}}&nbsp;{{coinInfo.name}}
       return `${this.myAccount.dayoutheight * 1 || "0"}&nbsp;${this.coinInfo
         .name || ""}`;
+    },
+    oneOutLimit() {
+      return `${this.myAccount.oneoutheight * 1 || "0"}&nbsp;${this.coinInfo
+        .name || ""}`;
     }
   },
   mounted() {
-    this.getAccount().then(coin => {
-      this.getDayNumber(coin);
-    });
+    this.getAccount();
   },
   methods: {
     changeStyle({ columnIndex }) {
@@ -206,6 +212,7 @@ export default {
       }
     },
     getAccount() {
+      this.showLoading = true;
       return this.request(this.api.getaccount, {
         search: null
       }).then(res => {
@@ -215,7 +222,7 @@ export default {
           this.myPropetyData = res.data.list;
           this.total = res.data.total;
           this.coinInfo = res.data.list[0];
-          return Promise.resolve(this.coinInfo.name);
+          this.showLoading = false;
         }
       });
     },
@@ -240,9 +247,11 @@ export default {
     },
     getDayNumber(coin) {
       this.request(this.api.getdaynumber, {
-        coin: coin
+        coin: coin,
+        showLoading: true
       }).then(res => {
         if (res.code == "0" && res.data.list && res.data.list[0]) {
+          this.showWidthDrawDialog = true;
           this.myAccount = res.data.list[0];
         } else {
           this.errMsg(res.code);
@@ -255,12 +264,12 @@ export default {
       switch (i) {
         case 0:
           // 充值弹窗
-          this.showChargeDialog = true;
+          // this.showChargeDialog = true;
           this.getAddress(coin);
           break;
         case 1:
           // 提币弹窗
-          this.showWidthDrawDialog = true;
+          // this.showWidthDrawDialog = true;
           this.getMyAddressList(coin);
           this.getDayNumber(coin);
           break;
@@ -273,8 +282,7 @@ export default {
     },
     getMyAddressList(coin) {
       this.request(this.api.getoutaddress, {
-        search: coin,
-        showLoading: 0
+        search: coin
       }).then(res => {
         if (res.code == "0") {
           res.data.list[0] && (this.usdtAddr = res.data.list);
@@ -284,25 +292,29 @@ export default {
       });
     },
     getAddress(coin) {
-      this.request(this.api.getaddress, { coin: coin }).then(res => {
-        if (res.code == "0") {
-          this.chargeAddress = res.data.address[0]
-            ? res.data.address[0].address
-            : "";
-        } else {
-          this.errMsg(res.code);
+      this.request(this.api.getaddress, { coin: coin, showLoading: true }).then(
+        res => {
+          if (res.code == "0") {
+            this.showChargeDialog = true;
+            this.chargeAddress = res.data.address[0]
+              ? res.data.address[0].address
+              : "";
+          } else {
+            this.errMsg(res.code);
+          }
         }
-      });
+      );
     },
     // 获取手机验证码
     getMobileCode() {
       if (!this.canGetCode) return false;
       this.countDown();
-      this.request(this.api.sendcodetoken).then(res => {
+      this.request(this.api.sendcodetoken, { showLoading: true }).then(res => {
         if (res.code == "0") {
           this.myMobileCode = true;
+          this.successMsg(res.msg || "发送成功");
         } else {
-          this.errMsg(res.code || "获取验证码失败");
+          this.errMsg(res.msg || "获取验证码失败");
         }
       });
     },
@@ -360,16 +372,22 @@ export default {
         return false;
       }
       if (isNaN(this.formData.number)) {
-        this.errMsg("提现数额必须位数字");
+        this.errMsg("label142" || "提现数额必须位数字");
         return false;
       }
+      // if (this.myAccount.oneoutheight * 1 < this.formData.number) {
+      //   this.errMsg("label143" || "提现数额不得超过单次提币限额");
+      //   return false;
+      // }
       this.request(this.api.outcoin, {
         ...this.formData,
-        addressName: this.addressName || ""
+        addressName: this.addressName || "",
+        showLoading: true
       }).then(res => {
-        if (res.code == "") {
+        if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
-          this.dialogClose(1);
+          this.dialogClose(0);
+          this.getAccount();
         } else {
           this.errMsg(res.msg || "操作失败");
         }

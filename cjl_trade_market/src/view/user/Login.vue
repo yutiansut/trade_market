@@ -226,7 +226,7 @@ export default {
         password: this.checkLoginData.password,
         showLoading: true
       }).then(res => {
-        if (res && res.code * 1 != 1) {
+        if (res && (res.code == 0 || res.code == 10000)) {
           res.code == 10000 && (this.bindGoogleAuth = false);
           res.code == 0 && (this.bindGoogleAuth = true);
           this.checkLogin = true;
