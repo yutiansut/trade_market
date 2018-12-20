@@ -9,10 +9,15 @@
         <div class="content">
             <div class="panel">
                 <span class="font-16">1.{{$t('download')||"下载安装"}}</span>
-                <div class="down-load flex flex-between">
-                    <a :style="{backgroundImage:'url('+downLoad_1+')'}" href=""></a>
-                    <a :style="{backgroundImage:'url('+downLoad_2+')'}" href=""></a>
-                    <a :style="{backgroundImage:'url('+downLoad_3+')'}" href=""></a>
+                <div class="down-load flex">
+                    <a
+                      class="mr-right-10"
+                      :style="{backgroundImage:'url('+downLoad_1+')'}"
+                      href="https://itunes.apple.com/cn/app/id388497605?mt=8"
+                      target="view_window"></a>
+                    <a :style="{backgroundImage:'url('+downLoad_3+')'}"
+                      href="https://android.myapp.com/myapp/detail.htm?apkName=com.google.android.apps.authenticator2"
+                      target="view_window"></a>
                 </div>
             </div>
             <div style="margin-top:15px;" class="panel">

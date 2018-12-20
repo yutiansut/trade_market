@@ -39,7 +39,7 @@
               <div class="qr-code">
                 <vue-qr v-if="qrcode"
                   :text="qrcode"
-                  :margin="0"
+                  :margin="10"
                   :size="150">
                 </vue-qr>
                 <span v-text="$t('appDownLoad')||'扫码下载App'"></span>

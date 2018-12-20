@@ -315,7 +315,10 @@ $mt: 9px;
 }
 .container {
   width: 300px;
-  height: 280px;
+  min-height: 208px;
+  max-height: 304px;
+  border-radius: 2px;
+  box-sizing: border-box;
   right: 180px;
   padding: 20px;
   background: $bg-white;

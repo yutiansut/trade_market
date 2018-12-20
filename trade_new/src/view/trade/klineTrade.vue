@@ -754,6 +754,7 @@ export default {
 <style lang="scss">
 .header-dark {
   .hd-top {
+    padding: 0 10px;
     background-color: #303644;
     border-bottom: 1px solid #303644;
     box-sizing: border-box !important;
@@ -931,7 +932,7 @@ span.color-danger{
 .logo {
   width: 100px;
   float: left;
-  margin: 9px 15px 0 15px;
+  margin: 9px 15px 0 0;
 }
 .trade-table {
   height: 100%;

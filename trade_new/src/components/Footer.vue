@@ -36,16 +36,16 @@
             </li>
             <li>
               <div class="warning" v-text="$t('riskWarning')"></div>
-              <div class="qr-code">
-                <vue-qr v-if="qrcode"
-                  :text="qrcode"
-                  :margin="0"
-                  :size="150">
-                </vue-qr>
-                <span v-text="$t('appDownLoad')||'扫码下载App'"></span>
-              </div>
             </li>
           </ul>
+          <div class="qr-code">
+            <vue-qr v-if="qrcode"
+              :text="qrcode"
+              :margin="10"
+              :size="150">
+            </vue-qr>
+            <span v-text="$t('appDownLoad')||'扫码下载App'"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -173,16 +173,16 @@ export default {
 <style lang="scss" scoped>
 $footer-font-color: #fff;
 .footer {
-  @include minWidth;
-  height: 300px;
+  // height: 300px;
   margin-top: 89px;
   box-sizing: border-box;
+  background: $bg-dark;
   width: 100%;
   .ft-body {
-    background: $bg-dark;
+    @include minWidth;
     overflow: hidden;
-    // width: $content-width;
-    padding: 33px 40px 67px 40px;
+    width: 77%;
+    padding: 30px 0;
     @include hCenter;
   }
   .ft-lf {
@@ -214,8 +214,12 @@ $footer-font-color: #fff;
   .ft-rt {
     color: #666;
     margin-left: 54%;
+    ul {
+      width: 73%;
+      float: left;
+    }
     li {
-      margin-top: 26px;
+      margin-top: 15px;
       &:first-child {
         margin-top: 0;
         color: $footer-font-color;
@@ -224,7 +228,6 @@ $footer-font-color: #fff;
     .warning {
       font-size: 13px;
       @include float;
-      width: 73%;
       line-height: 1.8;
       text-align: justify;
     }
@@ -243,7 +246,7 @@ $footer-font-color: #fff;
   .social-link {
     a {
       display: inline-block;
-      margin-left: 81px;
+      margin-left: 10%;
       transition: all 0.3s;
       &:first-child {
         margin-left: 0;

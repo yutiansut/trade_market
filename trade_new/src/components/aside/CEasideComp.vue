@@ -42,14 +42,14 @@
             </template>
           </el-table-column>
           <el-table-column
+            align='center'
             :label='$t("optional")||"自选"'
             width='80'>
               <template slot-scope="scope">
               <div
                 @click.stop="addMylist(scope.row,scope.$index)"
-                class="operate">
-                <span v-text="scope.row.trend"></span>
-                <i class="font-18 color-danger"
+                class="operate flex flex-h-center">
+                <i class="font-18 flex-center"
                   :class="scope.row.isMyLike?'el-icon-star-on':'el-icon-star-off'">
                 </i>
               </div>

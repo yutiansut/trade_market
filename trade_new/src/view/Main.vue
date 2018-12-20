@@ -1,5 +1,5 @@
 <template>
-    <div class="main wh-full">
+    <div class="main w-full">
         <my-header class="header-white" 
           :show-head-top='true'
           :headLogo='logo'>
@@ -44,15 +44,20 @@
                 </li>
               </ul>
             </div>
-            <el-table style="width:100%;font-size:14px;border-top:1px solid #eee;" 
+            <el-table
+              style="width:100%;font-size:16px;border-top:1px solid #eee;" 
               :data='tableData'
               v-loading='loading'>
               <el-table-column
                 width='200'
+                class-name='el-tab-col-1'
                 :label="$t('currencyPair')||'货币对'">
                 <div class="flex flex-v-center" slot-scope="scope">
                   <img class="thumb-30 m-right-10" :src="scope.row.logo" alt="">
-                  <span>{{scope.row.coinid}}&nbsp;/&nbsp;<em class="color-999">{{scope.row.maincoinid}}</em></span>
+                  <span class="currency-pair">
+                    <em class="font-bold">{{scope.row.coinid}}&nbsp;&nbsp;</em>
+                    <em class="color-999">{{scope.row.maincoinid}}</em>
+                  </span>
                 </div>
               </el-table-column>
               <el-table-column width='150' :label="$t('status')||'状态'">
@@ -82,8 +87,8 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column>
-                <div class="flex flex-between" slot-scope="scope">
+              <el-table-column width='150'>
+                <div class="btn-container flex flex-between" slot-scope="scope">
                   <button
                     v-text="$t('label132')"
                     @click="goTrade('/currency_trade',scope.row)"
@@ -96,7 +101,9 @@
                   </button>
                 </div>
               </el-table-column>
-              <el-table-column :label='$t("optMarket")' width='80'>
+              <el-table-column
+                align='center'
+                :label='$t("optMarket")' width='80'>
                 <div
                   @click="addMylist(scope.row,scope.$index)"
                   :title="$t('label109')" class="option wh-full" slot-scope="scope">
@@ -106,16 +113,12 @@
                 </div>
               </el-table-column>
             </el-table>
-            
           </div>
-          <!-- <advantage-intro></advantage-intro> -->
-          <!-- <friend-link></friend-link> -->
         </div>
         <my-footer></my-footer>
     </div>
 </template>
 <script>
-// import friendLink from "@/components/home/FriendLink";
 import mainCoinModel from "@/model/allCoinModel.js";
 import {
   addCustomList,
@@ -256,6 +259,12 @@ export default {
   }
 };
 </script>
+<style>
+.el-tab-col-1 .cell {
+  padding: 0;
+}
+</style>
+
 <style lang="scss" scoped>
 .dot {
   display: block;
@@ -269,9 +278,26 @@ export default {
   display: inline-block;
   margin-left: 15px;
   color: #fff;
+  overflow: hidden;
 }
 .trade-btn {
-  margin: 0 6px;
+  margin-left: 6px;
+  &:first-child {
+    margin-left: 0;
+  }
+}
+.btn-container {
+  margin: 0 -10px;
+  @media screen and (max-width: 1440px) {
+    flex-direction: column;
+    .trade-btn {
+      margin-left: 0;
+      margin-top: 6px;
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+  }
 }
 span.status_0 {
   color: $color-success;
@@ -306,6 +332,7 @@ span.status_1 {
     li {
       @include textVcenter(40px);
       margin: 0 44px;
+      padding: 0 10px;
       display: inline-block;
       color: #666;
       font-size: $font-large;
@@ -322,6 +349,12 @@ span.status_1 {
   .el-input {
     width: 200px;
     float: right;
+  }
+}
+.currency-pair {
+  cursor: pointer;
+  em:hover {
+    color: $color-danger;
   }
 }
 </style>

@@ -3,7 +3,7 @@
         <el-carousel
           v-show="bannerList.length>0"
           :interval="5000"
-          :height='bannerHeight'>
+          :height='bannerHeight+"px"'>
             <el-carousel-item v-for="(item,index) in bannerList" :key="index">
                 <router-link :to='item.link'>
                     <img class="banner-image" :src='item.bannerurl||item.url'>
@@ -33,37 +33,36 @@ export default {
   data() {
     return {
       bannerHeight: "auto",
+      bannerMinHeight: 380,
       bannerList: []
     };
   },
   mounted() {
-    let img = null;
     window.onresize = () => {
+      this.getBanner();
+    };
+    this.getBanner();
+  },
+  methods: {
+    getBanner() {
+      let img = null;
       this.request(this.api.banner).then(res => {
         if (res.code == "0" && res.data.list) {
           img = new Image();
           img.src = res.data.list[0].bannerurl;
           let width = window.innerWidth;
+          width < 1440 && (width = 1440);
           img.onload = () => {
             let r = width / img.width;
-            this.bannerHeight = `${img.height * r}px`;
+            this.bannerHeight =
+              img.height * r > this.bannerMinHeight
+                ? img.height * r
+                : this.bannerMinHeight;
           };
           this.bannerList = res.data.list;
         }
       });
-    };
-    this.request(this.api.banner).then(res => {
-      if (res.code == "0" && res.data.list) {
-        img = new Image();
-        img.src = res.data.list[0].bannerurl;
-        let width = window.innerWidth;
-        img.onload = () => {
-          let r = width / img.width;
-          this.bannerHeight = `${img.height * r}px`;
-        };
-        this.bannerList = res.data.list;
-      }
-    });
+    }
   }
 };
 </script>

@@ -10,7 +10,7 @@
                 <span v-text="$t('scanToDownLoad')"></span>
                 <vue-qr
                   :text="qrUrl"
-                  :margin="0"
+                  :margin="10"
                   :size="150">
                 </vue-qr>
               </div>
@@ -211,7 +211,6 @@ $ml: 25px;
 .hd-top-rt {
   box-sizing: border-box;
   height: inherit;
-  padding-right: 30px;
   text-align: right;
   cursor: pointer;
   color: $default-color;
@@ -264,6 +263,7 @@ $ml: 25px;
     min-width: 100%;
     background: $bg-dark;
     display: none;
+    
     li {
       @include textVcenter;
       color: #fff;

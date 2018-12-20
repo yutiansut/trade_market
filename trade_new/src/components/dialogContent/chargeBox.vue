@@ -17,7 +17,7 @@
             <div v-if="chargeAddress" class="qr-code">
               <vue-qr
                 :text="chargeAddress"
-                :margin="0"
+                :margin="1"
                 :size="120">
               </vue-qr>
             </div>

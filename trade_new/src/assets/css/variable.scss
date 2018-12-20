@@ -19,7 +19,7 @@ $bd-size: 1px;
 $bd-color: #e1e1e1;
 $default-border: $bd-size solid $bd-color;
 $mask-bg-rgba: rgba(0, 0, 0, 0.6);
-$content-width: 77%;
+$content-width: 66%;
 .color-danger {
   color: $main-bg-color;
 }
@@ -34,7 +34,7 @@ $content-width: 77%;
 @mixin float($float: left) {
   float: $float;
 }
-@mixin minWidth($min: 1200px) {
+@mixin minWidth($min: 1440px) {
   min-width: $min;
 }
 @mixin hCenter {
@@ -44,4 +44,21 @@ $content-width: 77%;
   height: $height;
   background-color: $bgcolor;
   width: $width;
+}
+button.btn-hover:hover {
+  opacity: 0.9;
+}
+
+button.btn-default {
+  background-color: #fff;
+  color: #333;
+  border-color: #eee;
+}
+button.btn-danger {
+  background-color: $color-danger;
+  color: #fff;
+}
+button.btn-success {
+  background-color: $color-success;
+  color: #fff;
 }

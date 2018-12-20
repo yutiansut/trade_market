@@ -9,10 +9,15 @@
         <div class="content">
             <div class="panel">
                 <span class="font-16">1.{{$t('download')||"下载安装"}}</span>
-                <div class="down-load flex flex-between">
-                    <a :style="{backgroundImage:'url('+downLoad_1+')'}" href=""></a>
-                    <a :style="{backgroundImage:'url('+downLoad_2+')'}" href=""></a>
-                    <a :style="{backgroundImage:'url('+downLoad_3+')'}" href=""></a>
+                <div class="down-load flex">
+                    <a
+                      class="m-right-10"
+                      :style="{backgroundImage:'url('+downLoad_1+')'}"
+                      href="https://itunes.apple.com/cn/app/id388497605?mt=8"
+                      target="view_window"></a>
+                    <a :style="{backgroundImage:'url('+downLoad_3+')'}"
+                      href="https://android.myapp.com/myapp/detail.htm?apkName=com.google.android.apps.authenticator2"
+                      target="view_window"></a>
                 </div>
             </div>
             <div style="margin-top:15px;" class="panel">
@@ -23,7 +28,7 @@
                           <vue-qr
                             class="img"
                             :text="qrUrl"
-                            :margin="0"
+                            :margin="10"
                             :size="106">
                           </vue-qr>
                         </div>
@@ -50,7 +55,7 @@
             <el-form label-position='top' @submit.native.prevent>
                 <el-form-item :label='$t("key")||"秘钥"'>
                     <div class="input-inner">
-                        <el-input name='googleKey' v-model="googleKey"></el-input>
+                        <el-input name='googleKey' disabled v-model="googleKey"></el-input>
                         <button class="btn-danger btn-large btn-block fr"
                           v-clipboard:copy="googleKey"
                           v-clipboard:success="onCopy"
@@ -93,7 +98,7 @@ export default {
       password: "",
       googleCode: "",
       downLoad_1: require("@/assets/images/user/download_1.jpg"),
-      downLoad_2: require("@/assets/images/user/download_2.jpg"),
+      // downLoad_2: require("@/assets/images/user/download_2.jpg"),
       downLoad_3: require("@/assets/images/user/download_3.jpg")
     };
   },

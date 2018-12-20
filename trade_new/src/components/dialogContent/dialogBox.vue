@@ -85,10 +85,13 @@ export default {
   background: #fff;
   overflow: auto;
   max-height: 85%;
+  border-radius: 2px;
   .dialog-header {
     @include textVcenter(80px);
     background-color: #b72127;
     .title-text {
+      border-top-right-radius: 2px;
+      border-top-left-radius: 2px;
       text-align: center;
       color: #fff;
       font-size: 26px;

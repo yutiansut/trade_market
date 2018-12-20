@@ -44,7 +44,7 @@ export default {
   @include minWidth;
   background: $bg-dark;
   font-size: $font-default;
-  @include textVcenter(60px);
+  @include textVcenter(50px);
   text-align: center;
   .text-wrap {
     display: inline-block;

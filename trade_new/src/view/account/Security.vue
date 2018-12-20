@@ -226,7 +226,7 @@ export default {
   },
   data() {
     return {
-      dialogId: null,
+      dialogId: 'googleAccount',
       bindState: {},
       authLogs: null,
       loginLogs: null

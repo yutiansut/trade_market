@@ -3,6 +3,15 @@
   @include hCenter;
   .hd-body {
     background: $bg-white;
+    margin: 0 auto;
+  }
+  .hd-top-inner {
+    width: 1280px;
+    margin: 0 auto;
+  }
+  .nav-inner {
+    width: 1280px;
+    margin: 0 auto;
   }
   .nav-bar {
     // a {
