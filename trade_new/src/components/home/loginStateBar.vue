@@ -192,6 +192,7 @@ export default {
     },
     //获取二维码
     getVersion(type) {
+      if (this.qrUrl) return false;
       this.request(this.api.version, { type: type || 0 }).then(res => {
         if (res.code == "0" && res.data && res.data.result) {
           this.qrUrl = res.data.result[0].url;
@@ -263,7 +264,7 @@ $ml: 25px;
     min-width: 100%;
     background: $bg-dark;
     display: none;
-    
+
     li {
       @include textVcenter;
       color: #fff;

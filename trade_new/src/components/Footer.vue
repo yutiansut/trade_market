@@ -163,8 +163,8 @@ export default {
     };
   },
   mounted() {
+    if (this.qrcode) return false;
     this.$bus.on("qrCodeLoad", url => {
-      console.log(url);
       url && (this.qrcode = url);
     });
   }
