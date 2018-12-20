@@ -1,5 +1,5 @@
 <template>
-    <ul class="list-container">
+    <ul :style="{maxHeight:maxHeight+'px'}" class="list-container">
       <li class="flex flex-between flex-v-center"
         v-for="(item) in dataList" :key='item.id'
         :class="(item.name==currentId||item.coinid==currentId)?'color-danger':''"
@@ -19,6 +19,7 @@ export default {
   name: "c2c-aside-comp",
   props: {
     myData: null,
+    maxHeight: String,
     showArrow: {
       type: Boolean,
       default: true
@@ -57,6 +58,7 @@ export default {
 
 .list-container {
   border-bottom: 1px solid $bd-color;
+  overflow-y: auto;
   li {
     @include textVcenter;
     padding: 0 10px;

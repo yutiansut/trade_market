@@ -24,7 +24,9 @@
           <el-table-column :label='$t("coin")||"币种"' width='100px'>
               <template slot-scope="scope">
               <div class="operate">
-                  <img class="thumb-20 m-right-10" :src="scope.row.logo" alt="">
+                  <img v-if='scope.row.icon||scope.row.logo'
+                    class="thumb-20 m-right-10"
+                    :src="scope.row.icon||scope.row.logo" alt="">
                   <span>{{scope.row.coinid}}</span>
               </div>
               </template>

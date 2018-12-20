@@ -19,7 +19,7 @@
               class="nav-item p-rel"
               :class='currentPath==mainCoin.link?"active":""'>
               <router-link :to='mainCoin.link'>
-                <span v-text="$t(mainCoin.i18nKey)||item.mainCoin"></span>&nbsp;
+                <span class="fl" v-text="$t(mainCoin.i18nKey)||item.mainCoin"></span>&nbsp;
                 <i v-if='mainCoin.subItem' class="iconfont icon-xiala"></i>
               </router-link>
               <ol class="sub-nav p-abs" v-if="mainCoin.subItem">

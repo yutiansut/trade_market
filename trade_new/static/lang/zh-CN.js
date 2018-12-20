@@ -51,7 +51,6 @@ module.exports = {
     helpCenter: "帮助中心",
     rate: "费率",
     currencyProfile: "币种资料",
-    currencyIntro: "币种简介",
     faqCenter: "问题中心",
     agreement: "用户协议",
     currencySearch: "币种搜索",

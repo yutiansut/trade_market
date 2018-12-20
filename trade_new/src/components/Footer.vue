@@ -215,7 +215,7 @@ $footer-font-color: #fff;
     color: #666;
     margin-left: 54%;
     ul {
-      width: 73%;
+      width: 70%;
       float: left;
     }
     li {

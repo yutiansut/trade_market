@@ -4,6 +4,7 @@
           <el-aside width="400px">
             <div class="list-tree">
                 <c2c-aside-comp 
+                    max-height='660'
                     :myData='myData'
                     :showArrow='false'
                     @onListClick='onListClick'>
@@ -23,11 +24,11 @@
                   <dd>
                     <ul class="properties">
                       <li>{{$t("publishDate")||"推出日期"}}：&nbsp;&nbsp;{{coinInfo.sdate}}</li>
-                      <li>{{$t("publishVol")||"发行总量"}}：&nbsp;&nbsp;21000000</li>
-                      <li>{{$t("marketVal")||"市值"}}：&nbsp;&nbsp;$ 106,364,261,880</li>
+                      <li>{{$t("publishVol")||"发行总量"}}：&nbsp;&nbsp;{{coinInfo.number}}</li>
+                      <li>{{$t("marketVal")||"市值"}}：&nbsp;&nbsp;${{coinInfo.usdt*1||0}}</li>
                       <li>{{$t("currencyAlgorithm")||"币种算法"}}：&nbsp;&nbsp;{{coinInfo.coinscrypt}}</li>
                       <li>{{$t("blockSize")||"区块大小"}}：&nbsp;&nbsp;{{coinInfo.blocksize}}</li>
-                      <li>{{$t("currencyDifficulty")||"区块大小"}}：&nbsp;&nbsp;2016 Blocks</li>
+                      <!-- <li>{{$t("currencyDifficulty")||"难度调整"}}：&nbsp;&nbsp;2016 Blocks</li> -->
                     </ul>
                   </dd>
                   <dt class="font-bold" v-text="$t('link')"></dt>
