@@ -190,8 +190,13 @@ export default {
       });
     },
     getTradeCoin(coin, index) {
-      if (this.storage.get(`sub_${index}`)) {
-        this.currencyConfig = this.storage.get(`sub_${index}`);
+      if (
+        window.sessionStorage &&
+        window.sessionStorage.getItem(`sub_${index}`)
+      ) {
+        this.currencyConfig = JSON.parse(
+          window.sessionStorage.getItem(`sub_${index}`)
+        );
         this.$bus.emit("navChange", this.currencyConfig);
         return false;
       }
@@ -204,7 +209,13 @@ export default {
         if (res.code == "0") {
           this.currencyConfig = res.data.list;
         }
-        this.storage.set(`sub_${index}`, res.data.list);
+        if (window.sessionStorage) {
+          window.sessionStorage.setItem(
+            `sub_${index}`,
+            JSON.stringify(res.data.list)
+          );
+        }
+        // this.storage.set(`sub_${index}`, res.data.list);
         this.$bus.emit("navChange", this.currencyConfig);
         this.showLoading = false;
       });

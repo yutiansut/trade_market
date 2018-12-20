@@ -319,7 +319,7 @@ $mt: 9px;
   max-height: 304px;
   border-radius: 2px;
   box-sizing: border-box;
-  right: 180px;
+  right: 320px;
   padding: 20px;
   background: $bg-white;
   box-shadow: 0 0 10px 1px #333;
