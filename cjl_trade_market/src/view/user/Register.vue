@@ -131,7 +131,8 @@ export default {
       if (val == "") return;
       switch (name) {
         case "cellphone":
-          !this.Util.isPhone(val) && this.errMsg("label123" | "手机号码格式不正确");
+          !this.Util.isPhone(val) &&
+            this.errMsg("label123" | "手机号码格式不正确");
           break;
         case "password":
           !this.Util.isPassword(val) &&
@@ -142,7 +143,8 @@ export default {
             this.errMsg("两次输入密码不一致");
           break;
         case "verCode":
-          val != this.verCodeStr && this.errMsg("label126" || "图形验证码不正确");
+          val != this.verCodeStr &&
+            this.errMsg("label126" || "图形验证码不正确");
           break;
       }
     },
@@ -170,7 +172,10 @@ export default {
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
+          if (this.getCodeTimes > 0) {
+            this.codeTexti18n = "tryAgain";
+            this.second = "";
+          }
         }
       });
     },

@@ -112,6 +112,7 @@ export default {
       },
       bindGoogleAuth: false,
       checkLogin: false,
+      getCodeTimes: 0,
       codeTexti18n: "getMsgCode",
       myGoogleCode: "",
       second: "",
@@ -167,7 +168,10 @@ export default {
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
+          if (this.getCodeTimes > 0) {
+            this.codeTexti18n = "tryAgain";
+            this.second = "";
+          }
         }
       });
     },
@@ -226,7 +230,7 @@ export default {
         password: this.checkLoginData.password,
         showLoading: true
       }).then(res => {
-        if (res && (res.code == 0 || res.code == 10000)) {
+        if (res.code == 0 || res.code == 10000) {
           res.code == 10000 && (this.bindGoogleAuth = false);
           res.code == 0 && (this.bindGoogleAuth = true);
           this.checkLogin = true;

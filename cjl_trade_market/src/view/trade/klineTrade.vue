@@ -929,9 +929,9 @@ span.color-danger{
   }
 }
 .logo {
-  width: 73px;
+  width: 100px;
   float: left;
-  margin: 14px 15px 0 15px;
+  margin: 9px 15px 0 15px;
 }
 .trade-table {
   height: 100%;

@@ -1,6 +1,6 @@
 import qs from 'qs';
 import axios from 'axios';
-import { Loading, MessageBox } from 'element-ui';
+import { Loading } from 'element-ui';
 import api from '@/config/apiConfig.js';
 import Utils from './utils';
 import myStorage from '@/assets/js/myStorage';
@@ -52,6 +52,7 @@ const ajaxRequest = (function () {
         // 统一判断后端返回的错误码
         if (code == -1) {
             myStorage.remove('token');
+            myStorage.remove("cellphone");
             myStorage.set('isLogin', false);
             userModel.isLogin = false;
         };

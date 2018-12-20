@@ -8991,7 +8991,6 @@ var RequestData = function (showLoading) {
                 //kline.setTopTickers(json.data.list.datas.topTickers);
                 // GLOBAL_VAR.KLineData = eval(json.data.list.datas.data);
                 GLOBAL_VAR.KLineData = json.data.list.datas.data;
-                console.log(GLOBAL_VAR.KLineData);
                 try {
                     if (!GLOBAL_VAR.chartMgr.updateData("frame0.k0", GLOBAL_VAR.KLineData)) {
                         //GLOBAL_VAR.requestParam = setHttpRequestParam(GLOBAL_VAR.market_from, GLOBAL_VAR.time_type, GLOBAL_VAR.limit, null);

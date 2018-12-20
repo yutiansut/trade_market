@@ -673,7 +673,8 @@
             }
             var kline = new Kline();
             //var klineUrl = "http://192.168.5.112/trade/kline?needTickers=1&symbol=BTC_USDT&type=15min&size=1000";
-            var klineUrl = "http://47.95.213.181:80/API/kline";
+            // var klineUrl = "http://47.95.213.181:80/API/kline";
+            var klineUrl = window.location.protocol + "//" + window.location.host + "/API/kline";
             setInterval(function () {
                 biType = "btc_usdt";
                 var d = new Date();

@@ -167,7 +167,10 @@ export default {
         },
         onComplete: () => {
           this.canGetCode = true;
-          this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
+          if (this.getCodeTimes > 0) {
+            this.codeTexti18n = "tryAgain";
+            this.second = "";
+          }
         }
       });
     },
