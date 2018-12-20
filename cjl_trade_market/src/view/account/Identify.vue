@@ -222,6 +222,14 @@ export default {
       this.request(this.api.saftyState).then(res => {
         if (res && res.code == "0") {
           this.bindState = res.data.list[0];
+          if (this.idcardstate >= 2) {
+            this.$alert(this.$t("label152"), this.$t("label140"), {
+              showClose: false,
+              confirmButtonText: "返回首页"
+            }).then(() => {
+              this.navigateTo("/");
+            });
+          }
         } else {
           this.errMsg(res.msg);
         }

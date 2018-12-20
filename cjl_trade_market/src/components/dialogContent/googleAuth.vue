@@ -98,7 +98,7 @@ export default {
       password: "",
       googleCode: "",
       downLoad_1: require("@/assets/images/user/download_1.jpg"),
-      downLoad_2: require("@/assets/images/user/download_2.jpg"),
+      // downLoad_2: require("@/assets/images/user/download_2.jpg"),
       downLoad_3: require("@/assets/images/user/download_3.jpg")
     };
   },

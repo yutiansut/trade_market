@@ -369,6 +369,8 @@ module.exports = {
     label149: "File format must be png or jpg",
     label150: "Image size must be less than 4Mb, current size",
     label151: "Image size must be less than 4Mb and be png or jpg formated. Make sure that the image must be clear,clean and waterless",
+    label152: "Please don't identify repeatly",
+    label153: "Back home",
     "认证失败": "Check failed",
     "获取数据失败": "Fetch data failed",
     "邮箱格式不正确": "Invalid email address",
