@@ -16,12 +16,11 @@ import VueI18n from 'vue-i18n';
 import locale from 'element-ui/lib/locale';
 import enLocale from 'element-ui/lib/locale/lang/en';
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
-import ElementUI from 'element-ui';
 import vueBus from 'vue-bus';
 VueClipboard.config.autoSetContainer = true;
 Vue.use(vueBus);
 Vue.use(VueI18n);
-Vue.use(ElementUI, zhLocale);
+Vue.use(ELEMENT, zhLocale);
 Vue.use(VueClipboard);
 /**
  * 方法

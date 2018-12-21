@@ -1,4 +1,4 @@
-function Kline() {}
+function Kline() { }
 Kline.prototype = {
     browerState: 0,
     klineWebsocket: null,
@@ -12,7 +12,7 @@ Kline.prototype = {
     symbol: null,
     curPrice: null,
     title: "",
-    reset: function(a) {
+    reset: function (a) {
         this.refreshUrl(a);
         this.symbol = a;
         this.lastDepth = null;
@@ -24,27 +24,27 @@ Kline.prototype = {
         $("#bids .table").empty();
         this.websocketRedister(a);
     },
-    setTitle: function() {
-        document.title = (this.curPrice == null ? "": this.curPrice + " ") + this.title;
+    setTitle: function () {
+        document.title = (this.curPrice == null ? "" : this.curPrice + " ") + this.title;
     },
-    dateFormatTf: function(a) {
-        return (a < 10 ? "0": "") + a
+    dateFormatTf: function (a) {
+        return (a < 10 ? "0" : "") + a
     },
-    dateFormat: function(a) {
+    dateFormat: function (a) {
         return a.getFullYear() + "-" + this.dateFormatTf(a.getMonth() + 1) + "-" + this.dateFormatTf(a.getDate()) + " " + this.dateFormatTf(a.getHours()) + ":" + this.dateFormatTf(a.getMinutes()) + ":" + this.dateFormatTf(a.getSeconds())
     },
-    dateInit: function(b) {
+    dateInit: function (b) {
         var a = new Date();
         if (b) {
             a.setTime(b)
         }
         $(".m_rightbot").text(this.dateFormat(a));
         var c = this;
-        setInterval(function() {
+        setInterval(function () {
             a.setTime(a.getTime() + 1000);
             $(".m_rightbot").text(c.dateFormat(a))
         },
-        1000)
+            1000)
     },
     websocketRedister: function (symbol) {
         this.updateDepth();
@@ -54,9 +54,9 @@ Kline.prototype = {
         var depths = JSON.parse(json);
         $this.updateDepth(depths);
     },
-    pushTrades: function(l) {        
+    pushTrades: function (l) {
     },
-    updateDepth: function(e) {
+    updateDepth: function (e) {
         window._set_current_depth(e);
         if (!e) {
             return
@@ -86,7 +86,7 @@ Kline.prototype = {
             this.asksAndBids(g.slice(0), c, $("#bids .table"))
         }
     },
-    depthInit: function(f, h) {
+    depthInit: function (f, h) {
         h.empty();
         if (f && f.length > 0) {
             var g, b = "";
@@ -102,7 +102,7 @@ Kline.prototype = {
             b = null
         }
     },
-    asksAndBids: function(b, c, l) {
+    asksAndBids: function (b, c, l) {
         for (var f = 0; f < c.length; f++) {
             var n = false;
             for (var d = 0; d < b.length; d++) {
@@ -110,10 +110,10 @@ Kline.prototype = {
                     n = true;
                     if (c[f][1] != b[d][1]) {
                         var a = l.find("div:eq(" + f + ") .amount");
-                        a.addClass(c[f][1] > b[d][1] ? "red": "green");
+                        a.addClass(c[f][1] > b[d][1] ? "red" : "green");
                         var g = this.getAmount((b[d][1] + "").split("."));
-                        setTimeout((function(j, i) {
-                            return function() {
+                        setTimeout((function (j, i) {
+                            return function () {
                                 j.html(i[0] + "<g>" + i[1] + "</g>");
                                 j.removeClass("red").removeClass("green");
                                 j = null;
@@ -156,7 +156,7 @@ Kline.prototype = {
         var m;
         for (var f = 0; f < c.length; f++) {
             var o = l.find("div:eq(" + f + ")");
-            if (! (c[f].length >= 3 && c[f][2] == -1)) {
+            if (!(c[f].length >= 3 && c[f][2] == -1)) {
                 var k = (c[f][0] + "").split(".");
                 var e = this.getPrice(k, m);
                 m = k[0];
@@ -166,29 +166,29 @@ Kline.prototype = {
         b = null;
         c = null;
         l.find("div.add").slideDown(800);
-        setTimeout((function(i, j) {
-            return function() {
+        setTimeout((function (i, j) {
+            return function () {
                 i.slideUp(500,
-                function() {
-                    $(this).remove()
-                });
+                    function () {
+                        $(this).remove()
+                    });
                 j.removeClass("add")
             }
         })(l.find("div.remove"), l.find("div.add")), 1000)
     },
-    getAsks: function(b, a) {
+    getAsks: function (b, a) {
         if (b.length > a) {
             b.splice(0, b.length - a)
         }
         return b
     },
-    getBids: function(b, a) {
+    getBids: function (b, a) {
         if (b.length > a) {
             b.splice(a, b.length - 1)
         }
         return b
     },
-    getgview: function(c) {
+    getgview: function (c) {
         var d = "";
         var e;
         for (var b = 0; b < c.length; b++) {
@@ -202,7 +202,7 @@ Kline.prototype = {
         }
         return d
     },
-    getgasks: function(j) {
+    getgasks: function (j) {
         var k = j[j.length - 1][0];
         var e = j[0][0];
         var a = e - k;
@@ -212,7 +212,8 @@ Kline.prototype = {
             d = d / 2;
             b++
         }
-        if (d >= 1) { (b = 0)
+        if (d >= 1) {
+            (b = 0)
         }
         k = parseInt(k / d) * d;
         e = parseInt(e / d) * d;
@@ -233,7 +234,7 @@ Kline.prototype = {
         }
         return h
     },
-    getgbids: function(j) {
+    getgbids: function (j) {
         var k = j[j.length - 1][0];
         var e = j[0][0];
         var a = e - k;
@@ -243,7 +244,8 @@ Kline.prototype = {
             d = d / 2;
             b++
         }
-        if (d >= 1) { (b = 0)
+        if (d >= 1) {
+            (b = 0)
         }
         k = parseInt(k / d) * d;
         e = parseInt(e / d) * d;
@@ -264,7 +266,7 @@ Kline.prototype = {
         }
         return h
     },
-    getBlock: function(a, c) {
+    getBlock: function (a, c) {
         if (a > c) {
             return c
         } else {
@@ -272,7 +274,7 @@ Kline.prototype = {
             return this.getBlock(a, c)
         }
     },
-    getZeros: function(b) {
+    getZeros: function (b) {
         var a = "";
         while (b > 0) {
             b--;
@@ -280,7 +282,7 @@ Kline.prototype = {
         }
         return a
     },
-    getPrice: function(a, d) {
+    getPrice: function (a, d) {
         var c = a[0];
         if (d == c) {
             c = "<h>" + c + ".</h>"
@@ -297,7 +299,7 @@ Kline.prototype = {
         }
         return [c, b]
     },
-    getAmount: function(a) {
+    getAmount: function (a) {
         var c = a[0];
         var b = "";
         var d = this.amountDecimalDigits - c.length + 1;
@@ -319,12 +321,12 @@ Kline.prototype = {
         }
         return [c, b]
     },
-    setTopTickers: function(c) {     
+    setTopTickers: function (c) {
     },
-    setMarketShow: function(e, b, d, c) {      
+    setMarketShow: function (e, b, d, c) {
     },
-    refreshPage: function(a) {      
+    refreshPage: function (a) {
     },
-    refreshUrl: function(a) {         
-    } 
+    refreshUrl: function (a) {
+    }
 };
