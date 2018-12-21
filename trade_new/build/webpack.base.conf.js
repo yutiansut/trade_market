@@ -96,5 +96,5 @@ module.exports = {
   externals: {
     "element-ui": "ELEMENT",
     "vue": "Vue"
-  },
+  }
 }
