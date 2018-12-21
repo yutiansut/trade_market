@@ -47,6 +47,7 @@ locale.i18n((key, value) => i18n.t(key, value));
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/home/Header.vue';
 import loginStateBar from '@/components/home/loginStateBar.vue';
+import C2CAsideComp from "@/components/aside/C2CasideComp.vue";
 import dialogBox from '@/components/dialogContent/dialogBox.vue';
 import unLoginTip from '@/components/login/unLoginTip.vue';
 Vue.component(Footer.name, Footer);
@@ -54,6 +55,7 @@ Vue.component(Header.name, Header);
 Vue.component(loginStateBar.name, loginStateBar);
 Vue.component(dialogBox.name, dialogBox);
 Vue.component(unLoginTip.name, unLoginTip);
+Vue.component(C2CAsideComp.name, C2CAsideComp);
 /**
  * 引入自定义js
  */

@@ -193,9 +193,7 @@
     </div>
 </template>
 <script>
-import C2CAsideComp from "@/components/aside/C2CasideComp.vue";
 export default {
-  components: { C2CAsideComp },
   data() {
     return {
       showDialog: false,

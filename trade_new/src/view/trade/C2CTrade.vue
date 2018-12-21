@@ -340,10 +340,8 @@ import orderMatch from "@/components/dialogContent/orderMatching";
 import orderConfirm from "@/components/dialogContent/OrderConfirm";
 import marketOrder from "@/components/dialogContent/MarketOrder";
 import orderPaid from "@/components/dialogContent/orderPaid";
-import C2CAsideComp from "@/components/aside/C2CasideComp.vue";
 export default {
   components: {
-    C2CAsideComp,
     TradeConfirm,
     orderMatch,
     orderConfirm,
@@ -404,7 +402,6 @@ export default {
     this.getC2Ccoin()
       .then(res => {
         if (res) {
-          console.log(res);
           this.currencyList = res;
           this.coinInfo = res[0];
           return Promise.resolve(res[0].coinid);
