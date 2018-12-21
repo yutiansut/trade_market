@@ -93,6 +93,7 @@ module.exports = {
     child_process: 'empty'
   },
   externals: {
-    "vue": "Vue"
+    "vue": "Vue",
+    'vue-router': 'VueRouter'
   }
 }

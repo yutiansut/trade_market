@@ -1,4 +1,4 @@
-const Main = r => require(['@/view/Main'], r);
+const Main = r => require(['@/view/home/Home'], r);
 const routes = [
   {
     path: '/',
@@ -9,4 +9,4 @@ const routes = [
     }
   }
 ]
-export default new VueRouter({ mode: 'history', routes });
+export default new VueRouter({ routes });

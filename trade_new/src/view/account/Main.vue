@@ -11,7 +11,7 @@
 </template>
 <style lang="scss" scoped>
 .container {
-  min-height: calc(100% - 360px);
+  min-height: calc(100% - 294px);
   padding: 30px 0;
   width: 77%;
   margin: 0 auto;

@@ -2,7 +2,7 @@
  * 引入全局样式
  */
 import "@/assets/css/common.css";
-import 'normalize.css';
+import "normalize.css";
 /**
  * 引入自定义相关js
  */

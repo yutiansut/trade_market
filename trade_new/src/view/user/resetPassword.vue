@@ -187,7 +187,7 @@ export default {
 <style lang="scss" scoped>
 .content {
   padding: 1px;
-  min-height: calc(100% - 360px);
+  min-height: calc(100% - 294px);
   background-size: 105% auto;
   background-repeat: no-repeat;
   background-position: center 0;

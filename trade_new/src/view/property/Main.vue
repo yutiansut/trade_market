@@ -31,7 +31,7 @@ export default {
 .container {
   width: $content-width;
   margin: 30px auto 40px auto;
-  min-height: calc(100% - 290px);
+  min-height: calc(100% - 294px);
 }
 .bread-nav {
   font-size: $font-normal;

@@ -1,7 +1,7 @@
 <template>
-  <div id="app" class="p-rel wh-full">
+  <div id="app" class="wh-full">
     <keep-alive>
-      <transition name="slide-left">
+      <transition name="van-fade">
         <router-view></router-view>
       </transition>
     </keep-alive>
@@ -9,7 +9,7 @@
 </template>
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
 

@@ -18,6 +18,6 @@ export default {
 </script>
 <style lang="scss" scoped>
 .content {
-  min-height: calc(100% - 360px);
+  min-height: calc(100% - 294px);
 }
 </style>

@@ -4,10 +4,10 @@
             <el-form label-position='top' @submit.native.prevent>
               <!-- 登录第一步 -->
               <template v-if="!checkLogin">
-                <el-form-item :label='$t("cellphone")||"手机号"'>
+                <el-form-item :label='$t("label154")'>
                   <el-input v-model="checkLoginData.cellphone"
                       name='cellphone'
-                      :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
+                      :placeholder='$t("label155")'
                       @blur="validate(checkLoginData.cellphone,'cellphone')">
                   </el-input>
                 </el-form-item>
@@ -119,7 +119,8 @@ export default {
       myMobileCode: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: "",
-      oldPath: ""
+      oldPath: "",
+      canSubmit: false
     };
   },
   mounted() {
@@ -178,16 +179,25 @@ export default {
     // 表单验证
     validate(val, name) {
       if (val == "") return;
+      this.canSubmit = true;
       switch (name) {
         case "cellphone":
-          !this.Util.isPhone(val) && this.errMsg("手机号码格式不正确");
+          if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
+            this.errMsg("label156");
+            this.canSubmit = false;
+          }
           break;
         case "password":
-          !this.Util.isPassword(val) &&
-            this.errMsg("密码必须是以英文字母开头的6-12位字符");
+          if (!this.Util.isPassword(val)) {
+            this.errMsg("label124");
+            this.canSubmit = false;
+          }
           break;
         case "verCode":
-          val != this.verCodeStr && this.errMsg("图形验证码不正确");
+          if (val != this.verCodeStr) {
+            this.errMsg("label126");
+            this.canSubmit = false;
+          }
           break;
       }
     },
@@ -225,6 +235,7 @@ export default {
           return;
         }
       }
+      if (!this.canSubmit) return;
       this.request(this.api.checklogin, {
         tel: this.checkLoginData.cellphone,
         password: this.checkLoginData.password,
@@ -258,12 +269,12 @@ export default {
 <style lang="scss" scoped>
 .content {
   padding: 1px;
-  min-height: calc(100% - 360px);
+  min-height: calc(100% - 294px);
   background-size: 105% auto;
   background-repeat: no-repeat;
   background-position: center 0;
   .resize {
-    margin: 32px auto 0 auto;
+    margin: 40px auto 0 auto;
   }
 }
 .go-reg {

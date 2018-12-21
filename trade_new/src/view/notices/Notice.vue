@@ -32,6 +32,6 @@ export default {
 <style lang="scss" scoped>
 .el-container {
   border-bottom: $default-border;
-  min-height: calc(100% - 360px);
+  min-height: calc(100% - 294px);
 }
 </style>

@@ -11,7 +11,6 @@ html {
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 body {
-  min-width: 1440px;
   height: 100%;
   background-color: #fff;
   color: #333;
@@ -143,9 +142,9 @@ button.btn-bordered {
   border-color: #e5e5e5;
 }
 button.btn-large {
-  height: 40px;
-  line-height: 38px;
-  font-size: 16px;
+  height: 9em;
+  line-height: 8.8em;
+  font-size: 1.6em;
 }
 button:hover {
   background: none;
@@ -160,16 +159,16 @@ button.btn-inline {
   display: inline-block;
 }
 button.btn-small {
-  height: 30px;
-  line-height: 28px;
-  font-size: 14px;
+  height: 4.5em;
+  line-height: 4.3em;
+  font-size: 1.4em;
   width: 80px;
 }
 button.btn-mini {
-  height: 28px;
-  width: 50px;
-  line-height: 26px;
-  font-size: 14px;
+  height: 3em;
+  width: 5em;
+  line-height: 2.8em;
+  font-size: 1.4em;
 }
 button.btn-radius {
   border-radius: 2px;
@@ -180,23 +179,23 @@ button.btn-active:active {
 button.btn-hover:hover {
   opacity: 0.9;
 }
-
+button.btn-round {
+  border-radius: 10em;
+}
 button.btn-default {
   background-color: #fff;
   color: #333;
   border-color: #eee;
 }
 button.btn-danger {
-  background-color: #ab1e24;
+  background-color: #ff5c5c;
   color: #fff;
 }
 button.btn-success {
   background-color: #4fa56d;
   color: #fff;
 }
-.color-primary {
-  color: #ab1e24;
-}
+
 button[disabled] {
   opacity: 0.6;
   cursor: not-allowed;
