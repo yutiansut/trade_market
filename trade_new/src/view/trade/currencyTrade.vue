@@ -311,12 +311,14 @@
 import mainCoinModel from "@/model/allCoinModel.js";
 import { Loading } from "element-ui";
 import { randomString } from "@/assets/js/common.js";
+import CeAsideComp from "@/components/aside/CEasideComp.vue";
 let webSocket = null;
 let ajaxDone = true;
 window.onbeforeunload = () => {
   webSocket.close();
 };
 export default {
+  components: { CeAsideComp },
   data() {
     return {
       show: false,

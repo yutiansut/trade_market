@@ -340,8 +340,10 @@ import orderMatch from "@/components/dialogContent/orderMatching";
 import orderConfirm from "@/components/dialogContent/OrderConfirm";
 import marketOrder from "@/components/dialogContent/MarketOrder";
 import orderPaid from "@/components/dialogContent/orderPaid";
+import C2CAsideComp from "@/components/aside/C2CasideComp.vue";
 export default {
   components: {
+    C2CAsideComp,
     TradeConfirm,
     orderMatch,
     orderConfirm,

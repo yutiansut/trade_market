@@ -15,7 +15,10 @@
     </div>
 </template>
 <script>
+import CeAsideComp from "@/components/aside/CEasideComp.vue";
+import loginBar from "@/components/home/loginStateBar.vue";
 export default {
+  components: { CeAsideComp },
   methods: {
     getRowData(data) {
       this.navigateTo("/currency_trade", {

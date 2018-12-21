@@ -119,6 +119,8 @@
     </div>
 </template>
 <script>
+import indexBanner from "@/components/home/IndexBanner.vue";
+import noticeBar from "@/components/home/NoticeBar.vue";
 import mainCoinModel from "@/model/allCoinModel.js";
 import {
   addCustomList,
@@ -126,6 +128,10 @@ import {
   matchCustomList
 } from "@/assets/js/common.js";
 export default {
+  components: {
+    indexBanner,
+    noticeBar
+  },
   data() {
     return {
       logo: require("@/assets/images/home/pcew_logo.png"),

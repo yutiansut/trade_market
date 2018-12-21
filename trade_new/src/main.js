@@ -1,11 +1,4 @@
 /**
- * 引入全局样式
- */
-import "@/assets/css/common.css";
-import "@/assets/css/aliFont.css";
-import "vant/lib/vant-css/index.css";
-import 'element-ui/lib/theme-chalk/index.css';
-/**
  * 引入vue根节点组件
  */
 import Vue from 'vue'
@@ -54,22 +47,12 @@ locale.i18n((key, value) => i18n.t(key, value));
  */
 import Footer from '@/components/Footer.vue';
 import Header from '@/components/home/Header.vue';
-import indexBanner from '@/components/home/IndexBanner.vue';
-import noticeBar from '@/components/home/NoticeBar.vue';
 import loginStateBar from '@/components/home/loginStateBar.vue';
-import CeAsideComp from '@/components/aside/CEasideComp.vue';
-import C2CAsideComp from '@/components/aside/C2CasideComp.vue';
-import snapShot from '@/components/SnapShot.vue';
 import dialogBox from '@/components/dialogContent/dialogBox.vue';
 import unLoginTip from '@/components/login/unLoginTip.vue';
 Vue.component(Footer.name, Footer);
 Vue.component(Header.name, Header);
-Vue.component(indexBanner.name, indexBanner);
-Vue.component(noticeBar.name, noticeBar);
 Vue.component(loginStateBar.name, loginStateBar);
-Vue.component(CeAsideComp.name, CeAsideComp);
-Vue.component(C2CAsideComp.name, C2CAsideComp);
-Vue.component(snapShot.name, snapShot);
 Vue.component(dialogBox.name, dialogBox);
 Vue.component(unLoginTip.name, unLoginTip);
 /**

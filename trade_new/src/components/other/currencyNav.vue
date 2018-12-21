@@ -36,13 +36,15 @@ export default {
     return {
       myLists: [],
       searchVal: "",
-      coinid: null
+      coinid: null,
+      myValue: []
     };
   },
   mounted() {
     this.$bus.on("navChange", data => {
       if (data) {
         this.myLists = data;
+        this.myValue = data.slice(0);
       }
     });
   },

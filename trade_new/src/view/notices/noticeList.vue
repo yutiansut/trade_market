@@ -16,7 +16,11 @@
 <script>
 import newsModel from "@/model/newsModel.js";
 let { newsList } = newsModel;
+import snapShot from "@/components/SnapShot.vue";
 export default {
+  components: {
+    snapShot
+  },
   data() {
     return {
       articleList: newsList
