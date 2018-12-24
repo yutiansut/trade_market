@@ -8,18 +8,26 @@ import "normalize.css";
  */
 import Store from "@/vuexStore/store";
 import router from "@/router/index";
-import { Tabbar, TabbarItem, NavBar } from "vant";
+import { Tabbar, TabbarItem, NavBar, Cell, CellGroup, Field, Row, Col, Icon } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
-  .use(NavBar);
+  .use(NavBar)
+  .use(CellGroup)
+  .use(Cell)
+  .use(Field)
+  .use(Row)
+  .use(Col)
+  .use(Icon)
 /**
  * 引入全局组件
  */
 import App from "@/App";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
+import tabBar from "@/components/other/tabBar";
 Vue.component(Footer.name, Footer);
 Vue.component(Header.name, Header);
+Vue.component(tabBar.name, tabBar)
 /**
  * 引入自定义相关js
  */
@@ -68,7 +76,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       myStorage.set("isLogin", false);
-      next({ path: "/login" });
+      next({ path: "account/login" });
     }
   } else {
     if (to.name == "Login") {

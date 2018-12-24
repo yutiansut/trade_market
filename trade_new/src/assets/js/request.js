@@ -71,6 +71,7 @@ const ajaxRequest = (function () {
             //公共参数
             token: myStorage.get("token") || ""
         };
+        !myStorage.get('token') && delete Public.token;
         let postData = Object.assign(Public, data);
         let httpDefaultOpts = {
             //http默认配置

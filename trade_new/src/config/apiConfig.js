@@ -329,6 +329,10 @@ let apiCfg = (function () {
         //上币申请
         addvoterequest: {
             url: 'addvoterequest'
+        },
+        //注册时获取验证码
+        setemailcode: {
+            url: 'setemailcode'
         }
     }
 }());

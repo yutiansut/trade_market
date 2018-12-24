@@ -5,7 +5,9 @@ const Home = r => require(["@/view/home/Home"], r);
 const c2cHome = r => require(["@/view/trade/c2cHome"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
-const Login = r => require(["@/view/user/login"], r);
+const Login = r => require(["@/view/user/Login"], r);
+const userMain = r => require(["@/view/user/userMain"], r);
+const Register = r => require(["@/view/user/Register"], r);
 const routes = [
   {
     path: "/",
@@ -48,13 +50,25 @@ const routes = [
       }
     ]
   }, {
-    path: "/login",
-    name: "Login",
-    component: Login,
-    meta: {
-      title: "用户中心",
-      auth: false
-    }
+    path: "/account",
+    name: "Account",
+    component: userMain,
+    redirect: "/account/login",
+    children: [{
+      path: "/account/login",
+      component: Login,
+      meta: {
+        title: "用户登录",
+        auth: false
+      }
+    }, {
+      path: "/account/register",
+      component: Register,
+      meta: {
+        title: "用户注册",
+        auth: false
+      }
+    }]
   }
 ];
 export default new Router({ routes });

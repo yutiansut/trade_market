@@ -14,10 +14,10 @@
       >
         <el-form-item :label='$t("label154")'>
           <el-input
-            v-model.trim="registerData.username"
-            name='username'
+            v-model.trim="registerData.account"
+            name='account'
             :placeholder='$t("label158")'
-            @blur="validate(registerData.username,'username')"
+            @blur="validate(registerData.account,'account')"
           >
           </el-input>
         </el-form-item>
@@ -36,11 +36,11 @@
           :label='$t("cellphone")||"手机号"'
         >
           <el-input
-            v-model.trim="registerData.cellphone"
+            v-model.trim="registerData.accountCode"
             name='cellphone'
             :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
             maxlength='11'
-            @blur="validate(registerData.cellphone,'codesendto')"
+            @blur="validate(registerData.accountCode,'accountCode')"
           >
           </el-input>
         </el-form-item>
@@ -49,10 +49,10 @@
           :label='$t("email")||"邮箱"'
         >
           <el-input
-            v-model.trim="registerData.email"
+            v-model.trim="registerData.accountCode"
             name='email'
             :placeholder='$t("emailPlaceholder")||"请输入邮箱"'
-            @blur="validate(registerData.email,'codesendto')"
+            @blur="validate(registerData.accountCode,'accountCode')"
           >
           </el-input>
         </el-form-item>
@@ -167,9 +167,8 @@ export default {
       bg: `background-image:url(${bg})`,
       registerData: {
         type: "1",
-        username: "",
-        email: "",
-        cellphone: "",
+        account: "",
+        accountCode: "",
         password: "",
         repassword: "",
         formCode: "",
@@ -197,13 +196,13 @@ export default {
       if (val == "") return;
       this.canSubmit = true;
       switch (name) {
-        case "username":
+        case "account":
           if (!this.Util.isUserName(val)) {
             this.errMsg("label159");
             this.canSubmit = false;
           }
           break;
-        case "codesendto":
+        case "accountCode":
           if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
             this.errMsg("label156");
             this.canSubmit = false;
@@ -261,41 +260,53 @@ export default {
       });
     },
     sendCode() {
-      if (
-        !this.canGetCode ||
-        !this.Util.isPhone(this.registerData.cellphone) ||
-        !this.Util.isEmail(this.registerData.email)
-      )
-        return false;
-      this.countDown();
+      if (!this.canGetCode) return false;
       if (this.registerData.type == "1") {
         // 手机验证码
+        if (!this.Util.isPhone(this.registerData.accountCode)) return false;
         this.request(this.api.sendcode, {
           tel: this.registerData.cellphone,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
             this.myCode = true;
+            this.successMsg(res.msg || "发送成功");
           } else {
             this.errMsg(res.msg || "获取验证码失败");
           }
         });
       } else {
         //邮箱验证码
+        if (!this.Util.isEmail(this.registerData.accountCode)) return false;
+        this.request(this.api.setemailcode, {
+          email: this.registerData.email,
+          showLoading: true
+        }).then(res => {
+          if (res.code == "0") {
+            this.successMsg(res.msg || "发送成功");
+            this.myCode = true;
+          } else {
+            this.errMsg(res.msg || "获取验证码失败");
+          }
+        });
       }
+      this.countDown();
     },
 
     formSubmit() {
+      console.log(this.registerData);
       for (let key in this.registerData) {
         let item = this.registerData[key];
-        if (item == "") {
+        if (item == "" && item == "recommender") {
           this.errMsg("请填写完整信息");
           return;
         }
       }
       if (!this.canSubmit) return;
       let postData = {
-        tel: this.registerData.cellphone,
+        type: this.registerData.type,
+        account: this.registerData.account,
+        accountCode: this.registerData.accountCode,
         password: this.registerData.password,
         code: this.registerData.formCode,
         showLoading: true,

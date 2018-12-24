@@ -1,9 +1,9 @@
 <template>
-  <div class="header">
+  <div class="header van-hairline--bottom">
     <van-nav-bar
       :title="$store.state.headerTitle"
       :right-text="rightText"
-      :left-arrow='true'
+      :left-arrow='$store.state.showHeaderBack'
       @click-left="onClickLeft"
       @click-right="onClickRight"
     />
@@ -22,7 +22,9 @@ export default {
     onClickRight() {
       this.$emit("onHeaderRtClick");
     },
-    onClickLeft() {}
+    onClickLeft() {
+      this.$router.go(-1);
+    }
   }
 };
 </script>

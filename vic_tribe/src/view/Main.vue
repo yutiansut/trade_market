@@ -1,9 +1,7 @@
 <template>
   <div class="wh-full app-main">
     <my-header></my-header>
-    <transition name="van-slide-left">
-      <router-view></router-view>
-    </transition>
+    <router-view></router-view>
     <my-footer></my-footer>
   </div>
 </template>
@@ -11,11 +9,9 @@
 export default {
   data() {
     return {};
-  },
-  mounted() {}
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-
 </style>

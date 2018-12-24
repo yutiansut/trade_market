@@ -1,54 +1,77 @@
 <template>
-    <div class="footer">
-      <div class="ft-body">
-        <div class="ft-lf">
-          <dl v-for="(item,i) in footerNavList"
-            :key='i' class="ft-nav">
-            <dt v-text="$t(item.i18nKey)||item.title"></dt>
-            <dd v-for="(itemIn,j) in item.items" :key='j'>
-              <a v-if="itemIn.label=='用户协议'"
-                target="view_window"
-                :href="itemIn.link"
-                v-text="$t(itemIn.i18nKey)||itemIn.label">
-              </a>
-              <router-link
-                v-else
-                :to='itemIn.link'
-                v-text="$t(itemIn.i18nKey)||itemIn.label">
-              </router-link>
-            </dd>
-          </dl>
-        </div>
-        <div class="ft-rt">
-          <ul>
-            <li class="social-link">
-              <router-link class="foot-logo p-rel" to='/'>
-                <img :src="logo" alt="logo">
-              </router-link>
-              <router-link class="ml-0" to='/'><i class="iconfont icon-icon"></i></router-link>
-              <router-link to='/'><i class="iconfont icon-zhifeiji"></i></router-link>
-              <router-link to='/'><i class="iconfont icon-email"></i></router-link>
-              <router-link to='/'><i class="iconfont icon-facebook"></i></router-link>
-            </li>
-            <li class="font-14">CopyRight&nbsp;2015-2018&nbsp;
-              <em v-text="$t('copyRight')"></em>&nbsp;
-              <em v-text="$t('ISP')"></em>：156159948
-            </li>
-            <li>
-              <div class="warning" v-text="$t('riskWarning')"></div>
-            </li>
-          </ul>
-          <div class="qr-code">
-            <vue-qr v-if="qrcode"
-              :text="qrcode"
-              :margin="10"
-              :size="150">
-            </vue-qr>
-            <span v-text="$t('appDownLoad')||'扫码下载App'"></span>
-          </div>
+  <div class="footer">
+    <div class="ft-body">
+      <div class="ft-lf">
+        <dl
+          v-for="(item,i) in footerNavList"
+          :key='i'
+          class="ft-nav"
+        >
+          <dt v-text="$t(item.i18nKey)||item.title"></dt>
+          <dd
+            v-for="(itemIn,j) in item.items"
+            :key='j'
+          >
+            <a
+              v-if="itemIn.label=='用户协议'"
+              target="view_window"
+              :href="itemIn.link"
+              v-text="$t(itemIn.i18nKey)||itemIn.label"
+            >
+            </a>
+            <router-link
+              v-else
+              :to='itemIn.link'
+              v-text="$t(itemIn.i18nKey)||itemIn.label"
+            >
+            </router-link>
+          </dd>
+        </dl>
+      </div>
+      <div class="ft-rt">
+        <ul>
+          <li class="social-link">
+            <router-link
+              class="foot-logo p-rel"
+              to='/'
+            >
+              <img
+                :src="logo"
+                alt="logo"
+              >
+            </router-link>
+            <router-link
+              class="ml-0"
+              to='/Binmarkxqc@gmail.com'
+            ><i class="iconfont icon-icon"></i></router-link>
+            <router-link to='/'><i class="iconfont icon-zhifeiji"></i></router-link>
+            <router-link to='/Binmarkxqc@gmail.com'><i class="iconfont icon-email"></i></router-link>
+            <router-link to='Binmarkxqc@gmail.com'><i class="iconfont icon-facebook"></i></router-link>
+          </li>
+          <li class="font-14">CopyRight&nbsp;2015-2018&nbsp;
+            <em v-text="$t('copyRight')"></em>&nbsp;
+            <em v-text="$t('ISP')"></em>：156159948
+          </li>
+          <li>
+            <div
+              class="warning"
+              v-text="$t('riskWarning')"
+            ></div>
+          </li>
+        </ul>
+        <div class="qr-code">
+          <vue-qr
+            v-if="qrcode"
+            :text="qrcode"
+            :margin="10"
+            :size="150"
+          >
+          </vue-qr>
+          <span v-text="$t('appDownLoad')||'扫码下载App'"></span>
         </div>
       </div>
     </div>
+  </div>
 </template>
 <script>
 import VueQr from "vue-qr";

@@ -23,9 +23,7 @@ $mask-bg-rgba: rgba(0, 0, 0, 0.6);
 .color-success {
   color: $color-success;
 }
-.active {
-  color: $color-active;
-}
+
 button {
   appearance: none;
   border: 1px solid transparent;
@@ -38,8 +36,8 @@ button {
     border-color: #e5e5e5;
   }
   &.btn-large {
-    height: 9rem;
-    line-height: 8.8rem;
+    height: 4rem;
+    line-height: 4rem;
     font-size: 1.6rem;
   }
   &.btn-block {
@@ -50,15 +48,15 @@ button {
     display: inline-block;
   }
   &.btn-small {
-    height: 4.5rem;
-    line-height: 4.3rem;
+    height: 3rem;
+    line-height: 3rem;
     font-size: 1.4rem;
-    width: 8em;
+    width: 8rem;
   }
   &.btn-mini {
-    height: 3em;
-    width: 5em;
-    line-height: 2.8rem;
+    height: 2rem;
+    width: 5rem;
+    line-height: 2rem;
     font-size: 1.4rem;
   }
   &.btn-radius {

@@ -1,5 +1,5 @@
 <template>
-  <div class="footer">
+  <div class="footer van-hairline--top">
     <van-tabbar
       v-if="showFooter"
       :fixed='false'
@@ -118,6 +118,16 @@ export default {
   methods: {
     onChange(i) {
       this.$store.commit("setFooterItem", i);
+    }
+  },
+  watch: {
+    $route(to, from) {
+      this.tabConfig.map((item, i) => {
+        if (to.path == item.link) {
+          this.$store.commit("setFooterItem", i);
+          return;
+        }
+      });
     }
   }
 };
