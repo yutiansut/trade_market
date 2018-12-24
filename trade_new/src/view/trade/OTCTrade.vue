@@ -1,196 +1,307 @@
 <template>
-    <div class="main wh-full">
-        <my-header class="header-main">
-            <login-bar></login-bar>
-        </my-header>
-        <el-container>
-            <el-aside width='400px'>
-                <c2c-aside-comp
-                    @onListClick="onListClick"
-                    :myData='currencyList'>
-                </c2c-aside-comp>
-            </el-aside>
-            <el-main>
-                <div class="panel-container p-rel flex flex-between">
-                    <div class="form-wrap">
-                        <div class="font-18 font-bit-bold" v-html="buyingLabel"></div>
-                        <div class="break-line"></div>
-                        <div class="account flex flex-between">
-                            <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
-                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('buyingValiation')||'买入估价'"></label>
-                            <el-input disabled :value='coinInfo.buycny'>
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('buyVol')||'买入量'"></label>
-                            <el-input :placeholder="minNum" v-model="buyForm.number">
-                                <span class="unit" slot="suffix" v-text="coinInfo.coinid"></span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('money')||'金额'"></label>
-                            <el-input disabled v-model="buyTotal">
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <button
-                            @click="buyHandle"
-                            class="btn-block btn-large btn-danger btn-active"
-                            v-html="buyingLabel">
-                        </button>
-                    </div>
-                    <div class="vertical-line p-abs abs-h-center"></div>
-                    <div class="form-wrap">
-                        <div class="font-18 font-bit-bold" v-html="sellingLabel"></div>
-                        <div class="break-line"></div>
-                        <div class="account flex flex-between">
-                          <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
-                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>                          
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('sellingValiation')||'卖出估价'"></label>
-                            <el-input disabled :value='coinInfo.sellcny'>
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('sellVol')||'卖出量'"></label>
-                            <el-input :placeholder='minNum' v-model="sellForm.number">
-                                <span class="unit" slot="suffix" v-text="coinInfo.coinid"></span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('money')||'金额'"></label>                            
-                            <el-input disabled v-model="sellTotal">
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <button
-                            @click="sellHandle"
-                            class="btn-block btn-large btn-success btn-active"
-                            v-html="sellingLabel">
-                        </button>
-                    </div>
-                </div>
-                <div class="warning-box">
-                    <h3 v-text="$t('transferNote')||'转让须知'"></h3>
-                    <span class="color-666">1、转让后获得相应的CNY。  2、转让获得的CNY可以提现至您指定的账户内，最低提现金额为100。 3、转让是直接扣除您在本平台的相应代币的数量。 4、本平台仅提供收购各类币种，转让后无法取消操作。</span>
-                </div>
-                <div class="panel-container">
-                    <div class="panel-header flex flex-between flex-v-center">
-                        <span class="font-bit-bold font-18"
-                            v-text="$t('myOrder')||'我的订单'">
-                        </span>
-                        <!-- <router-link to=''>更多</router-link> -->
-                    </div>
-                    <div class="break-line"></div>
-                    <el-table
-                      max-height='350'
-                      v-loading='showLoading'
-                      :data='myOrderList'>
-                        <el-table-column prop='wdate'
-                            :label='$t("time")||"时间"'>
-                        </el-table-column>
-                        <el-table-column prop='coinid'
-                            :label='$t("currencyType")||"币种"'>
-                        </el-table-column>
-                        <el-table-column
-                           :label='$t("type")||"类型"'>
-                           <span slot-scope="scope"
-                           :class='scope.row.type=="0"?"color-danger":"color-success"'
-                           v-text="scope.row.type=='0'?$t('buy'):$t('sell')">
-                        </span>
-                        </el-table-column>
-                        <el-table-column
-                           :label='$t("amount")||"数量"'>
-                           <template slot-scope="scope">
-                                {{scope.row.number*1}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column :label='($t("unitPrice")||"单价")+"(CNY)"'>
-                            <template slot-scope="scope">
-                                {{scope.row.price*1}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column :label='($t("totalPrice")||"总价")+"(CNY)"'>
-                            <template slot-scope="scope">
-                                {{scope.row.zj*1}}
-                            </template>
-                        </el-table-column>
-                        <el-table-column
-                          width='100'
-                          :label='($t("status")||"状态")'>
-                            <template slot-scope="scope">
-                                <span @click="showOrderDetail(scope.row)"
-                                  :class="scope.row.state=='0'?'color-danger':'color-success'"
-                                  v-text="scope.row.state=='0'?'待付款':'已完成'"></span>
-                            </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-            </el-main>
-        </el-container>
-        <!-- 购买弹窗 -->
-        <dialog-box
-          width='25%'
-          :dialogTitle='$t("orderDetail")'
-          :showDialog='showDialog'
-          @onDialogClose='dialogClose'>
-          <div v-show="orderStatus==0" class="row">
-            <div class="column color-danger txt-center flex flex-between" v-text="$t('label134')"></div>
-          </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf" v-text="$t('owner')"></span>
-              <span class="span-rt" v-text="bankInfo.hz"></span>
+  <div class="main wh-full">
+    <my-header class="header-main">
+      <login-bar></login-bar>
+    </my-header>
+    <el-container>
+      <el-aside width='400px'>
+        <c2c-aside-comp
+          @onListClick="onListClick"
+          :myData='currencyList'
+        >
+        </c2c-aside-comp>
+      </el-aside>
+      <el-main>
+        <div class="panel-container p-rel flex flex-between">
+          <div class="form-wrap">
+            <div
+              class="font-18 font-bit-bold"
+              v-html="buyingLabel"
+            ></div>
+            <div class="break-line"></div>
+            <div class="account flex flex-between">
+              <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
+              <router-link
+                to='./property'
+                v-text="$t('recharge')||'充值'"
+              ></router-link>
             </div>
-          </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf"  v-text="$t('bankCardNo')"></span>
-              <span class="span-rt" v-text="bankInfo.bankcard">jogjgioejao</span>
+            <div class="input-group">
+              <label v-text="$t('buyingValiation')||'买入估价'"></label>
+              <el-input
+                disabled
+                :value='coinInfo.buycny'
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
             </div>
-          </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf"  v-text="$t('depositBank')"></span>
-              <span class="span-rt" v-text="bankInfo.khyh"></span>
+            <div class="input-group">
+              <label v-text="$t('buyVol')||'买入量'"></label>
+              <el-input
+                :placeholder="minNum"
+                v-model="buyForm.number"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                  v-text="coinInfo.coinid"
+                ></span>
+              </el-input>
             </div>
-          </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf"  v-text="$t('bankBranch')"></span>
-              <span class="span-rt" v-text="bankInfo.khzh"></span>
+            <div class="input-group">
+              <label v-text="$t('money')||'金额'"></label>
+              <el-input
+                disabled
+                v-model="buyTotal"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
             </div>
+            <button
+              @click="buyHandle"
+              class="btn-block btn-large btn-danger btn-active"
+              v-html="buyingLabel"
+            >
+            </button>
           </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf"  v-text="$t('transferAmount')"></span>
-              <span class="span-rt font-bold color-danger" v-text="'￥'+bankInfo.amount*1"></span>
+          <div class="vertical-line p-abs abs-h-center"></div>
+          <div class="form-wrap">
+            <div
+              class="font-18 font-bit-bold"
+              v-html="sellingLabel"
+            ></div>
+            <div class="break-line"></div>
+            <div class="account flex flex-between">
+              <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
+              <router-link
+                to='./property'
+                v-text="$t('recharge')||'充值'"
+              ></router-link>
             </div>
+            <div class="input-group">
+              <label v-text="$t('sellingValiation')||'卖出估价'"></label>
+              <el-input
+                disabled
+                :value='coinInfo.sellcny'
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('sellVol')||'卖出量'"></label>
+              <el-input
+                :placeholder='minNum'
+                v-model="sellForm.number"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                  v-text="coinInfo.coinid"
+                ></span>
+              </el-input>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('money')||'金额'"></label>
+              <el-input
+                disabled
+                v-model="sellTotal"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
+            </div>
+            <button
+              @click="sellHandle"
+              class="btn-block btn-large btn-success btn-active"
+              v-html="sellingLabel"
+            >
+            </button>
           </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf"  v-text="$t('status')"></span>
-              <span class="span-rt"
-                :class="orderStatus=='0'?'color-danger':'color-success'"
-                v-text="orderStatus==0?$t('label128'):$t('completed')">
+        </div>
+        <div class="warning-box">
+          <h3 v-text="$t('transferNote')||'转让须知'"></h3>
+          <span class="color-666">1、转让后获得相应的CNY。 2、转让获得的CNY可以提现至您指定的账户内，最低提现金额为100。 3、转让是直接扣除您在本平台的相应代币的数量。 4、本平台仅提供收购各类币种，转让后无法取消操作。</span>
+        </div>
+        <div class="panel-container">
+          <div class="panel-header flex flex-between flex-v-center">
+            <span
+              class="font-bit-bold font-18"
+              v-text="$t('myOrder')||'我的订单'"
+            >
+            </span>
+            <!-- <router-link to=''>更多</router-link> -->
+          </div>
+          <div class="break-line"></div>
+          <el-table
+            max-height='350'
+            v-loading='showLoading'
+            :data='myOrderList'
+          >
+            <el-table-column
+              prop='wdate'
+              :label='$t("time")||"时间"'
+            >
+            </el-table-column>
+            <el-table-column
+              prop='coinid'
+              :label='$t("currencyType")||"币种"'
+            >
+            </el-table-column>
+            <el-table-column :label='$t("type")||"类型"'>
+              <span
+                slot-scope="scope"
+                :class='scope.row.type=="0"?"color-danger":"color-success"'
+                v-text="scope.row.type=='0'?$t('buy'):$t('sell')"
+              >
               </span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="column flex flex-between">
-              <span class="span-lf"  v-text="$t('note')"></span>
-              <span class="span-rt" v-text="noteStr"></span>
-            </div>
-          </div>
-        </dialog-box>
-        <my-footer></my-footer>
-    </div>
+            </el-table-column>
+            <el-table-column :label='$t("amount")||"数量"'>
+              <template slot-scope="scope">
+                {{scope.row.number*1}}
+              </template>
+            </el-table-column>
+            <el-table-column :label='($t("unitPrice")||"单价")+"(CNY)"'>
+              <template slot-scope="scope">
+                {{scope.row.price*1}}
+              </template>
+            </el-table-column>
+            <el-table-column :label='($t("totalPrice")||"总价")+"(CNY)"'>
+              <template slot-scope="scope">
+                {{scope.row.zj*1}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              width='100'
+              :label='($t("status")||"状态")'
+            >
+              <template slot-scope="scope">
+                <span
+                  @click="showOrderDetail(scope.row)"
+                  :class="scope.row.state=='0'?'color-danger':'color-success'"
+                  v-text="scope.row.state=='0'?'待付款':'已完成'"
+                ></span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+      </el-main>
+    </el-container>
+    <!-- 购买弹窗 -->
+    <dialog-box
+      width='25%'
+      :dialogTitle='$t("orderDetail")'
+      :showDialog='showDialog'
+      @onDialogClose='dialogClose'
+    >
+      <div
+        v-show="orderStatus==0"
+        class="row"
+      >
+        <div
+          class="column color-danger txt-center flex flex-between"
+          v-text="$t('label134')"
+        ></div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('owner')"
+          ></span>
+          <span
+            class="span-rt"
+            v-text="bankInfo.hz"
+          ></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('bankCardNo')"
+          ></span>
+          <span
+            class="span-rt"
+            v-text="bankInfo.bankcard"
+          >jogjgioejao</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('depositBank')"
+          ></span>
+          <span
+            class="span-rt"
+            v-text="bankInfo.khyh"
+          ></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('bankBranch')"
+          ></span>
+          <span
+            class="span-rt"
+            v-text="bankInfo.khzh"
+          ></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('transferAmount')"
+          ></span>
+          <span
+            class="span-rt font-bold color-danger"
+            v-text="'￥'+bankInfo.amount*1"
+          ></span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('status')"
+          ></span>
+          <span
+            class="span-rt"
+            :class="orderStatus=='0'?'color-danger':'color-success'"
+            v-text="orderStatus==0?$t('label128'):$t('completed')"
+          >
+          </span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="column flex flex-between">
+          <span
+            class="span-lf"
+            v-text="$t('note')"
+          ></span>
+          <span
+            class="span-rt"
+            v-text="noteStr"
+          ></span>
+        </div>
+      </div>
+    </dialog-box>
+    <my-footer></my-footer>
+  </div>
 </template>
 <script>
 export default {

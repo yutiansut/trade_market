@@ -1,0 +1,108 @@
+$bg-white: #fff;
+$main-bg-color: #f5f5f5;
+$hover-bg-color: #991c22;
+$color-success: #4fa56d;
+$color-danger: #ff4b58;
+$bg-dark: #333333;
+$color-dark: #333;
+$color-active: #333;
+$font: "PingFang SC";
+$font-mini: 1.2rem;
+$font-default: 1.4rem;
+$font-normal: 1.6rem;
+$font-middile: 1.8rem;
+$font-large: 2rem;
+$font-ex-large: 2.4rem;
+$bd-size: 1rem;
+$bd-color: #e1e1e1;
+$default-border: $bd-size solid $bd-color;
+$mask-bg-rgba: rgba(0, 0, 0, 0.6);
+.color-danger {
+  color: $color-danger;
+}
+.color-success {
+  color: $color-success;
+}
+.active {
+  color: $color-active;
+}
+button {
+  appearance: none;
+  border: 1px solid transparent;
+  background: none;
+  border-radius: 0;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  &.btn-bordered {
+    border-color: #e5e5e5;
+  }
+  &.btn-large {
+    height: 9rem;
+    line-height: 8.8rem;
+    font-size: 1.6rem;
+  }
+  &.btn-block {
+    display: block;
+    width: 100%;
+  }
+  &.btn-inline {
+    display: inline-block;
+  }
+  &.btn-small {
+    height: 4.5rem;
+    line-height: 4.3rem;
+    font-size: 1.4rem;
+    width: 8em;
+  }
+  &.btn-mini {
+    height: 3em;
+    width: 5em;
+    line-height: 2.8rem;
+    font-size: 1.4rem;
+  }
+  &.btn-radius {
+    border-radius: 2rem;
+  }
+  &.btn-active:active {
+    opacity: 0.9;
+  }
+  &.btn-hover:hover {
+    opacity: 0.9;
+  }
+  &.btn-round {
+    border-radius: 10rem;
+  }
+  &.btn-default {
+    background-color: #fff;
+    color: #333;
+    border-color: #eee;
+  }
+  &.btn-dark {
+    background-color: $color-dark;
+    color: #fff;
+  }
+  &.btn-success {
+    background-color: $color-success;
+    color: #fff;
+  }
+  &.btn-danger {
+    background-color: $color-danger;
+    color: #fff;
+  }
+  &[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@mixin textVcenter($height: 4rem) {
+  height: $height;
+  line-height: $height;
+}
+
+@mixin breakLine($height: 1rem, $bgcolor: #e1e1e1, $width: 100%) {
+  height: $height;
+  background-color: $bgcolor;
+  width: $width;
+}

@@ -1,11 +1,11 @@
-'use strict'
-const path = require('path')
+"use strict";
+const path = require("path");
 module.exports = {
   dev: {
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsSubDirectory: "static",
+    assetsPublicPath: "/",
     proxyTable: {},
-    host: '127.0.0.1', 
+    host: "192.168.5.225",
     port: 8080,
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -13,19 +13,19 @@ module.exports = {
     poll: false,
     useEslint: true,
     showEslintErrorsInOverlay: false,
-    devtool: 'cheap-module-eval-source-map',
+    devtool: "cheap-module-eval-source-map",
     cacheBusting: true,
     cssSourceMap: true
   },
   build: {
-    index: path.resolve(__dirname, '../dist/index.html'),
-    assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    index: path.resolve(__dirname, "../dist/index.html"),
+    assetsRoot: path.resolve(__dirname, "../dist"),
+    assetsSubDirectory: "static",
+    assetsPublicPath: "/",
     productionSourceMap: true,
-    devtool: '#source-map',
+    devtool: "#source-map",
     productionGzip: false,
-    productionGzipExtensions: ['js', 'css'],
+    productionGzipExtensions: ["js", "css"],
     bundleAnalyzerReport: process.env.npm_config_report
   }
-}
+};

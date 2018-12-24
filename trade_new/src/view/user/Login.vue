@@ -1,93 +1,123 @@
 <template>
-    <div :style="bg" class="content p-rel">
-        <login-modal class="resize" :titleText='$t("login")||"登录"'>
-            <el-form label-position='top' @submit.native.prevent>
-              <!-- 登录第一步 -->
-              <template v-if="!checkLogin">
-                <el-form-item :label='$t("label154")'>
-                  <el-input v-model="checkLoginData.cellphone"
-                      name='cellphone'
-                      :placeholder='$t("label155")'
-                      @blur="validate(checkLoginData.cellphone,'cellphone')">
-                  </el-input>
-                </el-form-item>
-                <el-form-item :label='$t("password")||"密码"'>
-                    <el-input
-                      v-model="checkLoginData.password"
-                      name='password'
-                      type='password'
-                      :placeholder='$t("pwdPlaceholder")||"请输入密码"'
-                      @blur="validate(checkLoginData.password,'password')">
-                    </el-input>
-                </el-form-item>
-                <el-form-item :label='$t("imgCode")||"验证码"'>
-                    <div class="code-wrap flex flex-between">
-                        <el-input
-                          v-model="checkLoginData.verCode"
-                          name='verCode'
-                          :placeholder='$t("imgCodePlaceholder")||"请输入验证码"'
-                          @blur="validate(checkLoginData.verCode,'verCode')">
-                        </el-input>
-                        <div @click="createCode(verCodeNumArr,4)" class="code">
-                          <ver-code
-                            :contentHeight='38'
-                            :identifyCode='verCodeStr'>
-                          </ver-code>
-                        </div>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                  <button
-                    @click="loginStep"
-                    class="btn-block btn-large btn-danger btn-active"
-                    v-text="$t('nextStep')||'下一步'">
-                  </button>
-                </el-form-item>
-                <div class="flex flex-between">
-                    <router-link to='/user/resetpwd'>{{$t('forgetPwd')||"忘记密码"}}?</router-link>
-                    <router-link class="go-reg" to='/user/register' v-text='$t("registerNow")||"立即注册"'></router-link>
-                </div>
-              </template>
-              <!-- 登录验证 -->
-              <template v-else>
-                <el-form-item :label="$t('loginAuth')||'登录验证'">
-                  <el-radio-group v-model="loginData.type">
-                    <el-radio label="2">{{$t('mobileCode')||'手机验证码'}}</el-radio>
-                    <el-radio label='1' :disabled='bindGoogleAuth?false:true'>
-                      {{$t('googleCode')||'谷歌验证码'}}
-                    </el-radio>
-                  </el-radio-group>
-                </el-form-item>
-                <div class="mobile-code-wrap p-rel">
-                  <el-input
-                    v-show="loginData.type==2"
-                    v-model="loginData.mobileCode"
-                    name='mobileCode'
-                    :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
-                    :disabled="myMobileCode?false:true">
-                  </el-input>
-                  <el-input
-                    v-show="loginData.type==1"
-                    v-model="loginData.googleCode"
-                    name='googleCode'
-                    :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'>
-                  </el-input>
-                  <div v-show="loginData.type==2"
-                    @click='getMobileCode'
-                    class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
-                  </div>
-                </div>
-                <el-form-item>
-                  <button
-                    @click="loginHandle"
-                    class="btn-block btn-large btn-danger btn-active"
-                    v-text="$t('login')||'登录'">
-                  </button>
-                </el-form-item>
-              </template>
-            </el-form>
-        </login-modal>
-    </div>
+  <div
+    :style="bg"
+    class="content p-rel"
+  >
+    <login-modal
+      class="resize"
+      :titleText='$t("login")||"登录"'
+    >
+      <el-form
+        label-position='top'
+        @submit.native.prevent
+      >
+        <!-- 登录第一步 -->
+        <template v-if="!checkLogin">
+          <el-form-item :label='$t("label154")'>
+            <el-input
+              v-model="checkLoginData.username"
+              name='username'
+              :placeholder='$t("label162")'
+              @blur="validate(checkLoginData.username,'username')"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item :label='$t("password")||"密码"'>
+            <el-input
+              v-model="checkLoginData.password"
+              name='password'
+              type='password'
+              :placeholder='$t("pwdPlaceholder")||"请输入密码"'
+              @blur="validate(checkLoginData.password,'password')"
+            >
+            </el-input>
+          </el-form-item>
+          <el-form-item :label='$t("imgCode")||"验证码"'>
+            <div class="code-wrap flex flex-between">
+              <el-input
+                v-model="checkLoginData.verCode"
+                name='verCode'
+                :placeholder='$t("imgCodePlaceholder")||"请输入验证码"'
+                @blur="validate(checkLoginData.verCode,'verCode')"
+              >
+              </el-input>
+              <div
+                @click="createCode(verCodeNumArr,4)"
+                class="code"
+              >
+                <ver-code
+                  :contentHeight='38'
+                  :identifyCode='verCodeStr'
+                >
+                </ver-code>
+              </div>
+            </div>
+          </el-form-item>
+          <el-form-item>
+            <button
+              @click="loginStep"
+              class="btn-block btn-large btn-danger btn-active"
+              v-text="$t('nextStep')||'下一步'"
+            >
+            </button>
+          </el-form-item>
+          <div class="flex flex-between">
+            <router-link to='/user/resetpwd'>{{$t('forgetPwd')||"忘记密码"}}?</router-link>
+            <router-link
+              class="go-reg"
+              to='/user/register'
+              v-text='$t("registerNow")||"立即注册"'
+            ></router-link>
+          </div>
+        </template>
+        <!-- 登录验证 -->
+        <template v-else>
+          <el-form-item :label="$t('loginAuth')||'登录验证'">
+            <el-radio-group v-model="loginData.type">
+              <el-radio label="2">{{$t('mobileCode')||'手机验证码'}}</el-radio>
+              <el-radio
+                label='1'
+                :disabled='bindGoogleAuth?false:true'
+              >
+                {{$t('googleCode')||'谷歌验证码'}}
+              </el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <div class="mobile-code-wrap p-rel">
+            <el-input
+              v-show="loginData.type==2"
+              v-model="loginData.mobileCode"
+              name='mobileCode'
+              :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
+              :disabled="myMobileCode?false:true"
+            >
+            </el-input>
+            <el-input
+              v-show="loginData.type==1"
+              v-model="loginData.googleCode"
+              name='googleCode'
+              :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
+            >
+            </el-input>
+            <div
+              v-show="loginData.type==2"
+              @click='getMobileCode'
+              class="mobile-code abs-v-center color-danger"
+            >{{$t(this.codeTexti18n)}}{{second}}
+            </div>
+          </div>
+          <el-form-item>
+            <button
+              @click="loginHandle"
+              class="btn-block btn-large btn-danger btn-active"
+              v-text="$t('login')||'登录'"
+            >
+            </button>
+          </el-form-item>
+        </template>
+      </el-form>
+    </login-modal>
+  </div>
 </template>
 <script>
 import loginModal from "@/components/Login/LoginModal.vue";
@@ -100,6 +130,7 @@ export default {
     return {
       bg: `background-image:url(${bg})`,
       checkLoginData: {
+        username: "",
         cellphone: "",
         password: "",
         verCode: ""
@@ -181,6 +212,12 @@ export default {
       if (val == "") return;
       this.canSubmit = true;
       switch (name) {
+        case "username":
+          if (!this.Util.isUserName(val)) {
+            this.errMsg("label159");
+            this.canSubmit = false;
+          }
+          break;
         case "cellphone":
           if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
             this.errMsg("label156");

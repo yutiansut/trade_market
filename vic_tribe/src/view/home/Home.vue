@@ -1,15 +1,12 @@
 <template>
-    <div class="main wh-full">
-        <keep-alive>
-          <router-view></router-view>
-        </keep-alive>
-    </div>
+  <div class="app-body overflow-y">
+    首页
+  </div>
 </template>
 <script>
-export default {
-  data() {}
-};
+export default {};
 </script>
-
 <style lang="scss" scoped>
 </style>
+
+

@@ -1,5 +1,10 @@
 const Utils = (function () {
     return {
+        isUserName(data) {
+            if (data == "") return false;
+            let pattern = /^[A-Za-z0-9]{6,12}$/;
+            return pattern.test(data);
+        },
         isPhone(data) {
             let pattern = /^(1[3456789])\d{9}$/;
             if (data == "") return false;

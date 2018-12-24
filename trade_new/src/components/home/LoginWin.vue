@@ -1,111 +1,156 @@
 <template>
-    <div class="container abs-v-center">
-        <div class="win-title" v-text="$t('welcome')"></div>
-        <div v-if="userData.isLogin">
-            <div class="user-info">
-                <h3 class="nick-name" v-text="userData.tel"></h3>
-                <div class="cellphone">
-                    <span><em v-text="$t('accountId')"></em> ：{{userData.username||userData.tel}}</span>
-                    <span class="color-primary"></span>
-                </div>
-                <div><em v-text="$t('totalEstimate')"></em>：</div>
-                <div class="wealth">
-                    <span v-show="visiable" class="color-primary" v-text="'￥'+(userData.balance||'0')"></span>
-                    <span v-show='!visiable' class="color-primary">*** ***</span>
-                    <i @click="hideAccount" class="iconfont" :class="visiable?'icon-eye':'icon-eyeclose'"></i>
-                </div>
-            </div>
-            <div class="break-line"></div>
-            <div class="btn-group">
-                <button @click.stop='navigateTo("/property")'
-                  class="btn-inline btn-hover btn-small btn-danger"
-                  v-text="$t('recharge')">
-                </button>
-                <button @click.stop='navigateTo("/property")'
-                  class="btn-inline btn-hover btn-small btn-danger"
-                  v-text="$t('withdraw')">
-                </button>
-                <button @click.stop='navigateTo("/property")'
-                  class="btn-inline btn-hover btn-small btn-danger"
-                  v-text="$t('myFund')">
-                </button>
-            </div>
+  <div class="container abs-v-center">
+    <div
+      class="win-title"
+      v-text="$t('welcome')"
+    ></div>
+    <div v-if="userData.isLogin">
+      <div class="user-info">
+        <h3
+          class="nick-name"
+          v-text="userData.tel"
+        ></h3>
+        <div class="cellphone">
+          <span><em v-text="$t('accountId')"></em> ：{{userData.username||userData.tel}}</span>
+          <span class="color-primary"></span>
         </div>
-        <div v-else>
-          <!-- 登录第一步 -->
-          <template v-if="!checkLogin">
-            <el-input
-              @blur="validate(checkLoginData.cellphone,'cellphone')"
-              v-model="checkLoginData.cellphone"
-              :placeholder="$t('cellphone')||'手机号'">
-            </el-input>
-            <el-input
-              @blur="validate(checkLoginData.password,'password')"
-              type='password'
-              v-model="checkLoginData.password"
-              maxlength='12'
-              :placeholder="$t('password')||'密码'">
-            </el-input>
-            <div class="form-group">
-                <div @click="createCode(verCodeNumArr,4)" class="code-box">
-                  <ver-code
-                    :identifyCode='verCodeStr'
-                    :contentHeight='38'
-                    :contentWidth='78'>
-                  </ver-code>
-                </div>
-                <div class="code-input">
-                  <el-input
-                    @blur="validate(checkLoginData.code,'code')"
-                    type='tel'
-                    v-model="checkLoginData.code"
-                    :placeholder="$t('imgCode')||'验证码'">
-                  </el-input>
-                </div>
-            </div>
-            <button
-              @click.prevent="loginStep"
-              class="btn-block btn-large btn-active btn-danger"
-              v-text="$t('nextStep')||'下一步'">
-            </button>
-            <div class="panel">
-                <router-link to='/user/resetpwd' v-text="$t('forgetPwd')+'?'||'忘记密码？'"></router-link>
-                <router-link to='/user/register' v-text="$t('onlineRegister'||'在线注册')"></router-link>
-            </div>
-          </template>
-          <!-- 登录验证 -->
-          <template v-else>
-            <el-radio-group v-model="loginData.type">
-              <el-radio label="2">{{$t('mobileCode')||'短信验证码'}}</el-radio>
-              <el-radio label='1' :disabled='bindGoogleAuth?false:true'>{{$t('googleCode')||'谷歌验证码'}}</el-radio>
-            </el-radio-group>
-            <div class="mobile-code-wrap p-rel">
-              <el-input
-                v-show="loginData.type==2"
-                v-model="loginData.mobileCode"
-                name='mobileCode'
-                :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
-                :disabled="myMobileCode?false:true">
-              </el-input>
-              <el-input
-                v-show="loginData.type==1"
-                v-model="loginData.googleCode"
-                name='googleCode'
-                :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'>
-              </el-input>
-              <div v-show="loginData.type==2"
-                @click='getMobileCode'
-                class="mobile-code abs-v-center color-danger">{{$t(this.codeTexti18n)}}{{second}}
-              </div>
-            </div>
-            <button
-              @click.prevent="loginHandle"
-              class="btn-block btn-large btn-active btn-danger"
-              v-text="$t('login')||'登录'">
-            </button>
-          </template>
+        <div><em v-text="$t('totalEstimate')"></em>：</div>
+        <div class="wealth">
+          <span
+            v-show="visiable"
+            class="color-primary"
+            v-text="'￥'+(userData.balance||'0')"
+          ></span>
+          <span
+            v-show='!visiable'
+            class="color-primary"
+          >*** ***</span>
+          <i
+            @click="hideAccount"
+            class="iconfont"
+            :class="visiable?'icon-eye':'icon-eyeclose'"
+          ></i>
         </div>
+      </div>
+      <div class="break-line"></div>
+      <div class="btn-group">
+        <button
+          @click.stop='navigateTo("/property")'
+          class="btn-inline btn-hover btn-small btn-danger"
+          v-text="$t('recharge')"
+        >
+        </button>
+        <button
+          @click.stop='navigateTo("/property")'
+          class="btn-inline btn-hover btn-small btn-danger"
+          v-text="$t('withdraw')"
+        >
+        </button>
+        <button
+          @click.stop='navigateTo("/property")'
+          class="btn-inline btn-hover btn-small btn-danger"
+          v-text="$t('myFund')"
+        >
+        </button>
+      </div>
     </div>
+    <div v-else>
+      <!-- 登录第一步 -->
+      <template v-if="!checkLogin">
+        <el-input
+          @blur="validate(checkLoginData.username,'username')"
+          v-model="checkLoginData.username"
+          :placeholder="$t('label162')||'请输入用户名'"
+        >
+        </el-input>
+        <el-input
+          @blur="validate(checkLoginData.password,'password')"
+          type='password'
+          v-model="checkLoginData.password"
+          maxlength='12'
+          :placeholder="$t('password')||'密码'"
+        >
+        </el-input>
+        <div class="form-group">
+          <div
+            @click="createCode(verCodeNumArr,4)"
+            class="code-box"
+          >
+            <ver-code
+              :identifyCode='verCodeStr'
+              :contentHeight='38'
+              :contentWidth='78'
+            >
+            </ver-code>
+          </div>
+          <div class="code-input">
+            <el-input
+              @blur="validate(checkLoginData.code,'code')"
+              type='tel'
+              v-model="checkLoginData.code"
+              :placeholder="$t('imgCode')||'验证码'"
+            >
+            </el-input>
+          </div>
+        </div>
+        <button
+          @click.prevent="loginStep"
+          class="btn-block btn-large btn-active btn-danger"
+          v-text="$t('nextStep')||'下一步'"
+        >
+        </button>
+        <div class="panel">
+          <router-link
+            to='/user/resetpwd'
+            v-text="$t('forgetPwd')+'?'||'忘记密码？'"
+          ></router-link>
+          <router-link
+            to='/user/register'
+            v-text="$t('onlineRegister'||'在线注册')"
+          ></router-link>
+        </div>
+      </template>
+      <!-- 登录验证 -->
+      <template v-else>
+        <el-radio-group v-model="loginData.type">
+          <el-radio label="2">{{$t('sendCode')||'短信验证码'}}</el-radio>
+          <el-radio
+            label='1'
+            :disabled='bindGoogleAuth?false:true'
+          >{{$t('googleCode')||'谷歌验证码'}}</el-radio>
+        </el-radio-group>
+        <div class="mobile-code-wrap p-rel">
+          <el-input
+            v-show="loginData.type==2"
+            v-model="loginData.sendCode"
+            name='sendCode'
+            :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
+            :disabled="myCode?false:true"
+          >
+          </el-input>
+          <el-input
+            v-show="loginData.type==1"
+            v-model="loginData.googleCode"
+            name='googleCode'
+            :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
+          >
+          </el-input>
+          <div
+            v-show="loginData.type==2"
+            @click='sendCode'
+            class="mobile-code abs-v-center color-danger"
+          >{{$t(this.codeTexti18n)}}{{second}}
+          </div>
+        </div>
+        <button
+          @click.prevent="loginHandle"
+          class="btn-block btn-large btn-active btn-danger"
+          v-text="$t('login')||'登录'"
+        >
+        </button>
+      </template>
+    </div>
+  </div>
 </template>
 <script>
 import verCode from "@/components/other/verCode";
@@ -119,18 +164,19 @@ export default {
       visiable: 1,
       checkLogin: false,
       checkLoginData: {
+        username: "",
         cellphone: "",
         password: "",
         code: ""
       },
       loginData: {
         type: "2", //1 是google验证，2手机验证
-        mobileCode: "",
+        sendCode: "",
         googleCode: ""
       },
       bindGoogleAuth: false,
       myGoogleCode: false,
-      myMobileCode: false,
+      myCode: false,
       codeTexti18n: "getMsgCode",
       second: "",
       canGetCode: true,
@@ -171,7 +217,7 @@ export default {
       this.checkLogin = false;
       this.loginData = {
         type: "2",
-        mobileCode: "",
+        sendCode: "",
         googleCode: ""
       };
       this.checkLoginData = {
@@ -200,7 +246,7 @@ export default {
         }
       });
     },
-    getMobileCode() {
+    sendCode() {
       if (!this.canGetCode || !this.Util.isPhone(this.checkLoginData.cellphone))
         return false;
       this.countDown();
@@ -209,7 +255,7 @@ export default {
         showLoading: true
       }).then(res => {
         if (res.code == "0") {
-          this.myMobileCode = true;
+          this.myCode = true;
         } else {
           this.errMsg(res.msg);
         }
@@ -240,7 +286,7 @@ export default {
     },
     // 登录验证
     loginHandle() {
-      if (this.loginData.mobileCode == "" && this.loginData.googleCode == "") {
+      if (this.loginData.sendCode == "" && this.loginData.googleCode == "") {
         this.errMsg("请填写完整信息");
         return;
       }
@@ -248,7 +294,7 @@ export default {
         type: this.loginData.type,
         tel: this.checkLoginData.cellphone,
         showLoading: true,
-        code: this.loginData.mobileCode || this.loginData.googleCode
+        code: this.loginData.sendCode || this.loginData.googleCode
       }).then(res => {
         if (res.code == "0") {
           this.storage.set("isLogin", true);
@@ -298,7 +344,7 @@ export default {
     onTypeChage() {
       this.timer && clearInterval(this.timer);
       this.codeTexti18n = "getMsgCode";
-      this.loginData.mobileCode = "";
+      this.loginData.sendCode = "";
       this.loginData.googleCode = "";
       this.second = "";
       this.canGetCode = true;
