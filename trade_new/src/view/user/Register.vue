@@ -265,7 +265,7 @@ export default {
         // 手机验证码
         if (!this.Util.isPhone(this.registerData.accountCode)) return false;
         this.request(this.api.sendcode, {
-          tel: this.registerData.cellphone,
+          tel: this.registerData.accountCode,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
@@ -279,7 +279,7 @@ export default {
         //邮箱验证码
         if (!this.Util.isEmail(this.registerData.accountCode)) return false;
         this.request(this.api.setemailcode, {
-          email: this.registerData.email,
+          email: this.registerData.accountCode,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
@@ -304,13 +304,13 @@ export default {
       }
       if (!this.canSubmit) return;
       let postData = {
-        type: this.registerData.type,
+        type: this.registerData.type - 1,
         account: this.registerData.account,
-        accountCode: this.registerData.accountCode,
+        accountcode: this.registerData.accountCode,
         password: this.registerData.password,
         code: this.registerData.formCode,
         showLoading: true,
-        parent: this.registerData.recommender || ""
+        parent: this.registerData.recommender || null
       };
       this.request(this.api.register, postData).then(res => {
         if (res.code == "0") {
