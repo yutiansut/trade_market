@@ -19,7 +19,10 @@ const routes = [
         path: "/home",
         component: Home,
         name: "Home",
-        meta: { title: "首页" }
+        meta: {
+          title: "首页",
+          removeHeader: true
+        }
       },
       {
         path: "/c2c/",
@@ -44,7 +47,7 @@ const routes = [
         name: "User",
         component: User,
         meta: {
-          title: "用户中心",
+          title: "我的",
           auth: true
         }
       }

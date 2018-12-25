@@ -1,5 +1,8 @@
 <template>
-  <div class="header van-hairline--bottom">
+  <div
+    v-if="$store.state.showMainHeader"
+    class="header van-hairline--bottom"
+  >
     <van-nav-bar
       :title="$store.state.headerTitle"
       :right-text="rightText"
@@ -12,7 +15,7 @@
 <script>
 export default {
   name: "my-header",
-  props: ["rightText"],
+  props: ["rightText", "showHeader"],
   data() {
     return {
       canBack: false

@@ -70,6 +70,8 @@ router.beforeEach((to, from, next) => {
     next({ path: "/" });
   }
   to.meta.title && (document.title = to.meta.title);
+  // 设置是否加载通用的header
+  Store.commit('setMainHeaderShow', !to.meta.removeHeader)
   Store.commit("setHeaderTitle", to.meta.title);
   if (to.meta.auth) {
     if (myStorage.get("token")) {

@@ -6,7 +6,8 @@ export default new Vuex.Store({
     showFooter: true,
     headerTitle: "",
     footerItemIndex: 0,
-    showHeaderBack: false
+    showHeaderBack: false,
+    showMainHeader: true
   },
   mutations: {
     loginState(state) {
@@ -23,6 +24,9 @@ export default new Vuex.Store({
     },
     setShowHeaderBack(state) {
       state.showHeaderBack = !state.showHeaderBack;
+    },
+    setMainHeaderShow(state, val) {
+      state.showMainHeader = val;
     }
   },
   actions: {
