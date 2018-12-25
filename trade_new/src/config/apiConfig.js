@@ -330,9 +330,13 @@ let apiCfg = (function () {
         addvoterequest: {
             url: 'addvoterequest'
         },
-        //注册时获取验证码
+        //注册时获取邮箱验证码
         setemailcode: {
             url: 'setemailcode'
+        },
+        //登录时获取邮箱验证码
+        sendemailcode: {
+            url: 'sendemailcode'
         }
     }
 }());

@@ -45,24 +45,26 @@ const routes = [
         component: User,
         meta: {
           title: "用户中心",
-          auth: false
+          auth: true
         }
       }
     ]
   }, {
-    path: "/account",
+    path: "/userentry",
     name: "Account",
     component: userMain,
-    redirect: "/account/login",
+    redirect: "/userentry/login",
     children: [{
-      path: "/account/login",
+      path: "/userentry/login",
+      name: "Login",
       component: Login,
       meta: {
         title: "用户登录",
         auth: false
       }
     }, {
-      path: "/account/register",
+      path: "/userentry/register",
+      name: "Register",
       component: Register,
       meta: {
         title: "用户注册",

@@ -11,7 +11,7 @@
           v-text="userData.tel"
         ></h3>
         <div class="cellphone">
-          <span><em v-text="$t('accountId')"></em> ：{{userData.username||userData.tel}}</span>
+          <span><em v-text="$t('accountId')"></em> ：{{userData.account||userData.tel}}</span>
           <span class="color-primary"></span>
         </div>
         <div><em v-text="$t('totalEstimate')"></em>：</div>
@@ -58,8 +58,8 @@
       <!-- 登录第一步 -->
       <template v-if="!checkLogin">
         <el-input
-          @blur="validate(checkLoginData.username,'username')"
-          v-model="checkLoginData.username"
+          @blur="validate(checkLoginData.account,'account')"
+          v-model="checkLoginData.account"
           :placeholder="$t('label162')||'请输入用户名'"
         >
         </el-input>
@@ -113,30 +113,53 @@
       <!-- 登录验证 -->
       <template v-else>
         <el-radio-group v-model="loginData.type">
-          <el-radio label="2">{{$t('sendCode')||'短信验证码'}}</el-radio>
           <el-radio
-            label='1'
+            :disabled='bindCellphone?false:true'
+            label="1"
+          >{{$t('mobileCode')||'手机验证码'}}</el-radio>
+          <el-radio
+            label='0'
             :disabled='bindGoogleAuth?false:true'
-          >{{$t('googleCode')||'谷歌验证码'}}</el-radio>
+          >
+            {{$t('googleCode')||'谷歌验证码'}}
+          </el-radio>
+          <el-radio
+            label='2'
+            :disabled='bindEmail?false:true'
+          >
+            {{$t('label161')||'邮箱验证码'}}
+          </el-radio>
         </el-radio-group>
+        <el-input
+          v-show="loginData.type=='1'"
+          v-model='loginData.codeAccount'
+          :placeholder='$t("mobilePlaceholder")'
+        >
+        </el-input>
+        <el-input
+          v-show="loginData.type=='2'"
+          v-model='loginData.codeAccount'
+          :placeholder='$t("emailPlaceholder")'
+        >
+        </el-input>
         <div class="mobile-code-wrap p-rel">
           <el-input
-            v-show="loginData.type==2"
-            v-model="loginData.sendCode"
-            name='sendCode'
-            :placeholder='$t("mobileCodePlaceholder")||"请输入短信验证码"'
+            v-show="loginData.type!=0"
+            v-model="loginData.code"
+            name='mobileCode'
+            :placeholder='loginData.type=="1"?$t("mobileCode"):$t("label161")'
             :disabled="myCode?false:true"
           >
           </el-input>
           <el-input
-            v-show="loginData.type==1"
-            v-model="loginData.googleCode"
+            v-show="loginData.type==0"
+            v-model="loginData.code"
             name='googleCode'
             :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
           >
           </el-input>
           <div
-            v-show="loginData.type==2"
+            v-show="loginData.type!=0"
             @click='sendCode'
             class="mobile-code abs-v-center color-danger"
           >{{$t(this.codeTexti18n)}}{{second}}
@@ -164,25 +187,26 @@ export default {
       visiable: 1,
       checkLogin: false,
       checkLoginData: {
-        username: "",
-        cellphone: "",
+        account: "",
         password: "",
         code: ""
       },
       loginData: {
-        type: "2", //1 是google验证，2手机验证
-        sendCode: "",
-        googleCode: ""
+        type: "1", //0 是google验证，1手机验证,2邮箱验证
+        code: "",
+        codeAccount: ""
       },
       bindGoogleAuth: false,
-      myGoogleCode: false,
+      bindCellphone: false,
+      bindEmail: false,
       myCode: false,
       codeTexti18n: "getMsgCode",
       second: "",
       canGetCode: true,
       verCodeStr: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      userData: this.userModel
+      userData: this.userModel,
+      canSubmit: false
     };
   },
   mounted() {
@@ -203,7 +227,7 @@ export default {
           this.userData = Object.assign({}, this.userData, {
             balance: res.data.amount * 1,
             tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
-            username: res.data.userinfo[0] && res.data.userinfo[0].username
+            account: res.data.userinfo[0] && res.data.userinfo[0].account
           });
         } else {
           this.errMsg(res.msg);
@@ -217,11 +241,11 @@ export default {
       this.checkLogin = false;
       this.loginData = {
         type: "2",
-        sendCode: "",
-        googleCode: ""
+        code: "",
+        codeAccount: ""
       };
       this.checkLoginData = {
-        cellphone: "",
+        account: "",
         password: "",
         code: ""
       };
@@ -247,67 +271,119 @@ export default {
       });
     },
     sendCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.checkLoginData.cellphone))
-        return false;
+      if (this.loginData.codeAccount == "" || !this.canGetCode) return false;
       this.countDown();
-      this.request(this.api.sendcodeuser, {
-        tel: this.checkLoginData.cellphone,
-        showLoading: true
-      }).then(res => {
-        if (res.code == "0") {
-          this.myCode = true;
-        } else {
-          this.errMsg(res.msg);
+      if (this.loginData.type == "2") {
+        // 获取邮箱验证码
+        if (!this.Util.isEmail(this.loginData.codeAccount)) {
+          this.errMsg("邮箱格式不正确");
+          return false;
         }
-      });
+        this.request(this.api.sendemailcode, {
+          email: this.loginData.codeAccount,
+          showLoading: true
+        }).then(res => {
+          if (res.code == "0") {
+            this.myCode = true;
+            this.successMsg(res.msg);
+          } else {
+            this.errMsg(res.msg || "获取验证码失败");
+          }
+        });
+      } else {
+        // 获取手机验证码
+        if (!this.Util.isPhone(this.loginData.codeAccount)) {
+          this.errMsg("label123");
+          return false;
+        }
+        this.request(this.api.sendcodeuser, {
+          tel: this.loginData.codeAccount,
+          showLoading: true
+        }).then(res => {
+          if (res.code == "0") {
+            this.myCode = true;
+            this.successMsg(res.msg);
+          } else {
+            this.errMsg(res.msg || "获取验证码失败");
+          }
+        });
+      }
     },
     // 第一步登录
     loginStep() {
-      for (let key in this.checkLoginData) {
-        let item = this.checkLoginData[key];
-        if (item == "") {
-          this.errMsg("请填写完整信息");
-          return;
-        }
-      }
+      if (!this.canSubmit) return;
       this.request(this.api.checklogin, {
-        tel: this.checkLoginData.cellphone,
+        account: this.checkLoginData.account,
         password: this.checkLoginData.password,
         showLoading: true
       }).then(res => {
-        if (res.code == 0 || res.code == 10000) {
-          res.code == 10000 && (this.bindGoogleAuth = false);
-          res.code == 0 && (this.bindGoogleAuth = true);
-          this.checkLogin = true;
-        } else {
-          this.errMsg(res.msg || "账号或者密码错误");
+        if (res && res.code == "30") {
+          this.errMsg(res.msg || "登录失败");
+          return false;
         }
+        this.bindGoogleAuth = res.data.isGoogle;
+        this.bindCellphone = res.data.isCellphone;
+        this.bindEmail = res.data.isEmail;
+        // switch (res.code) {
+        //   case "10001":
+        //     this.bindGoogleAuth = false;
+        //     this.bindCellphone = true;
+        //     this.bindEmail = true;
+        //     break;
+        //   case "10002":
+        //     this.bindCellphone = true;
+        //     this.bindGoogleAuth = false;
+        //     this.bindEmail = false;
+        //     break;
+        //   case "10003":
+        //     this.loginData.type = "2";
+        //     this.bindEmail = true;
+        //     this.bindGoogleAuth = false;
+        //     this.bindCellphone = false;
+        //     break;
+        //   case "10004":
+        //     this.bindEmail = false;
+        //     this.bindGoogleAuth = true;
+        //     this.bindCellphone = true;
+        //     break;
+        //   case "10005":
+        //     this.loginData.type = "1";
+        //     this.bindCellphone = false;
+        //     this.bindEmail = true;
+        //     this.bindGoogleAuth = true;
+        //     break;
+        // }
+        this.checkLogin = true;
       });
     },
     // 登录验证
     loginHandle() {
-      if (this.loginData.sendCode == "" && this.loginData.googleCode == "") {
+      if (this.loginData.code == "") {
         this.errMsg("请填写完整信息");
         return;
       }
       this.request(this.api.login, {
         type: this.loginData.type,
-        tel: this.checkLoginData.cellphone,
-        showLoading: true,
-        code: this.loginData.sendCode || this.loginData.googleCode
+        account: this.loginData.codeAccount,
+        code: this.loginData.code,
+        showLoading: true
       }).then(res => {
-        if (res.code == "0") {
-          this.storage.set("isLogin", true);
-          this.storage.set("token", res.data.token);
-          this.storage.set("cellphone", this.checkLoginData.cellphone);
-          this.successMsg(res.msg);
-          this.userModel.cellphone = this.checkLoginData.cellphone;
-          this.userData.isLogin = true;
-          this.getUserInfo();
-          this.userModel = this.userData;
-        } else {
-          this.errMsg(res.msg);
+        if (res && res.code != "0") {
+          this.errMsg(res.msg || "登录失败");
+          return false;
         }
+        this.successMsg(res.msg);
+        this.storage.set("isLogin", true);
+        this.storage.set("token", res.data.token);
+        if (res.data.userinfo && res.data.userinfo[0]) {
+          this.userData.cellphone = res.data.userinfo[0].tel || "";
+          this.userData.email = res.data.userinfo[0].email || "";
+          this.storage.set("cellphone", this.userData.cellphone);
+          this.storage.set("email", this.userData.email);
+        }
+        this.userData.isLogin = true;
+        this.getUserInfo();
+        this.userModel = this.userData;
       });
     },
     createCode(arr, len) {
@@ -322,18 +398,31 @@ export default {
     // y验证
     validate(val, name) {
       if (val == "") return;
+      this.canSubmit = true;
       switch (name) {
+        case "account":
+          if (!this.Util.isUserName(val)) {
+            this.errMsg("label159");
+            this.canSubmit = false;
+          }
+          break;
         case "cellphone":
-          !this.Util.isPhone(val) &&
-            this.errMsg("label123" || "手机号码格式不正确");
+          if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
+            this.errMsg("label156");
+            this.canSubmit = false;
+          }
           break;
         case "password":
-          !this.Util.isPassword(val) &&
-            this.errMsg("label124" || "密码必须是以英文字母开头的6-12位字符");
+          if (!this.Util.isPassword(val)) {
+            this.errMsg("label124");
+            this.canSubmit = false;
+          }
           break;
-        case "verCode":
-          val != this.verCodeStr &&
-            this.errMsg("label126" || "图形验证码不正确");
+        case "code":
+          if (val != this.verCodeStr) {
+            this.errMsg("label126");
+            this.canSubmit = false;
+          }
           break;
       }
     },
@@ -344,8 +433,8 @@ export default {
     onTypeChage() {
       this.timer && clearInterval(this.timer);
       this.codeTexti18n = "getMsgCode";
-      this.loginData.sendCode = "";
-      this.loginData.googleCode = "";
+      this.loginData.code = "";
+      this.loginData.codeAccount = "";
       this.second = "";
       this.canGetCode = true;
     }
@@ -445,6 +534,13 @@ $mt: 9px;
     margin-top: 30px;
     display: flex;
     justify-content: space-between;
+  }
+  .el-radio {
+    margin-left: 0;
+    margin-top: 10px;
+    &:first-child {
+      margin-right: 10px;
+    }
   }
 }
 </style>

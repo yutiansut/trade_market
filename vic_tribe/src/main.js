@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
       next();
     } else {
       myStorage.set("isLogin", false);
-      next({ path: "account/login" });
+      next({ path: "/userentry/login" });
     }
   } else {
     if (to.name == "Login") {

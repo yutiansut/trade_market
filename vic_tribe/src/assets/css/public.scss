@@ -1,0 +1,43 @@
+.user-entry {
+  .page-head {
+    color: #eee;
+    margin-top: 3.74vh;
+    span:first-child {
+      margin-right: 0.8rem;
+    }
+  }
+  .label {
+    color: #ababab;
+    margin-top: 3.74vh;
+  }
+  .link-to {
+    color: #e0e0e0;
+    margin-top: 1rem;
+    margin-bottom: 6.28vh;
+    display: block;
+  }
+  .form {
+    margin-top: 4rem;
+    .van-row {
+      color: #e0e0e0;
+      height: 3rem;
+      margin-top: 5vh;
+      border-bottom: 1px solid #94969b;
+      .van-col {
+        height: 100%;
+        font-size: 1.6rem;
+      }
+      .iconfont {
+        position: relative;
+        top: -0.2rem;
+      }
+    }
+    input {
+      background: none;
+      font-size: inherit;
+      width: 100%;
+      border: none;
+      outline: none;
+    }
+  }
+}

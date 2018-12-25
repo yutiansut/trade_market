@@ -1,216 +1,304 @@
 <template>
-    <div class="content">
-        <div class="title font-16 font-bold" v-text="$t('accountSecurity')||'账户安全'"></div>
-        <!-- 认证 -->
-        <div class="table-wrap bd-bottom">
-            <div class="header" v-text="$t('security')||'安全认证'"></div>
-            <ul class="safe-auth">
-              <!-- 修改密码 -->
-              <li>
-                <span>
-                  <i class="el-icon-success color-success"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('loginPwd')||"登录密码"}}</em>
-                </span>
-                <span
-                  v-text="$t('loginPwdDesp')||'用于登录时的密码'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a @click="bindHandle('loginPassword')"
-                    class="color-danger"
-                    href="javascript:"
-                    v-text="$t('change')||'修改'">
-                  </a>
-                </span>
-              </li>
-              <!-- 绑定资金密码 -->
-              <li>
-                <span>
-                  <i :class="bindState.tradstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>                  
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('fundPwd')||"资金密码"}}</em>
-                </span>
-                <span
-                  v-text="$t('fundPwdDesp')||'交易时密码，请谨慎保管'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a
-                    @click="bindHandle('financialPassword')"
-                    class="color-danger"
-                    href="javascript:"
-                    v-text="bindState.tradstate=='0'?$t('bind')||'绑定':$t('change')">
-                  </a>
-                </span>
-              </li>
-              <!-- 手机账户 -->
-              <li>
-                <span>
-                  <i class="el-icon-success color-success"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('mobileAccount')||"手机账户"}}</em>
-                </span>
-                <span
-                  v-text="$t('mobileAccountDesp')||'登录时唯一账号'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a
-                    v-if="!bindState.tel"
-                    class="color-danger"
-                    href="javascript:"
-                    v-text="$t('bind')||'绑定'">
-                  </a>
-                  <em v-else v-text="bindState.tel" class="color-999"></em>
-                </span>
-              </li>
-              <!-- 邮箱 -->
-              <li>
-                <span>
-                  <i :class="bindState.emailstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('email')||"电子邮箱"}}</em>
-                </span>
-                <span
-                  v-text="$t('emailDesp')||'安全通知、登录、安全设置时输入'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a v-if="bindState.emailstate=='0'"
-                    @click="bindHandle('email')"
-                    class="color-danger"
-                    href="javascript:"
-                    v-text="$t('bind')||'绑定'">
-                  </a>
-                  <em v-else v-text="bindState.email||$t('binded')" class="color-999"></em>
-                </span>
-              </li>
-              <!-- 银行账户 -->
-              <li>
-                <span>
-                  <i :class="bindState.bankstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('bankAccount')||"银行账户"}}</em>
-                </span>
-                <span
-                  v-text="$t('bankAccountDesp')||'用户交易买入、卖出'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a
-                    @click="bindHandle('bankAccount')"
-                    class="color-danger"
-                    href="javascript:"
-                    v-text="bindState.bankstate=='0'?$t('bind')||'绑定':$t('change')">
-                  </a>
-                </span>
-              </li>
-              <!-- google账户 -->
-              <li>
-                <span>
-                  <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('googleAuth')||"谷歌验证"}}</em>
-                </span>
-                <span
-                  v-text="$t('googleAuthDesp')||'用户交易买入、卖出'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a
-                    v-if="bindState.googlestate =='0'"
-                    @click="bindHandle('googleAccount')"
-                    class="color-danger"
-                    href="javascript:"
-                    v-text="$t('bind')||'绑定'">
-                  </a>
-                  <em v-else class="color-999" v-text="bindState.val||'已绑定'"></em>
-                </span>
-              </li>
-              <!-- 实名认证 -->
-              <li>
-                <span>
-                  <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
-                  <em>&nbsp;&nbsp;&nbsp;{{$t('identify')||"身份认证"}}</em>
-                </span>
-                <span
-                  v-text="$t('identifyDesp')||'用户交易买入、卖出银行卡绑定'"
-                  class="txt-center color-999">
-                </span>
-                <span class="txt-rt">
-                  <a
-                    v-if="bindState.idcardstate =='0'"
-                    class="color-danger"
-                    href="javascript:"
-                    @click="navigateTo('/account/identify')"
-                    v-text="$t('label138')||'去认证'">
-                  </a>
-                  <em v-else-if="bindState.idcardstate =='1'" class="color-success" v-text="$t('label146')||'审核中'"></em>
-                  <em v-else class="color-999" v-text="bindState.val||'已绑定'"></em>
-                </span>
-              </li>
-            </ul>
-        </div>
-        <!-- 安全日志 -->
-        <div class="table-wrap bd-bottom-none mt-20">
-            <div class="header" v-text="$t('safeLogs')||'安全日志'"></div>
-            <el-table max-height='350' :data='authLogs'>
-              <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
-              <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
-              <el-table-column :label='$t("operation")||"操作"' prop='updatelog'></el-table-column>
-              <!-- <el-table-column :label='$t("status")||"状态"' width='100'>
-                <div slot-scope="scope" v-text="scope.row.state"></div>
-              </el-table-column> -->
-            </el-table>
-        </div>
-        <!-- 登录日志 -->
-        <div class="table-wrap bd-bottom-none mt-20">
-            <div class="header" v-text="$t('loginLogs')"></div>
-            <el-table
-              max-height='350'
-              :data='loginLogs'>
-              <el-table-column :label='$t("orderNum")||"序号"' width='250' type='index'></el-table-column>
-              <el-table-column :label='$t("time")||"时间"' prop='wdate'></el-table-column>
-              <el-table-column label='IP' prop='ip'></el-table-column>
-              <!-- <el-table-column :label='$t("status")||"状态"'>
-                <div slot-scope="scope" v-text="scope.row.state"></div>
-              </el-table-column> -->
-              <el-table-column width='100' :label='$t("type")||"类型"'>
-                <div slot-scope="scope" v-html="scope.row.type=='1'?'web&nbsp;登录':'Mobile&nbsp;登录'"></div>                
-              </el-table-column>
-            </el-table>
-        </div>
-        <!-- 修改登录密码 -->
-        <bind-password
-          :show='dialogId=="loginPassword"?true:false'
-          :title='$t("changePwd")||"修改登录密码"'
-          apiKey='updateloginpwd'
-          @closeModal='onClose'>
-        </bind-password>
-        <!-- 修改设置资金密码 -->
-        <bind-password
-          :show='dialogId=="financialPassword"?true:false'
-          :title='fundPassTitle'
-          apiKey='updatepaypassword'
-          :passwordLabel='$t("fundPwd")||"资金密码"'
-          @fundPasswordUpdated='fundPasswordUpdated'
-          @closeModal='onClose'>
-        </bind-password>
-        <!-- 绑定邮箱 -->
-        <bind-email 
-          :show='dialogId=="email"?true:false'
-          @closeModal='onClose'
-          @emailBind="emailBind">
-        </bind-email>
-        <!-- 绑定银行卡号 -->
-        <bind-bank 
-          :show='dialogId=="bankAccount"?true:false'
-          :ownerName='this.bindState.username'
-          @bankCardBind='bankCardBind'
-          @closeModal='onClose'>
-        </bind-bank>
-        <!-- 谷歌验证 -->
-        <google-auth
-          @onGoogleBind='onGoogleBind'
-          :show='dialogId=="googleAccount"?true:false'
-          @closeModal='onClose'>
-        </google-auth>
+  <div class="content">
+    <div
+      class="title font-16 font-bold"
+      v-text="$t('accountSecurity')||'账户安全'"
+    ></div>
+    <!-- 认证 -->
+    <div class="table-wrap bd-bottom">
+      <div
+        class="header"
+        v-text="$t('security')||'安全认证'"
+      ></div>
+      <ul class="safe-auth">
+        <!-- 修改密码 -->
+        <li>
+          <span>
+            <i class="el-icon-success color-success"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('loginPwd')||"登录密码"}}</em>
+          </span>
+          <span
+            v-text="$t('loginPwdDesp')||'用于登录时的密码'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              @click="bindHandle('loginPassword')"
+              class="color-danger"
+              href="javascript:"
+              v-text="$t('change')||'修改'"
+            >
+            </a>
+          </span>
+        </li>
+        <!-- 绑定资金密码 -->
+        <li>
+          <span>
+            <i :class="bindState.tradstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('fundPwd')||"资金密码"}}</em>
+          </span>
+          <span
+            v-text="$t('fundPwdDesp')||'交易时密码，请谨慎保管'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              @click="bindHandle('financialPassword')"
+              class="color-danger"
+              href="javascript:"
+              v-text="bindState.tradstate=='0'?$t('bind')||'绑定':$t('change')"
+            >
+            </a>
+          </span>
+        </li>
+        <!-- 手机账户 -->
+        <li>
+          <span>
+            <i class="el-icon-success color-success"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('mobileAccount')||"手机账户"}}</em>
+          </span>
+          <span
+            v-text="$t('mobileAccountDesp')||'登录时唯一账号'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              v-if="!bindState.tel"
+              class="color-danger"
+              href="javascript:"
+              @click="bindHandle('cellphone')"
+              v-text="$t('bind')||'绑定'"
+            >
+            </a>
+            <em
+              v-else
+              v-text="bindState.tel"
+              class="color-999"
+            ></em>
+          </span>
+        </li>
+        <!-- 邮箱 -->
+        <li>
+          <span>
+            <i :class="bindState.emailstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('email')||"电子邮箱"}}</em>
+          </span>
+          <span
+            v-text="$t('emailDesp')||'安全通知、登录、安全设置时输入'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              v-if="bindState.emailstate=='0'"
+              @click="bindHandle('email')"
+              class="color-danger"
+              href="javascript:"
+              v-text="$t('bind')||'绑定'"
+            >
+            </a>
+            <em
+              v-else
+              v-text="bindState.email||$t('binded')"
+              class="color-999"
+            ></em>
+          </span>
+        </li>
+        <!-- 银行账户 -->
+        <li>
+          <span>
+            <i :class="bindState.bankstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('bankAccount')||"银行账户"}}</em>
+          </span>
+          <span
+            v-text="$t('bankAccountDesp')||'用户交易买入、卖出'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              @click="bindHandle('bankAccount')"
+              class="color-danger"
+              href="javascript:"
+              v-text="bindState.bankstate=='0'?$t('bind')||'绑定':$t('change')"
+            >
+            </a>
+          </span>
+        </li>
+        <!-- google账户 -->
+        <li>
+          <span>
+            <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('googleAuth')||"谷歌验证"}}</em>
+          </span>
+          <span
+            v-text="$t('googleAuthDesp')||'用户交易买入、卖出'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              v-if="bindState.googlestate =='0'"
+              @click="bindHandle('googleAccount')"
+              class="color-danger"
+              href="javascript:"
+              v-text="$t('bind')||'绑定'"
+            >
+            </a>
+            <em
+              v-else
+              class="color-999"
+              v-text="bindState.val||'已绑定'"
+            ></em>
+          </span>
+        </li>
+        <!-- 实名认证 -->
+        <li>
+          <span>
+            <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <em>&nbsp;&nbsp;&nbsp;{{$t('identify')||"身份认证"}}</em>
+          </span>
+          <span
+            v-text="$t('identifyDesp')||'用户交易买入、卖出银行卡绑定'"
+            class="txt-center color-999"
+          >
+          </span>
+          <span class="txt-rt">
+            <a
+              v-if="bindState.idcardstate =='0'"
+              class="color-danger"
+              href="javascript:"
+              @click="navigateTo('/account/identify')"
+              v-text="$t('label138')||'去认证'"
+            >
+            </a>
+            <em
+              v-else-if="bindState.idcardstate =='1'"
+              class="color-success"
+              v-text="$t('label146')||'审核中'"
+            ></em>
+            <em
+              v-else
+              class="color-999"
+              v-text="bindState.val||'已绑定'"
+            ></em>
+          </span>
+        </li>
+      </ul>
     </div>
+    <!-- 安全日志 -->
+    <div class="table-wrap bd-bottom-none mt-20">
+      <div
+        class="header"
+        v-text="$t('safeLogs')||'安全日志'"
+      ></div>
+      <el-table
+        max-height='350'
+        :data='authLogs'
+      >
+        <el-table-column
+          :label='$t("orderNum")||"序号"'
+          width='250'
+          type='index'
+        ></el-table-column>
+        <el-table-column
+          :label='$t("time")||"时间"'
+          prop='wdate'
+        ></el-table-column>
+        <el-table-column
+          :label='$t("operation")||"操作"'
+          prop='updatelog'
+        ></el-table-column>
+        <!-- <el-table-column :label='$t("status")||"状态"' width='100'>
+                <div slot-scope="scope" v-text="scope.row.state"></div>
+              </el-table-column> -->
+      </el-table>
+    </div>
+    <!-- 登录日志 -->
+    <div class="table-wrap bd-bottom-none mt-20">
+      <div
+        class="header"
+        v-text="$t('loginLogs')"
+      ></div>
+      <el-table
+        max-height='350'
+        :data='loginLogs'
+      >
+        <el-table-column
+          :label='$t("orderNum")||"序号"'
+          width='250'
+          type='index'
+        ></el-table-column>
+        <el-table-column
+          :label='$t("time")||"时间"'
+          prop='wdate'
+        ></el-table-column>
+        <el-table-column
+          label='IP'
+          prop='ip'
+        ></el-table-column>
+        <!-- <el-table-column :label='$t("status")||"状态"'>
+                <div slot-scope="scope" v-text="scope.row.state"></div>
+              </el-table-column> -->
+        <el-table-column
+          width='100'
+          :label='$t("type")||"类型"'
+        >
+          <div
+            slot-scope="scope"
+            v-html="scope.row.type=='1'?'web&nbsp;登录':'Mobile&nbsp;登录'"
+          ></div>
+        </el-table-column>
+      </el-table>
+    </div>
+    <!-- 修改登录密码 -->
+    <bind-password
+      :show='dialogId=="loginPassword"?true:false'
+      :title='$t("changePwd")||"修改登录密码"'
+      :bindEmail='bindState.emailstate=="0"?false:true'
+      :bindCellphone='bindState.tel?true:false'
+      apiKey='updateloginpwd'
+      @closeModal='onClose'
+    >
+    </bind-password>
+    <!-- 修改设置资金密码 -->
+    <bind-password
+      :show='dialogId=="financialPassword"?true:false'
+      :title='fundPassTitle'
+      apiKey='updatepaypassword'
+      :bindEmail='bindState.emailstate=="0"?false:true'
+      :bindCellphone='bindState.tel?true:false'
+      :passwordLabel='$t("fundPwd")||"资金密码"'
+      @fundPasswordUpdated='fundPasswordUpdated'
+      @closeModal='onClose'
+    >
+    </bind-password>
+    <!-- 绑定邮箱 -->
+    <bind-email
+      :show='dialogId=="email"?true:false'
+      @closeModal='onClose'
+      @emailBind="emailBind"
+    >
+    </bind-email>
+    <!-- 绑定银行卡号 -->
+    <bind-bank
+      :show='dialogId=="bankAccount"?true:false'
+      :ownerName='this.bindState.username'
+      @bankCardBind='bankCardBind'
+      @closeModal='onClose'
+    >
+    </bind-bank>
+    <!-- 谷歌验证 -->
+    <google-auth
+      @onGoogleBind='onGoogleBind'
+      :show='dialogId=="googleAccount"?true:false'
+      @closeModal='onClose'
+    >
+    </google-auth>
+  </div>
 </template>
 <script>
 import bindPassword from "../../components/dialogContent/bindPassword";

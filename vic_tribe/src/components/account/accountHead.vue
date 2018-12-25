@@ -19,7 +19,7 @@ export default {
     },
     to: {
       type: String,
-      default: "/account/register"
+      default: "/userentry/register"
     },
     logo: {
       type: String,

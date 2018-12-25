@@ -1,5 +1,5 @@
 <template>
-  <div class="login">
+  <div class="login user-entry">
     <account-head></account-head>
     <div class="page-head font-bold">
       <span class="font-20">登录</span>
@@ -8,9 +8,12 @@
     <p class="label font-14 color-666">
       您可以使用VIC tribe账号/邮箱账号进行登录
     </p>
-    <div class="form">
-      <tab-bar :tabItem='tabItem'></tab-bar>
-      <van-row>
+    <form class="form">
+      <tab-bar
+        @onTabChange='onTabChange'
+        :tabItem='tabItem'
+      ></tab-bar>
+      <van-row v-show="type=='0'">
         <van-col
           class="font-16"
           span='6'
@@ -20,8 +23,26 @@
           span='18'
         >
           <input
+            autocomplete='off'
             type="text"
             placeholder="请输入手机号"
+          >
+        </van-col>
+      </van-row>
+      <van-row v-show="type=='1'">
+        <van-col
+          class="font-16"
+          span='6'
+        >邮箱</van-col>
+        <van-col
+          class="font-16"
+          span='18'
+        >
+          <input
+            v-model="account"
+            autocomplete='off'
+            type="text"
+            placeholder="请输入邮箱"
           >
         </van-col>
       </van-row>
@@ -29,6 +50,8 @@
         <van-col span='6'>密码</van-col>
         <van-col span='14'>
           <input
+            v-model="password"
+            autocomplete='off'
             type="password"
             placeholder="请输入密码"
           >
@@ -41,6 +64,8 @@
         <van-col span='6'>验证码</van-col>
         <van-col span='10'>
           <input
+            v-model="code"
+            autocomplete='off'
             type="text"
             placeholder="请输入验证码"
           >
@@ -50,7 +75,7 @@
           span='8'
         >获取验证码</van-col>
       </van-row>
-    </div>
+    </form>
     <router-link
       class="font-14 fr link-to"
       to=''
@@ -69,15 +94,21 @@ export default {
   components: { accountHead },
   data() {
     return {
-      tabItem: ["手机号", "邮箱"]
+      tabItem: ["手机号", "邮箱"],
+      type: 0,
+      account: "",
+      password: "",
+      code: ""
     };
   },
   methods: {
-    getCode() {}
+    getCode() {},
+    onTabChange(i) {
+      this.type = i;
+    }
   }
 };
 </script>
-
 <style lang="scss" scoped>
 .login {
   .down-load {
@@ -85,48 +116,6 @@ export default {
     text-align: center;
     color: #fff;
     margin-top: 2.7vh;
-  }
-
-  .page-head {
-    color: #eee;
-    margin-top: 3.74vh;
-    span:first-child {
-      margin-right: 0.8rem;
-    }
-  }
-  .label {
-    color: #ababab;
-    margin-top: 3.74vh;
-  }
-  .link-to {
-    color: #fff;
-    margin-top: 1rem;
-    margin-bottom: 6.28vh;
-    display: block;
-  }
-  .form {
-    margin-top: 4rem;
-    .van-row {
-      color: #eee;
-      height: 3rem;
-      margin-top: 5vh;
-      border-bottom: 1px solid #94969b;
-      .van-col {
-        height: 100%;
-        font-size: 1.6rem;
-      }
-      .iconfont {
-        position: relative;
-        top: -0.2rem;
-      }
-    }
-    input {
-      background: none;
-      font-size: inherit;
-      width: 100%;
-      border: none;
-      outline: none;
-    }
   }
   .version {
     bottom: 2rem;

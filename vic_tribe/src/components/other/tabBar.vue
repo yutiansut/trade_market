@@ -16,12 +16,15 @@
 </template>
 <style lang="scss" scoped>
 .tab-bar {
-  color: #fff;
+  color: #a8abad;
   span {
     padding-bottom: 1.2rem;
     &:first-child {
       margin-right: 4.2rem;
       display: inline-block;
+    }
+    &.active {
+      color: #fff;
     }
     &.active:after {
       content: "";
@@ -48,7 +51,7 @@ export default {
   methods: {
     onTabTouch(i, item) {
       this.tabIndex = i;
-      this.$emit("onTabChage", i);
+      this.$emit("onTabChange", i);
     }
   }
 };

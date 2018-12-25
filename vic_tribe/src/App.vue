@@ -12,6 +12,7 @@
 </template>
 <style lang="scss">
 @import "@/assets/css/variable.scss";
+@import "@/assets/css/public.scss";
 </style>
 
 <script>

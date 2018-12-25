@@ -1,68 +1,90 @@
 <template>
-    <dialog-box
-        :showDialog="showModal"
-        width='500px'
-        :showHeaderImg="false"
-        :headerTitle='$t("bindEmail")||title'
-        :showHeaderTitle='true'
-        @onDialogClose='closeModal'>
-        <div class="content">
-            <el-form label-position='top'
-              @submit.native.prevent
-              :model='formData'>
-                <el-form-item :label='$t("email")||"邮箱"'>
-                  <el-input v-model="formData.email" name='email'
-                    @blur="validate(formData.email,'email')"
-                    :placeholder='$t("emailPlaceholder")||"请输入邮箱"'>
-                  </el-input>
-                </el-form-item>
-                <!-- <el-form-item :label='$t("emailCode")||"邮箱验证码"'>
+  <dialog-box
+    :showDialog="showModal"
+    width='500px'
+    :showHeaderImg="false"
+    :headerTitle='$t("bindEmail")||title'
+    :showHeaderTitle='true'
+    @onDialogClose='closeModal'
+  >
+    <div class="content">
+      <el-form
+        label-position='top'
+        @submit.native.prevent
+        :model='formData'
+      >
+        <el-form-item :label='$t("email")||"邮箱"'>
+          <el-input
+            v-model="formData.email"
+            name='email'
+            @blur="validate(formData.email,'email')"
+            :placeholder='$t("emailPlaceholder")||"请输入邮箱"'
+          >
+          </el-input>
+        </el-form-item>
+        <!-- <el-form-item :label='$t("emailCode")||"邮箱验证码"'>
                   <el-input v-model="formData.emailCode" name='emailCode'
                     @blur="validate(formData.emailCode,'emailCode')"
                     :placeholder='$t("emailCodePlaceholder")||"请输入邮箱验证码"'>
                   </el-input>
                 </el-form-item> -->
-                <el-form-item :label='$t("cellphone")||mobileLabel'>
-                  <el-input name='mobile'
-                    @blur="validate(formData.cellphone,'cellphone')"
-                    v-model="formData.cellphone"
-                    :placeholder='$t("mobilePlaceholder")||"请输入手机号"'>
-                  </el-input>
-                </el-form-item>
-                <el-form-item :label='$t("mobileCode")||"手机验证码"'>
-                    <div class="mobile-code-wrap p-rel">
-                      <el-input v-model="formData.mobileCode" name='mobileCode'
-                        @blur="validate(formData.mobileCode,'mobileCode')"
-                        :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'>
-                      </el-input>
-                      <div @click='getMobileCode'
-                        class="mobile-code abs-v-center color-danger"
-                        v-text="codeText">
-                      </div>
-                    </div>
-                </el-form-item>
-                <el-form-item :label='$t("imgCode")||"图形验证码"'>
-                    <div class="code-wrap flex flex-between">
-                        <el-input v-model="formData.imgCode" name='imgCode'
-                          @blur="validate(formData.imgCode,'imgCode')"
-                          :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'>
-                        </el-input>
-                        <div @click="createCode(verCodeNumArr,4)" class="code">
-                          <ver-code
-                            :contentHeight='38'
-                            :identifyCode='verCodeStr'>
-                          </ver-code>
-                        </div>
-                    </div>
-                </el-form-item>
-                <button style="margin-top: 1px;"
-                  @click="formSubmit"
-                  class="btn-block btn-large btn-danger btn-active"
-                  v-text="$t('submit')||'提交'">
-                </button>
-            </el-form>
-        </div>
-    </dialog-box>
+        <el-form-item :label='$t("cellphone")||mobileLabel'>
+          <el-input
+            name='mobile'
+            @blur="validate(formData.cellphone,'cellphone')"
+            v-model="formData.cellphone"
+            :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='$t("mobileCode")||"手机验证码"'>
+          <div class="mobile-code-wrap p-rel">
+            <el-input
+              v-model="formData.mobileCode"
+              name='mobileCode'
+              @blur="validate(formData.mobileCode,'mobileCode')"
+              :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
+            >
+            </el-input>
+            <div
+              @click='getMobileCode'
+              class="mobile-code abs-v-center color-danger"
+              v-text="codeText"
+            >
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item :label='$t("imgCode")||"图形验证码"'>
+          <div class="code-wrap flex flex-between">
+            <el-input
+              v-model="formData.imgCode"
+              name='imgCode'
+              @blur="validate(formData.imgCode,'imgCode')"
+              :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'
+            >
+            </el-input>
+            <div
+              @click="createCode(verCodeNumArr,4)"
+              class="code"
+            >
+              <ver-code
+                :contentHeight='38'
+                :identifyCode='verCodeStr'
+              >
+              </ver-code>
+            </div>
+          </div>
+        </el-form-item>
+        <button
+          style="margin-top: 1px;"
+          @click="formSubmit"
+          class="btn-block btn-large btn-danger btn-active"
+          v-text="$t('submit')||'提交'"
+        >
+        </button>
+      </el-form>
+    </div>
+  </dialog-box>
 </template>
 <script>
 import verCode from "@/components/other/verCode";

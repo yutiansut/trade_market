@@ -1,58 +1,91 @@
 <template>
-    <dialog-box
-        :showDialog="showModal"
-        width='500px'
-        :showHeaderImg="false"
-        :headerTitle='title'
-        :showHeaderTitle='true'
-        @onDialogClose='closeModal'>
-        <div class="content">
-            <el-form label-position='top' @submit.native.prevent>
-                <!-- <el-form-item :label='$t("cellphone")||mobileLabel'>
-                    <el-input name='mobile'
-                      v-model="formData.cellphone"
-                      :placeholder='$t("mobilePlaceholder")||"请输入手机号"'>
-                    </el-input>
-                </el-form-item> -->
-                <el-form-item :label='$t("mobileCode")||"手机验证码"'>
-                    <div class="mobile-code-wrap p-rel">
-                        <el-input name='mobileCode'
-                          v-model="formData.mobileCode"
-                          :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'>
-                        </el-input>
-                        <div @click="getMobileCode" class="mobile-code abs-v-center color-danger">
-                          {{$t(this.codeTexti18n)}}{{second}}
-                        </div>                        
-                    </div>
-                </el-form-item>
-                <el-form-item :label='$t("newPassword")||passwordLabel'>
-                    <el-input name='password' type='password'
-                      v-model="formData.password"
-                      :placeholder='$t("pwdPlaceholder")||"请输入密码"'>
-                    </el-input>
-                </el-form-item>
-                <el-form-item :label='$t("imgCode")||"图形验证码"'>
-                    <div class="code-wrap flex flex-between">
-                        <el-input name='code'
-                          v-model="formData.imgCode"
-                          :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'>
-                        </el-input>
-                        <div @click="createCode(verCodeNumArr,4)" class="code">
-                          <ver-code
-                            :contentHeight='38'
-                            :identifyCode='verCodeStr'>
-                          </ver-code>
-                        </div>
-                    </div>
-                </el-form-item>
-                <button style="margin-top: 1px;"
-                  @click="formSubmit(apiKey)"
-                  class="btn-block btn-large btn-danger btn-active"
-                  v-text="$t('submit')||'提交'">
-                </button>
-            </el-form>
-        </div>
-    </dialog-box>
+  <dialog-box
+    :showDialog="showModal"
+    width='500px'
+    :showHeaderImg="false"
+    :headerTitle='title'
+    :showHeaderTitle='true'
+    @onDialogClose='closeModal'
+  >
+    <div class="content">
+      <el-form
+        label-position='top'
+        @submit.native.prevent
+      >
+        <el-form-item :label="$t('label163')">
+          <el-radio-group v-model="formData.type">
+            <el-radio
+              :disabled='bindCellphone?false:true'
+              label="1"
+            >{{$t('mobileCode')||'手机验证码'}}</el-radio>
+            <el-radio
+              :disabled='bindEmail?false:true'
+              label="2"
+            >{{$t('label161')||'邮箱验证码'}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item :label='formData.type=="1"?$t("cellphone"):$t("email")'>
+          <el-input
+            v-model="formData.codeAccount"
+            :placeholder='formData.type=="1"?$t("mobilePlaceholder"):$t("emailPlaceholder")'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='formData.type=="1"?$t("mobileCode"):$t("emailCode")'>
+          <div class="mobile-code-wrap p-rel">
+            <el-input
+              name='mobileCode'
+              v-model="formData.code"
+              :placeholder='formData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
+            >
+            </el-input>
+            <div
+              @click="sendCode"
+              class="mobile-code abs-v-center color-danger"
+            >
+              {{$t(this.codeTexti18n)}}{{second}}
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item :label='$t("newPassword")||passwordLabel'>
+          <el-input
+            name='password'
+            type='password'
+            v-model="formData.password"
+            :placeholder='$t("pwdPlaceholder")||"请输入密码"'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='$t("imgCode")||"图形验证码"'>
+          <div class="code-wrap flex flex-between">
+            <el-input
+              name='code'
+              v-model="formData.imgCode"
+              :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'
+            >
+            </el-input>
+            <div
+              @click="createCode(verCodeNumArr,4)"
+              class="code"
+            >
+              <ver-code
+                :contentHeight='38'
+                :identifyCode='verCodeStr'
+              >
+              </ver-code>
+            </div>
+          </div>
+        </el-form-item>
+        <button
+          style="margin-top: 1px;"
+          @click="formSubmit(apiKey)"
+          class="btn-block btn-large btn-danger btn-active"
+          v-text="$t('submit')||'提交'"
+        >
+        </button>
+      </el-form>
+    </div>
+  </dialog-box>
 </template>
 <script>
 import verCode from "@/components/other/verCode";
@@ -60,6 +93,15 @@ export default {
   components: { verCode },
   props: {
     title: String,
+    bindEmail: {
+      type: Boolean,
+      default: false
+    },
+    bindCellphone: {
+      type: Boolean,
+      default: false
+    },
+
     show: {
       type: Boolean,
       default: false
@@ -83,13 +125,14 @@ export default {
       codeText: null,
       timer: null,
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      myMobileCode: "",
+      myCode: "",
       verCodeStr: "",
       second: "",
       codeTexti18n: "getMsgCode",
       formData: {
-        cellphone: "",
-        mobileCode: "",
+        type: "1",
+        codeAccount: "",
+        code: "",
         password: "",
         imgCode: ""
       }
@@ -111,9 +154,11 @@ export default {
       this.codeTexti18n = "getMsgCode";
       this.second = "";
       this.timer = null;
-      this.myMobileCode = false;
+      this.myCode = false;
       this.formData = {
-        mobileCode: "",
+        type: "1",
+        codeAccount: "",
+        code: "",
         password: "",
         imgCode: ""
       };
@@ -121,6 +166,10 @@ export default {
     validate(val, name) {
       if (val == "") {
         this.errMsg("请填写完整信息");
+      } else if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
+        // 邮箱或者验证码不合法
+        this.errMsg("label156");
+        return false;
       } else if (name == "password" && !this.Util.isPassword(val)) {
         this.errMsg("密码必须是以英文字母开头的6-12位字符");
       } else if (
@@ -138,7 +187,7 @@ export default {
         if (!this.validate(item, key)) return;
       }
       this.request(this.api[api], {
-        code: this.formData.mobileCode,
+        code: this.formData.code,
         password: this.formData.password,
         showLoading: true
       }).then(res => {
@@ -174,7 +223,7 @@ export default {
         }
       });
     },
-    getMobileCode() {
+    sendCode() {
       if (!this.canGetCode) return false;
       this.countDown();
       this.request(this.api.sendcodetoken, { showLoading: true }).then(res => {

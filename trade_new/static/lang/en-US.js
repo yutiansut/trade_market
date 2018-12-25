@@ -378,6 +378,8 @@ module.exports = {
     label160: "Code type",
     label161: "Email code",
     label162: "Input your username",
+    label163: "Code type",
+    "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",
     "获取数据失败": "Fetch data failed",
     "邮箱格式不正确": "Invalid email address",
