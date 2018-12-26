@@ -1,81 +1,121 @@
 <template>
-    <div class="hd-top-rt flex flex-end">
-          <div ref="dropDown" class="download-app drop-down p-rel">
-            <span>
-              <em v-text="$t('appDownLoad')"></em>
-              <i class="iconfont icon-xiala fr"></i>
-              <div
-                :style='{"top":dropDownTop}'
-                class="drop-down-item abs-h-center">
-                <span v-text="$t('scanToDownLoad')"></span>
-                <vue-qr
-                  :text="qrUrl"
-                  :margin="10"
-                  :size="150">
-                </vue-qr>
-              </div>
-            </span>
-          </div>
-          <div v-if='userData.isLogin' class="opration-wrap flex flex-end">
-            <span>
-              <i class="iconfont icon-zichan fl"></i>
-              <span
-                @click="navigateTo('/property')"
-                v-text="$t('assets')">
-              </span>
-            </span>
-            <div ref='dropDown' class="drop-down p-rel">
-              <span>
-                <i class="iconfont icon-dingdan fl"></i>
-                <em v-text="$t('order')"></em>
-                <i class="iconfont icon-xiala fr"></i>
-              </span>
-              <ul :style='{"top":dropDownTop}'
-                class="drop-down-item lf-0">
-                <li v-for='(item,i) in myOrderDropdown'
-                  :key='i'
-                  v-text="$t(item.i18nKey)||item.label"
-                  @click='dropDownHandle(item.link)'>
-                </li>
-              </ul>
-            </div>
-            <div ref='dropDown' class="drop-down p-rel">
-              <span>
-                <i class="iconfont icon-yonghu fl"></i>
-                <em v-text="userData.cellphone"></em>
-                <i class="iconfont icon-xiala fr"></i>
-              </span>
-              <ul :style='{"top":dropDownTop}' class="drop-down-item lf-0">
-                <li v-for='(item,i) in userDropDown' 
-                  :key='i'
-                  v-text="$t(item.i18nKey)||item.label"
-                  @click='dropDownHandle(item.link)'>
-                </li>
-                <li @click="logout" v-text="$t('logout')||'退出登录'"></li>
-              </ul>
-            </div>
-          </div>
-          <div v-else class="opration-wrap">
-            <span @click="navigateTo('/user/login')" v-text='$t("login")'></span>
-            <button @click="navigateTo('/user/register')" v-text="$t('register')"></button>
-          </div>
-          <div class="lang-selection drop-down p-rel">
-            <span class="flex flex-between flex-v-center">
-              <i class="iconfont icon-duoyuyan m-right-10"></i>
-              <em v-text='$t("language")'></em>
-              <i class="iconfont icon-xiala fr"></i>
-            </span>
-            <ul :style='{"top":dropDownTop}'
-                ref='dropDown'
-                class="drop-down-item rt-0">
-                <li v-for="(item,i) in langList.items" 
-                  :key='i'
-                  v-text="item.label"
-                  @click='selectLang(i)'>
-                </li>
-            </ul>
-          </div>
+  <div class="hd-top-rt flex flex-end">
+    <div
+      ref="dropDown"
+      class="download-app drop-down p-rel"
+    >
+      <span>
+        <em v-text="$t('appDownLoad')"></em>
+        <i class="iconfont icon-xiala fr"></i>
+        <div
+          :style='{"top":dropDownTop}'
+          class="drop-down-item abs-h-center"
+        >
+          <span v-text="$t('scanToDownLoad')"></span>
+          <vue-qr
+            :text="qrUrl"
+            :margin="10"
+            :size="150"
+          >
+          </vue-qr>
         </div>
+      </span>
+    </div>
+    <div
+      v-if='userData.isLogin'
+      class="opration-wrap flex flex-end"
+    >
+      <span>
+        <i class="iconfont icon-zichan fl"></i>
+        <span
+          @click="navigateTo('/property')"
+          v-text="$t('assets')"
+        >
+        </span>
+      </span>
+      <div
+        ref='dropDown'
+        class="drop-down p-rel"
+      >
+        <span>
+          <i class="iconfont icon-dingdan fl"></i>
+          <em v-text="$t('order')"></em>
+          <i class="iconfont icon-xiala fr"></i>
+        </span>
+        <ul
+          :style='{"top":dropDownTop}'
+          class="drop-down-item lf-0"
+        >
+          <li
+            v-for='(item,i) in myOrderDropdown'
+            :key='i'
+            v-text="$t(item.i18nKey)||item.label"
+            @click='dropDownHandle(item.link)'
+          >
+          </li>
+        </ul>
+      </div>
+      <div
+        ref='dropDown'
+        class="drop-down p-rel"
+      >
+        <span>
+          <i class="iconfont icon-yonghu fl"></i>
+          <em v-text="userData.cellphone||userData.email"></em>
+          <i class="iconfont icon-xiala fr"></i>
+        </span>
+        <ul
+          :style='{"top":dropDownTop}'
+          class="drop-down-item lf-0"
+        >
+          <li
+            v-for='(item,i) in userDropDown'
+            :key='i'
+            v-text="$t(item.i18nKey)||item.label"
+            @click='dropDownHandle(item.link)'
+          >
+          </li>
+          <li
+            @click="logout"
+            v-text="$t('logout')||'退出登录'"
+          ></li>
+        </ul>
+      </div>
+    </div>
+    <div
+      v-else
+      class="opration-wrap"
+    >
+      <span
+        @click="navigateTo('/user/login')"
+        v-text='$t("login")'
+      ></span>
+      <button
+        @click="navigateTo('/user/register')"
+        v-text="$t('register')"
+      ></button>
+    </div>
+    <div class="lang-selection drop-down p-rel">
+      <span class="flex flex-between flex-v-center">
+        <i class="iconfont icon-duoyuyan m-right-10"></i>
+        <em v-text='$t("language")'></em>
+        <i class="iconfont icon-xiala fr"></i>
+      </span>
+      <ul
+        :style='{"top":dropDownTop}'
+        ref='dropDown'
+        class="drop-down-item rt-0"
+      >
+        <li
+          v-for="(item,i) in langList.items"
+          :key='i'
+          v-text="item.label"
+          @click='selectLang(i)'
+        >
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 <script>
 import VueQr from "vue-qr";
@@ -157,6 +197,7 @@ export default {
     this.dropDownTop = h;
     this.userModel.isLogin = this.storage.get("isLogin");
     this.userModel.cellphone = this.storage.get("cellphone");
+    this.userModel.email = this.storage.get("email");
     this.getVersion();
   },
   methods: {

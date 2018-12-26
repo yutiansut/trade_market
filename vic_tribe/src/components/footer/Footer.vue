@@ -23,7 +23,7 @@
           :style="{backgroundImage:'url('+item.icon.normal+')'}"
         ></div> -->
           <span
-            :class="active==i?'active':''"
+            :class="active==i?'active':'color-999'"
             v-text="item.label"
           ></span>
         </div>
@@ -53,6 +53,9 @@
   span {
     display: block;
     margin-top: 0.1em;
+    &.active {
+      color: #333;
+    }
   }
 }
 </style>

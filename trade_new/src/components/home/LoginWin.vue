@@ -8,10 +8,10 @@
       <div class="user-info">
         <h3
           class="nick-name"
-          v-text="userData.tel"
+          v-text="userData.tel||userData.email"
         ></h3>
         <div class="cellphone">
-          <span><em v-text="$t('accountId')"></em> ：{{userData.account||userData.tel}}</span>
+          <span><em v-text="$t('accountId')"></em> ：{{userData.account}}</span>
           <span class="color-primary"></span>
         </div>
         <div><em v-text="$t('totalEstimate')"></em>：</div>
@@ -130,7 +130,7 @@
             {{$t('label161')||'邮箱验证码'}}
           </el-radio>
         </el-radio-group>
-        <el-input
+        <!-- <el-input
           v-show="loginData.type=='1'"
           v-model='loginData.codeAccount'
           :placeholder='$t("mobilePlaceholder")'
@@ -141,10 +141,10 @@
           v-model='loginData.codeAccount'
           :placeholder='$t("emailPlaceholder")'
         >
-        </el-input>
+        </el-input> -->
         <div class="mobile-code-wrap p-rel">
           <el-input
-            v-show="loginData.type!=0"
+            v-show="loginData.type!=''&&loginData.type!='0'"
             v-model="loginData.code"
             name='mobileCode'
             :placeholder='loginData.type=="1"?$t("mobileCode"):$t("label161")'
@@ -152,14 +152,14 @@
           >
           </el-input>
           <el-input
-            v-show="loginData.type==0"
+            v-show="loginData.type!=''&&loginData.type=='0'"
             v-model="loginData.code"
             name='googleCode'
             :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
           >
           </el-input>
           <div
-            v-show="loginData.type!=0"
+            v-show="loginData.type!=''&&loginData.type!='0'"
             @click='sendCode'
             class="mobile-code abs-v-center color-danger"
           >{{$t(this.codeTexti18n)}}{{second}}
@@ -192,14 +192,16 @@ export default {
         code: ""
       },
       loginData: {
-        type: "1", //0 是google验证，1手机验证,2邮箱验证
-        code: "",
-        codeAccount: ""
+        type: "", //0 是google验证，1手机验证,2邮箱验证
+        code: ""
       },
       bindGoogleAuth: false,
       bindCellphone: false,
       bindEmail: false,
       myCode: false,
+      myTel: "",
+      myEmail: "",
+      myGoogle: "",
       codeTexti18n: "getMsgCode",
       second: "",
       canGetCode: true,
@@ -227,7 +229,8 @@ export default {
           this.userData = Object.assign({}, this.userData, {
             balance: res.data.amount * 1,
             tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
-            account: res.data.userinfo[0] && res.data.userinfo[0].account
+            email: res.data.userinfo[0] && res.data.userinfo[0].email,
+            account: res.data.userinfo[0] && res.data.userinfo[0].username
           });
         } else {
           this.errMsg(res.msg);
@@ -241,8 +244,7 @@ export default {
       this.checkLogin = false;
       this.loginData = {
         type: "2",
-        code: "",
-        codeAccount: ""
+        code: ""
       };
       this.checkLoginData = {
         account: "",
@@ -271,16 +273,12 @@ export default {
       });
     },
     sendCode() {
-      if (this.loginData.codeAccount == "" || !this.canGetCode) return false;
+      if (!this.canGetCode) return false;
       this.countDown();
       if (this.loginData.type == "2") {
         // 获取邮箱验证码
-        if (!this.Util.isEmail(this.loginData.codeAccount)) {
-          this.errMsg("邮箱格式不正确");
-          return false;
-        }
         this.request(this.api.sendemailcode, {
-          email: this.loginData.codeAccount,
+          email: this.myEmail,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
@@ -292,12 +290,8 @@ export default {
         });
       } else {
         // 获取手机验证码
-        if (!this.Util.isPhone(this.loginData.codeAccount)) {
-          this.errMsg("label123");
-          return false;
-        }
         this.request(this.api.sendcodeuser, {
-          tel: this.loginData.codeAccount,
+          tel: this.myTel,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
@@ -324,35 +318,12 @@ export default {
         this.bindGoogleAuth = res.data.isGoogle;
         this.bindCellphone = res.data.isCellphone;
         this.bindEmail = res.data.isEmail;
-        // switch (res.code) {
-        //   case "10001":
-        //     this.bindGoogleAuth = false;
-        //     this.bindCellphone = true;
-        //     this.bindEmail = true;
-        //     break;
-        //   case "10002":
-        //     this.bindCellphone = true;
-        //     this.bindGoogleAuth = false;
-        //     this.bindEmail = false;
-        //     break;
-        //   case "10003":
-        //     this.loginData.type = "2";
-        //     this.bindEmail = true;
-        //     this.bindGoogleAuth = false;
-        //     this.bindCellphone = false;
-        //     break;
-        //   case "10004":
-        //     this.bindEmail = false;
-        //     this.bindGoogleAuth = true;
-        //     this.bindCellphone = true;
-        //     break;
-        //   case "10005":
-        //     this.loginData.type = "1";
-        //     this.bindCellphone = false;
-        //     this.bindEmail = true;
-        //     this.bindGoogleAuth = true;
-        //     break;
-        // }
+        this.bindGoogleAuth = res.data.isgoogle;
+        this.bindCellphone = res.data.istel;
+        this.myTel = res.data.tel || "";
+        this.myEmail = res.data.email || "";
+        this.myGoogle = res.data.google || "";
+        this.bindEmail = res.data.isemail;
         this.checkLogin = true;
       });
     },
@@ -362,10 +333,18 @@ export default {
         this.errMsg("请填写完整信息");
         return;
       }
+      let account = "";
+      if (this.loginData.type == "0") {
+        account = this.myGoogle;
+      } else if (this.loginData.type == "1") {
+        account = this.myTel;
+      } else if (this.loginData.type == "2") {
+        account = this.myEmail;
+      }
       this.request(this.api.login, {
         type: this.loginData.type,
-        account: this.loginData.codeAccount,
         code: this.loginData.code,
+        account: account,
         showLoading: true
       }).then(res => {
         if (res && res.code != "0") {
@@ -434,7 +413,6 @@ export default {
       this.timer && clearInterval(this.timer);
       this.codeTexti18n = "getMsgCode";
       this.loginData.code = "";
-      this.loginData.codeAccount = "";
       this.second = "";
       this.canGetCode = true;
     }

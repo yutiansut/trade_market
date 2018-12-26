@@ -2,22 +2,37 @@
  * 引入全局样式
  */
 import "@/assets/css/common.css";
-import "normalize.css";
 /**
  * 引入第三方库
  */
 import Store from "@/vuexStore/store";
 import router from "@/router/index";
-import { Tabbar, TabbarItem, NavBar, Cell, CellGroup, Field, Row, Col, Icon } from "vant";
+import {
+  Tabbar,
+  TabbarItem,
+  NavBar,
+  Cell,
+  CellGroup,
+  Field,
+  Row,
+  Col,
+  Icon,
+  Tag,
+  Tab,
+  Tabs
+} from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
   .use(NavBar)
+  .use(Field)
   .use(CellGroup)
   .use(Cell)
-  .use(Field)
   .use(Row)
   .use(Col)
   .use(Icon)
+  .use(Tag)
+  .use(Tab)
+  .use(Tabs)
 /**
  * 引入全局组件
  */
@@ -69,6 +84,8 @@ router.beforeEach((to, from, next) => {
   if (to.matched.length == 0) {
     next({ path: "/" });
   }
+  // 判断是否有上一页
+  from.path && Store.commit("setShowHeaderBack", true);
   to.meta.title && (document.title = to.meta.title);
   // 设置是否加载通用的header
   Store.commit('setMainHeaderShow', !to.meta.removeHeader)

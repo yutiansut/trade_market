@@ -7,14 +7,15 @@ export default new Vuex.Store({
     headerTitle: "",
     footerItemIndex: 0,
     showHeaderBack: false,
-    showMainHeader: true
+    showMainHeader: true,
+    newsList: []
   },
   mutations: {
     loginState(state) {
       state.isLogin = !state.isLogin;
     },
-    footerShow(state) {
-      state.showFooter = !state.showFooter;
+    footerShow(state, newVal) {
+      state.showFooter = newVal;
     },
     setFooterItem(state, newVal) {
       state.footerItemIndex = newVal;
@@ -22,16 +23,23 @@ export default new Vuex.Store({
     setHeaderTitle(state, newVal) {
       state.headerTitle = newVal;
     },
-    setShowHeaderBack(state) {
-      state.showHeaderBack = !state.showHeaderBack;
+    setShowHeaderBack(state, newVal) {
+      if (state.showHeaderBack == newVal) return
+      state.showHeaderBack = newVal;
     },
     setMainHeaderShow(state, val) {
       state.showMainHeader = val;
+    },
+    updateNewsList(state, arr) {
+      state.newsList = arr;
     }
   },
   actions: {
     changeLoginState(ctx) {
       ctx.commit("loginState");
+    },
+    getNewsList(ctx, data) {
+      ctx.commit('updateNewsList', data)
     }
   }
 });

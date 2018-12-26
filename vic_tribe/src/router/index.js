@@ -8,6 +8,15 @@ const User = r => require(["@/view/user/User"], r);
 const Login = r => require(["@/view/user/Login"], r);
 const userMain = r => require(["@/view/user/userMain"], r);
 const Register = r => require(["@/view/user/Register"], r);
+const News = r => require(["@/view/news/newsMain"], r);
+const newsList = r => require(["@/view/news/newsList"], r);
+const newsDetail = r => require(["@/view/news/newsDetail"], r);
+const Vicexchange = r => require(["@/view/trade/VicExchange"], r);
+const currencyExchange = r => require(["@/view/trade/currencyExchange"], r);
+const directionalTrade = r => require(["@/view/trade/directionalTrade"], r);
+const Record = r => require(["@/view/record/Record"], r);
+const exchangeRecord = r => require(["@/view/record/exchangeRecord"], r);
+
 const routes = [
   {
     path: "/",
@@ -20,7 +29,7 @@ const routes = [
         component: Home,
         name: "Home",
         meta: {
-          title: "首页",
+          title: "VIC首页",
           removeHeader: true
         }
       },
@@ -52,7 +61,8 @@ const routes = [
         }
       }
     ]
-  }, {
+  },
+  {
     path: "/userentry",
     name: "Account",
     component: userMain,
@@ -72,6 +82,65 @@ const routes = [
       meta: {
         title: "用户注册",
         auth: false
+      }
+    }]
+  },
+  {
+    path: "/news",
+    name: "News",
+    component: News,
+    redirect: '/news/list',
+    children: [{
+      path: "/news/list",
+      name: "newsList",
+      component: newsList,
+      meta: {
+        title: "资讯列表"
+      }
+    }, {
+      path: "/news/detail/:id",
+      name: "newsDetail",
+      component: newsDetail,
+      meta: {
+        title: "资讯详情"
+      }
+    }]
+  },
+  {
+    path: "/vicexchange",
+    name: "Vicexchange",
+    component: Vicexchange,
+    meta: {
+      title: "VIC兑换"
+    }
+  },
+  {
+    path: "/currency_exchange",
+    name: "currencyExchange",
+    component: currencyExchange,
+    meta: {
+      title: "货币兑换"
+    }
+  },
+  {
+    path: "/dir_trade",
+    name: "directionalTrade",
+    component: directionalTrade,
+    meta: {
+      title: "定向交易"
+    }
+  },
+  {
+    path: '/record',
+    name: 'Record',
+    component: Record,
+    redirect: "/record/exchange_record",
+    children: [{
+      path: "/record/exchange_record",
+      component: exchangeRecord,
+      name: "exchangeRecord",
+      meta: {
+        title: "转换记录"
       }
     }]
   }

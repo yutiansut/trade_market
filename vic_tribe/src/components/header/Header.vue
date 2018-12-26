@@ -1,12 +1,13 @@
 <template>
   <div
     v-if="$store.state.showMainHeader"
-    class="header van-hairline--bottom"
+    class="header"
   >
     <van-nav-bar
       :title="$store.state.headerTitle"
       :right-text="rightText"
       :left-arrow='$store.state.showHeaderBack'
+      :border='false'
       @click-left="onClickLeft"
       @click-right="onClickRight"
     />
@@ -15,12 +16,13 @@
 <script>
 export default {
   name: "my-header",
-  props: ["rightText", "showHeader"],
+  props: ["rightText", "showHeader", "showArrow"],
   data() {
     return {
       canBack: false
     };
   },
+  mounted() {},
   methods: {
     onClickRight() {
       this.$emit("onHeaderRtClick");
@@ -37,6 +39,13 @@ export default {
   font-size: 1.4em;
   .van-icon {
     color: #333;
+  }
+  .van-nav-bar__text {
+    color: #666;
+  }
+  .van-ellipsis {
+    font-size: 1.6rem;
+    font-weight: 600;
   }
 }
 </style>

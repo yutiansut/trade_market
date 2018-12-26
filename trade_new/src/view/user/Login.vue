@@ -91,7 +91,7 @@
               </el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item>
+          <!-- <el-form-item>
             <el-input
               v-show="loginData.type=='1'"
               v-model='loginData.codeAccount'
@@ -104,10 +104,10 @@
               :placeholder='$t("emailPlaceholder")'
             >
             </el-input>
-          </el-form-item>
+          </el-form-item> -->
           <div class="mobile-code-wrap p-rel">
             <el-input
-              v-show="loginData.type!=0"
+              v-show="loginData.type!=''&&loginData.type!='0'"
               v-model="loginData.code"
               name='mobileCode'
               :placeholder='loginData.type=="1"?$t("mobileCode"):$t("label161")'
@@ -115,14 +115,14 @@
             >
             </el-input>
             <el-input
-              v-show="loginData.type==0"
+              v-show="loginData.type!=''&&loginData.type=='0'"
               v-model="loginData.code"
               name='googleCode'
               :placeholder='$t("fillGoogleCode")||"请输入谷歌验证码"'
             >
             </el-input>
             <div
-              v-show="loginData.type!=0"
+              v-show="loginData.type!=''&&loginData.type!='0'"
               @click='sendCode'
               class="mobile-code abs-v-center color-danger"
             >{{$t(this.codeTexti18n)}}{{second}}
@@ -158,10 +158,12 @@ export default {
       },
       canGetCode: true,
       loginData: {
-        type: "1", //0 是google验证，1手机验证,2邮箱
-        code: "",
-        codeAccount: ""
+        type: "", //0 是google验证，1手机验证,2邮箱
+        code: ""
       },
+      myTel: "",
+      myEmail: "",
+      myGoogle: "",
       bindGoogleAuth: false,
       bindEmail: false,
       bindCellphone: false,
@@ -192,16 +194,11 @@ export default {
       this.verCodeStr = str;
     },
     sendCode() {
-      if (this.loginData.codeAccount == "" || !this.canGetCode) return false;
+      if (!this.canGetCode) return false;
       this.countDown();
       if (this.loginData.type == "2") {
-        // 获取邮箱验证码
-        if (!this.Util.isEmail(this.loginData.codeAccount)) {
-          this.errMsg("邮箱格式不正确");
-          return false;
-        }
         this.request(this.api.sendemailcode, {
-          email: this.loginData.codeAccount,
+          email: this.myEmail,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
@@ -212,13 +209,8 @@ export default {
           }
         });
       } else {
-        // 获取手机验证码
-        if (!this.Util.isPhone(this.loginData.codeAccount)) {
-          this.errMsg("label123");
-          return false;
-        }
         this.request(this.api.sendcodeuser, {
-          tel: this.loginData.codeAccount,
+          tel: this.myTel,
           showLoading: true
         }).then(res => {
           if (res.code == "0") {
@@ -289,10 +281,18 @@ export default {
         this.errMsg("请填写完整信息");
         return;
       }
+      let account = "";
+      if (this.loginData.type == "0") {
+        account = this.myGoogle;
+      } else if (this.loginData.type == "1") {
+        account = this.myTel;
+      } else if (this.loginData.type == "2") {
+        account = this.myEmail;
+      }
       this.request(this.api.login, {
         type: this.loginData.type,
-        account: this.loginData.codeAccount,
         code: this.loginData.code,
+        account: account,
         showLoading: true
       }).then(res => {
         if (res && res.code != "0") {
@@ -305,6 +305,8 @@ export default {
         this.storage.set("token", res.data.token);
         this.navigateTo("/");
         if (res.data.userinfo && res.data.userinfo[0]) {
+          this.userModel.cellphone = res.data.userinfo[0].tel;
+          this.userModel.email = res.data.userinfo[0].email;
           this.storage.set("cellphone", res.data.userinfo[0].tel || "");
           this.storage.set("email", res.data.userinfo[0].email || "");
         }
@@ -322,38 +324,12 @@ export default {
           this.errMsg(res.msg || "登录失败");
           return false;
         }
-        this.bindGoogleAuth = res.data.isGoogle;
-        this.bindCellphone = res.data.isCellphone;
-        this.bindEmail = res.data.isEmail;
-        // switch (res.code) {
-        //   case "10001":
-        //     this.bindGoogleAuth = false;
-        //     this.bindCellphone = true;
-        //     this.bindEmail = true;
-        //     break;
-        //   case "10002":
-        //     this.bindCellphone = true;
-        //     this.bindGoogleAuth = false;
-        //     this.bindEmail = false;
-        //     break;
-        //   case "10003":
-        //     this.loginData.type = "2";
-        //     this.bindEmail = true;
-        //     this.bindGoogleAuth = false;
-        //     this.bindCellphone = false;
-        //     break;
-        //   case "10004":
-        //     this.bindEmail = false;
-        //     this.bindGoogleAuth = true;
-        //     this.bindCellphone = true;
-        //     break;
-        //   case "10005":
-        //     this.loginData.type = "1";
-        //     this.bindCellphone = false;
-        //     this.bindEmail = true;
-        //     this.bindGoogleAuth = true;
-        //     break;
-        // }
+        this.bindGoogleAuth = res.data.isgoogle;
+        this.bindCellphone = res.data.istel;
+        this.bindEmail = res.data.isemail;
+        this.myTel = res.data.tel || "";
+        this.myEmail = res.data.email || "";
+        this.myGoogle = res.data.google || "";
         this.checkLogin = true;
       });
     },
