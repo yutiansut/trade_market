@@ -8,12 +8,12 @@
       <div class="user-info">
         <h3
           class="nick-name"
-          v-text="userData.tel||userData.email"
+          v-text="userData.member"
         ></h3>
-        <div class="cellphone">
+        <!-- <div class="cellphone">
           <span><em v-text="$t('accountId')"></em> ：{{userData.account}}</span>
           <span class="color-primary"></span>
-        </div>
+        </div> -->
         <div><em v-text="$t('totalEstimate')"></em>：</div>
         <div class="wealth">
           <span
@@ -230,7 +230,7 @@ export default {
             balance: res.data.amount * 1,
             tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
             email: res.data.userinfo[0] && res.data.userinfo[0].email,
-            account: res.data.userinfo[0] && res.data.userinfo[0].username
+            member: res.data.userinfo[0] && res.data.userinfo[0].member
           });
         } else {
           this.errMsg(res.msg);
@@ -357,6 +357,7 @@ export default {
         if (res.data.userinfo && res.data.userinfo[0]) {
           this.userData.cellphone = res.data.userinfo[0].tel || "";
           this.userData.email = res.data.userinfo[0].email || "";
+          this.userData.member = res.data.userinfo[0].member;
           this.storage.set("cellphone", this.userData.cellphone);
           this.storage.set("email", this.userData.email);
         }

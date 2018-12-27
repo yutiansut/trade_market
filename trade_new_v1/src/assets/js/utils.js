@@ -1,17 +1,12 @@
 const Utils = (function () {
     return {
-        isUserName(data) {
-            if (data == "") return false;
-            let pattern = /^[A-Za-z0-9]{6,12}$/;
-            return pattern.test(data);
-        },
         isPhone(data) {
             let pattern = /^(1[3456789])\d{9}$/;
             if (data == "") return false;
             return pattern.test(data);
         },
         isPassword(data) {
-            let pattern = /^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/;
+            let pattern = /^(\w){6,12}$/;
             if (data == "") return false;
             return pattern.test(data);
         },
@@ -27,13 +22,12 @@ const Utils = (function () {
         },
         isIdCard(data) {
             let str = data;
-            let reg = '';
             if (str == "") return false;
             let len = str.length;
             if (len == 15) {
-                reg = /^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/;
+                let reg = /^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/;
             } else if (len == 18) {
-                reg = /^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d|X|x)$/;
+                let reg = /^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d|X|x)$/;
             } else {
                 return false;
             }
@@ -58,7 +52,7 @@ const Utils = (function () {
             return (lastcode.charAt(sum % 11) == part[7].toUpperCase());
         },
         isBankNo(data) {
-            return /^\d{16,19}$/.test(data);
+            return /^\d{19}$/.test(data) || /^\d{16}$/.test(data);
         },
         isPositiveNum(data) {
             return /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d{0,2})$/.test(data)
@@ -164,8 +158,8 @@ const Utils = (function () {
             let n = config.count;
             config.onStart && this.dataType(config.onStart) === 'function' && config.onStart(n)
             let timer = setInterval(() => {
-                n--;
-                if (n < 0) {
+                --n;
+                if (n <= 0) {
                     clearInterval(timer);
                     timer = null;
                     (config.onComplete && this.dataType(config.onComplete) === "function") && config.onComplete();
@@ -174,46 +168,6 @@ const Utils = (function () {
                 (config.onCounting && this.dataType(config.onCounting) === "function") && config.onCounting(n);
             }, config.duration);
             return timer;
-        },
-        //求和
-        sumCalc(arr, price, num) {
-            if (this.dataType(arr) == "array") {
-                arr.map(item => {
-                    if (item[price] && item[num]) {
-                        item.total = this.accMul(item[price], item[num]);
-                    }
-                });
-            };
-            return arr;
-        },
-        //乘积精度处理
-        accMul(arg1, arg2) {
-            var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
-            try { m += s1.split(".")[1].length } catch (e) { }
-            try { m += s2.split(".")[1].length } catch (e) { }
-            return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m)
-        },
-        setCookie(name, value) {
-            var Days = 30;
-            var exp = new Date();
-            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
-            document.cookie = name + "=" + escape(value) + ";path=/;expires=" + exp.toGMTString();
-        },
-        //读取cookies
-        getCookie(name) {
-            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
-            if (arr = document.cookie.match(reg))
-                return unescape(arr[2]);
-            else
-                return null;
-        },
-        //删除cookies
-        delCookie(name) {
-            var exp = new Date();
-            exp.setTime(exp.getTime() - 1);
-            var cval = getCookie(name);
-            if (cval != null)
-                document.cookie = name + "=" + cval + ";path=/;expires=" + exp.toGMTString();
         }
     }
 }());

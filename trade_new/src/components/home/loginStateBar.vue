@@ -61,7 +61,7 @@
       >
         <span>
           <i class="iconfont icon-yonghu fl"></i>
-          <em v-text="userData.cellphone||userData.email"></em>
+          <em v-text="userData.member||'***'"></em>
           <i class="iconfont icon-xiala fr"></i>
         </span>
         <ul
@@ -196,8 +196,6 @@ export default {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
     this.userModel.isLogin = this.storage.get("isLogin");
-    this.userModel.cellphone = this.storage.get("cellphone");
-    this.userModel.email = this.storage.get("email");
     this.getVersion();
   },
   methods: {

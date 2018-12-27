@@ -69,7 +69,7 @@
               v-if="!bindState.tel"
               class="color-danger"
               href="javascript:"
-              @click="bindHandle('cellphone')"
+              @click="bindHandle('tel')"
               v-text="$t('bind')||'绑定'"
             >
             </a>
@@ -283,6 +283,13 @@
       @emailBind="emailBind"
     >
     </bind-email>
+    <!-- 绑定手机 -->
+    <bind-tel
+      :show='dialogId=="tel"?true:false'
+      @closeModal='onClose'
+      @telBind="telBind"
+    >
+    </bind-tel>
     <!-- 绑定银行卡号 -->
     <bind-bank
       :show='dialogId=="bankAccount"?true:false'
@@ -303,6 +310,7 @@
 <script>
 import bindPassword from "../../components/dialogContent/bindPassword";
 import bindEmail from "../../components/dialogContent/bindEmail";
+import bindTel from "../../components/dialogContent/bindTel";
 import bindBank from "../../components/dialogContent/bindBankCard";
 import googleAuth from "../../components/dialogContent/googleAuth";
 export default {
@@ -310,7 +318,8 @@ export default {
     bindPassword,
     bindEmail,
     bindBank,
-    googleAuth
+    googleAuth,
+    bindTel
   },
   data() {
     return {
@@ -366,11 +375,14 @@ export default {
     fundPasswordUpdated() {
       this.bindState.tradstate = "1";
     },
+    telBind(tel) {
+      this.bindState.tel = tel;
+    },
     onClose() {
       this.dialogId = null;
     },
     getState() {
-      this.request(this.api.saftyState).then(res => {
+      this.request(this.api.saftyState, { showLoading: true }).then(res => {
         console.log(`账号状态：${JSON.stringify(res)}`);
         if (res && res.code != "0") {
           this.getDataFaild(res.msg || "获取数据失败");

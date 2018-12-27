@@ -3,7 +3,7 @@
     :showDialog="showModal"
     width='500px'
     :showHeaderImg="false"
-    :headerTitle='$t("bindEmail")||title'
+    :headerTitle='$t("label164")||title'
     :showHeaderTitle='true'
     @onDialogClose='closeModal'
   >
@@ -13,22 +13,22 @@
         @submit.native.prevent
         :model='formData'
       >
-        <el-form-item :label='$t("email")||"邮箱"'>
+        <el-form-item :label='$t("cellphone")||"手机号"'>
           <el-input
-            v-model="formData.email"
-            name='email'
-            @blur="validate(formData.email,'email')"
-            :placeholder='$t("emailPlaceholder")||"请输入邮箱"'
+            v-model="formData.tel"
+            name='tel'
+            @blur="validate(formData.tel,'tel')"
+            :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
           >
           </el-input>
         </el-form-item>
-        <el-form-item :label='$t("emailCode")||"邮箱验证码"'>
+        <el-form-item :label='$t("mobileCode")||"手机验证码"'>
           <div class="mobile-code-wrap p-rel">
             <el-input
-              v-model="formData.emailCode"
-              name='emailCode'
-              @blur="validate(formData.emailCode,'emailCode')"
-              :placeholder='$t("emailCodePlaceholder")||"请输入邮箱验证码"'
+              v-model="formData.code"
+              name='code'
+              @blur="validate(formData.code,'code')"
+              :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
             >
             </el-input>
             <div
@@ -89,11 +89,10 @@ export default {
       canGetCode: true,
       codeText: null,
       timer: null,
-      emailCode: "",
+      code: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: "",
       formData: null,
-      myMobileCode: "",
       canSubmit: false
     };
   },
@@ -114,17 +113,15 @@ export default {
       this.canGetCode = true;
       this.codeText = this.$t("getMsgCode") || "获取验证码";
       this.timer = null;
-      this.myMobileCode = "";
-      this.myEmailCode = "";
       this.formData = {
-        email: "",
-        emailCode: "",
+        tel: "",
+        code: "",
         imgCode: ""
       };
     },
-    bindEmail(data) {
-      return this.request(this.api.bindemail, {
-        email: data.email || "",
+    bindTel(data) {
+      return this.request(this.api.addtel, {
+        tel: data.tel || "",
         code: data.code || "",
         showLoading: true
       });
@@ -147,14 +144,14 @@ export default {
           return;
         }
       }
-      this.bindEmail({
-        code: this.formData.emailCode,
-        email: this.formData.email
+      this.bindTel({
+        code: this.formData.code,
+        tel: this.formData.tel
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "绑定成功");
           this.showModal = false;
-          this.$emit("emailBind");
+          this.$emit("telBind", this.formData.tel);
           this.init();
         } else {
           this.errMsg(res.msg);
@@ -165,9 +162,9 @@ export default {
       if (val == "") return;
       this.canSubmit = true;
       switch (name) {
-        case "email":
-          if (!this.Util.isEmail(val)) {
-            this.errMsg("邮箱格式不正确");
+        case "tel":
+          if (!this.Util.isPhone(val)) {
+            this.errMsg("label123");
             this.canSubmit = false;
           }
           break;
@@ -186,7 +183,7 @@ export default {
       this.init();
     },
     countDown() {
-      if (!this.canGetCode || !this.Util.isEmail(this.formData.email))
+      if (!this.canGetCode || !this.Util.isPhone(this.formData.tel))
         return false;
       this.timer = this.Util.timerCounter({
         onStart: t => {
@@ -208,8 +205,8 @@ export default {
       this.countDown();
       if (!this.canSubmit) return false;
       this.request(this.api.code, {
-        account: this.formData.email,
-        type: "3",
+        account: this.formData.tel,
+        type: "0",
         showLoading: true
       }).then(res => {
         if (res.code == "0") {

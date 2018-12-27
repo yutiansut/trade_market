@@ -1,20 +1,13 @@
 import qs from 'qs';
 import axios from 'axios';
-import { Loading } from 'element-ui';
+import router from "../../router/index";
 import api from '@/config/apiConfig.js';
-import Utils from './utils';
-import myStorage from '@/assets/js/myStorage';
-import userModel from '@/model/userData.js';
-axios.defaults.withCredentials = true;
-let loadingMask = null;
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
     axios.interceptors.request.use(
         config => {
             if (config.showLoading) {
-                loadingMask = Loading.service({
-                    background: "rgba(255, 255, 255, .4)"
-                });
+                //加载中
             }
             return config;
         },
@@ -33,7 +26,7 @@ const ajaxRequest = (function () {
     );
 
     function errorState(response) {
-        loadingMask.close();
+        Toast.clear();
         if (
             response &&
             (response.status === 200 ||
@@ -41,46 +34,47 @@ const ajaxRequest = (function () {
                 response.status === 400)
         ) {
             return response.data;
-        }
-        return false;
+        };
+        Toast({
+            message: "网络不给力",
+            position: "bottom"
+        });
     };
 
     function successState(response) {
-        loadingMask && loadingMask.close();
-        let code = response.data.code * 1 || null;
+        Toast.clear();
+        let code = response.data.code || null;
         let msg = null;
-        // 统一判断后端返回的错误码
-        if (code == -1) {
-            myStorage.remove('token');
-            myStorage.remove("cellphone");
-            myStorage.set('isLogin', false);
-            userModel.isLogin = false;
-        };
-    };
-    function createParam(data) {
-        let params = '';
-        if (data && Utils.dataType(data) == "object") {
-            for (let key in data) {
-                data[key] && (params += `/${data[key]}`);
-            }
-            return params;
+        //统一判断后端返回的错误码
+        switch (code) {
+            case '0':
+                break;
+            case '1':
+                msg = response.data.msg || "网络不给力";
+                break;
+            case '2':
+                msg = "登录信息已失效！";
+                if (router.history.current.path != '/login') {
+                    router.push({ path: "/login" });
+                }
+                break;
         }
+
     };
     return (opts, data) => {
         let Public = {
             //公共参数
-            token: myStorage.get("token") || ""
+            token: localStorage.getItem("token")
         };
-        !myStorage.get('token') && delete Public.token;
-        let postData = Object.assign(Public, data);
+
         let httpDefaultOpts = {
             //http默认配置
-            method: opts.method ? opts.method : "post",
+            method: opts.method ? opts.method : 'post',
             baseURL: baseURL,
             url: opts.url,
             timeout: 60000,
-            params: postData,
-            data: qs.stringify(postData),
+            params: Object.assign(Public, data),
+            data: qs.stringify(Object.assign(Public, data)),
             headers:
                 opts.method == "get"
                     ? {
@@ -98,11 +92,8 @@ const ajaxRequest = (function () {
         } else {
             delete httpDefaultOpts.params;
         }
-        if (data && data.showLoading) {
-            httpDefaultOpts.showLoading = data.showLoading;
-        } else {
-            httpDefaultOpts.showLoading = false;
-        }
+        httpDefaultOpts.showLoading = !(data && data.showLoading == '0')
+
         let promise = new Promise(function (resolve, reject) {
             axios(httpDefaultOpts)
                 .then(res => {

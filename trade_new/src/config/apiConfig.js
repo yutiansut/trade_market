@@ -337,6 +337,14 @@ let apiCfg = (function () {
         //登录时获取邮箱验证码
         sendemailcode: {
             url: 'sendemailcode'
+        },
+        //发送验证码
+        code: {
+            url: "code"
+        },
+        //绑定手机号
+        addtel: {
+            url: "addtel"
         }
     }
 }());

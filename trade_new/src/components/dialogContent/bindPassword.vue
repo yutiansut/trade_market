@@ -34,10 +34,7 @@
           >
           </el-input>
         </el-form-item> -->
-        <el-form-item
-          v-show="showCodeInput"
-          :label='formData.type=="0"?$t("mobileCode"):$t("emailCode")'
-        >
+        <el-form-item :label='formData.type=="0"?$t("mobileCode"):$t("emailCode")'>
           <div class="mobile-code-wrap p-rel">
             <el-input
               :disabled='myCode?false:true'
@@ -136,9 +133,8 @@ export default {
       verCodeStr: "",
       second: "",
       codeTexti18n: "getMsgCode",
-      showCodeInput: false,
       formData: {
-        type: "0",
+        type: "",
         code: "",
         password: "",
         imgCode: ""
@@ -152,6 +148,11 @@ export default {
     show: function() {
       this.showModal = this.show;
       this.createCode(this.verCodeNumArr, 4);
+      if (this.bindEmail && !this.bindCellphone) {
+        this.formData.type = "1";
+      } else if (this.bindCellphone && !this.bindEmail) {
+        this.formData.type = "0";
+      }
     }
   },
   methods: {
@@ -199,14 +200,15 @@ export default {
           this.closeModal();
           if (this.apiKey != "updateloginpwd") {
             this.$emit("fundPasswordUpdated");
+          } else {
+            this.userModel.isLogin = false;
+            this.storage.remove("token");
+            this.navigateTo("/user/login");
           }
         } else {
           this.errMsg(res.msg);
         }
       });
-    },
-    onTypeChange() {
-      this.showCodeInput = true;
     },
     countDown() {
       this.timer = this.Util.timerCounter({
@@ -232,8 +234,11 @@ export default {
     sendCode() {
       if (!this.canGetCode) return false;
       this.countDown();
-      this.request(this.api.sendcodetoken, {
-        type: this.formData.type,
+      let codeType = this.formData.type == 0 ? "4" : "5";
+      let account = this.storage.get("token");
+      this.request(this.api.code, {
+        account: account,
+        type: codeType,
         showLoading: true
       }).then(res => {
         if (res.code == "0") {
