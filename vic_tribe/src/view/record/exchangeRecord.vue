@@ -40,8 +40,8 @@ export default {};
   margin-top: 1rem;
   background: #fff;
   .van-row {
-    height: 4.5rem;
-    line-height: 4.4rem;
+    height: 4.15rem;
+    line-height: 4.13rem;
     color: #555;
     border-top: 0.1rem solid #eee;
   }

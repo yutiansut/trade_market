@@ -236,3 +236,7 @@ img {
 .txt-rt {
   text-align: right;
 }
+/* 背景颜色 */
+.bg-#fff {
+  background-color: #fff;
+}

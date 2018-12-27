@@ -16,7 +16,8 @@ const currencyExchange = r => require(["@/view/trade/currencyExchange"], r);
 const directionalTrade = r => require(["@/view/trade/directionalTrade"], r);
 const Record = r => require(["@/view/record/Record"], r);
 const exchangeRecord = r => require(["@/view/record/exchangeRecord"], r);
-
+const incomeRecord = r => require(['@/view/record/incomeRecord'], r);
+const billRecord = r => require(['@/view/record/billRecord'], r);
 const routes = [
   {
     path: "/",
@@ -141,6 +142,20 @@ const routes = [
       name: "exchangeRecord",
       meta: {
         title: "转换记录"
+      }
+    }, {
+      path: "/record/income_record",
+      component: incomeRecord,
+      name: "incomeRecord",
+      meta: {
+        title: "收益记录"
+      }
+    }, {
+      path: "/record/bill_record",
+      component: billRecord,
+      name: "billRecord",
+      meta: {
+        title: "我的账单"
       }
     }]
   }

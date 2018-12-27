@@ -172,7 +172,7 @@ export default {
         },
         {
           label: "我的账单",
-          link: "",
+          link: "/record/bill_record",
           icon: require("@/assets/images/home/txjl.png")
         }
       ],

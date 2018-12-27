@@ -13,30 +13,37 @@
         @submit.native.prevent
       >
         <el-form-item :label="$t('label163')">
-          <el-radio-group v-model="formData.type">
+          <el-radio-group
+            @change="onTypeChange"
+            v-model="formData.type"
+          >
             <el-radio
               :disabled='bindCellphone?false:true'
-              label="1"
+              label="0"
             >{{$t('mobileCode')||'手机验证码'}}</el-radio>
             <el-radio
               :disabled='bindEmail?false:true'
-              label="2"
+              label="1"
             >{{$t('label161')||'邮箱验证码'}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label='formData.type=="1"?$t("cellphone"):$t("email")'>
+        <!-- <el-form-item :label='formData.type=="1"?$t("cellphone"):$t("email")'>
           <el-input
             v-model="formData.codeAccount"
             :placeholder='formData.type=="1"?$t("mobilePlaceholder"):$t("emailPlaceholder")'
           >
           </el-input>
-        </el-form-item>
-        <el-form-item :label='formData.type=="1"?$t("mobileCode"):$t("emailCode")'>
+        </el-form-item> -->
+        <el-form-item
+          v-show="showCodeInput"
+          :label='formData.type=="0"?$t("mobileCode"):$t("emailCode")'
+        >
           <div class="mobile-code-wrap p-rel">
             <el-input
+              :disabled='myCode?false:true'
               name='mobileCode'
               v-model="formData.code"
-              :placeholder='formData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
+              :placeholder='formData.type=="0"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
             >
             </el-input>
             <div
@@ -129,9 +136,9 @@ export default {
       verCodeStr: "",
       second: "",
       codeTexti18n: "getMsgCode",
+      showCodeInput: false,
       formData: {
-        type: "1",
-        codeAccount: "",
+        type: "0",
         code: "",
         password: "",
         imgCode: ""
@@ -156,8 +163,7 @@ export default {
       this.timer = null;
       this.myCode = false;
       this.formData = {
-        type: "1",
-        codeAccount: "",
+        type: "0",
         code: "",
         password: "",
         imgCode: ""
@@ -166,10 +172,6 @@ export default {
     validate(val, name) {
       if (val == "") {
         this.errMsg("请填写完整信息");
-      } else if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
-        // 邮箱或者验证码不合法
-        this.errMsg("label156");
-        return false;
       } else if (name == "password" && !this.Util.isPassword(val)) {
         this.errMsg("密码必须是以英文字母开头的6-12位字符");
       } else if (
@@ -187,6 +189,7 @@ export default {
         if (!this.validate(item, key)) return;
       }
       this.request(this.api[api], {
+        type: this.formData.type,
         code: this.formData.code,
         password: this.formData.password,
         showLoading: true
@@ -201,6 +204,9 @@ export default {
           this.errMsg(res.msg);
         }
       });
+    },
+    onTypeChange() {
+      this.showCodeInput = true;
     },
     countDown() {
       this.timer = this.Util.timerCounter({
@@ -226,8 +232,12 @@ export default {
     sendCode() {
       if (!this.canGetCode) return false;
       this.countDown();
-      this.request(this.api.sendcodetoken, { showLoading: true }).then(res => {
+      this.request(this.api.sendcodetoken, {
+        type: this.formData.type,
+        showLoading: true
+      }).then(res => {
         if (res.code == "0") {
+          this.myCode = true;
           this.successMsg(res.msg || "发送成功");
         } else {
           this.errMsg(res.msg || "发送失败");
