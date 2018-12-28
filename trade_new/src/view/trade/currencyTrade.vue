@@ -1,311 +1,470 @@
 <template>
-    <div class="main wh-full">
-        <my-header class="header-main">
-            <login-bar></login-bar>
-        </my-header>
-        <el-container>
-            <!-- 左侧表格栏目 -->
-            <el-aside width="24%">
-              <ce-aside-comp
-                @onRowClick='getRowData'>
-              </ce-aside-comp>
-            </el-aside>
-            <!-- 主要body -->
-            <el-main v-loading='showLoading'>
-              <!-- K线图头部 -->
-              <div class="panel-head flex flex-v-center">
-                <img class="currency-thumb thumb-30" :src="currentCoinInfo.logo" alt="">
-                <div class="heading">{{tradecoin}}/{{maincoin}}</div>
-                <div class="market-val flex flex-v-center">
-                  <span class="font-16" >{{currentCoinInfo.prise*1}}</span>
-                  <!-- <span class="font-14 color-666">≈0.05 CNY </span> -->
-                </div>
-                <div class="market-condition font-12">
-                  <span>
-                    <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
-                    <i
-                      :class="currentCoinInfo.rise*1>0?'color-danger':'color-success'"
-                      v-text='currentCoinInfo.rise*1+"%"'>
-                    </i>
-                  </span>
-                  <span>
-                    <em class="color-666" v-text="$t('high')||'高'"></em>
-                    <i>{{currentCoinInfo.height*1}}</i>
-                  </span>
-                  <span>
-                    <em class="color-666" v-text="$t('low')||'低'"></em>
-                    <i>{{currentCoinInfo.low*1}}</i>
-                  </span>
-                  <span>
-                    <em class="color-666" v-text="$t('dayVol')||'24H量'"></em>
-                    <i>{{currentCoinInfo.number*1}}&nbsp;{{tradecoin}}</i>
-                  </span>
-                </div>
-                <button @click="navigateTo('/kline_trade',{maincoinid: maincoin,coinid: tradecoin})" style="margin-left:20%;" class="btn-inline btn-hover btn-success btn-small">K线交易</button>
+  <div class="main wh-full">
+    <my-header class="header-main">
+      <login-bar></login-bar>
+    </my-header>
+    <el-container>
+      <!-- 左侧表格栏目 -->
+      <el-aside width="24%">
+        <ce-aside-comp @onRowClick='getRowData'>
+        </ce-aside-comp>
+      </el-aside>
+      <!-- 主要body -->
+      <el-main v-loading='showLoading'>
+        <!-- K线图头部 -->
+        <div class="panel-head flex flex-v-center">
+          <img
+            class="currency-thumb thumb-30"
+            :src="currentCoinInfo.logo"
+            alt=""
+          >
+          <div class="heading">{{tradecoin}}/{{maincoin}}</div>
+          <div class="market-val flex flex-v-center">
+            <span class="font-16">{{currentCoinInfo.prise*1}}</span>
+            <!-- <span class="font-14 color-666">≈0.05 CNY </span> -->
+          </div>
+          <div class="market-condition font-12">
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('increase')||'涨幅'"
+              ></em>
+              <i
+                :class="currentCoinInfo.rise*1>0?'color-danger':'color-success'"
+                v-text='currentCoinInfo.rise*1+"%"'
+              >
+              </i>
+            </span>
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('high')||'高'"
+              ></em>
+              <i>{{currentCoinInfo.height*1}}</i>
+            </span>
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('low')||'低'"
+              ></em>
+              <i>{{currentCoinInfo.low*1}}</i>
+            </span>
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('dayVol')||'24H量'"
+              ></em>
+              <i>{{currentCoinInfo.number*1}}&nbsp;{{tradecoin}}</i>
+            </span>
+          </div>
+          <button
+            @click="navigateTo('/kline_trade',{maincoinid: maincoin,coinid: tradecoin})"
+            style="margin-left:20%;"
+            class="btn-inline btn-hover btn-success btn-small"
+          >K线交易</button>
+        </div>
+        <!-- K线图占位 -->
+        <div
+          id='kMap'
+          class="k-map"
+        >
+          <iframe
+            id='iframe'
+            :src="iframUrl"
+            width="100%"
+            height="100%"
+            frameborder="0"
+          ></iframe>
+        </div>
+        <div class="panel-container flex flex-between">
+          <div class="content-lf flex flex-between">
+            <!-- 买入 -->
+            <div class="form-wrap">
+              <div
+                class="font-18 font-bit-bold"
+                v-html="buyingLabel"
+              ></div>
+              <div class="break-line"></div>
+              <div class="account flex flex-between">
+                <span
+                  class="balance"
+                  v-html="availabelBalance"
+                ></span>
+                <router-link
+                  to='./property'
+                  v-text="$t('recharge')||'充值'"
+                ></router-link>
               </div>
-              <!-- K线图占位 -->
-              <div id='kMap' class="k-map">
-                <iframe id='iframe' :src="iframUrl" width="100%" height="100%" frameborder="0"></iframe>
+              <div class="input-group">
+                <label v-text="$t('buyingRate')||'买入价'"></label>
+                <el-input v-model="buyFormData.price">
+                  <span
+                    class="unit"
+                    slot="suffix"
+                    v-text="maincoin"
+                  ></span>
+                </el-input>
+                <em class="hint font-12">≈0.05</em>
               </div>
-              <div class="panel-container flex flex-between">
-                <div class="content-lf flex flex-between">
-                  <!-- 买入 -->
-                  <div class="form-wrap">
-                    <div class="font-18 font-bit-bold" v-html="buyingLabel"></div>
-                    <div class="break-line"></div>
-                    <div class="account flex flex-between">
-                      <span class="balance" v-html="availabelBalance"></span>
-                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
-                    </div>
-                    <div class="input-group">
-                      <label v-text="$t('buyingRate')||'买入价'"></label>
-                      <el-input v-model="buyFormData.price">
-                        <span class="unit" slot="suffix" v-text="maincoin"></span>
-                      </el-input>
-                      <em class="hint font-12">≈0.05</em>
-                    </div>
-                    <div class="input-group">
-                      <label v-text="$t('buyVol')||'买入量'"></label>
-                      <el-input v-model="buyFormData.orderVol">
-                        <span class="unit" slot="suffix" v-text="tradecoin"></span>
-                      </el-input>
-                    </div>
-                    <div class="total flex flex-between">
-                      <span v-text="totalLabel"></span>
-                      <i v-text="buyTotal"></i>
-                    </div>
-                    <button
-                      @click="buyHandle"
-                      class="btn-block btn-large btn-danger btn-active"
-                      v-html="buyingLabel">
-                    </button>
-                  </div>
-                  <!-- 卖出 -->
-                  <div class="form-wrap">
-                    <div class="font-18 font-bit-bold" v-html="sellingLabel"></div>
-                    <div class="break-line"></div>
-                    <div class="account flex flex-between">
-                      <span class="balance" v-html="availabelAmount"></span>
-                      <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
-                    </div>
-                    <div class="input-group">
-                      <label v-text="$t('sellingRate')||'卖出价'"></label>
-                      <el-input v-model="sellFormData.price">
-                        <span class="unit" slot="suffix" v-text="maincoin"></span>
-                      </el-input>
-                      <em class="hint font-12">≈0.05</em>
-                    </div>
-                    <div class="input-group">
-                      <label v-text="$t('sellVol')||'卖出量'"></label>
-                      <el-input v-model="sellFormData.orderVol">
-                        <span class="unit" slot="suffix" v-text="tradecoin"></span>
-                      </el-input>
-                    </div>
-                    <div class="total flex flex-between">
-                      <span v-text="totalLabel"></span>
-                      <i v-text="sellTotal"></i>
-                    </div>
-                    <button @click="sellHandle"
-                      class="btn-block btn-large btn-success btn-active"
-                      v-html="sellingLabel">
-                    </button>
-                  </div>
-                </div>
-                <!-- 交易行情 -->
-                <div class="trade-market">
-                  <div class="flex flex-between flex-v-center">
-                    <span class='font-18'>
-                      <i v-html="latestPrice"></i>
-                      <!-- <em class="font-12 color-666">≈ 0.05 CNY</em> -->
+              <div class="input-group">
+                <label v-text="$t('buyVol')||'买入量'"></label>
+                <el-input v-model="buyFormData.orderVol">
+                  <span
+                    class="unit"
+                    slot="suffix"
+                    v-text="tradecoin"
+                  ></span>
+                </el-input>
+              </div>
+              <div class="total flex flex-between">
+                <span v-text="totalLabel"></span>
+                <i v-text="buyTotal"></i>
+              </div>
+              <button
+                @click="buyHandle"
+                class="btn-block btn-large btn-danger btn-active"
+                v-html="buyingLabel"
+              >
+              </button>
+            </div>
+            <!-- 卖出 -->
+            <div class="form-wrap">
+              <div
+                class="font-18 font-bit-bold"
+                v-html="sellingLabel"
+              ></div>
+              <div class="break-line"></div>
+              <div class="account flex flex-between">
+                <span
+                  class="balance"
+                  v-html="availabelAmount"
+                ></span>
+                <router-link
+                  to='./property'
+                  v-text="$t('recharge')||'充值'"
+                ></router-link>
+              </div>
+              <div class="input-group">
+                <label v-text="$t('sellingRate')||'卖出价'"></label>
+                <el-input v-model="sellFormData.price">
+                  <span
+                    class="unit"
+                    slot="suffix"
+                    v-text="maincoin"
+                  ></span>
+                </el-input>
+                <em class="hint font-12">≈0.05</em>
+              </div>
+              <div class="input-group">
+                <label v-text="$t('sellVol')||'卖出量'"></label>
+                <el-input v-model="sellFormData.orderVol">
+                  <span
+                    class="unit"
+                    slot="suffix"
+                    v-text="tradecoin"
+                  ></span>
+                </el-input>
+              </div>
+              <div class="total flex flex-between">
+                <span v-text="totalLabel"></span>
+                <i v-text="sellTotal"></i>
+              </div>
+              <button
+                @click="sellHandle"
+                class="btn-block btn-large btn-success btn-active"
+                v-html="sellingLabel"
+              >
+              </button>
+            </div>
+          </div>
+          <!-- 交易行情 -->
+          <div class="trade-market">
+            <div class="flex flex-between flex-v-center">
+              <span class='font-18'>
+                <i v-html="latestPrice"></i>
+                <!-- <em class="font-12 color-666">≈ 0.05 CNY</em> -->
+              </span>
+              <!-- <router-link to=''>更多</router-link> -->
+            </div>
+            <div class="break-line"></div>
+            <div class="table">
+              <div class="thead font-16">
+                <span v-text='$t("stalls")||"档位"'></span>
+                <span v-text='priceLabel'></span>
+                <span v-text='amountLabel'></span>
+                <span
+                  class="txt-rt"
+                  v-text='totalLabel'
+                ></span>
+              </div>
+              <!-- 卖出五档图 -->
+              <div
+                class="tbody"
+                v-if="latestSoldData&&latestSoldData[0]"
+              >
+                <template v-for="(item,index) in latestSoldData">
+                  <div
+                    @click="onLatestClick(item)"
+                    class="row flex p-rel"
+                    :key='index'
+                  >
+                    <div
+                      :style='{width:(item.total/sellListTotal)*100+"%"}'
+                      class="progress p-abs"
+                    ></div>
+                    <span class="column color-success">
+                      {{$t('sell')}}&nbsp;{{latestSoldData.length-index}}
                     </span>
-                    <!-- <router-link to=''>更多</router-link> -->
+                    <span
+                      style="width:25%;"
+                      class="column"
+                      v-text="item.price*1"
+                    ></span>
+                    <span
+                      class="column"
+                      v-text="item.number*1"
+                    ></span>
+                    <span
+                      class="column txt-rt"
+                      v-text="item.total*1"
+                    ></span>
                   </div>
-                  <div class="break-line"></div>
-                  <div class="table">
-                    <div class="thead font-16">
-                      <span v-text='$t("stalls")||"档位"'></span>
-                      <span v-text='priceLabel'></span>
-                      <span v-text='amountLabel'></span>
-                      <span class="txt-rt" v-text='totalLabel'></span>
-                    </div>
-                    <!-- 卖出五档图 -->
-                    <div class="tbody" v-if="latestSoldData&&latestSoldData[0]">
-                      <template v-for="(item,index) in latestSoldData">
-                        <div @click="onLatestClick(item)" class="row flex p-rel"
-                          :key='index'>
-                          <div :style='{width:(item.total/sellListTotal)*100+"%"}' class="progress p-abs"></div>
-                          <span class="column color-success">
-                            {{$t('sell')}}&nbsp;{{latestSoldData.length-index}}
-                          </span>
-                          <span style="width:25%;" class="column" v-text="item.price*1"></span>
-                          <span class="column" v-text="item.number*1"></span>
-                          <span class="column txt-rt" v-text="item.total*1"></span>
-                        </div>
-                      </template>
-                    </div>
-                    <div class="no-data" v-else v-text="$t('label108')"></div>
-                  </div>
-                  <div class="break-line m-top-10 m-bottom-10"></div>
-                  <div class="table">
-                    <!-- 买入五档图 -->
-                    <div class="tbody" v-if="latestBuyData&&latestBuyData[0]">
-                      <template v-for="(item,index) in latestBuyData">
-                        <div @click="onLatestClick(item)" class="row flex flex-between p-rel" :key='index'>
-                          <div :style='{width:(item.total/sellListTotal)*100+"%"}' class="progress p-abs"></div>
-                          <span class="column color-danger" v-html="$t('buy')+'&nbsp;'+(index+1)">
-                          </span>
-                          <span class="column" v-text="item.price*1"></span>
-                          <span class="column" v-text="item.number*1"></span>
-                          <span class="column txt-rt" v-text="item.total"></span>
-                        </div>
-                      </template>
-                    </div>
-                    <div class="no-data" v-else v-text="$t('label108')"></div>
-                  </div>
-                </div>
+                </template>
               </div>
-              <div class="panel-container flex flex-between">
-                <!-- 左侧内容 -->
-                <div class="content-lf">
-                    <!-- 当前委托 -->
-                    <div class="panel-title font-18 font-bit-bold"
-                      v-text="$t('currEnstrument')||'当前委托'"></div>
-                    <template v-if="userData.isLogin">
-                      <el-table stripe 
-                        :data='currentDeclareData'>
-                        <el-table-column width="140"
-                          :label='$t("date")||"日期"'
-                          prop='writedate'>
-                        </el-table-column>
-                        <el-table-column width='100'
-                          :label='$t("type")||"类型"'>
-                          <span slot-scope="scope"
-                            :class="scope.row.type=='0'?'color-danger':'color-success'"
-                            v-text="scope.row.type=='0'?$t('buy'):$t('sell')" >
-                          </span>
-                        </el-table-column>
-                        <el-table-column
-                          :label='priceLabel'>
-                          <template slot-scope="scope">
-                            {{scope.row.price*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          :label='marketVolLabel'>
-                          <template slot-scope="scope">
-                            {{scope.row.number*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          :label='$t("volumn")||"成交量"'>
-                          <template slot-scope="scope">
-                            {{scope.row.dealnumber*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          :width="$i18n.locale==='zh-CN'?'60':'120'"
-                          :label='$t("operation")||"操作"'>
-                          <span class="handle color-danger"
-                            @click='cancelOrder(scope.row.id)'
-                            slot-scope="scope"
-                            v-text="$t('withdrawed'||'撤单')">
-                          </span>
-                        </el-table-column>
-                      </el-table>
-                    </template>
-                    <unlogin-tip></unlogin-tip>
-                    <!-- 历史委托 -->
-                    <div class="panel-title font-18 font-bit-bold" v-text="$t('oldEnstrument')||'历史委托'"></div>
-                    <template v-if="userData.isLogin">
-                      <el-table stripe
-                        :data='historicalDeclareData'
-                        max-height='500'>
-                        <el-table-column width="140"
-                          :label='$t("date")||"日期"' prop='writedate'>
-                        </el-table-column>
-                        <el-table-column width='100'
-                          :label='$t("type")||"类型"'>
-                          <span slot-scope="scope"
-                            :class="scope.row.state=='0'?'color-danger':'color-success'"
-                            v-text="scope.row.state=='0'?$t('buy'):$t('sell')" >
-                          </span>
-                        </el-table-column>
-                        <el-table-column
-                          :label='priceLabel'>
-                          <template slot-scope="scope">
-                            {{scope.row.price*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          :label='marketVolLabel'>
-                          <template slot-scope="scope">
-                            {{scope.row.number*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          :label='$t("volumn")||"成交量"'>
-                          <template slot-scope="scope">
-                            {{scope.row.dealnumber*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          :width="$i18n.locale=='zh-CN'?'100':'120'"
-                          :label='$t("operation")||"操作"'>
-                          <span class="handle color-danger"
-                            slot-scope="scope"
-                            v-text="$t('completed'||'已完成')">
-                          </span>
-                        </el-table-column>
-                      </el-table>
-                    </template>
-                    <unlogin-tip></unlogin-tip>
-                </div>
-                <!-- 右侧内容(成交) -->
-                <div class="content-rt">
-                  <div class="panel-title flex flex-between">
-                    <span class="font-18 font-bit-bold" v-text="$t('tradeRecord')||'成交历史'"></span>
-                    <!-- <router-link to=''>更多</router-link> -->
+              <div
+                class="no-data"
+                v-else
+                v-text="$t('label108')"
+              ></div>
+            </div>
+            <div class="break-line m-top-10 m-bottom-10"></div>
+            <div class="table">
+              <!-- 买入五档图 -->
+              <div
+                class="tbody"
+                v-if="latestBuyData&&latestBuyData[0]"
+              >
+                <template v-for="(item,index) in latestBuyData">
+                  <div
+                    @click="onLatestClick(item)"
+                    class="row flex flex-between p-rel"
+                    :key='index'
+                  >
+                    <div
+                      :style='{width:(item.total/sellListTotal)*100+"%"}'
+                      class="progress p-abs"
+                    ></div>
+                    <span
+                      class="column color-danger"
+                      v-html="$t('buy')+'&nbsp;'+(index+1)"
+                    >
+                    </span>
+                    <span
+                      class="column"
+                      v-text="item.price*1"
+                    ></span>
+                    <span
+                      class="column"
+                      v-text="item.number*1"
+                    ></span>
+                    <span
+                      class="column txt-rt"
+                      v-text="item.total"
+                    ></span>
                   </div>
-                  <template v-if="userData.isLogin">
-                    <div class="break-line"></div>
-                    <el-table style="font-weight:normal"
-                      :data='historicalBuyData'
-                      :cell-style='myCellStyle'
-                      max-height='700'
-                      stripe>
-                      <el-table-column width='100' :label='$t("time")||"时间"'>
-                        <span class="color-danger" slot-scope="scope" v-text="scope.row.writedate"></span>
-                      </el-table-column>
-                      <el-table-column width='150'
-                        :label='priceLabel'>
-                        <template slot-scope="scope">
-                          {{scope.row.price*1}}
-                        </template>
-                      </el-table-column>
-                      <el-table-column width='120'
-                        :label='amountLabel'>
-                        <template slot-scope="scope">
-                          {{scope.row.number*1}}
-                        </template>
-                      </el-table-column>
-                      <el-table-column :label='totalLabel'>
-                        <div slot-scope="scope" v-text="scope.row.total"></div>
-                      </el-table-column>
-                    </el-table>
+                </template>
+              </div>
+              <div
+                class="no-data"
+                v-else
+                v-text="$t('label108')"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="panel-container flex flex-between">
+          <!-- 左侧内容 -->
+          <div class="content-lf">
+            <!-- 当前委托 -->
+            <div
+              class="panel-title font-18 font-bit-bold"
+              v-text="$t('currEnstrument')||'当前委托'"
+            ></div>
+            <template v-if="userData.isLogin">
+              <el-table
+                stripe
+                :data='currentDeclareData'
+              >
+                <el-table-column
+                  width="140"
+                  :label='$t("date")||"日期"'
+                  prop='writedate'
+                >
+                </el-table-column>
+                <el-table-column
+                  width='100'
+                  :label='$t("type")||"类型"'
+                >
+                  <span
+                    slot-scope="scope"
+                    :class="scope.row.type=='0'?'color-danger':'color-success'"
+                    v-text="scope.row.type=='0'?$t('buy'):$t('sell')"
+                  >
+                  </span>
+                </el-table-column>
+                <el-table-column :label='priceLabel'>
+                  <template slot-scope="scope">
+                    {{scope.row.price*1}}
                   </template>
-                  <unlogin-tip></unlogin-tip>
-                </div>
-              </div>
-            </el-main>
-        </el-container>
-        <!-- 充币弹窗 -->
-        <!-- <charge-box
+                </el-table-column>
+                <el-table-column :label='marketVolLabel'>
+                  <template slot-scope="scope">
+                    {{scope.row.number*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label='$t("volumn")||"成交量"'>
+                  <template slot-scope="scope">
+                    {{scope.row.dealnumber*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :width="$i18n.locale==='zh-CN'?'60':'120'"
+                  :label='$t("operation")||"操作"'
+                >
+                  <span
+                    class="handle color-danger"
+                    @click='cancelOrder(scope.row.id,scope.row.type,scope.row.number,scope.row.price)'
+                    slot-scope="scope"
+                    v-text="$t('withdrawed'||'撤单')"
+                  >
+                  </span>
+                </el-table-column>
+              </el-table>
+            </template>
+            <unlogin-tip></unlogin-tip>
+            <!-- 历史委托 -->
+            <div
+              class="panel-title font-18 font-bit-bold"
+              v-text="$t('oldEnstrument')||'历史委托'"
+            ></div>
+            <template v-if="userData.isLogin">
+              <el-table
+                stripe
+                :data='historicalDeclareData'
+                max-height='500'
+              >
+                <el-table-column
+                  width="140"
+                  :label='$t("date")||"日期"'
+                  prop='writedate'
+                >
+                </el-table-column>
+                <el-table-column
+                  width='100'
+                  :label='$t("type")||"类型"'
+                >
+                  <span
+                    slot-scope="scope"
+                    :class="scope.row.state=='0'?'color-danger':'color-success'"
+                    v-text="scope.row.state=='0'?$t('buy'):$t('sell')"
+                  >
+                  </span>
+                </el-table-column>
+                <el-table-column :label='priceLabel'>
+                  <template slot-scope="scope">
+                    {{scope.row.price*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label='marketVolLabel'>
+                  <template slot-scope="scope">
+                    {{scope.row.number*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label='$t("volumn")||"成交量"'>
+                  <template slot-scope="scope">
+                    {{scope.row.dealnumber*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :width="$i18n.locale=='zh-CN'?'100':'120'"
+                  :label='$t("operation")||"操作"'
+                >
+                  <span
+                    class="handle color-danger"
+                    slot-scope="scope"
+                    v-text="$t('completed'||'已完成')"
+                  >
+                  </span>
+                </el-table-column>
+              </el-table>
+            </template>
+            <unlogin-tip></unlogin-tip>
+          </div>
+          <!-- 右侧内容(成交) -->
+          <div class="content-rt">
+            <div class="panel-title flex flex-between">
+              <span
+                class="font-18 font-bit-bold"
+                v-text="$t('tradeRecord')||'成交历史'"
+              ></span>
+              <!-- <router-link to=''>更多</router-link> -->
+            </div>
+            <template v-if="userData.isLogin">
+              <div class="break-line"></div>
+              <el-table
+                style="font-weight:normal"
+                :data='historicalBuyData'
+                :cell-style='myCellStyle'
+                max-height='700'
+                stripe
+              >
+                <el-table-column
+                  width='100'
+                  :label='$t("time")||"时间"'
+                >
+                  <span
+                    class="color-danger"
+                    slot-scope="scope"
+                    v-text="scope.row.writedate"
+                  ></span>
+                </el-table-column>
+                <el-table-column
+                  width='150'
+                  :label='priceLabel'
+                >
+                  <template slot-scope="scope">
+                    {{scope.row.price*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  width='120'
+                  :label='amountLabel'
+                >
+                  <template slot-scope="scope">
+                    {{scope.row.number*1}}
+                  </template>
+                </el-table-column>
+                <el-table-column :label='totalLabel'>
+                  <div
+                    slot-scope="scope"
+                    v-text="scope.row.total"
+                  ></div>
+                </el-table-column>
+              </el-table>
+            </template>
+            <unlogin-tip></unlogin-tip>
+          </div>
+        </div>
+      </el-main>
+    </el-container>
+    <!-- 充币弹窗 -->
+    <!-- <charge-box
           :showCharge='show'
           :chargeAddress='chargeAddress' 
           @closeModel='onClose'>
         </charge-box> -->
-        <my-footer></my-footer>
-    </div>
+    <my-footer></my-footer>
+  </div>
 </template>
 <script>
 import mainCoinModel from "@/model/allCoinModel.js";
@@ -486,7 +645,7 @@ export default {
             });
         }
         ajaxDone = false;
-      }, 3000);
+      }, 1000);
     },
     // 单列样式
     myCellStyle() {
@@ -552,7 +711,7 @@ export default {
           if (res.code == "0") {
             return Promise.resolve(res);
           } else {
-            return Promise.reject(res.mg);
+            return Promise.reject(res.msg);
           }
         }
       );
@@ -562,11 +721,21 @@ export default {
           if (res.code == "0") {
             return Promise.resolve(res);
           } else {
-            return Promise.reject(res.mg);
+            return Promise.reject(res.msg);
           }
         }
       );
-      return Promise.all([entrustData, orderData]);
+      //获取交易历史
+      const allOrderData = this.request(this.api.gettoporder, params).then(
+        res => {
+          if (res.code == "0") {
+            return Promise.resolve(res);
+          } else {
+            return Promise.reject(res.msg);
+          }
+        }
+      );
+      return Promise.all([entrustData, orderData, allOrderData]);
     },
     // 获取账户状态
     getState() {
@@ -613,20 +782,16 @@ export default {
         showLoading: true
       }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
+
         if (res.code == "0") {
+          this.updateLastestData(
+            this.storage.get("token"),
+            this.maincoin,
+            this.tradecoin
+          );
           this.successMsg(res.msg || "操作成功");
-          // 获取交易信息
-          this.awaitResult(this.maincoin, this.tradecoin).then(res => {
-            let [entrustData, orderData] = [...res];
-            if (entrustData) {
-              this.currentDeclareData = this.Util.sumCalc(
-                entrustData.data.list,
-                "price",
-                "number"
-              );
-            }
-            orderData && (this.historicalDeclareData = orderData.data.list);
-          });
+          this.myBlance -= this.buyTotal;
+          this.myAvailable -= this.sellTotal;
         } else {
           this.errMsg(res.msg);
         }
@@ -642,13 +807,26 @@ export default {
       });
     },
     // 取消订单
-    cancelOrder(id) {
+    cancelOrder(id, type, num, price) {
       this.showLoading = true;
       this.request(this.api.clearentrust, { id: id }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.msg);
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
+        this.updateLastestData(
+          this.storage.get("token"),
+          this.maincoin,
+          this.tradecoin
+        );
         this.successMsg(res.msg);
         this.delItemFromList(id, this.currentDeclareData);
+        if (type == 0) {
+          this.myBlance += this.Util.accMul(num, price);
+        } else {
+          this.myAvailable += this.Util.accMul(num, price);
+        }
         this.showLoading = false;
       });
     },
@@ -673,13 +851,6 @@ export default {
       let num = this.buyFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
-        // } else if (!this.canTrade) {
-        //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-        //     confirmButtonText: "去认证",
-        //     type: "warning"
-        //   }).then(() => {
-        //     this.navigateTo("/account/security");
-        //   });
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forbuy, {
           maincoin: this.maincoin,
@@ -694,13 +865,6 @@ export default {
       let num = this.sellFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
-        // } else if (!this.canTrade) {
-        //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-        //     confirmButtonText: "去认证",
-        //     type: "warning"
-        //   }).then(() => {
-        //     this.navigateTo("/account/security");
-        //   });
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forsell, {
           maincoin: this.maincoin,

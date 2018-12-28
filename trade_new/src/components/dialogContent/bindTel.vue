@@ -13,22 +13,24 @@
         @submit.native.prevent
         :model='formData'
       >
-        <el-form-item :label='$t("cellphone")||"手机号"'>
+        <!-- 手机号 -->
+        <el-form-item :label='$t("cellphone")'>
           <el-input
             v-model="formData.tel"
             name='tel'
             @blur="validate(formData.tel,'tel')"
-            :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
+            :placeholder='$t("mobilePlaceholder")'
           >
           </el-input>
         </el-form-item>
-        <el-form-item :label='$t("mobileCode")||"手机验证码"'>
+        <!-- 验证码 -->
+        <el-form-item :label='$t("mobileCode")'>
           <div class="mobile-code-wrap p-rel">
             <el-input
               v-model="formData.code"
               name='code'
               @blur="validate(formData.code,'code')"
-              :placeholder='$t("mobileCodePlaceholder")||"请输入手机验证码"'
+              :placeholder='$t("mobileCodePlaceholder")'
             >
             </el-input>
             <div
@@ -39,13 +41,23 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item :label='$t("imgCode")||"图形验证码"'>
+        <el-form-item :label='$t("password")'>
+          <el-input
+            type='password'
+            v-model="formData.password"
+            name='password'
+            :placeholder='$t("pwdPlaceholder")'
+          >
+          </el-input>
+        </el-form-item>
+        <!-- 图像验证码 -->
+        <el-form-item :label='$t("imgCode")'>
           <div class="code-wrap flex flex-between">
             <el-input
               v-model="formData.imgCode"
               name='imgCode'
               @blur="validate(formData.imgCode,'imgCode')"
-              :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'
+              :placeholder='$t("imgCodePlaceholder")'
             >
             </el-input>
             <div
@@ -114,6 +126,7 @@ export default {
       this.codeText = this.$t("getMsgCode") || "获取验证码";
       this.timer = null;
       this.formData = {
+        password: "",
         tel: "",
         code: "",
         imgCode: ""
@@ -146,7 +159,8 @@ export default {
       }
       this.bindTel({
         code: this.formData.code,
-        tel: this.formData.tel
+        tel: this.formData.tel,
+        password: this.formData.password
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "绑定成功");

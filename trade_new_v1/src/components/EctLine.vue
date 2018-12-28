@@ -1,5 +1,8 @@
 <template>
-    <div ref="container" class="container"></div>
+  <div
+    ref="container"
+    class="container"
+  ></div>
 </template>
 <script>
 import Echart from "echarts/lib/echarts";
@@ -21,9 +24,7 @@ export default {
       yAxis: {
         show: false
       },
-      areaStyle: {
-        
-      },
+      areaStyle: {},
       series: [
         {
           name: "销量",

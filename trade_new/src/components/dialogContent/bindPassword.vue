@@ -105,7 +105,6 @@ export default {
       type: Boolean,
       default: false
     },
-
     show: {
       type: Boolean,
       default: false

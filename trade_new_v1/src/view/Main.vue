@@ -1,6 +1,6 @@
 <template>
   <div class="main wh-full">
-
+    
   </div>
 </template>
 <style lang="scss" scoped>
@@ -12,7 +12,9 @@ export default {
     return {};
   },
   created() {},
-  mounted() {}
+  mounted() {
+    
+  }
 };
 </script>
 

@@ -39,13 +39,24 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item :label='$t("imgCode")||"图形验证码"'>
+        <!-- 登录密码 -->
+        <el-form-item :label='$t("password")'>
+          <el-input
+            v-model="formData.password"
+            type='password'
+            name='email'
+            :placeholder='$t("pwdPlaceholder")'
+          >
+          </el-input>
+        </el-form-item>
+        <!-- 图形验证码 -->
+        <el-form-item :label='$t("imgCode")'>
           <div class="code-wrap flex flex-between">
             <el-input
               v-model="formData.imgCode"
               name='imgCode'
               @blur="validate(formData.imgCode,'imgCode')"
-              :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'
+              :placeholder='$t("imgCodePlaceholder")'
             >
             </el-input>
             <div
@@ -124,8 +135,9 @@ export default {
     },
     bindEmail(data) {
       return this.request(this.api.bindemail, {
-        email: data.email || "",
-        code: data.code || "",
+        email: data.email,
+        code: data.code,
+        password: data.password,
         showLoading: true
       });
     },
@@ -149,7 +161,8 @@ export default {
       }
       this.bindEmail({
         code: this.formData.emailCode,
-        email: this.formData.email
+        email: this.formData.email,
+        password: this.formData.password
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg || "绑定成功");
@@ -209,7 +222,7 @@ export default {
       if (!this.canSubmit) return false;
       this.request(this.api.code, {
         account: this.formData.email,
-        type: "3",
+        type: "1",
         showLoading: true
       }).then(res => {
         if (res.code == "0") {

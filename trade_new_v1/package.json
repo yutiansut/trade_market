@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "echarts": "^4.2.0-rc.2",
+    "element-ui": "^2.4.11",
     "normalize.css": "^8.0.1",
     "vue": "^2.5.2",
     "vue-i18n": "^8.3.2",

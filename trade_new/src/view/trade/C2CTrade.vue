@@ -1,139 +1,215 @@
 <template>
-    <div class="main">
-        <my-header class="header-main">
-            <login-bar></login-bar>
-        </my-header>
-        <el-container>
-            <!-- 侧栏列表 -->
-            <el-aside width="400px">
-              <c2c-aside-comp
-                :myData='currencyList'
-                @onListClick='onListClick'>
-              </c2c-aside-comp>
-            </el-aside>
-            <el-main>
-                <div class="panel-head flex flex-v-center">
-                    <img class="thumb-30" src="" alt="">
-                    <span class="font-bold font-20">{{coinInfo.coinid}}/CNY</span>
-                    <div class="market-condition">
-                        <span>
-                          <em class="color-666" v-text="$t('livePrice')||'实时价'"></em>
-                          <i v-text="'￥'+coinInfo.cny"></i>
-                        </span>
-                        <span>
-                          <em class="color-666" v-text="$t('increase')||'涨幅'"></em>
-                          <i class="color-danger">+3.68%</i>
-                        </span>
-                        <span>
-                          <em class="color-666" v-text="$t('high')||'高'"></em>
-                          <i>￥7.29</i>
-                        </span>
-                        <span>
-                          <em class="color-666" v-text="$t('low')||'低'"></em>
-                          <i>￥6.70</i>
-                        </span>
-                    </div>
-                </div>
-                <!-- 分割线 -->
-                <div class="break-line"></div>
-                <!-- 买入/卖出 -->
-                <div class="panel-container p-rel flex flex-between">
-                    <div class="form-wrap">
-                        <div class="font-18 font-bit-bold" v-html="buyingLabel"></div>
-                        <div class="break-line"></div>
-                        <div class="account flex flex-between">
-                            <span class="balance" v-html="advisalPrice"></span>
-                            <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('buyingValiation')||'买入估价'"></label>
-                            <el-input v-model="buyFormData.price">
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('buyVol')||'买入量'"></label>
-                            <el-input
-                              :placeholder='minNum'
-                              v-model="buyFormData.number">
-                              <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('money')||'金额'"></label>
-                            <el-input disabled='disabled' :value="buyTotal">
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <button @click="buyHandle"
-                          class="btn-block btn-large btn-danger btn-active"
-                          v-html="buyingLabel">
-                        </button>
-                    </div>
-                    <div class="vertical-line p-abs abs-h-center"></div>
-                    <div class="form-wrap">
-                        <div class="font-18 font-bit-bold" v-html="sellingLabel"></div>
-                        <div class="break-line"></div>
-                        <div class="account flex flex-between">
-                          <span class="balance" v-html="myAvailableLabel"></span>
-                          <router-link to='./property' v-text="$t('recharge')||'充值'"></router-link>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('sellingValiation')||'卖出估价'"></label>
-                            <el-input v-model="sellFormData.price">
-                               <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('sellVol')||'卖出量'"></label>
-                            <el-input
-                              :placeholder='minNum'
-                              v-model="sellFormData.number">
-                                <span class="unit" slot="suffix" v-text="coinInfo.coinid||''"></span>
-                            </el-input>
-                        </div>
-                        <div class="input-group">
-                            <label v-text="$t('money')||'金额'"></label>                            
-                            <el-input disabled='disabled' :value="sellTotal">
-                                <span class="unit" slot="suffix">CNY</span>
-                            </el-input>
-                        </div>
-                        <button @click="sellHandle"
-                          class="btn-block btn-large btn-success btn-active"
-                          v-html="sellingLabel">
-                        </button>
-                    </div>
-                </div>
-                <!-- 挂单 -->
-                <div class="panel-container">
-                    <div class="panel-header font-18 font-bit-bold" v-text="$t('inOrder')||'市场挂单'"></div>
-                    <div class="break-line"></div>
-                    <el-table
-                        :fit='true'
-                        :max-height='428'
-                        :data='marketList'>
-                        <el-table-column width="120"
-                          :label='$t("type")||"类型"'>
-                          <span slot-scope="scope"
-                            v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
-                            :class="scope.row.type=='0'?'color-danger':'color-success'">
-                          </span>
-                        </el-table-column>
-                        <el-table-column
-                          :label='($t("price")||"价格")+"(CNY)"'>
-                          <template slot-scope="scope">
-                            {{scope.row.price*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column :label='numberLabel'>
-                          <template slot-scope="scope">
-                            {{scope.row.number*1}}
-                          </template>
-                        </el-table-column>
-                        <el-table-column prop='total'
-                          :label='($t("total")||"总计")+"(CNY)"'>
-                        </el-table-column>
-                        <!-- <el-table-column prop='tradeLimit'
+  <div class="main">
+    <my-header class="header-main">
+      <login-bar></login-bar>
+    </my-header>
+    <el-container>
+      <!-- 侧栏列表 -->
+      <el-aside width="400px">
+        <c2c-aside-comp
+          :myData='currencyList'
+          @onListClick='onListClick'
+        >
+        </c2c-aside-comp>
+      </el-aside>
+      <el-main>
+        <div class="panel-head flex flex-v-center">
+          <img
+            class="thumb-30"
+            src=""
+            alt=""
+          >
+          <span class="font-bold font-20">{{coinInfo.coinid}}/CNY</span>
+          <div class="market-condition">
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('livePrice')||'实时价'"
+              ></em>
+              <i v-text="'￥'+coinInfo.cny"></i>
+            </span>
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('increase')||'涨幅'"
+              ></em>
+              <i class="color-danger">+3.68%</i>
+            </span>
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('high')||'高'"
+              ></em>
+              <i>￥7.29</i>
+            </span>
+            <span>
+              <em
+                class="color-666"
+                v-text="$t('low')||'低'"
+              ></em>
+              <i>￥6.70</i>
+            </span>
+          </div>
+        </div>
+        <!-- 分割线 -->
+        <div class="break-line"></div>
+        <!-- 买入/卖出 -->
+        <div class="panel-container p-rel flex flex-between">
+          <div class="form-wrap">
+            <div
+              class="font-18 font-bit-bold"
+              v-html="buyingLabel"
+            ></div>
+            <div class="break-line"></div>
+            <div class="account flex flex-between">
+              <span
+                class="balance"
+                v-html="advisalPrice"
+              ></span>
+              <router-link
+                to='./property'
+                v-text="$t('recharge')||'充值'"
+              ></router-link>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('buyingValiation')||'买入估价'"></label>
+              <el-input v-model="buyFormData.price">
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('buyVol')||'买入量'"></label>
+              <el-input
+                :placeholder='minNum'
+                v-model="buyFormData.number"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                  v-text="coinInfo.coinid||''"
+                ></span>
+              </el-input>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('money')||'金额'"></label>
+              <el-input
+                disabled='disabled'
+                :value="buyTotal"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
+            </div>
+            <button
+              @click="buyHandle"
+              class="btn-block btn-large btn-danger btn-active"
+              v-html="buyingLabel"
+            >
+            </button>
+          </div>
+          <div class="vertical-line p-abs abs-h-center"></div>
+          <div class="form-wrap">
+            <div
+              class="font-18 font-bit-bold"
+              v-html="sellingLabel"
+            ></div>
+            <div class="break-line"></div>
+            <div class="account flex flex-between">
+              <span
+                class="balance"
+                v-html="myAvailableLabel"
+              ></span>
+              <router-link
+                to='./property'
+                v-text="$t('recharge')||'充值'"
+              ></router-link>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('sellingValiation')||'卖出估价'"></label>
+              <el-input v-model="sellFormData.price">
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('sellVol')||'卖出量'"></label>
+              <el-input
+                :placeholder='minNum'
+                v-model="sellFormData.number"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                  v-text="coinInfo.coinid||''"
+                ></span>
+              </el-input>
+            </div>
+            <div class="input-group">
+              <label v-text="$t('money')||'金额'"></label>
+              <el-input
+                disabled='disabled'
+                :value="sellTotal"
+              >
+                <span
+                  class="unit"
+                  slot="suffix"
+                >CNY</span>
+              </el-input>
+            </div>
+            <button
+              @click="sellHandle"
+              class="btn-block btn-large btn-success btn-active"
+              v-html="sellingLabel"
+            >
+            </button>
+          </div>
+        </div>
+        <!-- 挂单 -->
+        <div class="panel-container">
+          <div
+            class="panel-header font-18 font-bit-bold"
+            v-text="$t('inOrder')||'市场挂单'"
+          ></div>
+          <div class="break-line"></div>
+          <el-table
+            :fit='true'
+            :max-height='428'
+            :data='marketList'
+          >
+            <el-table-column
+              width="120"
+              :label='$t("type")||"类型"'
+            >
+              <span
+                slot-scope="scope"
+                v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                :class="scope.row.type=='0'?'color-danger':'color-success'"
+              >
+              </span>
+            </el-table-column>
+            <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+              <template slot-scope="scope">
+                {{scope.row.price*1}}
+              </template>
+            </el-table-column>
+            <el-table-column :label='numberLabel'>
+              <template slot-scope="scope">
+                {{scope.row.number*1}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop='total'
+              :label='($t("total")||"总计")+"(CNY)"'
+            >
+            </el-table-column>
+            <!-- <el-table-column prop='tradeLimit'
                           :label='($t("tradeLimit")||"交易限额")+"(USDT)"'>
                         </el-table-column>
                         <el-table-column width="150" prop='seller'
@@ -145,194 +221,242 @@
                         <el-table-column width="120" prop='meanTime'
                           :label='$t("averageTime")||"平均用时"'>
                         </el-table-column> -->
-                        <el-table-column width='100'
-                          :label='$t("operation")||"操作"'>
-                          <template slot-scope="scope">
-                            <button
-                              class="btn-inline btn-mini btn-radius"
-                              :class='scope.row.type=="1"?"btn-danger":"btn-success"'
-                              v-text="scope.row.type=='1'?$t('buy'):$t('sell')"
-                              @click="tradeConfirmHandle(scope.row)">
-                            </button>
-                          </template>
-                        </el-table-column>
-                    </el-table>
-                </div>
-                <!-- 我发布的订单 -->
-                <div class="panel-container">
-                    <div class="panel-header font-18 font-bit-bold"
-                      v-text="$t('myOrder')">
-                    </div>
-                    <template v-if="userData.isLogin">
-                      <div class="break-line"></div>
-                      <el-table
-                        :fit='true'
-                        :data='myOrderList'>
-                          <el-table-column width="150"
-                            prop='autoid'
-                            :label='$t("orderId")||"单号"'>
-                          </el-table-column>
-                          <el-table-column width='120'
-                            :label='$t("type")||"类型"'>
-                            <span slot-scope="scope"
-                              v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
-                              :class="scope.row.type=='0'?'color-danger':'color-success'">
-                            </span>
-                          </el-table-column>
-                          <el-table-column
-                            :label='($t("price")||"价格")+"(CNY)"'>
-                            <template slot-scope="scope">
-                              {{scope.row.price|toFix()}}
-                            </template>
-                          </el-table-column>
-                          <el-table-column :label='numberLabel'>
-                            <template slot-scope="scope">
-                              {{scope.row.number|toFix()}}
-                            </template>
-                          </el-table-column>
-                          <el-table-column prop='total'
-                            :label='amountLabel'>
-                          </el-table-column>
-                          <!-- <el-table-column width='150' prop='name'
+            <el-table-column
+              width='100'
+              :label='$t("operation")||"操作"'
+            >
+              <template slot-scope="scope">
+                <button
+                  class="btn-inline btn-mini btn-radius"
+                  :class='scope.row.type=="1"?"btn-danger":"btn-success"'
+                  v-text="scope.row.type=='1'?$t('buy'):$t('sell')"
+                  @click="tradeConfirmHandle(scope.row)"
+                >
+                </button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <!-- 我发布的订单 -->
+        <div class="panel-container">
+          <div
+            class="panel-header font-18 font-bit-bold"
+            v-text="$t('myOrder')"
+          >
+          </div>
+          <template v-if="userData.isLogin">
+            <div class="break-line"></div>
+            <el-table
+              :fit='true'
+              :data='myOrderList'
+            >
+              <el-table-column
+                width="150"
+                prop='autoid'
+                :label='$t("orderId")||"单号"'
+              >
+              </el-table-column>
+              <el-table-column
+                width='120'
+                :label='$t("type")||"类型"'
+              >
+                <span
+                  slot-scope="scope"
+                  v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                  :class="scope.row.type=='0'?'color-danger':'color-success'"
+                >
+                </span>
+              </el-table-column>
+              <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+                <template slot-scope="scope">
+                  {{scope.row.price|toFix()}}
+                </template>
+              </el-table-column>
+              <el-table-column :label='numberLabel'>
+                <template slot-scope="scope">
+                  {{scope.row.number|toFix()}}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop='total'
+                :label='amountLabel'
+              >
+              </el-table-column>
+              <!-- <el-table-column width='150' prop='name'
                             :label='$t("theirName")||"对方姓名"'>
                           </el-table-column> -->
-                          <el-table-column width="200" prop='wdate'
-                            :label='$t("createdTime")||"建立时间"'>
-                          </el-table-column>
-                          <el-table-column width="100"
-                            :label='$t("operation")||"操作"'>
-                            <a slot-scope="scope"
-                              v-text='"撤单"'
-                              class="color-danger"
-                              @click="cancelMyc2cOrder(scope.row.autoid)">
-                            </a>
-                          </el-table-column>
-                      </el-table>
-                    </template>
-                    <unlogin-tip></unlogin-tip>
-                </div>
-                <div class="panel-container">
-                    <div class="panel-header font-18 font-bit-bold"
-                      v-text="$t('myCtcOrder')||'我的CTC交易订单'">
-                    </div>
-                    <template v-if="userData.isLogin">
-                      <div class="break-line"></div>
-                      <el-table
-                          :data='myC2COrderList'>
-                          <el-table-column width="150"
-                            prop='autoid'
-                            :label='$t("orderId")||"单号"'>
-                          </el-table-column>
-                          <el-table-column width='120'
-                            :label='$t("type")||"类型"'>
-                            <span slot-scope="scope"
-                              v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
-                              :class="scope.row.type=='0'?'color-danger':'color-success'">
-                            </span>
-                          </el-table-column>
-                          <el-table-column
-                            :label='($t("price")||"价格")+"(CNY)"'>
-                            <template slot-scope="scope">
-                              {{scope.row.price|toFix()}}
-                            </template>
-                          </el-table-column>
-                          <el-table-column :label='numberLabel'>
-                            <template slot-scope="scope">
-                              {{scope.row.number|toFix()}}
-                            </template>
-                          </el-table-column>
-                          <el-table-column prop='total'
-                            :label='amountLabel'>
-                          </el-table-column>
-                          <!-- <el-table-column width='150' prop='name'
+              <el-table-column
+                width="200"
+                prop='wdate'
+                :label='$t("createdTime")||"建立时间"'
+              >
+              </el-table-column>
+              <el-table-column
+                width="100"
+                :label='$t("operation")||"操作"'
+              >
+                <a
+                  slot-scope="scope"
+                  v-text='"撤单"'
+                  class="color-danger"
+                  @click="cancelMyc2cOrder(scope.row.autoid)"
+                >
+                </a>
+              </el-table-column>
+            </el-table>
+          </template>
+          <unlogin-tip></unlogin-tip>
+        </div>
+        <div class="panel-container">
+          <div
+            class="panel-header font-18 font-bit-bold"
+            v-text="$t('myCtcOrder')||'我的CTC交易订单'"
+          >
+          </div>
+          <template v-if="userData.isLogin">
+            <div class="break-line"></div>
+            <el-table :data='myC2COrderList'>
+              <el-table-column
+                width="150"
+                prop='autoid'
+                :label='$t("orderId")||"单号"'
+              >
+              </el-table-column>
+              <el-table-column
+                width='120'
+                :label='$t("type")||"类型"'
+              >
+                <span
+                  slot-scope="scope"
+                  v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                  :class="scope.row.type=='0'?'color-danger':'color-success'"
+                >
+                </span>
+              </el-table-column>
+              <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+                <template slot-scope="scope">
+                  {{scope.row.price|toFix()}}
+                </template>
+              </el-table-column>
+              <el-table-column :label='numberLabel'>
+                <template slot-scope="scope">
+                  {{scope.row.number|toFix()}}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop='total'
+                :label='amountLabel'
+              >
+              </el-table-column>
+              <!-- <el-table-column width='150' prop='name'
                             :label='$t("theirName")||"对方姓名"'>
                           </el-table-column> -->
-                          <el-table-column width="200" prop='wdate'
-                            :label='$t("createdTime")||"建立时间"'>
-                          </el-table-column>
-                          <el-table-column width="100"
-                            :label='$t("operation")||"操作"'>
-                            <template slot-scope="scope">
-                              <span class="color-danger"
-                                @click="confirmHandle(scope.row)"
-                                v-if="scope.row.type==0&&scope.row.state==0">{{$t('label128')}}
-                              </span>
-                              <span class="color-success"
-                                v-if="scope.row.type==1&&scope.row.state==0">{{$t('label129')}}
-                              </span>
-                              <span class="color-success"
-                                v-if="scope.row.type==0&&scope.row.state==1">{{$t('label128')}}
-                              </span>
-                              <span class="color-999" v-if="scope.row.type<2&&scope.row.state==2">{{$t('completed')}}</span>
-                              <span class="color-danger" v-if="scope.row.type==1&&scope.row.state==1"
-                                @click="confirmHandle(scope.row)">{{$t('label131')}}
-                              </span>
-                            </template>
-                          </el-table-column>
-                      </el-table>
-                    </template>
-                    <unlogin-tip></unlogin-tip>
-                </div>
-            </el-main>
-        </el-container>
-        <my-footer></my-footer>
-        <!-- 卖出发布确认弹窗 -->
-        <trade-confirm
-          :show='dialogId==1?true:false'
-          :title="$t('sellingConfirm')"
-          :numLabel="$t('sellingNum')"
-          :amountLabel="$t('sellingAmount')"
-          :valuationLabel='$t("sellingValiation")'
-          :tradeModeLabel='$t("tradeMethods")'
-          :number='confirmData.number'
-          :price='confirmData.price'
-          @onSubmit='publicOrder(api.addsellc2c,confirmData)'
-          @closeModel='onModelClose'>
-        </trade-confirm>
-        <!-- 买入发布确认 -->
-        <trade-confirm
-          :show='dialogId==0?true:false'
-          :title="$t('buyingConfirm')"
-          :numLabel="$t('buyingNum')"
-          :amountLabel="$t('buyingAmount')"
-          :valuationLabel='$t("buyingValiation")'
-          :tradeModeLabel='$t("tradeMethods")'
-          :number='confirmData.number'
-          :price='confirmData.price'
-          @onSubmit='publicOrder(api.addbuyc2c,confirmData)'
-          @closeModel='onModelClose'>
-        </trade-confirm>
-        <!-- 订单匹配弹窗 -->
-        <!-- <order-match
+              <el-table-column
+                width="200"
+                prop='wdate'
+                :label='$t("createdTime")||"建立时间"'
+              >
+              </el-table-column>
+              <el-table-column
+                width="100"
+                :label='$t("operation")||"操作"'
+              >
+                <template slot-scope="scope">
+                  <span
+                    class="color-danger"
+                    @click="confirmHandle(scope.row)"
+                    v-if="scope.row.type==0&&scope.row.state==0"
+                  >{{$t('label128')}}
+                  </span>
+                  <span
+                    class="color-success"
+                    v-if="scope.row.type==1&&scope.row.state==0"
+                  >{{$t('label129')}}
+                  </span>
+                  <span
+                    class="color-success"
+                    v-if="scope.row.type==0&&scope.row.state==1"
+                  >{{$t('label128')}}
+                  </span>
+                  <span
+                    class="color-999"
+                    v-if="scope.row.type<2&&scope.row.state==2"
+                  >{{$t('completed')}}</span>
+                  <span
+                    class="color-danger"
+                    v-if="scope.row.type==1&&scope.row.state==1"
+                    @click="confirmHandle(scope.row)"
+                  >{{$t('label131')}}
+                  </span>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+          <unlogin-tip></unlogin-tip>
+        </div>
+      </el-main>
+    </el-container>
+    <my-footer></my-footer>
+    <!-- 卖出发布确认弹窗 -->
+    <trade-confirm
+      :show='dialogId==1?true:false'
+      :title="$t('sellingConfirm')"
+      :numLabel="$t('sellingNum')"
+      :amountLabel="$t('sellingAmount')"
+      :valuationLabel='$t("sellingValiation")'
+      :tradeModeLabel='$t("tradeMethods")'
+      :number='confirmData.number'
+      :price='confirmData.price'
+      @onSubmit='publicOrder(api.addsellc2c,confirmData)'
+      @closeModel='onModelClose'
+    >
+    </trade-confirm>
+    <!-- 买入发布确认 -->
+    <trade-confirm
+      :show='dialogId==0?true:false'
+      :title="$t('buyingConfirm')"
+      :numLabel="$t('buyingNum')"
+      :amountLabel="$t('buyingAmount')"
+      :valuationLabel='$t("buyingValiation")'
+      :tradeModeLabel='$t("tradeMethods")'
+      :number='confirmData.number'
+      :price='confirmData.price'
+      @onSubmit='publicOrder(api.addbuyc2c,confirmData)'
+      @closeModel='onModelClose'
+    >
+    </trade-confirm>
+    <!-- 订单匹配弹窗 -->
+    <!-- <order-match
           :show='dialogId==2?true:false'
           :myData='orderMatchList'
           :operateLable='$t(operateLabeli18n)||operateLable'>
         </order-match> -->
-        <!-- 挂单买入/卖出待确认弹窗 -->
-        <order-confirm
-          :show='dialogId==3?true:false'>
-        </order-confirm>
-        <!-- 挂单买入/卖出订单 -->
-        <market-order
-          :show='dialogId==4?true:false'
-          :title='$t(marketOrderCfg.titlei18nkey)'
-          :volumnLabel='$t(marketOrderCfg.volumnLabeli18nkey)'
-          :volumn="marketOrderDetail.number*1"
-          :price="marketOrderDetail.price*1"
-          :amount="marketOrderDetail.total*1"
-          @onSubmit='tradeFromMarket(marketOrderDetail.type,marketOrderDetail.autoid)'
-          @closeModal='onModelClose'
-          :coin='marketOrderDetail.coinid'>
-        </market-order>
-        <!-- 待收/付款 -->
-        <order-paid
-          :show='dialogId==5?true:false'
-          :title="$t('orderDetail')||'订单详情'"
-          :formData='orderDetail'
-          @onSubmit='dealOrder(orderDetail.type,orderId)'
-          @closeModal='onModelClose'>
-        </order-paid>
-    </div>
+    <!-- 挂单买入/卖出待确认弹窗 -->
+    <order-confirm :show='dialogId==3?true:false'>
+    </order-confirm>
+    <!-- 挂单买入/卖出订单 -->
+    <market-order
+      :show='dialogId==4?true:false'
+      :title='$t(marketOrderCfg.titlei18nkey)'
+      :volumnLabel='$t(marketOrderCfg.volumnLabeli18nkey)'
+      :volumn="marketOrderDetail.number*1"
+      :price="marketOrderDetail.price*1"
+      :amount="marketOrderDetail.total*1"
+      @onSubmit='tradeFromMarket(marketOrderDetail.type,marketOrderDetail.autoid)'
+      @closeModal='onModelClose'
+      :coin='marketOrderDetail.coinid'
+    >
+    </market-order>
+    <!-- 待收/付款 -->
+    <order-paid
+      :show='dialogId==5?true:false'
+      :title="$t('orderDetail')||'订单详情'"
+      :formData='orderDetail'
+      @onSubmit='dealOrder(orderDetail.type,orderId)'
+      @closeModal='onModelClose'
+    >
+    </order-paid>
+  </div>
 </template>
 <script>
 import TradeConfirm from "@/components/dialogContent/TradeConfirm";

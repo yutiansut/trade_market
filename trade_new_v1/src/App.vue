@@ -1,5 +1,8 @@
 <template>
-  <div id="app" class="p-rel wh-full">
+  <div
+    id="app"
+    class="p-rel wh-full"
+  >
     <keep-alive>
       <transition name="slide-left">
         <router-view></router-view>
@@ -9,7 +12,11 @@
 </template>
 <script>
 export default {
-  name: 'App'
-}
+  name: "App"
+};
 </script>
+<style lang="scss">
+@import "@/assets/css/element-variable.scss";
+@import "@/assets/css/common.scss";
+</style>
 

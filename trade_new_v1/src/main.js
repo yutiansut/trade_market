@@ -1,22 +1,24 @@
 /**
- * 引入全局样式
- */
-import "@/assets/css/common.css";
-/**
- * 引入自定义相关js
- */
-import App from '@/App'
-import router from '@/router'
-import Util from '@/assets/js/utils'
-import Request from '@/assets/js/request';
-import myStorage from '@/assets/js/myStorage';
-import apiCfg from '@/config/apiConfig';
-/**
  * 引入并使用第三方库
  */
 import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 Vue.config.productionTip = false;
+Vue.use(ELEMENT);
+ELEMENT.locale(ELEMENT.lang.en)
+
+/**
+ * 引入自定义相关js
+ */
+import App from '@/App';
+import router from '@/router';
+import Store from '@/vuexStore/store';
+import Util from '@/assets/js/utils';
+import Request from '@/assets/js/request';
+import myStorage from '@/assets/js/myStorage';
+import sessionStorage from '@/assets/js/mySession';
+import apiCfg from '@/config/apiConfig';
+
 /**
  * 全局方法
  */
@@ -42,7 +44,9 @@ Object.assign(Vue.prototype, {
   request: Request,
   Util: Util,
   storage: myStorage,
+  session: sessionStorage,
   api: apiCfg,
+  Store: Store,
   redirectTo(pathName, params) {
     let data = {
       path: pathName,

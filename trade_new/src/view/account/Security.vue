@@ -66,18 +66,12 @@
           </span>
           <span class="txt-rt">
             <a
-              v-if="!bindState.tel"
-              class="color-danger"
+              class="color-success"
               href="javascript:"
               @click="bindHandle('tel')"
-              v-text="$t('bind')||'绑定'"
+              v-text="bindState.tel?$t('label167'):$t('bind')"
             >
             </a>
-            <em
-              v-else
-              v-text="bindState.tel"
-              class="color-999"
-            ></em>
           </span>
         </li>
         <!-- 邮箱 -->
@@ -93,18 +87,12 @@
           </span>
           <span class="txt-rt">
             <a
-              v-if="bindState.emailstate=='0'"
-              @click="bindHandle('email')"
-              class="color-danger"
+              class="color-success"
               href="javascript:"
-              v-text="$t('bind')||'绑定'"
+              @click="bindHandle('email')"
+              v-text="bindState.emailstate!='0'?$t('label168'):$t('bind')"
             >
             </a>
-            <em
-              v-else
-              v-text="bindState.email||$t('binded')"
-              class="color-999"
-            ></em>
           </span>
         </li>
         <!-- 银行账户 -->
@@ -158,7 +146,7 @@
         <!-- 实名认证 -->
         <li>
           <span>
-            <i :class="bindState.googlestate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <i :class="bindState.idcardstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
             <em>&nbsp;&nbsp;&nbsp;{{$t('identify')||"身份认证"}}</em>
           </span>
           <span
@@ -370,7 +358,7 @@ export default {
       this.bindState.googlestate = "1";
     },
     bankCardBind() {
-      this.bindState.googlestate = "1";
+      this.bindState.bankstate = "1";
     },
     fundPasswordUpdated() {
       this.bindState.tradstate = "1";

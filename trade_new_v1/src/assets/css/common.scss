@@ -1,7 +1,31 @@
+$bg-default: #fff;
+$color-success: #4fa56d;
+$color-danger: #ab1e24;
+$bg-dark: #1f262d;
+$main-font-color: #333;
+$bd-size: 1px;
+$bd-color: #e1e1e1;
+$default-border: $bd-size solid $bd-color;
+$mask-bg-rgba: rgba(0, 0, 0, 0.6);
+$content-width: 1200px;
+
+@mixin textVcenter($height: 40px) {
+  height: $height;
+  line-height: $height;
+}
+
+@mixin minWidth($min: 1440px) {
+  min-width: $min;
+}
+@mixin breakLine($height: 1px, $bgcolor: #e1e1e1, $width: 100%) {
+  height: $height;
+  background-color: $bgcolor;
+  width: $width;
+}
 html {
   height: 100%;
   width: 100%;
-  font-size: 62.5%;
+  font-size: 10px;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -11,10 +35,10 @@ html {
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 body {
-  min-width: 1440px;
+  @include minWidth;
   height: 100%;
-  background-color: #fff;
-  color: #333;
+  background-color: $bg-default;
+  color: $main-font-color;
 }
 
 table th {
@@ -82,36 +106,27 @@ em {
 }
 /* margin 10像素*/
 .m-top-10 {
-  margin-top: 10px;
+  margin-top: 1rem;
 }
 .m-left-10 {
-  margin-left: 10px;
+  margin-left: 1rem;
 }
 .m-right-10 {
-  margin-right: 10px;
+  margin-right: 1rem;
 }
 .m-bottom-10 {
-  margin-bottom: 10px;
+  margin-bottom: 1rem;
 }
 .m-10 {
-  margin: 10px;
+  margin: 1rem;
 }
 /*字体大小*/
-.font-12 {
-  font-size: 1.2em;
+@for $i from 12 to 29 {
+  .font-#{$i} {
+    font-size: 0.1rem * $i;
+  }
 }
-.font-14 {
-  font-size: 1.4em;
-}
-.font-16 {
-  font-size: 1.6em;
-}
-.font-18 {
-  font-size: 1.8em;
-}
-.font-20 {
-  font-size: 2em;
-}
+
 /* 字重 */
 .font-bit-bold {
   font-weight: 500;
@@ -121,61 +136,9 @@ em {
 }
 /*button 按钮样式*/
 input {
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -webkit-appearance: none;
+  appearance: none;
   outline: none;
   border: 1px solid transparent;
-}
-button {
-  -moz-appearance: none;
-  -ms-appearance: none;
-  -webkit-appearance: none;
-  border: 1px solid transparent;
-  background: none;
-  border-radius: 0;
-  outline: none;
-  font-family: "microsoft yahei";
-  cursor: pointer;
-  text-align: center;
-}
-button.btn-bordered {
-  border-color: #e5e5e5;
-}
-button.btn-large {
-  height: 40px;
-  line-height: 38px;
-  font-size: 16px;
-}
-button:hover {
-  background: none;
-}
-
-button.btn-block {
-  display: block;
-  width: 100%;
-}
-
-button.btn-inline {
-  display: inline-block;
-}
-button.btn-small {
-  height: 30px;
-  line-height: 28px;
-  font-size: 14px;
-  width: 80px;
-}
-button.btn-mini {
-  height: 28px;
-  width: 50px;
-  line-height: 26px;
-  font-size: 14px;
-}
-button.btn-radius {
-  border-radius: 2px;
-}
-button.btn-active:active {
-  opacity: 0.9;
 }
 button.btn-hover:hover {
   opacity: 0.9;
@@ -187,13 +150,14 @@ button.btn-default {
   border-color: #eee;
 }
 button.btn-danger {
-  background-color: #ab1e24;
+  background-color: $color-danger;
   color: #fff;
 }
 button.btn-success {
-  background-color: #4fa56d;
+  background-color: $color-success;
   color: #fff;
 }
+
 .color-primary {
   color: #ab1e24;
 }
@@ -240,30 +204,30 @@ button[disabled] {
 
 /* 滚动条样式 */
 ::-webkit-scrollbar {
-  width: 0;
-  height: 0;
+  width: 0.4rem;
+  height: 0.4rem;
   background-color: #f5f5f5;
   border-radius: 0;
 }
 
 /*定义滚动条轨道 内阴影+圆角*/
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 0.4rem rgba(0, 0, 0, 0.3);
   background-color: hsla(215, 17%, 59%, 0.5);
   border-radius: 0;
 }
 
 /*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
-  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 0.4rem rgba(0, 0, 0, 0.3);
   background-color: hsla(215, 17%, 59%, 0.5);
   border-radius: 0;
 }
 
 /* 缩虐图尺寸 --rounded 圆形*/
 .thumb-20 {
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
 }
 .thumb-30 {
   width: 30px;

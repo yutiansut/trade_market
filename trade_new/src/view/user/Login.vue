@@ -196,31 +196,20 @@ export default {
     sendCode() {
       if (!this.canGetCode) return false;
       this.countDown();
-      if (this.loginData.type == "2") {
-        this.request(this.api.sendemailcode, {
-          email: this.myEmail,
-          showLoading: true
-        }).then(res => {
-          if (res.code == "0") {
-            this.myCode = true;
-            this.successMsg(res.msg);
-          } else {
-            this.errMsg(res.msg || "获取验证码失败");
-          }
-        });
-      } else {
-        this.request(this.api.sendcodeuser, {
-          tel: this.myTel,
-          showLoading: true
-        }).then(res => {
-          if (res.code == "0") {
-            this.myCode = true;
-            this.successMsg(res.msg);
-          } else {
-            this.errMsg(res.msg || "获取验证码失败");
-          }
-        });
-      }
+      let [type, account] =
+        this.loginData.type == "2" ? ["3", this.myEmail] : ["2", this.myTel];
+      this.request(this.api.code, {
+        type: type,
+        account: account,
+        showLoading: true
+      }).then(res => {
+        if (res.code == "0") {
+          this.myCode = true;
+          this.successMsg(res.msg);
+        } else {
+          this.errMsg(res.msg || "获取验证码失败");
+        }
+      });
     },
     // 倒计时函数
     countDown() {
