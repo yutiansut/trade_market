@@ -181,7 +181,6 @@ export default {
     },
     validate(val, name) {
       if (val == "") {
-        this.errMsg("请填写完整信息");
         return false;
       }
       this.canSubmit = true;
@@ -213,6 +212,12 @@ export default {
       }
     },
     submitForm() {
+      for (let key in this.formData) {
+        if (this.formData[key] == "") {
+          this.errMsg("请填写完整信息");
+          return false;
+        }
+      }
       this.request(this.api.forgetpwd, {
         type: this.veriType,
         account: this.formData.account,
