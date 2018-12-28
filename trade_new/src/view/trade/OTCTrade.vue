@@ -553,7 +553,7 @@ export default {
           }
         })
         .catch(err => {
-          console.log(res.msg);
+          console.log(err);
         });
     },
     dialogClose() {

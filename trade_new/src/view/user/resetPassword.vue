@@ -1,64 +1,107 @@
 <template>
-    <div :style="bg" class="content p-rel">
-        <login-modal class="resize"
-            titleText="重置登录密码">
-            <el-form label-position='top' @submit.native.prevent>
-                <el-form-item label='手机号'>
-                    <el-input
-                      name='cellphone'
-                      placeholder='请输入账号'
-                      v-model="formData.cellphone"
-                      maxlength='11'
-                      @blur="validate(formData.cellphone,'cellphone')">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label='手机验证码'>
-                    <div class="mobile-code-wrap p-rel">
-                        <el-input
-                          name='mobileCode'
-                          placeholder='请输入手机验证码'
-                          v-model="formData.mobileCode"
-                          :disabled='myMobileCode?false:true'>
-                        </el-input>
-                        <div
-                          class="mobile-code abs-v-center color-danger"
-                          @click='getMobileCode'>{{$t(this.codeTexti18n)}}{{second}}
-                        </div>
-                    </div>
-                </el-form-item>
-                <el-form-item label='登录密码'>
-                    <el-input
-                      name='password'
-                      type='password'
-                      placeholder='请输入密码'
-                      v-model="formData.password"
-                      @blur="validate(formData.password,'password')">
-                    </el-input>
-                </el-form-item>
-                <el-form-item label='图形验证码'>
-                    <div class="code-wrap flex flex-between">
-                        <el-input
-                          name='verCode'
-                          placeholder='请输入验证码'
-                          v-model="formData.verCode"
-                          @blur="validate(formData.verCode,'verCode')">
-                        </el-input>
-                        <div @click="createCode(verCodeNumArr,4)" class="code">
-                          <ver-code
-                            :contentHeight='38'
-                            :identifyCode='verCodeStr'>
-                          </ver-code>
-                        </div>
-                    </div>
-                </el-form-item>
-                <el-form-item>
-                    <button @click="submitForm"
-                      class="btn-block btn-large btn-danger btn-active">提交
-                    </button>
-                </el-form-item>
-            </el-form>
-        </login-modal>
-    </div>
+  <div
+    :style="bg"
+    class="content p-rel"
+  >
+    <login-modal
+      class="resize"
+      titleText="重置登录密码"
+    >
+      <el-form
+        label-position='top'
+        @submit.native.prevent
+      >
+        <el-form-item :label="$t('label163')">
+          <el-radio-group v-model="veriType">
+            <el-radio label="0">{{$t('mobileCode')}}</el-radio>
+            <el-radio label='1'>
+              {{$t('label161')}}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <!-- 输入邮箱或者手机 -->
+        <el-form-item
+          v-show='veriType=="0"'
+          :label='$t("cellphone")'
+        >
+          <el-input
+            :placeholder='$t("mobilePlaceholder")'
+            v-model="formData.account"
+            maxlength='11'
+            @blur="validate(formData.account,'account')"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item
+          v-show='veriType=="1"'
+          :label='$t("email")'
+        >
+          <el-input
+            :placeholder='$t("emailPlaceholder")'
+            v-model="formData.account"
+            maxlength='11'
+            @blur="validate(formData.account,'account')"
+          >
+          </el-input>
+        </el-form-item>
+        <!-- 输入验证码 -->
+        <el-form-item :label='veriType=="0"?$t("mobileCode"):$t("label161")'>
+          <div class="mobile-code-wrap p-rel">
+            <el-input
+              v-model="formData.code"
+              name='code'
+              :placeholder='veriType=="0"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
+              :disabled="myCode?false:true"
+            >
+            </el-input>
+            <div
+              class="mobile-code abs-v-center color-danger"
+              @click='getcode'
+            >{{$t(this.codeTexti18n)}}{{second}}
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item label='登录密码'>
+          <el-input
+            name='password'
+            type='password'
+            placeholder='请输入密码'
+            v-model="formData.password"
+            @blur="validate(formData.password,'password')"
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item label='图形验证码'>
+          <div class="code-wrap flex flex-between">
+            <el-input
+              name='verCode'
+              placeholder='请输入验证码'
+              v-model="formData.verCode"
+              @blur="validate(formData.verCode,'verCode')"
+            >
+            </el-input>
+            <div
+              @click="createCode(verCodeNumArr,4)"
+              class="code"
+            >
+              <ver-code
+                :contentHeight='38'
+                :identifyCode='verCodeStr'
+              >
+              </ver-code>
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item>
+          <button
+            @click="submitForm"
+            class="btn-block btn-large btn-danger btn-active"
+          >提交
+          </button>
+        </el-form-item>
+      </el-form>
+    </login-modal>
+  </div>
 </template>
 <script>
 import loginModal from "@/components/Login/LoginModal.vue";
@@ -69,20 +112,22 @@ export default {
     const bg = require("@/assets/images/user/bg.jpg");
     return {
       bg: `background-image:url(${bg})`,
+      veriType: "0",
       formData: {
-        cellphone: "",
-        mobileCode: "",
+        account: "",
+        code: "",
         password: "",
         verCode: ""
       },
       second: "",
-      myMobileCode: false,
+      mycode: false,
       canGetCode: true,
       verCodeStr: "",
       getCodeTimes: 0,
       codeText: "获取验证码",
       codeTexti18n: "getMsgCode",
-      verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+      canSubmit: false
     };
   },
   mounted() {
@@ -117,62 +162,61 @@ export default {
         }
       });
     },
-    getMobileCode() {
-      if (!this.canGetCode || !this.Util.isPhone(this.formData.cellphone))
-        return false;
+    getcode() {
+      if (!this.canGetCode) return false;
       this.countDown();
-      this.request(this.api.sendcodeuser, {
-        tel: this.formData.cellphone
+      let codeType = this.veriType == 0 ? "2" : "3";
+      this.request(this.api.code, {
+        account: this.formData.account,
+        type: codeType,
+        showLoading: true
       }).then(res => {
         if (res.code == "0") {
-          this.myMobileCode = true;
+          this.myCode = true;
+          this.successMsg(res.msg || "发送成功");
+        } else {
+          this.errMsg(res.msg || "发送失败");
         }
       });
     },
     validate(val, name) {
-      if (!val) return false;
+      if (val == "") {
+        this.errMsg("请填写完整信息");
+        return false;
+      }
+      this.canSubmit = true;
       switch (name) {
-        case "cellphone":
-          if (val == "") {
-            this.errMsg("手机号不能为空");
-          } else if (!this.Util.isPhone(val)) {
-            this.errMsg("手机号码格式不正确");
+        case "account":
+          if (!this.Util.isPhone(val) && !this.Util.isEmail(val)) {
+            this.errMsg("label156");
+            this.canSubmit = false;
           }
           break;
         case "password":
-          if (val == "") {
-            this.errMsg("密码不能为空");
-          } else if (!this.Util.isPassword(val)) {
+          if (!this.Util.isPassword(val)) {
             this.errMsg("密码必须包含字母");
+            this.canSubmit = false;
           }
           break;
-        case "mobileCode":
-          if (val == "") {
-            this.errMsg("手机验证码不能为空");
-          } else if (val != this.myMobileCode) {
+        case "code":
+          if (val != this.mycode) {
             this.errMsg("手机验证码不正确");
+            this.canSubmit = false;
           }
           break;
         case "verCode":
-          if (val == "") {
-            this.errMsg("图片验证码不能为空");
-          } else if (val != this.verCodeStr) {
+          if (val != this.verCodeStr) {
             this.errMsg("图形验证码不正确");
+            this.canSubmit = false;
           }
           break;
       }
     },
     submitForm() {
-      for (let key in this.formData) {
-        let item = this.formData[key];
-        if (item == "") {
-          this.errMsg("请填写完整信息");
-          return;
-        }
-      }
       this.request(this.api.forgetpwd, {
-        tel: this.formData.cellphone,
-        code: this.formData.mobileCode,
+        type: this.veriType,
+        account: this.formData.account,
+        code: this.formData.code,
         password: this.formData.password
       }).then(res => {
         if (res.code == "0") {

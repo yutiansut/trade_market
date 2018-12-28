@@ -392,12 +392,6 @@ export default {
             this.canSubmit = false;
           }
           break;
-        case "password":
-          if (!this.Util.isPassword(val)) {
-            this.errMsg("label124");
-            this.canSubmit = false;
-          }
-          break;
         case "code":
           if (val != this.verCodeStr) {
             this.errMsg("label126");

@@ -380,6 +380,7 @@ module.exports = {
     label162: "Input your username",
     label163: "Code type",
     label164: "Bind cellphone",
+    label165: "Cellphone or email is required",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",
