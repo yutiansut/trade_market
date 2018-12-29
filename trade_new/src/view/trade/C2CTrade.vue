@@ -534,9 +534,7 @@ export default {
       .then(coin => {
         this.gettradorder(coin);
         this.getMyAccount(coin).then(res => {
-          if (res && res.code == "0") {
-            this.myAvailable = res.usable;
-          }
+          res && (this.myAvailable = res.usable);
         });
         return this.getc2callorder(coin).then(list => {
           this.marketList = list;
@@ -706,6 +704,9 @@ export default {
       this.getc2corder();
       this.getc2callorder(data.coinid);
       this.gettradorder(data.coinid);
+      this.getMyAccount(data.coinid).then(res => {
+        res && (this.myAvailable = res.usable);
+      });
     },
     // 获取c2c币种
     getC2Ccoin() {
@@ -754,7 +755,10 @@ export default {
     },
     //获取资产信息
     getMyAccount(coin) {
-      return this.request(this.api.getaccount, { search: coin }).then(res => {
+      return this.request(this.api.getaccount, {
+        search: coin,
+        showLoading: true
+      }).then(res => {
         console.log(`我的资产：${JSON.stringify(res)}`);
         if (res.code == "0") {
           return Promise.resolve(res.data.list[0]);
@@ -804,7 +808,7 @@ export default {
     },
     //确认收付款弹窗
     confirmHandle(rowData) {
-      // this.dialogId = rowData.type == "0" ? 6 : 5;
+      this.dialogId = rowData.type == "0" ? 6 : 5;
       this.orderId = rowData.autoid;
       this.orderDetail = {
         type: rowData.type,

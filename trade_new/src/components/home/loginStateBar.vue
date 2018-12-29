@@ -126,7 +126,7 @@ export default {
     return {
       userData: this.userModel,
       dropDownTop: 0,
-      qrUrl: "",
+      qrUrl: "../../../static/download.html",
       myOrderDropdown: [
         {
           label: "账单明细",

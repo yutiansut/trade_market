@@ -270,7 +270,6 @@ export default {
       return `${this.myAccount.usable * 1 || "0"}&nbsp;${this.coinInfo.name}`;
     },
     outLimit() {
-      // {{myAccount.outLimit}}&nbsp;{{coinInfo.name}}
       return `${this.myAccount.dayoutheight * 1 || "0"}&nbsp;${this.coinInfo
         .name || ""}`;
     },
@@ -344,7 +343,7 @@ export default {
             this.bindState.bankstate == "0" ||
             this.bindState.idcardstate < "2" ||
             this.bindState.googlestate == "0" ||
-            !this.bindState.tradstate == "0"
+            this.bindState.tradstate == "0"
           ) {
             this.$confirm(this.$t("label166"), this.$t("label140"), {
               showClose: false,
@@ -389,7 +388,7 @@ export default {
               ? res.data.address[0].address
               : "";
           } else {
-            this.errMsg(res.code);
+            this.errMsg(res.msg);
           }
         }
       );
@@ -399,16 +398,18 @@ export default {
       if (!this.canGetCode) return false;
       this.countDown();
       let type = this.veriType == "0" ? "4" : "5";
-      this.request(this.api.code, { type: type, showLoading: true }).then(
-        res => {
-          if (res.code == "0") {
-            this.myCode = true;
-            this.successMsg(res.msg || "发送成功");
-          } else {
-            this.errMsg(res.msg || "获取验证码失败");
-          }
+      this.request(this.api.code, {
+        type: type,
+        account: this.storage.get("token"),
+        showLoading: true
+      }).then(res => {
+        if (res.code == "0") {
+          this.myCode = true;
+          this.successMsg(res.msg || "发送成功");
+        } else {
+          this.errMsg(res.msg || "获取验证码失败");
         }
-      );
+      });
     },
     // 倒计时函数
     countDown() {
@@ -473,6 +474,7 @@ export default {
       }
       this.request(this.api.outcoin, {
         ...this.formData,
+        coin: this.coinInfo.name,
         type: this.veriType,
         addressName: this.addressName || "",
         showLoading: true

@@ -182,7 +182,7 @@ export default {
         }
       ],
       logo: require("@/assets/images/footer/bottom_logo.png"),
-      qrcode: ""
+      qrcode: "../../static/download.html"
     };
   },
   mounted() {

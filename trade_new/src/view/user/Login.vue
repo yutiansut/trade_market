@@ -266,7 +266,7 @@ export default {
       }
       let account = "";
       if (this.loginData.type == "0") {
-        account = this.myGoogle;
+        account = this.checkLoginData.account;
       } else if (this.loginData.type == "1") {
         account = this.myTel;
       } else if (this.loginData.type == "2") {

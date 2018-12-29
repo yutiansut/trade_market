@@ -385,6 +385,7 @@ module.exports = {
     label166: "Please fullfill security check",
     label167: "Change cellphone",
     label168: "Change email",
+    label169: "ID card",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",

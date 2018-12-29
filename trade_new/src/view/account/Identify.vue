@@ -166,7 +166,7 @@
           disabled='disabled'
           name='cardType'
           type='text'
-          value='身份证'
+          :value='$t("label169")'
           :placeholder='$t("idType")||"请输入证件类型"'
         >
         </el-input>

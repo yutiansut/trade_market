@@ -66,7 +66,7 @@
           </span>
           <span class="txt-rt">
             <a
-              class="color-success"
+              :class="bindState.tel?'color-success':'color-danger'"
               href="javascript:"
               @click="bindHandle('tel')"
               v-text="bindState.tel?$t('label167'):$t('bind')"
@@ -77,7 +77,7 @@
         <!-- 邮箱 -->
         <li>
           <span>
-            <i :class="bindState.emailstate !='0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
+            <i :class="bindState.emailstate >'0'?'el-icon-success color-success':'el-icon-warning color-danger'"></i>
             <em>&nbsp;&nbsp;&nbsp;{{$t('email')||"电子邮箱"}}</em>
           </span>
           <span
@@ -87,7 +87,7 @@
           </span>
           <span class="txt-rt">
             <a
-              class="color-success"
+              :class="bindState.emailstate!='0'?'color-success':'color-danger'"
               href="javascript:"
               @click="bindHandle('email')"
               v-text="bindState.emailstate!='0'?$t('label168'):$t('bind')"
@@ -312,7 +312,9 @@ export default {
   data() {
     return {
       dialogId: null,
-      bindState: {},
+      bindState: {
+        emailstate: "0"
+      },
       authLogs: null,
       loginLogs: null
     };

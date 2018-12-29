@@ -13,7 +13,6 @@ ELEMENT.locale(ELEMENT.lang.en)
 import App from '@/App';
 import router from '@/router';
 import Store from '@/vuexStore/store';
-import Util from '@/assets/js/utils';
 import Request from '@/assets/js/request';
 import myStorage from '@/assets/js/myStorage';
 import sessionStorage from '@/assets/js/mySession';
@@ -24,7 +23,7 @@ import apiCfg from '@/config/apiConfig';
  */
 let initLang = () => {
   let lang = "zh-CN";
-  myStorage.get('PCDefaultLanguage') && (lang = myStorage.get('PCDefaultLanguage'));
+  myStorage.get('DefaultLang') && (lang = myStorage.get('DefaultLang'));
   return lang;
 }
 /**
@@ -42,7 +41,6 @@ const i18n = new VueI18n({
  */
 Object.assign(Vue.prototype, {
   request: Request,
-  Util: Util,
   storage: myStorage,
   session: sessionStorage,
   api: apiCfg,

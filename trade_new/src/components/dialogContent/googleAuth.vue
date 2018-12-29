@@ -89,6 +89,7 @@
         >3.{{$t('finishBinding')||"完成绑定"}}</div>
         <el-form-item :label='$t("fillPwd")||"填写登录密码"'>
           <el-input
+            type='password'
             name='password'
             :placeholder='$t("fillPwd")||"填写登录密码"'
             v-model="password"
