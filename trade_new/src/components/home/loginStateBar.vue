@@ -126,7 +126,7 @@ export default {
     return {
       userData: this.userModel,
       dropDownTop: 0,
-      qrUrl: "../../../static/download.html",
+      qrUrl: "http://www.binmark.io/static/download.html",
       myOrderDropdown: [
         {
           label: "账单明细",

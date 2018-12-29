@@ -182,7 +182,7 @@ export default {
         }
       ],
       logo: require("@/assets/images/footer/bottom_logo.png"),
-      qrcode: "../../static/download.html"
+      qrcode: "http://www.binmark.io/static/download.html"
     };
   },
   mounted() {
