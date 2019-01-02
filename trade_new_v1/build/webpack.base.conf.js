@@ -76,7 +76,7 @@ module.exports = {
         }
       }, {
         test: /\.scss$/,
-        loaders: ['style', 'css', 'scss']
+        loaders: ['style', 'css', 'scss', 'sass']
       }
     ]
   },
@@ -93,8 +93,8 @@ module.exports = {
     child_process: 'empty'
   },
   externals: {
-    "element-ui": "ELEMENT",
     "vue": "Vue",
+    "element-ui": "ELEMENT",
     "vuex": "Vuex"
   }
 }

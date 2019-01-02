@@ -10,13 +10,14 @@
     </keep-alive>
   </div>
 </template>
+<style lang="scss">
+@import "@/assets/css/common.scss";
+@import "@/assets/css/element-variable.scss";
+</style>
 <script>
 export default {
   name: "App"
 };
 </script>
-<style lang="scss">
-@import "@/assets/css/element-variable.scss";
-@import "@/assets/css/common.scss";
-</style>
+
 

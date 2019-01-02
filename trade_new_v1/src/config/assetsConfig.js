@@ -1,0 +1,48 @@
+const assetConfig = (function () {
+    return {
+        imgs: {
+            logo_1: "",
+            logo_2: "",
+            lang_flag_cn: require("@/assets/img/china.png"),
+            lang_flag_en: require("@/assets/img/usa.png"),
+            adv_1: require("@/assets/img/adv_1.png"),
+            adv_2: require("@/assets/img/adv_2.png"),
+            adv_3: require("@/assets/img/adv_3.png"),
+            adv_4: require("@/assets/img/adv_4.png"),
+            alipay: require("@/assets/img/alipay.png"),
+            android_dl: require("@/assets/img/android_dl.png"),
+            ios_dl: require("@/assets/img/ios_dl.png"),
+            banner: require("@/assets/img/banner.png"),
+            banner_1: require("@/assets/img/banner_1.png"),
+            bubble: require("@/assets/img/bubble.png"),
+            c2c_banner_1: require("@/assets/img/c2c_banner_1.png"),
+            check_pass: require("@/assets/img/check_pass.png"),
+            checking: require("@/assets/img/checking.png"),
+            email: require("@/assets/img/email.png"),
+            facebook: require("@/assets/img/facebook.png"),
+            icon_24h: require("@/assets/img/icon_24h.png"),
+            icon_ad: require("@/assets/img/icon_ad.png"),
+            icon_bank: require("@/assets/img/icon_bank.png"),
+            icon_unipay: require("@/assets/img/icon_unipay.png"),
+            icon_fee: require("@/assets/img/icon_fee.png"),
+            icon_google: require("@/assets/img/icon_google.png"),
+            icon_lock: require("@/assets/img/icon_lock.png"),
+            icon_phone: require("@/assets/img/icon_phone.png"),
+            icon_safe: require("@/assets/img/icon_safe.png"),
+            icon_user_0: require("@/assets/img/icon_user_0.png"),
+            icon_user_1: require("@/assets/img/icon_user_1.png"),
+            icon_telegramm: require("@/assets/img/icon_telegramm.png"),
+            icon_twitter: require("@/assets/img/icon_twitter.png"),
+            icon_weixinpay: require("@/assets/img/icon_weixinpay.png"),
+            icon_vip: require("@/assets/img/icon_vip.png"),
+            idcard_1: require("@/assets/img/idcard_1.png"),
+            idcard_2: require("@/assets/img/idcard_2.png"),
+            idcard_3: require("@/assets/img/idcard_3.png"),
+            img_upload: require("@/assets/img/img_upload.png"),
+            invite_banner: require("@/assets/img/invite_banner.png"),
+            iphone: require("@/assets/img/iphone.png"),
+            login_bg: require("@/assets/img/login_bg.png")
+        }
+    }
+}());
+export default assetConfig;

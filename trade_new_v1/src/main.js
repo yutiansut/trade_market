@@ -6,18 +6,29 @@ Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.use(ELEMENT);
 ELEMENT.locale(ELEMENT.lang.en)
-
+/**
+ * 引入全局组件
+ */
+import App from '@/App';
+import Header from './components/header/Header.vue';
+import navBar from './components/header/navBar.vue';
+import statusBar from './components/header/statusBar.vue';
+Vue.component(Header.name, Header);
+Vue.component(navBar.name, navBar);
+Vue.component(statusBar.name, statusBar);
 /**
  * 引入自定义相关js
  */
-import App from '@/App';
-import router from '@/router';
+import router from '@/router/index';
 import Store from '@/vuexStore/store';
 import Request from '@/assets/js/request';
 import myStorage from '@/assets/js/myStorage';
 import sessionStorage from '@/assets/js/mySession';
+/**
+ * 引入全局配置文件
+ */
 import apiCfg from '@/config/apiConfig';
-
+import assetCfg from '@/config/assetsConfig'
 /**
  * 全局方法
  */
@@ -44,6 +55,7 @@ Object.assign(Vue.prototype, {
   storage: myStorage,
   session: sessionStorage,
   api: apiCfg,
+  assetCfg: assetCfg,
   Store: Store,
   redirectTo(pathName, params) {
     let data = {

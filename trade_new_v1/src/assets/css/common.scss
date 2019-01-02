@@ -1,14 +1,13 @@
 $bg-default: #fff;
 $color-success: #4fa56d;
 $color-danger: #ab1e24;
-$bg-dark: #1f262d;
+$bg-dark: #2a2f43;
 $main-font-color: #333;
 $bd-size: 1px;
 $bd-color: #e1e1e1;
 $default-border: $bd-size solid $bd-color;
 $mask-bg-rgba: rgba(0, 0, 0, 0.6);
 $content-width: 1200px;
-
 @mixin textVcenter($height: 40px) {
   height: $height;
   line-height: $height;
@@ -22,16 +21,18 @@ $content-width: 1200px;
   background-color: $bgcolor;
   width: $width;
 }
+* {
+  margin: 0;
+  padding: 0;
+}
 html {
   height: 100%;
   width: 100%;
-  font-size: 10px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
+  font-size: 14px;
   user-select: none;
+  box-sizing: border-box;
   overflow: auto;
-  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
+  font-family: "Helvetica Neue", Helvetica, "PingFang-SC-Medium", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 body {
@@ -41,10 +42,6 @@ body {
   color: $main-font-color;
 }
 
-table th {
-  font-weight: normal;
-  color: #333;
-}
 a {
   color: inherit;
 }
@@ -106,27 +103,32 @@ em {
 }
 /* margin 10像素*/
 .m-top-10 {
-  margin-top: 1rem;
+  margin-top: 10px;
 }
 .m-left-10 {
-  margin-left: 1rem;
+  margin-left: 10px;
 }
 .m-right-10 {
-  margin-right: 1rem;
+  margin-right: 10px;
 }
 .m-bottom-10 {
-  margin-bottom: 1rem;
+  margin-bottom: 10px;
 }
 .m-10 {
-  margin: 1rem;
+  margin: 10px;
 }
 /*字体大小*/
 @for $i from 12 to 29 {
   .font-#{$i} {
-    font-size: 0.1rem * $i;
+    font-size: 1px * $i;
   }
 }
-
+/*高度值*/
+@for $i from 1 to 9 {
+  .h-#{$i*10} {
+    height: 10px * $i;
+  }
+}
 /* 字重 */
 .font-bit-bold {
   font-weight: 500;

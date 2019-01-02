@@ -4,7 +4,7 @@ const userModel = {
         account: "",
         tel: "",
         email: "",
-        member: ''
+        member: ""
     },
     mutations: {
         loginState(state) {
