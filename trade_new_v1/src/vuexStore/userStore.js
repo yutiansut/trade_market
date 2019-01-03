@@ -1,6 +1,6 @@
 const userModel = {
     state: {
-        isLogin: false,
+        isLogin: true,
         account: "",
         tel: "",
         email: "",

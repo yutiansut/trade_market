@@ -1,74 +1,116 @@
 <template>
-    <div class="w-full">
-      <div v-if='showHead' class="hd-top">
-        <div class="hd-top-inner">
-          <div class="hd-top-lf">
-            <slot name="top-slot"></slot>
-          </div>
-          <login-bar></login-bar>
+  <div class="w-full">
+    <div
+      v-if='showHead'
+      class="hd-top"
+    >
+      <div class="hd-top-inner">
+        <div class="hd-top-lf">
+          <slot name="top-slot"></slot>
         </div>
-      </div>
-      <div v-if="showHeadBody" class="hd-body">
-        <div class="nav-inner">
-          <router-link to="/main">
-            <img class="logo p-rel" :src="headLogo" alt="">
-          </router-link>
-          <ul class="nav-bar">
-            <!-- 币币交易 -->
-            <li
-              class="nav-item p-rel"
-              :class='currentPath==mainCoin.link?"active":""'>
-              <router-link :to='mainCoin.link'>
-                <span class="fl" v-text="$t(mainCoin.i18nKey)||item.mainCoin"></span>&nbsp;
-                <i v-if='mainCoin.subItem' class="iconfont icon-xiala"></i>
-              </router-link>
-              <ol class="sub-nav p-abs" v-if="mainCoin.subItem">
-                <li class="sub-nav-item p-rel"
-                  @mouseenter='getTradeCoin(sItem.coinid,index)'
-                  v-for="(sItem,index) in mainCoin.subItem"
-                  :key='index'>
-                  <a 
-                    href="javascript:void(0)">
-                    <span>{{sItem.coinid}}&nbsp;{{$t('trade')}}</span>
-                    <i class="iconfont icon-arrow-right abs-v-center rt-0"></i>
-                  </a>
-                  <!-- 二级导航 -->
-                  <div v-loading='showLoading'
-                    element-loading-spinner='el-icon-loading'
-                    element-loading-background='rgba(0,0,0,.4)'
-                    class="nav-container p-abs">
-                    <currency-nav></currency-nav>
-                  </div>
-                </li>
-              </ol>
-            </li>
-            <!-- 其他交易 -->
-            <li v-for='(item,i) in navBarCfg'
-              :key='i' class="nav-item p-rel"
-              :class='currentPath==item.link?"active":""'>
-              <router-link :to='item.link?item.link:""'>
-                <span v-text="$t(item.i18nKey)||item.label"></span>&nbsp;
-                <i v-if='item.subItem' class="iconfont icon-xiala"></i>
-              </router-link>
-              <ol class="sub-nav p-abs" v-if="item.subItem">
-                <li class="sub-nav-item p-rel" v-for="(sItem,j) in item.subItem" :key='j'>
-                  <router-link :to="sItem.link?sItem.link:''">
-                    <span v-text="$t(sItem.i18nKey)||sItem.label"></span>
-                    <i v-if='sItem.type' class="iconfont icon-arrow-right abs-v-center rt-0"></i>
-                  </router-link>
-                </li>
-                <li class="sub-nav-item p-rel">
-                  <a target="view_window" :href="agreementUrl">
-                    <span v-text="$t('agreement')"></span>
-                  </a>
-                </li>
-              </ol>
-            </li>
-          </ul>
-          <slot></slot>
-        </div>
+        <login-bar></login-bar>
       </div>
     </div>
+    <div
+      v-if="showHeadBody"
+      class="hd-body"
+    >
+      <div class="nav-inner">
+        <router-link to="/main">
+          <img
+            class="logo p-rel"
+            :src="headLogo"
+            alt=""
+          >
+        </router-link>
+        <ul class="nav-bar">
+          <!-- 币币交易 -->
+          <li
+            class="nav-item p-rel"
+            :class='currentPath==mainCoin.link?"active":""'
+          >
+            <router-link :to='mainCoin.link'>
+              <span
+                class="fl"
+                v-text="$t(mainCoin.i18nKey)||item.mainCoin"
+              ></span>&nbsp;
+              <i
+                v-if='mainCoin.subItem'
+                class="iconfont icon-xiala"
+              ></i>
+            </router-link>
+            <ol
+              class="sub-nav p-abs"
+              v-if="mainCoin.subItem"
+            >
+              <li
+                class="sub-nav-item p-rel"
+                @mouseenter='getTradeCoin(sItem.coinid,index)'
+                v-for="(sItem,index) in mainCoin.subItem"
+                :key='index'
+              >
+                <a href="javascript:void(0)">
+                  <span>{{sItem.coinid}}&nbsp;{{$t('trade')}}</span>
+                  <i class="iconfont icon-arrow-right abs-v-center rt-0"></i>
+                </a>
+                <!-- 二级导航 -->
+                <div
+                  v-loading='showLoading'
+                  element-loading-spinner='el-icon-loading'
+                  element-loading-background='rgba(0,0,0,.4)'
+                  class="nav-container p-abs"
+                >
+                  <currency-nav></currency-nav>
+                </div>
+              </li>
+            </ol>
+          </li>
+          <!-- 其他交易 -->
+          <li
+            v-for='(item,i) in navBarCfg'
+            :key='i'
+            class="nav-item p-rel"
+            :class='currentPath==item.link?"active":""'
+          >
+            <router-link :to='item.link?item.link:""'>
+              <span v-text="$t(item.i18nKey)||item.label"></span>&nbsp;
+              <i
+                v-if='item.subItem'
+                class="iconfont icon-xiala"
+              ></i>
+            </router-link>
+            <ol
+              class="sub-nav p-abs"
+              v-if="item.subItem"
+            >
+              <li
+                class="sub-nav-item p-rel"
+                v-for="(sItem,j) in item.subItem"
+                :key='j'
+              >
+                <router-link :to="sItem.link?sItem.link:''">
+                  <span v-text="$t(sItem.i18nKey)||sItem.label"></span>
+                  <i
+                    v-if='sItem.type'
+                    class="iconfont icon-arrow-right abs-v-center rt-0"
+                  ></i>
+                </router-link>
+              </li>
+              <li class="sub-nav-item p-rel">
+                <a
+                  target="view_window"
+                  :href="agreementUrl"
+                >
+                  <span v-text="$t('agreement')"></span>
+                </a>
+              </li>
+            </ol>
+          </li>
+        </ul>
+        <slot></slot>
+      </div>
+    </div>
+  </div>
 </template>
 <script>
 import currencyNav from "@/components/other/currencyNav";
@@ -105,11 +147,11 @@ export default {
       agreementUrl: "http://47.95.213.181/binmark/static/services.pdf",
       showLoading: true,
       navBarCfg: [
-        {
-          i18nKey: "ctcTrade",
-          label: "C2C交易",
-          link: "/c2c_trade"
-        },
+        // {
+        //   i18nKey: "ctcTrade",
+        //   label: "C2C交易",
+        //   link: "/c2c_trade"
+        // },
         {
           i18nKey: "otcTrade",
           label: "OTC交易",

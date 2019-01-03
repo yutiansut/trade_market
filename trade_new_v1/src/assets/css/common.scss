@@ -122,13 +122,13 @@ em {
   width: $content-width;
 }
 /*字体大小*/
-@for $i from 12 to 29 {
+@for $i from 12 to 31 {
   .font-#{$i} {
     font-size: 1px * $i;
   }
 }
 
-@for $i from 1 to 9 {
+@for $i from 1 to 11 {
   /*高度值*/
   .h-#{$i*10} {
     height: 10px * $i;
@@ -170,14 +170,15 @@ button.btn-block {
 }
 button.btn-large {
   height: 40px;
-  line-height: 38px;
+  line-height: 40px;
   padding: 0 30px;
   font-size: 16px;
 }
 button.btn-small {
   height: 30px;
-  line-height: 28px;
-  padding: 0 15px;
+  line-height: 30px;
+  padding: 0 20px;
+  font-size: 12px;
 }
 button.btn-default {
   background-color: #fff;
@@ -196,6 +197,16 @@ button.btn-primary {
   background: linear-gradient(left, #267df7, #6935e1);
   color: #fff;
 }
+button.btn-round {
+  border-radius: 7.1rem;
+}
+button[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.color-gray {
+  color: #bdbec2;
+}
 .color-primary {
   color: $color-primary;
 }
@@ -205,10 +216,7 @@ button.btn-primary {
 .color-danger {
   color: $color-danger;
 }
-button[disabled] {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
+
 .fl {
   float: left;
 }

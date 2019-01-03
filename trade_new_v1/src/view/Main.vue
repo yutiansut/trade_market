@@ -15,6 +15,7 @@
         ></bar-item>
       </status-bar>
     </my-header>
+    <main-banner></main-banner>
     <my-footer></my-footer>
   </div>
 </template>
@@ -22,7 +23,9 @@
 </style>
 
 <script>
+import mainBanner from "@/components/banner/MainBanner";
 export default {
+  components: { mainBanner },
   data() {
     return {};
   },

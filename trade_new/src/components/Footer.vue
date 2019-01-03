@@ -50,7 +50,7 @@
           </li>
           <li class="font-14">CopyRight&nbsp;2015-2018&nbsp;
             <em v-text="$t('copyRight')"></em>&nbsp;
-            <em v-text="$t('ISP')"></em>：156159948
+            <!-- <em v-text="$t('ISP')"></em>：156159948 -->
           </li>
           <li>
             <div

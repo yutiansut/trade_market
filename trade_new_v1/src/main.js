@@ -5,7 +5,8 @@ import VueI18n from 'vue-i18n';
 Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.use(ELEMENT);
-ELEMENT.locale(ELEMENT.lang.en)
+ELEMENT.locale(ELEMENT.lang.en);
+import 'swiper/dist/css/swiper.css'
 /**
  * 引入全局组件
  */

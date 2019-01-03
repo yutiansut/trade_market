@@ -209,18 +209,7 @@
               :label='($t("total")||"总计")+"(CNY)"'
             >
             </el-table-column>
-            <!-- <el-table-column prop='tradeLimit'
-                          :label='($t("tradeLimit")||"交易限额")+"(USDT)"'>
-                        </el-table-column>
-                        <el-table-column width="150" prop='seller'
-                          :label='$t("sellerOnline")||"商家在线"'>
-                        </el-table-column>
-                        <el-table-column width="150" prop='volumn'
-                          :label='$t("orderVol")||"成交单数"'>
-                        </el-table-column>
-                        <el-table-column width="120" prop='meanTime'
-                          :label='$t("averageTime")||"平均用时"'>
-                        </el-table-column> -->
+
             <el-table-column
               width='100'
               :label='$t("operation")||"操作"'
@@ -714,7 +703,7 @@ export default {
         showLoading: 0
       }).then(res => {
         console.log(`c2c币种：${JSON.stringify(res)}`);
-        if (res.data && res.data.list) {
+        if (res.data && res.data.list && res.data.length > 0) {
           return Promise.resolve(res.data.list);
         }
       });

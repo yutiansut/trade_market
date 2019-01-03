@@ -13,6 +13,9 @@
 <style lang="scss">
 @import "@/assets/css/common.scss";
 @import "@/assets/css/element-variable.scss";
+#app {
+  @include minWidth();
+}
 </style>
 <script>
 export default {

@@ -1,6 +1,32 @@
 <template>
-  <div class="status-bar flex">
+  <div class="status-bar flex flex-v-center">
     <slot name='barItem'></slot>
+    <!-- user面板 -->
+    <template v-if="!Store.state.userModel.isLogin">
+      <button class="btn-login btn-small btn-round">登录</button>
+      <button class="btn-primary btn-small btn-round">注册</button>
+    </template>
+    <template v-else>
+      <div class="user-dropdown flex flex-v-center p-rel">
+        <div class="user-info flex flex-v-center h-30 color-gray flex-between">
+          <i class="iconfont icon-yonghu"></i>&nbsp;&nbsp;
+          <span>***166@qq.com</span>&nbsp;&nbsp;
+          <i class="iconfont el-icon-caret-bottom"></i>
+        </div>
+        <ol class="dropdown-item p-abs">
+          <li>
+            <router-link to=''>账户设置</router-link>
+          </li>
+          <li>
+            <router-link to=''>邀请好友</router-link>
+          </li>
+          <li>
+            <router-link to=''>退出登录</router-link>
+          </li>
+        </ol>
+      </div>
+    </template>
+    <!-- 选择语言 -->
     <div
       @click="dropDown"
       class="lang-switch flex p-rel flex-v-center"
@@ -84,6 +110,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+$mg-size: 30px;
 .status-bar {
   height: 100%;
 }
@@ -91,7 +118,7 @@ export default {
   height: 15px;
 }
 .lang-switch {
-  margin-left: 30px;
+  margin-left: $mg-size;
 }
 .drop-down {
   cursor: pointer;
@@ -107,13 +134,50 @@ export default {
       background-color: $bg-dark;
       color: #fff;
     }
-    &:first-child {
-      border-top: none;
-    }
     img {
       height: 15px;
       margin-right: 8px;
     }
   }
+}
+.user-dropdown {
+  height: 100%;
+  cursor: pointer;
+  &:hover {
+    .dropdown-item {
+      display: block;
+    }
+  }
+  .user-info {
+    margin-left: $mg-size;
+    border-radius: 30px;
+    border: 1px solid #bdbec2;
+    box-sizing: border-box;
+    padding: 0 10px;
+  }
+  .dropdown-item {
+    display: none;
+    right: 0;
+    top: 50px;
+    background: #fff;
+    border-radius: 2px;
+    z-index: 999;
+    overflow: hidden;
+    li {
+      padding: 0 30px;
+      line-height: 40px;
+      &:hover {
+        background-color: $bg-dark;
+        color: #fff;
+      }
+    }
+  }
+}
+button {
+  margin-left: $mg-size;
+}
+.btn-login {
+  color: #fff;
+  border-color: #555969;
 }
 </style>
