@@ -9,7 +9,13 @@ const textArr = [
     "notice",
     "Chinese",
     "English",
-    "Changing..."
+    "Changing...",
+    "Coin center",
+    "Candy box",
+    "Standard",
+    "Professional",
+    "Properties",
+    "Order"
 ];
 const langEnCfg = (function () {
     let obj = {};

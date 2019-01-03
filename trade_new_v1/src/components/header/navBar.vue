@@ -2,10 +2,12 @@
   <div class="nav flex flex-between">
     <img
       class="logo"
-      src=""
-      alt=""
+      :src="logo||''"
     >
-    <ul class="nav-item flex flex-v-center flex-between">
+    <ul
+      v-if="navItem"
+      class="nav-item flex flex-v-center flex-between"
+    >
       <li
         v-for="(item,i) in navItem"
         :key='i'
@@ -38,19 +40,21 @@
 <script>
 export default {
   name: "nav-bar",
-  data() {
-    return {
-      navItem: [
+  props: {
+    logo: String,
+    navItem: {
+      type: null,
+      default: [
         {
           label: "label2",
           link: "",
           subItem: [
             {
-              label: "子列表",
+              label: "label14",
               link: ""
             },
             {
-              label: "子列表1",
+              label: "label15",
               link: ""
             }
           ]
@@ -60,19 +64,25 @@ export default {
           link: ""
         },
         {
-          label: "label4",
+          label: "label12",
           link: ""
         },
         {
-          label: "label5",
-          link: ""
-        },
-        {
-          label: "label6",
+          label: "label13",
           link: ""
         }
       ]
+    }
+  },
+  data() {
+    return {
+      myNavItem: null
     };
+  },
+  mounted() {
+    if (this.navItem) {
+      this.myNavItem = this.navItem;
+    }
   }
 };
 </script>
@@ -80,7 +90,7 @@ export default {
 <style lang="scss" scoped>
 .nav {
   color: #bdbec2;
-  a {
+  > a {
     display: block;
   }
   .logo {
@@ -94,6 +104,7 @@ export default {
     height: 100%;
     transition: all 0.3s;
     &:hover {
+      color: #fff;
       .sub-item {
         display: block;
       }
@@ -101,11 +112,18 @@ export default {
   }
   .sub-item {
     display: none;
-    background-color: $bg-dark;
+    background-color: $bg-default;
     top: 50px;
-    > li {
+    color: #333;
+    z-index: 999;
+    li {
       padding: 0 10px;
-      @include textVcenter(30px);
+      @include textVcenter(40px);
+      transition: all 0.3s;
+      &:hover {
+        background-color: $bg-dark;
+        color: #fff;
+      }
     }
   }
 }

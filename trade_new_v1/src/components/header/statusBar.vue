@@ -1,22 +1,10 @@
 <template>
   <div class="status-bar flex">
-    <span class="bar-item flex flex-v-center">
-      <router-link to=''>
-        <i class="iconfont icon-email"></i>
-        <em v-text="$t('label7')"></em>
-      </router-link>
-    </span>
-    <span class="bar-item flex flex-v-center">
-      <router-link to=''>
-        <i class="iconfont icon-tongzhi"></i>
-        <em v-text="$t('label8')"></em>
-      </router-link>
-    </span>
+    <slot name='barItem'></slot>
     <div
       @click="dropDown"
-      class="bar-item flex p-rel flex-v-center"
+      class="lang-switch flex p-rel flex-v-center"
     >
-      <i class="iconfont icon-duoyuyan"></i>
       <img
         class="icon-flag"
         :src="dropDownItem[active].icon"
@@ -98,35 +86,33 @@ export default {
 <style lang="scss" scoped>
 .status-bar {
   height: 100%;
-  .bar-item {
-    height: 100%;
-    color: #bdbec2;
-    padding-left: 30px;
-    i {
-      margin-right: 4px;
-    }
-  }
 }
 .icon-flag {
   height: 15px;
 }
+.lang-switch {
+  margin-left: 30px;
+}
 .drop-down {
   cursor: pointer;
-  background-color: $bg-dark;
+  background-color: $bg-default;
   white-space: nowrap;
   top: 50px;
-  left: 30px;
+  right: 0;
+  z-index: 999;
   .drop-down-item {
     padding: 8px;
+    color: #333;
     &:hover {
-      background: #eee;
-      color: #333;
+      background-color: $bg-dark;
+      color: #fff;
     }
     &:first-child {
       border-top: none;
     }
     img {
       height: 15px;
+      margin-right: 8px;
     }
   }
 }

@@ -13,9 +13,13 @@ import App from '@/App';
 import Header from './components/header/Header.vue';
 import navBar from './components/header/navBar.vue';
 import statusBar from './components/header/statusBar.vue';
+import myFooter from './components/footer/Footer.vue';
+import barItem from './components/header/BarItem.vue';
 Vue.component(Header.name, Header);
 Vue.component(navBar.name, navBar);
 Vue.component(statusBar.name, statusBar);
+Vue.component(myFooter.name, myFooter);
+Vue.component(barItem.name, barItem);
 /**
  * 引入自定义相关js
  */

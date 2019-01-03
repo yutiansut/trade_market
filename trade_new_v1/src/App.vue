@@ -1,10 +1,10 @@
 <template>
   <div
     id="app"
-    class="p-rel wh-full"
+    class="wh-full"
   >
     <keep-alive>
-      <transition name="slide-left">
+      <transition name="el-fade">
         <router-view></router-view>
       </transition>
     </keep-alive>

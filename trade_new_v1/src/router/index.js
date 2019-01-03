@@ -5,7 +5,7 @@ const routes = [
     name: "Main",
     component: Main,
     meta: {
-      title: "首页"
+      title: "新交易所"
     }
   }
 ]

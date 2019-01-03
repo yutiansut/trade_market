@@ -1,6 +1,7 @@
 $bg-default: #fff;
-$color-success: #4fa56d;
-$color-danger: #ab1e24;
+$color-success: #53c3a2;
+$color-danger: #ef4c60;
+$color-primary: #2a79f5;
 $bg-dark: #2a2f43;
 $main-font-color: #333;
 $bd-size: 1px;
@@ -12,7 +13,6 @@ $content-width: 1200px;
   height: $height;
   line-height: $height;
 }
-
 @mixin minWidth($min: 1440px) {
   min-width: $min;
 }
@@ -32,12 +32,13 @@ html {
   user-select: none;
   box-sizing: border-box;
   overflow: auto;
-  font-family: "Helvetica Neue", Helvetica, "PingFang-SC-Medium", "Hiragino Sans GB",
-    "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, "PingFang-SC-Medium",
+    "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
 body {
   @include minWidth;
   height: 100%;
+  overflow: auto;
   background-color: $bg-default;
   color: $main-font-color;
 }
@@ -117,15 +118,24 @@ em {
 .m-10 {
   margin: 10px;
 }
+.content-width {
+  width: $content-width;
+}
 /*字体大小*/
 @for $i from 12 to 29 {
   .font-#{$i} {
     font-size: 1px * $i;
   }
 }
-/*高度值*/
+
 @for $i from 1 to 9 {
+  /*高度值*/
   .h-#{$i*10} {
+    height: 10px * $i;
+  }
+  /* 缩虐图尺寸 --rounded 圆形*/
+  .thumb-#{$i*10} {
+    width: 10px * $i;
     height: 10px * $i;
   }
 }
@@ -142,10 +152,33 @@ input {
   outline: none;
   border: 1px solid transparent;
 }
+button {
+  appearance: none;
+  border: 1px solid transparent;
+  background: none;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 2px;
+}
 button.btn-hover:hover {
   opacity: 0.9;
 }
-
+button.btn-block {
+  display: block;
+  width: 100%;
+}
+button.btn-large {
+  height: 40px;
+  line-height: 38px;
+  padding: 0 30px;
+  font-size: 16px;
+}
+button.btn-small {
+  height: 30px;
+  line-height: 28px;
+  padding: 0 15px;
+}
 button.btn-default {
   background-color: #fff;
   color: #333;
@@ -159,9 +192,18 @@ button.btn-success {
   background-color: $color-success;
   color: #fff;
 }
-
+button.btn-primary {
+  background: linear-gradient(left, #267df7, #6935e1);
+  color: #fff;
+}
 .color-primary {
-  color: #ab1e24;
+  color: $color-primary;
+}
+.color-success {
+  color: $color-success;
+}
+.color-danger {
+  color: $color-danger;
 }
 button[disabled] {
   opacity: 0.6;
@@ -226,23 +268,6 @@ button[disabled] {
   border-radius: 0;
 }
 
-/* 缩虐图尺寸 --rounded 圆形*/
-.thumb-20 {
-  width: 2rem;
-  height: 2rem;
-}
-.thumb-30 {
-  width: 30px;
-  height: 30px;
-}
-.thumb-40 {
-  width: 40px;
-  height: 40px;
-}
-.thumb-50 {
-  width: 50px;
-  height: 50px;
-}
 /* 文本对齐 */
 .txt-center {
   text-align: center;
