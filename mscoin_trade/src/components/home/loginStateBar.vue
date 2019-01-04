@@ -195,7 +195,7 @@ export default {
   mounted() {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
-    this.userModel.isLogin = this.storage.get("isLogin");
+    this.userData.isLogin = this.storage.get("isLogin");
     this.getVersion();
   },
   methods: {

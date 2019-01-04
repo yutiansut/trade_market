@@ -60,7 +60,7 @@
           <button
             @click="navigateTo('/kline_trade',{maincoinid: maincoin,coinid: tradecoin})"
             style="margin-left:20%;"
-            class="btn-inline btn-hover btn-default btn-small"
+            class="btn-inline btn-hover btn-success btn-small"
           >K线交易</button>
         </div>
         <!-- K线图占位 -->

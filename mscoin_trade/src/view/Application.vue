@@ -1,46 +1,32 @@
 <template>
-  <div class="main">
-    <my-header class="header-main">
-      <login-bar></login-bar>
-    </my-header>
-    <img
-      class="banner"
-      :src="banner"
-      alt=""
-    >
-    <div class="form-wrap p-rel">
-      <div
-        class="title font-bold"
-        v-html="$t('label110')"
-      ></div>
-      <div class="form">
-        <el-form
-          label-position='top'
-          @submit.native.prevent
-        >
-          <template v-for="(item,key) in formData">
-            <el-form-item
-              :label='$t(item.labeli18n)||item.label'
-              :key='key'
-            >
-              <el-input
-                name='mobile'
-                v-model="item.val"
-                :placeholder='$t(item.placeholderi18n)||item.placeholder'
-              >
-              </el-input>
-            </el-form-item>
-          </template>
-        </el-form>
-        <button
-          @click="onSubmit"
-          v-text="$t('submitApplication')||'提交上线申请'"
-          class="btn btn-large btn-block btn-active btn-primary"
-        >
-        </button>
-      </div>
-    </div>
-    <!-- <div class="requirement">
+    <div class="main">
+        <my-header class="header-main">
+            <login-bar></login-bar>
+        </my-header>
+        <img class="banner" :src="banner" alt="">
+        <div class="form-wrap p-rel">
+            <div class="title font-bold" v-html="$t('label110')"></div>
+            <div class="form">
+                <el-form label-position='top' @submit.native.prevent>
+                  <template v-for="(item,key) in formData">
+                    <el-form-item
+                      :label='$t(item.labeli18n)||item.label'
+                      :key='key'>
+                      <el-input name='mobile'
+                        v-model="item.val"
+                        :placeholder='$t(item.placeholderi18n)||item.placeholder'>
+                      </el-input>
+                    </el-form-item>
+                  </template>
+                </el-form>
+                <button
+                  @click="onSubmit"
+                  v-text="$t('submitApplication')||'提交上线申请'"
+                  class="btn btn-large btn-block btn-active btn-danger">
+                </button>
+            </div>
+        </div>
+        <!-- <div class="requirement">
             <template v-for='(item,i) in rules'>
             <dl :key='i'>
                 <dt v-text="item.title"></dt>
@@ -48,8 +34,8 @@
             </dl>
             </template>
         </div> -->
-    <my-footer></my-footer>
-  </div>
+        <my-footer></my-footer>
+    </div>
 </template>
 <script>
 export default {

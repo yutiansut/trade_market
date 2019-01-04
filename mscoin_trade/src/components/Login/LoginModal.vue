@@ -1,23 +1,15 @@
 <template>
-  <div
-    :style="{width:width}"
-    class="dialog"
-  >
-    <div
-      :style="{'background':headerBg}"
-      class="dialog-header p-rel"
-    >
-      <div
-        :style="{'font-size':titleSize,'color':titleColor}"
-        class="title"
-        v-text="titleText"
-      >
+    <div :style="{width:width}" class="dialog">
+      <div :style="{'background':headerBg}" class="dialog-header p-rel">
+        <div :style="{'font-size':titleSize,'color':titleColor}" 
+            class="title"
+            v-text="titleText">
+        </div>
+      </div>
+      <div class="dialog-body">
+        <slot></slot>
       </div>
     </div>
-    <div class="dialog-body">
-      <slot></slot>
-    </div>
-  </div>
 </template>
 <script>
 export default {
@@ -50,7 +42,7 @@ export default {
   background: #fff;
   .dialog-header {
     @include textVcenter(80px);
-    background-color: $main-bg-color;
+    background-color: #b72127;
     .title {
       letter-spacing: 2px;
     }

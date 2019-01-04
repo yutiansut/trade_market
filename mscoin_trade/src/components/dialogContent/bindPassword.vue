@@ -37,10 +37,10 @@
         <el-form-item :label='formData.type=="0"?$t("mobileCode"):$t("emailCode")'>
           <div class="mobile-code-wrap p-rel">
             <el-input
-              :disabled='myCode?false:true'
+              :disabled='!myCode'
               name='mobileCode'
               v-model="formData.code"
-              :placeholder='formData.type=="0"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
+              :placeholder='myCode?formData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder"):$t("label170")'
             >
             </el-input>
             <div
@@ -128,7 +128,7 @@ export default {
       codeText: null,
       timer: null,
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-      myCode: "",
+      myCode: false,
       verCodeStr: "",
       second: "",
       codeTexti18n: "getMsgCode",

@@ -48,9 +48,9 @@
             <router-link to='/Binmarkxqc@gmail.com'><i class="iconfont icon-email"></i></router-link>
             <router-link to='Binmarkxqc@gmail.com'><i class="iconfont icon-facebook"></i></router-link>
           </li>
-          <li class="font-14">CopyRight&nbsp;2015-2018&nbsp;
+          <li class="font-14">CopyRight&nbsp;{{copyRight}}&nbsp;
             <em v-text="$t('copyRight')"></em>&nbsp;
-            <em v-text="$t('ISP')"></em>：156159948
+            <!-- <em v-text="$t('ISP')"></em>：156159948 -->
           </li>
           <li>
             <div
@@ -184,6 +184,11 @@ export default {
       logo: require("@/assets/images/footer/bottom_logo.png"),
       qrcode: "http://www.binmark.io/static/download.html"
     };
+  },
+  computed: {
+    copyRight() {
+      return new Date().getFullYear();
+    }
   },
   mounted() {
     if (this.qrcode) return false;

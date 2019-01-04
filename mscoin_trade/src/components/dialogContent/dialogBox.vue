@@ -1,37 +1,13 @@
 <template>
-  <div
-    v-show="show"
-    class="pop-up flex flex-v-center flex-h-center"
-  >
-    <div
-      :style="{width:width}"
-      class="dialog"
-    >
-      <div
-        :style="{background:headerBg}"
-        class="dialog-header p-rel"
-      >
-        <img
-          v-if='showHeaderImg'
-          class="header-img abs-vh-center"
-          :src="headerImg"
-          alt=""
-        >
-        <div
-          v-if='showHeaderTitle'
-          class="title-text"
-          v-text="headerTitle"
-        ></div>
-        <i
-          @click.stop="closeHandle"
-          class="el-icon-close"
-        ></i>
+  <div v-show="show" class="pop-up flex flex-v-center flex-h-center">
+    <div :style="{width:width}" class="dialog">
+      <div :style="{background:headerBg}" class="dialog-header p-rel">
+        <img v-if='showHeaderImg' class="header-img abs-vh-center" :src="headerImg" alt="">
+        <div v-if='showHeaderTitle' class="title-text" v-text="headerTitle"></div>
+        <i @click.stop="closeHandle" class="el-icon-close"></i>
       </div>
       <div class="dialog-body">
-        <div
-          class="title font-bold font-16"
-          v-text="dialogTitle"
-        ></div>
+        <div class="title font-bold font-16" v-text="dialogTitle"></div>
         <slot></slot>
       </div>
     </div>
@@ -112,7 +88,7 @@ export default {
   border-radius: 2px;
   .dialog-header {
     @include textVcenter(80px);
-    background-color: $main-bg-color;
+    background-color: #b72127;
     .title-text {
       border-top-right-radius: 2px;
       border-top-left-radius: 2px;

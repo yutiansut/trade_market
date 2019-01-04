@@ -110,8 +110,8 @@
               v-show="loginData.type!=''&&loginData.type!='0'"
               v-model="loginData.code"
               name='mobileCode'
-              :placeholder='loginData.type=="1"?$t("mobileCode"):$t("label161")'
-              :disabled="myCode?false:true"
+              :placeholder='myCode?loginData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder"):$t("label170")'
+              :disabled="!myCode"
             >
             </el-input>
             <el-input
@@ -171,7 +171,7 @@ export default {
       getCodeTimes: 0,
       codeTexti18n: "getMsgCode",
       second: "",
-      myCode: "",
+      myCode: false,
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: "",
       oldPath: "",

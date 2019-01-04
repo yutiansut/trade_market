@@ -127,13 +127,13 @@
               <button
                 v-text="$t('label132')"
                 @click="goTrade('/currency_trade',scope.row)"
-                class="trade-btn btn-small btn-primary btn-hover"
+                class="trade-btn btn-small btn-danger btn-hover"
               >
               </button>
               <button
                 v-text="$t('label133')"
                 @click="goTrade('/kline_trade',scope.row)"
-                class="trade-btn btn-small btn-default btn-hover"
+                class="trade-btn btn-small btn-success btn-hover"
               >
               </button>
             </div>

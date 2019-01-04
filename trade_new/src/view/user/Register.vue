@@ -62,8 +62,8 @@
             <el-input
               v-model="registerData.formCode"
               name='formCode'
-              :placeholder='registerData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
-              :disabled="myCode?false:true"
+              :placeholder='myCode?registerData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder"):$t("label170")'
+              :disabled="!myCode"
             >
             </el-input>
             <div

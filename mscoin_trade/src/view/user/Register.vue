@@ -62,8 +62,8 @@
             <el-input
               v-model="registerData.formCode"
               name='formCode'
-              :placeholder='registerData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
-              :disabled="myCode?false:true"
+              :placeholder='myCode?registerData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder"):$t("label170")'
+              :disabled="!myCode"
             >
             </el-input>
             <div
@@ -147,7 +147,7 @@
         <el-form-item>
           <button
             @click="formSubmit"
-            class="btn-block btn-large btn-primary btn-active"
+            class="btn-block btn-large btn-danger btn-active"
             v-text="$t('register')||'注册'"
           >
           </button>

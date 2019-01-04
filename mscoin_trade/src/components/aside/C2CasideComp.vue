@@ -1,18 +1,33 @@
 <template>
-    <ul :style="{maxHeight:maxHeight+'px'}" class="list-container">
-      <li class="flex flex-between flex-v-center"
-        v-for="(item) in dataList" :key='item.id'
-        :class="(item.name==currentId||item.coinid==currentId)?'color-danger':''"
-        @click='onClick(item)'>
-        <div class="currency flex flex-v-center">
-          <img v-if='item.icon||item.logo' 
-            :src="item.icon||item.logo"
-            class="thumb-20" alt="">
-          <span class="font-bold" v-html="item.coinid||item.name+'&nbsp;/&nbsp;'+item.chinaname"></span>
-        </div>
-        <i v-if="showIcon" class="el-icon-arrow-right"></i>
-      </li>
-    </ul>
+  <ul
+    :style="{maxHeight:maxHeight+'px'}"
+    class="list-container"
+  >
+    <li
+      class="flex flex-between flex-v-center"
+      v-for="(item) in dataList"
+      :key='item.id'
+      :class="(item.name==currentId||item.coinid==currentId)?'color-danger':''"
+      @click='onClick(item)'
+    >
+      <div class="currency flex flex-v-center">
+        <img
+          v-if='item.icon||item.logo'
+          :src="item.icon||item.logo"
+          class="thumb-20"
+          alt=""
+        >
+        <span
+          class="font-bold"
+          v-html="item.coinid||item.name+'&nbsp;/&nbsp;'+item.chinaname"
+        ></span>
+      </div>
+      <i
+        v-if="showIcon"
+        class="el-icon-arrow-right"
+      ></i>
+    </li>
+  </ul>
 </template>
 <script>
 export default {
@@ -40,7 +55,7 @@ export default {
   },
   watch: {
     myData() {
-      if (this.myData && Array.isArray(this.myData)) {
+      if (this.myData.length > 0 && Array.isArray(this.myData)) {
         this.dataList = this.myData;
         this.currentId =
           (this.myData[0] && this.myData[0].name) || this.myData[0].coinid;

@@ -29,8 +29,9 @@
             <el-input
               v-model="formData.code"
               name='code'
+              :disabled="!myCode"
               @blur="validate(formData.code,'code')"
-              :placeholder='$t("mobileCodePlaceholder")'
+              :placeholder='myCode?$t("mobileCodePlaceholder"):$t("label170")'
             >
             </el-input>
             <div
@@ -102,6 +103,7 @@ export default {
       codeText: null,
       timer: null,
       code: "",
+      myCode: false,
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: "",
       formData: null,
@@ -224,6 +226,7 @@ export default {
         showLoading: true
       }).then(res => {
         if (res.code == "0") {
+          this.myCode = true;
           this.successMsg(res.msg);
         } else {
           this.errMsg(res.msg);

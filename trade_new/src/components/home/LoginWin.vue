@@ -147,8 +147,8 @@
             v-show="loginData.type!=''&&loginData.type!='0'"
             v-model="loginData.code"
             name='mobileCode'
-            :placeholder='loginData.type=="1"?$t("mobileCode"):$t("label161")'
-            :disabled="myCode?false:true"
+            :placeholder='myCode?loginData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder"):$t("label170")'
+            :disabled="!myCode"
           >
           </el-input>
           <el-input
@@ -349,8 +349,8 @@ export default {
           this.storage.set("email", this.userData.email);
         }
         this.userData.isLogin = true;
-        this.getUserInfo();
         this.userModel = this.userData;
+        this.getUserInfo();
       });
     },
     createCode(arr, len) {

@@ -104,7 +104,6 @@ export default {
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: "",
       formData: null,
-      myMobileCode: "",
       canSubmit: false
     };
   },
@@ -125,7 +124,6 @@ export default {
       this.canGetCode = true;
       this.codeText = this.$t("getMsgCode") || "获取验证码";
       this.timer = null;
-      this.myMobileCode = "";
       this.myEmailCode = "";
       this.formData = {
         email: "",
