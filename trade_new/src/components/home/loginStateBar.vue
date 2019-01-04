@@ -174,7 +174,7 @@ export default {
           icon: ""
         }
       ],
-      member: null,
+      member: "",
       langList: {
         id: 0,
         items: [

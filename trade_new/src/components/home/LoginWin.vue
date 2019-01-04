@@ -207,14 +207,12 @@ export default {
       verCodeStr: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       userData: this.userModel,
-      canSubmit: false
+      canSubmit: false,
+      getCodeTimes: 0
     };
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
-    if (this.storage.get("isLogin")) {
-      this.getUserInfo();
-    }
     this.$bus.on("onLogout", () => {
       this.initData();
     });
@@ -266,6 +264,7 @@ export default {
           this.codeText = "countDown";
         },
         onComplete: () => {
+          console.log(1);
           this.canGetCode = true;
           this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
         }
