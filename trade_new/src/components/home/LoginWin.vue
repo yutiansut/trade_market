@@ -1,19 +1,18 @@
 <template>
-  <div class="container abs-v-center">
+  <div
+    v-if="!userData.isLogin"
+    class="container abs-v-center"
+  >
     <div
       class="win-title"
       v-text="$t('welcome')"
     ></div>
-    <div v-if="userData.isLogin">
+    <!-- <div v-if="userData.isLogin">
       <div class="user-info">
         <h3
           class="nick-name"
           v-text="userData.member"
         ></h3>
-        <!-- <div class="cellphone">
-          <span><em v-text="$t('accountId')"></em> ：{{userData.account}}</span>
-          <span class="color-primary"></span>
-        </div> -->
         <div><em v-text="$t('totalEstimate')"></em>：</div>
         <div class="wealth">
           <span
@@ -53,8 +52,8 @@
         >
         </button>
       </div>
-    </div>
-    <div v-else>
+    </div> -->
+    <div>
       <!-- 登录第一步 -->
       <template v-if="!checkLogin">
         <el-input
@@ -224,7 +223,6 @@ export default {
     // 获取用户信息
     getUserInfo() {
       this.request(this.api.userinfo).then(res => {
-        console.log(`个人信息:${JSON.stringify(res)}`);
         if (res.code == "0" && res.data) {
           this.userData = Object.assign({}, this.userData, {
             balance: res.data.amount * 1,
@@ -232,14 +230,15 @@ export default {
             email: res.data.userinfo[0] && res.data.userinfo[0].email,
             member: res.data.userinfo[0] && res.data.userinfo[0].member
           });
+          this.$bus.emit("userLoaded", this.userData);
         } else {
           this.errMsg(res.msg);
         }
       });
     },
     initData() {
-      this.userData.isLogin = false;
       this.userModel.isLogin = false;
+      this.userData = this.userModel;
       this.canGetCode = true;
       this.checkLogin = false;
       this.loginData = {

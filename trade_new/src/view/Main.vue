@@ -78,7 +78,7 @@
                 alt=""
               >
               <span class="currency-pair">
-                <em class="font-bold">{{scope.row.coinid}}&nbsp;&nbsp;</em>
+                <em class="font-bold">{{scope.row.coinid}}&nbsp;</em>
                 <em class="color-999">{{scope.row.maincoinid}}</em>
               </span>
             </div>

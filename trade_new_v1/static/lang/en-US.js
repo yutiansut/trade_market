@@ -15,7 +15,14 @@ const textArr = [
     "Standard",
     "Professional",
     "Properties",
-    "Order"
+    "Order",
+    "Latest price",
+    "Rise",
+    "Lowest",
+    "Highest",
+    "Deal Num",
+    "Favourite",
+    "View all"
 ];
 const langEnCfg = (function () {
     let obj = {};

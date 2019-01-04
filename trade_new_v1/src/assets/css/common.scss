@@ -1,4 +1,4 @@
-$bg-default: #fff;
+$bg-default: #f9fafc;
 $color-success: #53c3a2;
 $color-danger: #ef4c60;
 $color-primary: #2a79f5;
@@ -120,6 +120,7 @@ em {
 }
 .content-width {
   width: $content-width;
+  margin: 0 auto;
 }
 /*字体大小*/
 @for $i from 12 to 31 {
@@ -134,10 +135,16 @@ em {
     height: 10px * $i;
   }
   /* 缩虐图尺寸 --rounded 圆形*/
-  .thumb-#{$i*10} {
-    width: 10px * $i;
-    height: 10px * $i;
+  .thumb-#{$i*5} {
+    width: 5px * $i;
+    height: 5px * $i;
   }
+}
+.clear-mt-fix:before {
+  content: "";
+  width: 100%;
+  height: 1px;
+  display: block;
 }
 /* 字重 */
 .font-bit-bold {

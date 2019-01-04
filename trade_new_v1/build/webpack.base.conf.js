@@ -94,7 +94,6 @@ module.exports = {
   },
   externals: {
     "vue": "Vue",
-    "element-ui": "ELEMENT",
     "vuex": "Vuex"
   }
 }

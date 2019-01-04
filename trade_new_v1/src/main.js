@@ -2,11 +2,14 @@
  * 引入并使用第三方库
  */
 import VueI18n from 'vue-i18n';
+import locale from 'element-ui/lib/locale';
+import enLocale from 'element-ui/lib/locale/lang/en';
+import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
 Vue.use(VueI18n);
-Vue.config.productionTip = false;
-Vue.use(ELEMENT);
-ELEMENT.locale(ELEMENT.lang.en);
+import ElementUI from 'element-ui';
+Vue.use(ElementUI, zhLocale);
 import 'swiper/dist/css/swiper.css'
+Vue.config.productionTip = false;
 /**
  * 引入全局组件
  */
@@ -48,10 +51,12 @@ let initLang = () => {
 const i18n = new VueI18n({
   locale: initLang(),
   messages: {
-    'en-US': Object.assign(require('../static/lang/en-US')),
-    'zh-CN': Object.assign(require('../static/lang/zh-CN'))
+    'en-US': Object.assign(require('../static/lang/en-US'), enLocale),
+    'zh-CN': Object.assign(require('../static/lang/zh-CN'), zhLocale)
   }
 });
+// element UI 语言同步;
+locale.i18n((key, value) => i18n.t(key, value));
 /**
  * 拓展Vue实例
  */

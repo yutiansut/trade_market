@@ -130,6 +130,7 @@ export default {
 <style lang="scss" scoped>
 .footer {
   padding: 50px 0 70px 0;
+  background: #fff;
   .footer-content {
     margin: 0 auto;
   }

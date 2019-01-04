@@ -61,7 +61,7 @@
       >
         <span>
           <i class="iconfont icon-yonghu fl"></i>
-          <em v-text="userData.member||'***'"></em>
+          <em v-text="member"></em>
           <i class="iconfont icon-xiala fr"></i>
         </span>
         <ul
@@ -174,6 +174,7 @@ export default {
           icon: ""
         }
       ],
+      member: null,
       langList: {
         id: 0,
         items: [
@@ -195,7 +196,12 @@ export default {
   mounted() {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
-    this.userData.isLogin = this.storage.get("isLogin");
+    Object.assign(this.userData, { isLogin: this.storage.get("isLogin") });
+    this.$bus.on("userLoaded", data => {
+      if (data) {
+        this.member = data.member;
+      }
+    });
     this.getVersion();
   },
   methods: {

@@ -73,6 +73,12 @@ export default {
           id: "3",
           type: "3",
           typeLabel: "活动公告"
+        },
+        {
+          title: "标题4",
+          id: "4",
+          type: "2",
+          typeLabel: "活动公告"
         }
       ]
     };
