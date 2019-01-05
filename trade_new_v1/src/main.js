@@ -19,11 +19,13 @@ import navBar from './components/header/navBar.vue';
 import statusBar from './components/header/statusBar.vue';
 import myFooter from './components/footer/Footer.vue';
 import barItem from './components/header/BarItem.vue';
+import formInput from './components/form/form-input.vue';
 Vue.component(Header.name, Header);
 Vue.component(navBar.name, navBar);
 Vue.component(statusBar.name, statusBar);
 Vue.component(myFooter.name, myFooter);
 Vue.component(barItem.name, barItem);
+Vue.component(formInput.name, formInput);
 /**
  * 引入自定义相关js
  */
@@ -88,7 +90,7 @@ Object.assign(Vue.prototype, {
 router.beforeEach((to, from, next) => {
   // 如果未匹配到正确的路由直接跳转首页
   if (to.matched.length == 0) {
-    next({ path: "/" });
+    next({ path: "/index" });
     return;
   }
   to.meta.title && (document.title = to.meta.title);

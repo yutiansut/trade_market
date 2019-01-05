@@ -1,44 +1,72 @@
 <template>
-    <dialog-box
-        :showDialog="showModal"
-        width='500px'
-        :showHeaderImg="false"
-        :headerTitle='$t("bindBank")||title'
-        :showHeaderTitle='true'
-        @onDialogClose='closeModal'>
-        <div class="content">
-            <el-form label-position='top' @submit.native.prevent>
-                <el-form-item :label='$t("owner")||"户主"'>
-                    <el-input name='owner' :value='ownerName'
-                      disabled
-                      :placeholder='$t("ownerPlaceholder")||"户主姓名"'>
-                    </el-input>
-                </el-form-item>
-                <el-form-item :label='$t("bankCardNo")||"银行卡号"'>
-                    <el-input name='cardNum' v-model="cardNum"
-                      @blur="validate(cardNum,'cardNum')"
-                      :placeholder='$t("bankCardNoPlaceholder")||"请输入银行卡号"'>
-                    </el-input>
-                </el-form-item>
-                <el-form-item :label='$t("depositBank")||"开户银行"'>
-                    <el-input name='depositBank' v-model="depositBank"
-                      :placeholder='$t("depositBankPlaceholder")||"请输入开户银行"'></el-input>
-                </el-form-item>
-                <el-form-item :label='$t("bankBranch")||"开户支行"'>
-                    <el-input name='bankBranches' v-model="bankBranches"
-                      :placeholder='$t("bankBranchPlaceholder")||"请输入开户支行"'></el-input>
-                </el-form-item>
-                <el-form-item :label='$t("googleCode")||"谷歌验证码"'>
-                    <el-input name='googleCode' v-model="googleCode"
-                      :placeholder='$t("googleCode")||"请输入谷歌验证码"'></el-input>
-                </el-form-item>
-                <button style="margin-top: 1px;"
-                  @click="formSubmit"
-                  class="btn-block btn-large btn-danger btn-active"
-                  v-text="$t('submit')||'提交'"></button>
-            </el-form>
-        </div>
-    </dialog-box>
+  <dialog-box
+    :showDialog="showModal"
+    width='500px'
+    :showHeaderImg="false"
+    :headerTitle='$t("bindBank")||title'
+    :showHeaderTitle='true'
+    @onDialogClose='closeModal'
+  >
+    <div class="content">
+      <el-form
+        label-position='top'
+        @submit.native.prevent
+      >
+        <el-form-item :label='$t("owner")||"户主"'>
+          <el-input
+            name='owner'
+            :value='ownerName'
+            disabled
+            :placeholder='$t("ownerPlaceholder")||"户主姓名"'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='$t("bankCardNo")||"银行卡号"'>
+          <el-input
+            name='cardNum'
+            v-model="cardNum"
+            @blur="validate(cardNum,'cardNum')"
+            :placeholder='$t("bankCardNoPlaceholder")||"请输入银行卡号"'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='$t("depositBank")||"开户银行"'>
+          <el-input
+            name='depositBank'
+            v-model="depositBank"
+            :placeholder='$t("depositBankPlaceholder")||"请输入开户银行"'
+          ></el-input>
+        </el-form-item>
+        <el-form-item :label='$t("bankBranch")||"开户支行"'>
+          <el-input
+            name='bankBranches'
+            v-model="bankBranches"
+            :placeholder='$t("bankBranchPlaceholder")||"请输入开户支行"'
+          ></el-input>
+        </el-form-item>
+        <!-- <el-form-item :label='$t("googleCode")||"谷歌验证码"'>
+          <el-input
+            name='googleCode'
+            v-model="googleCode"
+            :placeholder='$t("googleCode")||"请输入谷歌验证码"'
+          ></el-input>
+        </el-form-item> -->
+        <el-form-item :label='$t("fundPwd")'>
+          <el-input
+            v-model="password"
+            type='password'
+            :placeholder='$t("pwdPlaceholder")'
+          ></el-input>
+        </el-form-item>
+        <button
+          style="margin-top: 1px;"
+          @click="formSubmit"
+          class="btn-block btn-large btn-danger btn-active"
+          v-text="$t('submit')||'提交'"
+        ></button>
+      </el-form>
+    </div>
+  </dialog-box>
 </template>
 <script>
 export default {
@@ -56,7 +84,8 @@ export default {
       cardNum: "",
       depositBank: "",
       bankBranches: "",
-      googleCode: ""
+      googleCode: "",
+      password: ""
     };
   },
   watch: {
@@ -80,7 +109,7 @@ export default {
         this.cardNum == "" ||
         this.depositBank == "" ||
         this.bankBranches == "" ||
-        this.googleCode == ""
+        this.password == ""
       ) {
         this.errMsg("请填写完整信息");
         return false;
@@ -94,7 +123,8 @@ export default {
         bankcard: this.cardNum,
         bank1: this.depositBank,
         bank2: this.bankBranches,
-        googlecode: this.googleCode,
+        // googlecode: this.googleCode,
+        googlecode: this.password,
         showLoading: true
       }).then(res => {
         if (res.code == "0") {

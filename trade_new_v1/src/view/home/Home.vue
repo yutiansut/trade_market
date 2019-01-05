@@ -1,22 +1,5 @@
 <template>
-  <div class="main wh-full">
-    <my-header>
-      <!-- 导航 -->
-      <nav-bar slot="navBar"></nav-bar>
-      <!-- 登录后的状态栏 -->
-      <status-bar slot="statusBar">
-        <bar-item
-          slot="barItem"
-          icon-class="icon-zichan"
-          label='label16'
-        ></bar-item>
-        <bar-item
-          icon-class="icon-dingdan"
-          slot="barItem"
-          label='label17'
-        ></bar-item>
-      </status-bar>
-    </my-header>
+  <div class="home">
     <!-- 首页banner -->
     <main-banner></main-banner>
     <div class="panel clear-mt-fix bg-fff">
@@ -188,7 +171,7 @@
     <!-- 平台优势 -->
     <div class="panel clear-mt-fix">
       <div class="content content-width">
-        <div class="panel-title txt-center">
+        <div class="panel-title font-34 txt-center">
           <span>平台优势</span>
           <div class="border"></div>
         </div>
@@ -259,20 +242,90 @@
       class="about-us panel clear-mt-fix"
     >
       <div class="content content-width">
-        <div class="panel-title">关于我们</div>
+        <div class="panel-title font-34">关于我们</div>
         <p class="intro font-16">Exchange（全球区块链数字资产交易中心）是安全、稳定、可信赖的区块链数字资产全功能交易平台总部GBC（全球区块链研究中心）致力于整合区块链行业资源，建立全球性的区块链行业交流及研究中心</p>
+        <div class="comment">
+          <p class="font-20">对于EXCHANGE的评价...</p>
+          <swiper
+            class="comment-swiper"
+            ref='commentSwiper'
+            :options='swiperOption'
+          >
+            <swiper-slide>
+              <div
+                :style="{backgroundImage:'url('+assetCfg.imgs.bubble+')'}"
+                class="comment-content"
+              >
+                <p class="font-16">Exchange极币网将于上线运营的同时开通OTC交易功能，并首先支持USDT的OTC交易。</p>
+                <p class="txt-rt">{{new Date()}}</p>
+              </div>
+            </swiper-slide>
+            <swiper-slide>
+              <div
+                :style="{backgroundImage:'url('+assetCfg.imgs.bubble+')'}"
+                class="comment-content"
+              >
+                <p class="font-16">Exchange极币网将于上线运营的同时开通OTC交易功能，并首先支持USDT的OTC交易。</p>
+                <p class="txt-rt">{{new Date()}}</p>
+              </div>
+            </swiper-slide>
+          </swiper>
+        </div>
       </div>
     </div>
-    <my-footer></my-footer>
+    <!-- 下载区 -->
+    <div class="download-zone panel clear-mt-fix">
+      <div class="content p-rel content-width">
+        <div class="zone-left p-abs">
+          <p class="paragraph-1 font-40">随时随地，指尖交易</p>
+          <p class="font-17">专业数字货币交易平台，保证数据的绝对安全</p>
+          <div class="download-link flex flex-v-center">
+            <vue-qr
+              margin='5'
+              size='120'
+              text='code'
+            ></vue-qr>
+            <div class="btn-group">
+              <button class="btn-block btn-round btn-primary">
+                <a href="">
+                  <i class="font-28 iconfont icon-ios"></i>
+                  <em>Iphone&nbsp;下载</em>
+                </a>
+              </button>
+              <button class="btn-block btn-round btn-default">
+                <a
+                  href=""
+                  class="color-primary"
+                >
+                  <i class="font-28 iconfont icon-android"></i>
+                  <em>Android&nbsp;下载</em>
+                </a>
+              </button>
+            </div>
+          </div>
+        </div>
+        <img
+          class="phone p-abs"
+          :src="assetCfg.imgs.iphone"
+        >
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import mainBanner from "@/components/banner/MainBanner";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
+import VueQr from "vue-qr";
 export default {
-  components: { mainBanner },
+  components: { mainBanner, swiper, swiperSlide, VueQr },
+  name: "Home",
   data() {
     return {
-      activeIndex: "ETH"
+      activeIndex: "ETH",
+      swiperOption: {
+        slidesPerView: 2,
+        spaceBetween: 20
+      }
     };
   },
   created() {},
@@ -283,16 +336,18 @@ export default {
 .bg-fff {
   background-color: #fff;
 }
+$min-height: 500px;
 .panel {
+  min-height: $min-height;
   .content {
     margin-top: 60px;
+    height: 100%;
   }
   .panel-hd {
     line-height: 40px;
   }
 }
 .panel-title {
-  font-size: 34px;
   .border {
     width: 36px;
     margin: 23px auto 0 auto;
@@ -388,7 +443,6 @@ export default {
 .about-us {
   background-repeat: no-repeat;
   background-size: cover;
-  height: 500px;
   color: #fff;
   .intro {
     width: 740px;
@@ -397,5 +451,67 @@ export default {
     margin-top: 29px;
   }
 }
+.comment {
+  margin-top: 57px;
+  .comment-swiper {
+    margin-top: 20px;
+  }
+  .comment-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 35px 22px 12px;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height: 170px;
+    box-sizing: border-box;
+    color: #dad9ff;
+    max-height: 160px;
+    overflow: hidden;
+    p:first-child {
+      line-height: 1.8;
+    }
+  }
+}
+.download-zone {
+  background-color: #f9fafc;
+  .content {
+    height: $min-height;
+  }
+  .paragraph-1 {
+    margin-bottom: 20px;
+  }
+  .download-link {
+    margin-top: 36px;
+  }
+  .btn-group {
+    margin-left: 20px;
+    width: 200px;
+    button {
+      height: 45px;
+      a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      &:first-child {
+        margin-bottom: 20px;
+      }
+      &:last-child {
+        border: 1px solid $color-primary;
+      }
+    }
+    .iconfont {
+      margin-right: 20px;
+    }
+  }
+  .zone-left {
+    bottom: 79px;
+  }
+  .phone {
+    height: 100%;
+    top: 0;
+    right: 0;
+  }
+}
 </style>
-

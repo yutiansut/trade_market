@@ -5,7 +5,7 @@ $color-primary: #2a79f5;
 $bg-dark: #2a2f43;
 $main-font-color: #333;
 $bd-size: 1px;
-$bd-color: #e1e1e1;
+$bd-color: #eee;
 $default-border: $bd-size solid $bd-color;
 $mask-bg-rgba: rgba(0, 0, 0, 0.6);
 $content-width: 1200px;
@@ -123,7 +123,7 @@ em {
   margin: 0 auto;
 }
 /*字体大小*/
-@for $i from 12 to 31 {
+@for $i from 12 to 73 {
   .font-#{$i} {
     font-size: 1px * $i;
   }
@@ -161,7 +161,7 @@ input {
 }
 button {
   appearance: none;
-  border: 1px solid transparent;
+  border: none;
   background: none;
   outline: none;
   cursor: pointer;
@@ -201,7 +201,7 @@ button.btn-success {
   color: #fff;
 }
 button.btn-primary {
-  background: linear-gradient(left, #267df7, #6935e1);
+  background: linear-gradient(to right, #267df7, #6935e1);
   color: #fff;
 }
 button.btn-round {
@@ -209,7 +209,9 @@ button.btn-round {
 }
 button[disabled] {
   opacity: 0.6;
-  cursor: not-allowed;
+}
+input[disabled] {
+  background: #fff !important;
 }
 .color-gray {
   color: #bdbec2;

@@ -3,11 +3,7 @@
     id="app"
     class="wh-full"
   >
-    <keep-alive>
-      <transition name="el-fade">
-        <router-view></router-view>
-      </transition>
-    </keep-alive>
+    <router-view></router-view>
   </div>
 </template>
 <style lang="scss">

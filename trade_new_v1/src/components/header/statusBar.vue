@@ -18,7 +18,7 @@
             <router-link to=''>账户设置</router-link>
           </li>
           <li>
-            <router-link to=''>邀请好友</router-link>
+            <router-link to='/invite'>邀请好友</router-link>
           </li>
           <li>
             <router-link to=''>退出登录</router-link>
@@ -119,6 +119,7 @@ $mg-size: 30px;
 }
 .lang-switch {
   margin-left: $mg-size;
+  height: 100%;
 }
 .drop-down {
   cursor: pointer;

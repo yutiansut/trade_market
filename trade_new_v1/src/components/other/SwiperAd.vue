@@ -62,9 +62,6 @@ export default {
     swiper,
     swiperSlide
   },
-  data() {
-    newsData: null;
-  },
   computed: {
     swiper() {
       return this.$refs.mySwiper.swiper;
@@ -76,11 +73,6 @@ export default {
     },
     next() {
       this.swiper.slideNext();
-    }
-  },
-  watch: {
-    swiperData() {
-      this.newsData = this.swiperData;
     }
   }
 };
