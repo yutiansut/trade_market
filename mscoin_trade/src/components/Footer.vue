@@ -187,7 +187,8 @@ export default {
   },
   computed: {
     copyRight() {
-      return new Date().getFullYear();
+      let year = new Date().getFullYear();
+      return `${year - 1}-${year}`;
     }
   },
   mounted() {
