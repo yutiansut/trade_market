@@ -5,7 +5,7 @@ const routes = [
     path: '/',
     name: 'Main',
     component: r => require(['@/view/Main'], r),
-    meta: { auth: false, title: "首页" }
+    meta: { auth: false, title: "Binmark首页" }
   },
   {
     path: '/user',

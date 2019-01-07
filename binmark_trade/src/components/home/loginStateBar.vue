@@ -61,7 +61,7 @@
       >
         <span>
           <i class="iconfont icon-yonghu fl"></i>
-          <em v-text="member"></em>
+          <em v-text="userData.member"></em>
           <i class="iconfont icon-xiala fr"></i>
         </span>
         <ul
@@ -245,6 +245,7 @@ export default {
         if (res.code == "0") {
           this.storage.remove("token");
           this.storage.set("isLogin", false);
+          this.userData.isLogin = false;
           this.$bus.emit("onLogout");
           this.navigateTo("Main");
         }

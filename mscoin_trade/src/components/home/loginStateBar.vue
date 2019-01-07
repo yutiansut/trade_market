@@ -247,6 +247,7 @@ export default {
         if (res.code == "0") {
           this.storage.remove("token");
           this.storage.set("isLogin", false);
+          this.userData.isLogin = false;
           this.$bus.emit("onLogout");
           this.navigateTo("Main");
         }

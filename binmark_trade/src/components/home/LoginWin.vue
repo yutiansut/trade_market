@@ -239,8 +239,7 @@ export default {
       });
     },
     initData() {
-      this.userModel.isLogin = false;
-      this.userData = this.userModel;
+      this.userData.isLogin = false;
       this.canGetCode = true;
       this.checkLogin = false;
       this.loginData = {

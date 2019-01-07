@@ -241,7 +241,6 @@ export default {
     },
     initData() {
       this.userData.isLogin = false;
-      this.userModel.isLogin = false;
       this.canGetCode = true;
       this.checkLogin = false;
       this.loginData = {
