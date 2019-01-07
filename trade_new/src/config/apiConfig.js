@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "http://47.95.213.181:80/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "ws://47.95.213.181:80/echo/" : "ws://192.168.5.51:8080/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "http:www.binmark.io/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.binmark.io/echo/" : "ws://192.168.5.51:8080/echo/",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner

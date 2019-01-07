@@ -3,7 +3,7 @@
     <slot name='barItem'></slot>
     <!-- user面板 -->
     <template v-if="!Store.state.userModel.isLogin">
-      <button class="btn-login btn-small btn-round">登录</button>
+      <button class="btn-login btn-border btn-small btn-round">登录</button>
       <button class="btn-primary btn-small btn-round">注册</button>
     </template>
     <template v-else>

@@ -17,9 +17,7 @@
         ></bar-item>
       </status-bar>
     </my-header>
-    <transition name="el-fade-in">
-      <router-view></router-view>
-    </transition>
+    <router-view></router-view>
     <my-footer></my-footer>
   </div>
 </template>

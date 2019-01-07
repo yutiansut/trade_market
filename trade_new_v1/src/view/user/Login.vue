@@ -27,7 +27,7 @@
           <em class="color-666">没有账号？</em>
           <router-link
             class="color-primary"
-            to=''
+            to='/user/register'
           >注册</router-link>
         </span>
       </p>
@@ -50,7 +50,6 @@ export default {
   margin-top: 100px;
 }
 .login-form {
-  display: block;
   width: 300px;
   margin: 50px auto 0;
   .login-ipt {
