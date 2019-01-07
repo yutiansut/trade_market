@@ -1,0 +1,36 @@
+.header-main {
+  @include minWidth;
+  @include hCenter;
+  .hd-body {
+    background: $main-bg-color;
+  }
+  .nav-inner {
+    padding: 0 30px;
+  }
+  .nav-bar {
+    a {
+      color: #fff;
+    }
+    .nav-item {
+      height: 100%;
+      &:hover,
+      &.active {
+        background: $hover-bg-color;
+      }
+    }
+  }
+  .sub-nav {
+    .sub-nav-item {
+      // a {
+      //   color: $main-font-color;
+      // }
+      &:hover,
+      &.active {
+        background: $hover-bg-color;
+        a {
+          color: #fff;
+        }
+      }
+    }
+  }
+}

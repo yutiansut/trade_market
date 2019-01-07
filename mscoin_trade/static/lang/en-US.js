@@ -25,7 +25,7 @@ module.exports = {
     registerNow: "Register now",
     appDownLoad: "Mobile App",
     scanToDownLoad: "Scan To DownLoad",
-    welcome: "Welcome to Binmark",
+    welcome: "Welcome to Mscoin",
     assets: "Assets",
     order: "Order",
     orderDetail: "Order detail",

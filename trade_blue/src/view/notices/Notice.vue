@@ -1,0 +1,37 @@
+<template>
+    <div class='main wh-full'>
+        <my-header class="header-main">
+            <login-bar></login-bar>
+        </my-header>
+        <el-container>
+            <el-aside width="24%">
+                <ce-aside-comp @onRowClick='getRowData'></ce-aside-comp>
+            </el-aside>
+            <el-main>
+                <router-view></router-view>
+            </el-main>
+        </el-container>
+        <my-footer></my-footer>
+    </div>
+</template>
+<script>
+import CeAsideComp from "@/components/aside/CEasideComp.vue";
+import loginBar from "@/components/home/loginStateBar.vue";
+export default {
+  components: { CeAsideComp },
+  methods: {
+    getRowData(data) {
+      this.navigateTo("/currency_trade", {
+        maincoinid: data.maincoinid,
+        coinid: data.coinid
+      });
+    }
+  }
+};
+</script>
+<style lang="scss" scoped>
+.el-container {
+  border-bottom: $default-border;
+  min-height: calc(100% - 294px);
+}
+</style>

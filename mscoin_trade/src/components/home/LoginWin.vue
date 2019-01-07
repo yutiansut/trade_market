@@ -213,9 +213,11 @@ export default {
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
-    if (this.storage.get("isLogin")) {
-      this.getUserInfo();
-    }
+    this.$bus.on("userDataLoaded", data => {
+      if (data) {
+        this.userData = data;
+      }
+    });
     this.$bus.on("onLogout", () => {
       this.initData();
     });

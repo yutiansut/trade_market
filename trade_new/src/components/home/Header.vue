@@ -209,28 +209,10 @@ export default {
     } else {
       this.getMainCoin();
     }
-    if (this.storage.get("isLogin")) {
-      this.getUserInfo();
-    }
   },
   methods: {
     handleSelect(index) {
       this.activeIndex = index;
-    },
-    getUserInfo() {
-      this.request(this.api.userinfo).then(res => {
-        if (res.code == "0" && res.data) {
-          this.userData = Object.assign({}, this.userData, {
-            balance: res.data.amount * 1,
-            tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
-            email: res.data.userinfo[0] && res.data.userinfo[0].email,
-            member: res.data.userinfo[0] && res.data.userinfo[0].member
-          });
-          this.$bus.emit("userLoaded", this.userData);
-        } else {
-          this.errMsg(res.msg);
-        }
-      });
     },
     getMainCoin() {
       this.request(this.api.getmaincoin).then(res => {

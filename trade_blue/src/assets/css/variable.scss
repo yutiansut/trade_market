@@ -1,0 +1,72 @@
+$bg-white: #fff;
+$main-bg-color: #2a2f43;
+$hover-bg-color: #2d76f5;
+$color-success: #4fa56d;
+$color-danger: #ab1e24;
+$color-primary: #2d76f5;
+$bg-dark: #2a2f43;
+$main-font-color: #333;
+$input-height: 40px;
+$btn-height: 40px;
+$font: "PingFang SC";
+$base-font-size: 14px;
+$font-mini: 12px;
+$font-default: 14px;
+$font-normal: 16px;
+$font-middile: 18px;
+$font-large: 20px;
+$font-ex-large: 24px;
+$bd-size: 1px;
+$bd-color: #e1e1e1;
+$default-border: $bd-size solid $bd-color;
+$mask-bg-rgba: rgba(0, 0, 0, 0.6);
+$content-width: 66%;
+.color-danger {
+  color: $color-danger;
+}
+.color-primary {
+  color: $color-primary;
+}
+.color-success {
+  color: $color-success;
+}
+
+@mixin textVcenter($height: 40px) {
+  height: $height;
+  line-height: $height;
+}
+@mixin float($float: left) {
+  float: $float;
+}
+@mixin minWidth($min: 1440px) {
+  min-width: $min;
+}
+@mixin hCenter {
+  margin: 0 auto;
+}
+@mixin breakLine($height: 1px, $bgcolor: #e1e1e1, $width: 100%) {
+  height: $height;
+  background-color: $bgcolor;
+  width: $width;
+}
+button.btn-hover:hover {
+  opacity: 0.9;
+}
+
+button.btn-default {
+  background-color: $main-bg-color;
+  color: #fff;
+  border-color: $main-bg-color;
+}
+button.btn-danger {
+  background-color: $color-danger;
+  color: #fff;
+}
+button.btn-primary {
+  background-color: $color-primary;
+  color: #fff;
+}
+button.btn-success {
+  background-color: $color-success;
+  color: #fff;
+}

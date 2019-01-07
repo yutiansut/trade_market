@@ -216,6 +216,11 @@ export default {
     this.$bus.on("onLogout", () => {
       this.initData();
     });
+    this.$bus.on("userLoaded", data => {
+      if (data) {
+        this.userData = data;
+      }
+    });
   },
   methods: {
     // 获取用户信息
@@ -228,7 +233,6 @@ export default {
             email: res.data.userinfo[0] && res.data.userinfo[0].email,
             member: res.data.userinfo[0] && res.data.userinfo[0].member
           });
-          this.$bus.emit("userLoaded", this.userData);
         } else {
           this.errMsg(res.msg);
         }

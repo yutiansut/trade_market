@@ -1,27 +1,45 @@
 // 币种导航
 <template>
-    <div :style="{'width':width}" class="container">
-        <div class="serach">
-            <i class="iconfont el-icon-search fl"></i>
-            <div class="input-container">
-                <input v-model="searchVal"
-                  :placeholder="$t('currencySearch')+'...'"
-                  type="text">
-            </div>
-        </div>
-        <ul v-show="myLists.length>0" class="list-container">
-            <li v-for='(item,i) in myLists'
-                :key='i'
-                @click="toPage(item)">
-                <div class="list-item wh-full abs-v-center">
-                    <img v-if='item.logo' class="thumb-20"
-                        :src="item.logo" alt=""/>
-                    <span v-text="item.coinid"></span>
-                </div>
-            </li>
-        </ul>
-        <div v-show='myLists.length==0' class="result txt-center" v-text="$t('noResult')"></div>
+  <div
+    :style="{'width':width}"
+    class="container"
+  >
+    <div class="serach">
+      <i class="iconfont el-icon-search fl"></i>
+      <div class="input-container">
+        <input
+          v-model="searchVal"
+          :placeholder="$t('currencySearch')+'...'"
+          type="text"
+        >
+      </div>
     </div>
+    <ul
+      v-show="myLists.length>0"
+      class="list-container"
+    >
+      <li
+        v-for='(item,i) in myLists'
+        :key='i'
+        @click="toPage(item)"
+      >
+        <div class="list-item wh-full abs-v-center">
+          <img
+            v-if='item.logo'
+            class="thumb-20"
+            :src="item.logo"
+            alt=""
+          />
+          <span v-text="item.coinid"></span>
+        </div>
+      </li>
+    </ul>
+    <div
+      v-show='myLists.length==0'
+      class="result txt-center"
+      v-text="$t('noResult')"
+    ></div>
+  </div>
 </template>
 <script>
 export default {

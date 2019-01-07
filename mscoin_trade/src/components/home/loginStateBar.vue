@@ -196,11 +196,34 @@ export default {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
     this.userData.isLogin = this.storage.get("isLogin");
+    if (this.userData.isLogin) {
+      this.getUserInfo();
+    }
     this.getVersion();
+  },
+  beforeDestroy() {
+    this.$bus.off("userDataLoaded");
   },
   methods: {
     dropDownHandle(link) {
       this.navigateTo(link);
+    },
+    // 获取用户信息
+    getUserInfo() {
+      this.request(this.api.userinfo).then(res => {
+        console.log(`个人信息:${JSON.stringify(res)}`);
+        if (res.code == "0" && res.data) {
+          this.userData = Object.assign({}, this.userData, {
+            balance: res.data.amount * 1,
+            tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
+            email: res.data.userinfo[0] && res.data.userinfo[0].email,
+            member: res.data.userinfo[0] && res.data.userinfo[0].member
+          });
+          this.$bus.emit("userDataLoaded", this.userData);
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
     },
     selectLang(i) {
       let val = this.langList.items[i].val;

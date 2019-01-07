@@ -1,9 +1,8 @@
 $bg-white: #fff;
-$main-bg-color: #333;
-$hover-bg-color: #000;
+$main-bg-color: #ab1e24;
+$hover-bg-color: #991c22;
 $color-success: #4fa56d;
 $color-danger: #ab1e24;
-$color-primary: #d0a771;
 $bg-dark: #1f262d;
 $main-font-color: #333;
 $input-height: 40px;
@@ -51,16 +50,12 @@ button.btn-hover:hover {
 }
 
 button.btn-default {
-  background-color: $main-bg-color;
-  color: #fff;
-  border-color: $main-bg-color;
+  background-color: #fff;
+  color: #333;
+  border-color: #eee;
 }
 button.btn-danger {
   background-color: $color-danger;
-  color: #fff;
-}
-button.btn-primary {
-  background-color: $color-primary;
   color: #fff;
 }
 button.btn-success {

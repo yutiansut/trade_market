@@ -1,0 +1,71 @@
+$color-primary: #2d76f5;
+.el-input__inner {
+  border-radius: 0;
+  transition: all 0.3s;
+  &:hover,
+  &:focus {
+    border-color: $color-primary;
+  }
+  .el-tabs__item:hover {
+    color: $color-primary !important;
+  }
+}
+.el-radio__input.is-checked .el-radio__inner {
+  border-color: $color-primary;
+  background: $color-primary;
+}
+.el-radio__input.is-checked + .el-radio__label {
+  color: $color-primary;
+}
+.el-table th {
+  font-weight: 500;
+  font-size: 16px;
+  color: #444;
+}
+.el-table td,
+.el-table th {
+  padding: 8px 0 !important;
+}
+.el-table {
+  color: $main-font-color;
+}
+.el-aside {
+  border-right: 1px solid #e5e5e5;
+  padding: 20px 20px 0 20px;
+}
+.el-breadcrumb__item:last-child .el-breadcrumb__inner {
+  color: $color-danger;
+}
+.el-breadcrumb__inner a:hover,
+.el-breadcrumb__inner.is-link:hover {
+  color: $color-danger !important;
+}
+.el-select .el-input.is-focus .el-input__inner {
+  border-color: $color-primary;
+}
+.el-select .el-input__inner:focus {
+  border-color: $color-primary;
+}
+.el-select-dropdown__item.selected {
+  color: $color-primary;
+}
+.el-input.is-disabled .el-input__inner {
+  color: #666;
+}
+.el-form--label-top .el-form-item__label {
+  padding: 0;
+  line-height: normal;
+  margin-bottom: 10px;
+}
+.el-tabs__item {
+  font-size: 16px;
+  &:hover {
+    color: $color-primary;
+  }
+  &.is-active {
+    color: $color-primary;
+  }
+}
+.el-tabs--card > .el-tabs__header .el-tabs__nav {
+  border-radius: 0;
+}
