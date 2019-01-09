@@ -24,7 +24,8 @@
         input-class='register-ipt'
         label='邀请码（选填）'
         type='text'
-      ></form-input>
+      ><span></span>
+      </form-input>
       <el-checkbox v-model="checked">我已阅读并同意 <em class="color-primary">《用户协议》</em></el-checkbox>
       <button class="btn-large btn-block btn-hover btn-primary">注册</button>
       <p class="txt-center">已有账号？<router-link

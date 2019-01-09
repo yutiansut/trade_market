@@ -129,18 +129,6 @@
             {{$t('label161')||'邮箱验证码'}}
           </el-radio>
         </el-radio-group>
-        <!-- <el-input
-          v-show="loginData.type=='1'"
-          v-model='loginData.codeAccount'
-          :placeholder='$t("mobilePlaceholder")'
-        >
-        </el-input>
-        <el-input
-          v-show="loginData.type=='2'"
-          v-model='loginData.codeAccount'
-          :placeholder='$t("emailPlaceholder")'
-        >
-        </el-input> -->
         <div class="mobile-code-wrap p-rel">
           <el-input
             v-show="loginData.type!=''&&loginData.type!='0'"

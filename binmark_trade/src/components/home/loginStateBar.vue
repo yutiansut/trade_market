@@ -61,6 +61,7 @@
       >
         <span>
           <i class="iconfont icon-yonghu fl"></i>
+          <em class="level">vip{{userData.viplevel}}&nbsp;</em>
           <em v-text="userData.member"></em>
           <i class="iconfont icon-xiala fr"></i>
         </span>
@@ -215,7 +216,8 @@ export default {
             balance: res.data.amount * 1,
             tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
             email: res.data.userinfo[0] && res.data.userinfo[0].email,
-            member: res.data.userinfo[0] && res.data.userinfo[0].member
+            member: res.data.userinfo[0] && res.data.userinfo[0].member,
+            viplevel: res.data.userinfo[0] && res.data.userinfo[0].viplevel
           });
           this.$bus.emit("userLoaded", this.userData);
         } else {
