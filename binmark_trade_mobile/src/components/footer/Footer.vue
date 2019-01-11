@@ -60,8 +60,6 @@
 }
 </style>
 <script>
-const iconNormal = require("@/assets/images/home/2.png");
-const iconActive = require("@/assets/images/home/1.png");
 export default {
   name: "my-footer",
   data() {
@@ -70,34 +68,10 @@ export default {
         {
           label: "首页",
           icon: {
-            normal: iconNormal,
-            active: iconActive
+            normal: "",
+            active: ""
           },
           link: "/home"
-        },
-        {
-          label: "C2C",
-          icon: {
-            normal: iconNormal,
-            active: iconActive
-          },
-          link: "/c2c"
-        },
-        {
-          label: "应用",
-          icon: {
-            normal: iconNormal,
-            active: iconActive
-          },
-          link: "/app_list"
-        },
-        {
-          label: "我的",
-          icon: {
-            normal: iconNormal,
-            active: iconActive
-          },
-          link: "/user"
         }
       ]
     };

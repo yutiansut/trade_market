@@ -1,9 +1,10 @@
 <template>
-  <div class="tab-bar font-16 font-bold">
-    <template
-      v-if="tabItem"
-      v-for="(item,i) in tabItem"
-    >
+  <div
+    :class="myClass"
+    v-if="tabItem"
+    class="tab-bar font-16 font-bold"
+  >
+    <template v-for="(item,i) in tabItem">
       <span
         class="p-rel"
         :class="tabIndex==i?'active':''"
@@ -17,20 +18,25 @@
 <style lang="scss" scoped>
 .tab-bar {
   color: #a8abad;
+  height: 3rem;
   span {
+    box-sizing: border-box;
     padding-bottom: 1.2rem;
+    transition: all 0.1s;
+    display: inline-block;
+    margin-left: 3rem;
     &:first-child {
-      margin-right: 4.2rem;
-      display: inline-block;
+      margin-left: 0;
     }
     &.active {
-      color: #fff;
+      color: #333;
+      font-size: 1.8rem;
     }
     &.active:after {
       content: "";
       position: absolute;
       height: 0.25rem;
-      background: #fff;
+      background: #333;
       width: 100%;
       left: 50%;
       transform: translateX(-50%);
@@ -41,7 +47,7 @@
 </style>
 <script>
 export default {
-  props: ["tabItem"],
+  props: ["tabItem", "myClass"],
   name: "tab-bar",
   data() {
     return {

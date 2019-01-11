@@ -50,6 +50,7 @@ import Util from "@/assets/js/utils";
 import Request from "@/assets/js/request";
 import myStorage from "@/assets/js/myStorage";
 import apiCfg from "@/config/apiConfig";
+import assetConfig from "@/config/assetConfig";
 Vue.config.productionTip = false;
 
 /**
@@ -59,8 +60,9 @@ Object.assign(Vue.prototype, {
   request: Request,
   Util: Util,
   storage: myStorage,
-  $store: Store,
+  Store: Store,
   api: apiCfg,
+  assetConfig: assetConfig,
   redirectTo(pathName, params) {
     let data = {
       path: pathName,
@@ -82,7 +84,7 @@ Object.assign(Vue.prototype, {
 router.beforeEach((to, from, next) => {
   // 如果未匹配到正确的路由直接跳转首页
   if (to.matched.length == 0) {
-    next({ path: "/" });
+    next({ path: "/home" });
   }
   // 判断是否有上一页
   from.path && Store.commit("setShowHeaderBack", true);

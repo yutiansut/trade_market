@@ -23,7 +23,7 @@ export default {
     },
     logo: {
       type: String,
-      default: require("@/assets/images/login/logo.png")
+      default: ""
     }
   }
 };

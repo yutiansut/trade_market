@@ -8,7 +8,7 @@
   }
   .label {
     color: #ababab;
-    margin-top: 3.74vh;
+    margin-top: 4vw;
   }
   .link-to {
     color: #e0e0e0;
@@ -44,4 +44,10 @@
 // 重置vant 库默认样式
 .van-ellipsis {
   font-size: 1.4rem;
+}
+.van-field {
+  padding: 1rem 0;
+}
+.van-cell:not(:last-child)::after {
+  left: 0;
 }

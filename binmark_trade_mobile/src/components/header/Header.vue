@@ -1,12 +1,12 @@
 <template>
   <div
-    v-if="$store.state.showMainHeader"
+    v-if="Store.state.showMainHeader"
     class="header"
   >
     <van-nav-bar
-      :title="$store.state.headerTitle"
+      :title="Store.state.headerTitle"
       :right-text="rightText"
-      :left-arrow='$store.state.showHeaderBack'
+      :left-arrow='Store.state.showHeaderBack'
       :border='false'
       @click-left="onClickLeft"
       @click-right="onClickRight"
@@ -16,7 +16,7 @@
 <script>
 export default {
   name: "my-header",
-  props: ["rightText", "showHeader", "showArrow"],
+  props: ["rightText", "showHeader", "showArrow", "titleText"],
   data() {
     return {
       canBack: false
