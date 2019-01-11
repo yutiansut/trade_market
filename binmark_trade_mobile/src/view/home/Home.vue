@@ -4,28 +4,12 @@
   </div>
 </template>
 <script>
-import newsList from "@/components/other/newsList";
 export default {
-  components: { newsList },
   data() {
     return {};
   },
   mounted() {
-    let arrObj = [
-      {
-        id: "1",
-        thumb: "",
-        title: "这里是新闻标题，测试的标题",
-        tag: "交易"
-      },
-      {
-        id: "2",
-        thumb: "",
-        title: "这里是新闻标题，测试的标题",
-        tag: "交易"
-      }
-    ];
-    this.$store.dispatch("getNewsList", arrObj);
+    let arrObj = [];
   }
 };
 </script>
