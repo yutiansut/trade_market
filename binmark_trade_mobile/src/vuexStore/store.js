@@ -10,7 +10,17 @@ export default new Vuex.Store({
     footerItemIndex: 0,
     showHeaderBack: false,
     showMainHeader: true,
-    newsList: []
+    newsList: [{
+      id: '1',
+      title: "新闻标题",
+      content: "呢日用就购I爱干净偶尔加盖",
+      date: '2018/8/8'
+    }, {
+      id: '2',
+      title: "新闻标题",
+      content: "呢日用就购I爱干净偶尔加盖",
+      date: '2018/8/8'
+    }]
   },
   mutations: {
     loginState(state) {

@@ -1,24 +1,23 @@
 <template>
   <div class="app-body overflow-y">
     <news-list
-      v-for="(item,i) in $store.state.newsList"
+      v-for="(item,i) in Store.state.newsList"
       :key='item.id||i'
       :news-title='item.title'
-      :img-src='item.thumb'
-      :news-tag='item.tag'
+      :content='item.content||""'
+      :date='item.date'
       :link-to='"/news/detail/"+item.id'
     ></news-list>
   </div>
 </template>
 <style lang="scss" scoped>
-.app-body {
-  background: #fff;
-  padding: 1.9rem 15px 0 15px;
-}
 </style>
 <script>
 import newsList from "@/components/other/newsList";
 export default {
-  components: { newsList }
+  components: { newsList },
+  data() {
+    return {};
+  }
 };
 </script>

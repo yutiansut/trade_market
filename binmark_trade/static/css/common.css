@@ -142,11 +142,6 @@ html {
   font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB",
     "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
 }
-@media screen and (max-width: 1440px) {
-  html {
-    font-size: 12px;
-  }
-}
 body {
   min-width: 1440px;
   height: 100%;

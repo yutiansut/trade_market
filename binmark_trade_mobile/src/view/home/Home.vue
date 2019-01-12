@@ -1,9 +1,13 @@
 <template>
   <div class="app-body overflow-y">
     <div class="head">
-      <div class="home-header flex flex-v-center">
+      <div class="home-header p-rel flex flex-v-center">
         <img
-          class="logo"
+          class="thumb-30 avatar"
+          alt=""
+        >
+        <img
+          class="logo abs-vh-center"
           :src="assetConfig.imgs.logo_1"
           alt=""
         >
@@ -54,6 +58,39 @@
         <van-col span='4'></van-col>
       </van-row>
     </div>
+    <!-- 币种列表 -->
+    <div class="tab h-45 flex flex-v-center">
+      <a
+        href="javascript:"
+        class="font-16 font-bold active"
+      >USDT</a>
+    </div>
+    <div class="van-hairline--bottom"></div>
+    <div class="coin-list">
+      <div class="list-item van-hairline--bottom">
+        <van-row>
+          <van-col span='3'><img
+              class="thumb-25"
+              src=""
+            ></van-col>
+          <van-col span='8'>
+            <div class="font-15 font-bold">USDT</div>
+            <div class="color-666">
+              <span>24h量&nbsp;</span>
+              <span>1564646</span>
+            </div>
+          </van-col>
+          <van-col span='8'>
+            <div class="font-15 font-bold">0101616</div>
+            <div class="color-666">1.5</div>
+          </van-col>
+          <van-col span='5'>
+            <span class="rise font-16 down">1%</span>
+          </van-col>
+        </van-row>
+        <!-- K线图 -->
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -86,14 +123,15 @@ export default {
         direction: "vertical",
         autoplay: true,
         speed: 300
-      }
+      },
+      coinid: ""
     };
   },
   mounted() {}
 };
 </script>
 <style lang="scss" scoped>
-$padding-between: 1rem;
+$padding-between: 1.25rem;
 .head {
   padding: 0 $padding-between;
   background: #fff;
@@ -108,10 +146,57 @@ $padding-between: 1rem;
       width: 100%;
     }
   }
+  .notice-detail {
+    @include textVcenter(50px);
+  }
 }
-
-.notice-detail {
-  @include textVcenter(50px);
+.coin-list {
+  background: #fff;
+  .list-item {
+    padding: 0 $padding-between;
+  }
+}
+.tab {
+  margin-top: 1.25rem;
+  padding: 0 $padding-between;
+  background: #fff;
+  a {
+    display: block;
+    height: 100%;
+    line-height: 45px;
+    box-sizing: border-box;
+    transition: all 0.3s;
+    &:not(:last-child) {
+      margin-right: 2rem;
+    }
+    &.active {
+      border-bottom: 0.25rem solid $color-primary;
+    }
+  }
+}
+.list-item {
+  .van-row {
+    padding: 0.8rem 0;
+  }
+  .van-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 4rem;
+  }
+  .rise {
+    display: inline-block;
+    padding: 0.4rem 0.5rem;
+    text-align: center;
+    color: #fff;
+    border-radius: 0.2rem;
+    &.up {
+      background: $color-danger;
+    }
+    &.down {
+      background: $color-success;
+    }
+  }
 }
 </style>
 

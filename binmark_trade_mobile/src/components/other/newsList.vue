@@ -1,65 +1,53 @@
 <template>
-
   <van-row class="list-item">
     <router-link :to='linkTo||""'>
-      <van-col
-        class="van-hairline--bottom"
-        span='7'
-      >
-        <img
-          class="thumb"
-          :src="imgSrc"
-          :onerror='defaultImg'
-        >
-      </van-col>
-      <van-col
-        class="van-hairline--bottom"
-        offset='1'
-        span='16'
-      >
-        <div
-          class="title font-14 font-bold"
-          v-text="newsTitle"
-        ></div>
-        <div class="footer p-abs">
-          <van-tag v-text="newsTag"></van-tag>
-        </div>
-      </van-col>
+      <p
+        class="title font-18 font-bold"
+        v-text="newsTitle"
+      ></p>
+      <p
+        class="body color-666"
+        v-text="content"
+      ></p>
+      <p
+        class="color-999 date font-13"
+        v-text="date"
+      ></p>
     </router-link>
   </van-row>
 </template>
 <script>
 export default {
   name: "news-list",
-  props: ["img-src", "news-title", "news-tag", "link-to"],
+  props: ["news-title", "content", "link-to", "date"],
   data() {
     return {
       defaultImg: `this.src="${require("@/assets/images/default.png")}"`
     };
   },
   methods: {
-    imgOnErr() {
-      console.log("1");
-    }
+    imgOnErr() {}
   }
 };
 </script>
 <style lang="scss" scoped>
 .list-item {
-  padding-bottom: 2.1rem;
-  height: 27.6vw;
-  .van-col {
-    height: 100%;
-    padding-bottom: 1.8rem;
+  overflow: hidden;
+  padding: 0 1rem;
+  background: #fff;
+  p:not(:first-child) {
+    margin-top: 1.25rem;
+    line-height: 1.8;
   }
-  .thumb {
-    width: 100%;
-    border: none;
-    background: #f1f1f1;
-    height: 100%;
+  &:last-child {
+    a {
+      border-bottom: none;
+    }
   }
-  .footer {
-    bottom: 2.1rem;
+  a {
+    display: block;
+    padding: 1rem 0;
+    border-bottom: 1px solid #eee;
   }
 }
 </style>

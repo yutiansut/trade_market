@@ -10,6 +10,9 @@ const Register = r => require(["@/view/user/Register"], r);
 const Register_1 = r => require(["@/view/user/Register_1"], r);
 const Register_2 = r => require(["@/view/user/Register_2"], r);
 const Resetpassword = r => require(["@/view/user/Resetpassword"], r);
+const News = r => require(["@/view/news/newsMain"], r);
+const newsList = r => require(["@/view/news/newsList"], r);
+const newsDetail = r => require(["@/view/news/newsDetail"], r);
 const routes = [
   {
     path: "/",
@@ -65,6 +68,26 @@ const routes = [
       {
         path: "/userentry/resetpassword",
         component: Resetpassword
+      }
+    ]
+  },
+  {
+    path: "/news",
+    component: News,
+    children: [
+      {
+        path: "",
+        component: newsList,
+        meta: {
+          title: "我的公告"
+        }
+      },
+      {
+        path: "/news/detail/:id",
+        component: newsDetail,
+        meta: {
+          title: "公告详情"
+        }
       }
     ]
   }

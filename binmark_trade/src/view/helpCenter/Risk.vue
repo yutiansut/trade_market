@@ -27,7 +27,7 @@ export default {};
   .show-content-free {
     padding: 30px;
     background: #f1f1f1;
-    line-height: 1.5;
+    line-height: 1.8;
   }
 }
 </style>

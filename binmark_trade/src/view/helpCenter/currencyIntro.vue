@@ -178,7 +178,7 @@ export default {
       margin-top: 40px;
     }
     dd {
-      line-height: 1.5;
+      line-height: 1.8;
     }
   }
   .properties {
