@@ -2,6 +2,7 @@
  * 引入全局样式
  */
 import "@/assets/css/common.css";
+import 'swiper/dist/css/swiper.css'
 /**
  * 引入第三方库
  */
@@ -11,6 +12,7 @@ import {
   Tabbar,
   TabbarItem,
   NavBar,
+  NoticeBar,
   Cell,
   CellGroup,
   Field,
@@ -33,6 +35,7 @@ Vue.use(Tabbar)
   .use(Tag)
   .use(Tab)
   .use(Tabs)
+  .use(NoticeBar)
 /**
  * 引入全局组件
  */

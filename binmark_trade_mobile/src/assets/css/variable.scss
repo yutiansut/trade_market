@@ -22,6 +22,17 @@ $mask-bg-rgba: rgba(0, 0, 0, 0.6);
     font-size: 1px * $i;
   }
 }
+@for $i from 1 to 11 {
+  /*高度值*/
+  .h-#{$i*10} {
+    height: 10px * $i;
+  }
+  /* 缩虐图尺寸 --rounded 圆形*/
+  .thumb-#{$i*5} {
+    width: 5px * $i;
+    height: 5px * $i;
+  }
+}
 button {
   appearance: none;
   border: 1px solid transparent;

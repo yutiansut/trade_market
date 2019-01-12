@@ -177,6 +177,9 @@ export default {
       border-bottom: $default-border;
       margin-top: 40px;
     }
+    dd {
+      line-height: 1.5;
+    }
   }
   .properties {
     overflow: hidden;

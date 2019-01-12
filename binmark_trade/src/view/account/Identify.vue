@@ -292,7 +292,7 @@ export default {
               showClose: false,
               confirmButtonText: "返回首页"
             }).then(() => {
-              this.navigateTo("/");
+              this.navigateTo("/account/security");
             });
           }
         } else {
@@ -312,6 +312,7 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
           this.bindState.idcardstate = "1";
+          this.navigateTo("/");
         } else {
           this.errMsg(res.msg || "操作失败");
         }
