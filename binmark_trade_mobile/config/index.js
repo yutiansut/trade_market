@@ -4,7 +4,12 @@ module.exports = {
   dev: {
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
-    proxyTable: {},
+    proxyTable: {
+      '/API': {
+        target: "http://192.168.5.51:8080/",
+        changeOrigin: true
+      }
+    },
     host: "192.168.5.225",
     port: 8080,
     autoOpenBrowser: true,

@@ -9,7 +9,8 @@
     </div>
     <p class="label font-14 color-999">欢迎登录BINMARK</p>
     <form
-      @submit.native.prevent
+      autocomplete="off"
+      @submit.prevent='onSubmit'
       class="form"
     >
       <van-field
@@ -23,11 +24,14 @@
       />
       <button
         :disabled='disabled'
-        class="btn-block btn-danger btn-large btn-default btn-active"
+        class="btn-block btn-primary btn-large btn-default btn-active"
       >登录</button>
       <p class="login-links color-999 font-14 flex flex-between">
         <router-link to=''>忘记密码</router-link>
-        <span>还没有账号？<span class="color-danger">注册</span></span>
+        <span>还没有账号？<router-link
+            to='/userentry/register'
+            class="color-primary"
+          >注册</router-link></span>
       </p>
     </form>
   </div>
@@ -43,6 +47,9 @@ export default {
   },
   methods: {
     getCode() {},
+    onSubmit() {
+      console.log();
+    },
     onTabChange() {}
   }
 };

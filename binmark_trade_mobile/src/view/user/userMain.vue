@@ -1,4 +1,4 @@
-// 登录注册主页面
+// 登录注册
 <template>
   <div class="wh-full">
     <my-header titleText=""></my-header>

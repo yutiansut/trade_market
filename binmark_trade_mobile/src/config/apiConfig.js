@@ -1,370 +1,348 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "http://192.168.5.138:3000/",
-        // 二维码路径
-        qrUrl: 'https://www.kmsjqm.cn/',
-        //登录
-        login: {
-            url: 'api/common/login.do',
-            method: 'post'
+        baseURL: process.env.NODE_ENV === 'production' ? "http://www.binmark.io/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.binmark.io/echo/" : "ws://192.168.5.51:8080/echo/",
+        // 首页banner
+        banner: {
+            url: "banner",
         },
-        //发送验证码
-        getSmsCode: {
-            url: 'api/common/getSmsCode.do',
-            method: 'post'
+        //获取app地址
+        version: {
+            url: "version"
         },
-        //注册
+        //根据主币种和交易币种获取币种信息(最新交易信息)
+        getCoinInfo: {
+            url: 'getcoininfoByCoinType'
+        },
+        //所有币种
+        allcoin: {
+            url: 'allcoin'
+        },
+        //个人信息
+        userinfo: {
+            url: 'userinfo'
+        },
+        //公告列表
+        notices: {
+            url: "notices"
+        },
+        // 公告详情
+        notice: {
+            url: "notice"
+        },
+        // 阅读数+1
+        addreadnum: {
+            url: 'addreadnum'
+        },
+        // 友情链接
+        friendlink: {
+            url: 'link'
+        },
+        // 用户注册
         register: {
-            url: 'api/common/registerUser.do',
-            method: 'post'
+            url: 'register',
+        },
+        // 钱包注册
+        registeruser: {
+            url: "registeruser",
+        },
+        //手机登录
+        signin: {
+            url: "signin",
+        },
+        //pc登录
+        login: {
+            url: "login",
+        },
+        // 退出
+        logout: {
+            url: "logout"
+        },
+        // 登录验证
+        checklogin: {
+            url: "checklogin",
+
+        },
+        //用户不存在是发送短信
+        sendcode: {
+            url: 'sendcode'
+        },
+        //修改密码获取验证码
+        sendcodeuser: {
+            url: 'sendcodeuser'
+        },
+        updateloginpwd: {
+            url: 'updateloginpwd'
+        },
+        //设置资金密码
+        updatepaypassword: {
+            url: 'updatepaypassword'
+        },
+        // 资金交易获取验证码
+        sendcodetoken: {
+            url: 'sendcodetoken'
+        },
+        //获取主币种
+        getmaincoin: {
+            url: 'getmaincoin'
+        },
+        // 费率列表
+        gaslist: {
+            url: "gaslist"
+        },
+        // 获取验证码
+        bzcode: {
+            url: 'bzcode'
         },
         //忘记密码
-        forgetPassword: {
-            url: 'api/common/forgetPass.do',
-            method: 'post'
-        },
-        //验证token是否失效
-        checkToken: {
-            url: 'api/common/checkTokenExist.do',
-            method: 'post'
-        },
-        //修改头像
-        modifyCustomerHead: {
-            url: 'api/common/modifyCustomerHead.do',
-            method: 'post'
-        },
-
-        //查询个人信息
-        selectMyCustomerInfo: {
-            url: 'api/customer/selectMyCustomerInfo.do',
-            method: 'post'
-        },
-
-        //查询银行卡列表
-        selectMyBankCard: {
-            url: 'api/customer/selectMyBankCard.do',
-            method: 'post'
-        },
-        //添加银行卡
-        pushBankCard: {
-            url: 'api/customer/pushBankCard.do',
-            method: 'post'
-        },
-        //删除银行卡
-        deleteMyBankCard: {
-            url: 'api/customer/deleteMyBankCard.do',
-            method: 'post'
-        },
-        //设置默认银行卡
-        setBankCardFlag: {
-            url: 'api/customer/setBankCardFlag.do',
-            method: 'post'
-        },
-
-        //首页数据
-        selectIndexView: {
-            url: "api/customer/selectIndexView.do",
-            method: "post"
-        },
-        selectIndexData: {
-            url: 'api/convert/selectIndexData.do',
-            method: 'post'
-        },
-
-        //官方资讯
-        selectNotice: {
-            url: "api/customer/selectNotice.do",
-            method: "post"
-        },
-        //查询banner
-        selectBanner: {
-            url: "api/customer/selectBanner.do",
-            method: "post"
-        },
-        //消息列表
-        selectMessageList: {
-            url: "api/customer/selectMessageList.do",
-            method: "post"
-        },
-
-
-        //签到
-        customerSign: {
-            url: 'api/customer/sign.do',
-            method: 'post'
-        },
-        modifyCustomerInfo: {
-            url: 'api/customer/modifyCustomerInfo.do',
-            method: 'post'
-        },
-        //修改登录密码
-        changeLoginPwd: {
-            url: "api/common/modifyLoginPass.do",
-            method: "post"
-        },
-        //修改支付密码
-        changePayPwd: {
-            url: "api/common/modifyPayPass.do",
-            method: "post"
-        },
-        selectMyFans: {
-            url: "api/customer/selectMyFans.do",
-            method: "post"
-        },
-        //我的圈友个人信息
-        selectSybCustomer: {
-            url: '/api/customer/selectSybCustomer.do',
-            method: 'post'
-        },
-        //我的圈友列表
-        selectCustomerList: {
-            url: '/api/customer/selectDirectCustomerList.do',
-            method: 'post'
-        },
-        getFeedbackType: {
-            url: 'api/customer/getFeedbackType.do',
-            method: 'post'
-        },
-        //意见反馈
-        pushCustomerFeedback: {
-            url: 'api/customer/pushCustomerFeedback.do',
-            method: 'post'
-        },
-        //问题列表
-        getCustomerFeedbackList: {
-            url: 'api/customer/getFeedbackList.do',
-            method: 'post'
-        },
-
-        //查询转出账户信息
-        selectCustomerByPhone: {
-            url: "api/customer/selectCustomerByPhone.do",
-            method: "post"
-        },
-        //收支流水记录
-        selectProfit: {
-            url: "api/convert/selectProfit.do",
-            method: "post"
-        },
-        //资产转换
-        moneyToRegiter: {
-            url: "api/convert/moneyToRegiter.do",
-            method: "post"
-        },
-        //转换记录
-        selectConvert: {
-            url: "api/convert/selectConvert.do",
-            method: "post"
-        },
-        //提现
-        applyCash: {
-            url: "api/convert/applyCash.do",
-            method: "post"
-        },
-        //查询提现记录
-        selectCash: {
-            url: "api/convert/selectCash.do",
-            method: "post"
-        },
-
-
-        // 上传多张图片 
-        uploadImages: {
-            url: 'api/common/uploadImages.do',
-            method: 'post'
-        },
-        // base64文件上传 
-        uploadImagesByBase64: {
-            url: 'api/common/uploadImagesByBase64.do',
-            method: 'post'
-        },
-        // 首页模块 
-        selectIndexProduct: {
-            url: 'api/mall/selectIndexProduct.do',
-            method: 'post'
-        },
-        // 添加/修改收获地址
-        saveMallCustomerAddress: {
-            url: 'api/mall/saveMallCustomerAddress.do',
-            method: 'post'
-        },
-        // 查询所有收货地址
-        selectMallCustomerAddressList: {
-            url: 'api/mall/selectMallCustomerAddressList.do',
-            method: 'post'
-        },
-        // 删除收获地址
-        delMallCustomerAddress: {
-            url: 'api/mall/delMallCustomerAddress.do',
-            method: 'post'
-        },
-        // 设置默认地址
-        setDefultAdress: {
-            url: 'api/mall/setDefultAdress.do',
-            method: 'post'
-        },
-        // 我的收藏列表
-        selectMyCollection: {
-            url: 'api/mall/selectMyCollection.do',
-            method: 'post'
-        },
-        // 收藏/取消收藏
-        modifyMyCollection: {
-            url: 'api/mall/modifyMyCollection.do',
-            method: 'post'
-        },
-        // 批量收藏 
-        batchMyCollection: {
-            url: 'api/mall/batchMyCollection.do',
-            method: 'post'
-        },
-        // 查询订单
-        selectMyOrder: {
-            url: 'api/order/selectMyOrder.do',
-            method: 'post'
-        },
-        // 评价
-        pushProductComment: {
-            url: 'api/mall/pushProductComment.do',
-            method: 'post'
-        },
-        // 查询商品分类
-        selectProductClassifyList: {
-            url: 'api/mall/selectProductClassifyList.do',
-            method: 'post'
-        },
-        // 查询全部分类产品
-        getClassifyProduct: {
-            url: 'api/mall/getClassifyProduct.do',
-            method: 'post'
-        },
-
-        // 添加购物车 
-        addCustomerCar: {
-            url: 'api/customerCar/addCustomerCar.do',
-            method: 'post'
-        },
-        // 编辑购物车 
-        modifyCustomerCar: {
-            url: 'api/customerCar/modifyCustomerCar.do',
-            method: 'post'
-        },
-        // 删除购物车 
-        delCustomerCar: {
-            url: 'api/customerCar/delCustomerCar.do',
-            method: 'post'
-        },
-        // 批量删除购物车 
-        delMoreCustomerCar: {
-            url: 'api/customerCar/delMoreCustomerCar.do',
-            method: 'post'
-        },
-        // 我的购物车 
-        selectCustomerCar: {
-            url: 'api/customerCar/selectCustomerCar.do',
-            method: 'post'
-        },
-        // 查询购物车数量接口 
-        selectCustomerCarNum: {
-            url: 'api/customerCar/selectCustomerCarNum.do',
-            method: 'post'
-        },
-        // 查询商品列表
-        selectMallProductList: {
-            url: 'api/mall/selectMallProductList.do',
-            method: 'post'
-        },
-        getProductCategory: {
-            url: 'api/mall/getProductCategory.do',
-            method: 'post'
-        },
-
-
-        // 商品详情
-        selectProductDetail: {
-            url: 'api/mall/selectProductDetail.do',
-            method: 'post'
-        },
-
-
-        // 确认收货
-        confirmOrder: {
-            url: 'api/order/confirmOrder.do',
-            method: 'post'
-        },
-        // 取消订单
-        cancelOrderInfo: {
-            url: 'api/order/cancelOrderInfo.do',
-            method: 'post'
-        },
-        // 删除订单
-        delOrderInfo: {
-            url: 'api/order/delOrderInfo.do',
-            method: 'post'
-        },
-        // 根据订单获取物流信息
-        selectLogisticsInfo: {
-            url: 'api/order/selectLogisticsInfo.do',
-            method: 'post'
-        },
-        // 商品评价列表
-        selectProductCommentList: {
-            url: 'api/mall/selectProductCommentList.do',
-            method: 'post'
-        },
-        // 订单支付
-        payMyOrder: {
-            url: 'api/order/payMyOrder.do',
-            method: 'post'
-        },
-
-
-        // 构建订单号
-        buildOrderInfo: {
-            url: 'api/order/buildOrderInfo.do',
-            method: 'post'
-        },
-        // 构建订单号(购物车)
-        buildOrderInfoByCars: {
-            url: 'api/order/buildOrderInfoByCars.do',
-            method: 'post'
-        },
-        // 创建订单 
-        createOrderInfo: {
-            url: 'api/order/createOrderInfo.do',
-            method: 'post'
-        },
-
-        //游戏接口
-        //--转盘信息
-        getRewardTurntable: {
-            url: "api/customer/getRewardTurntable.do",
-            method: "post"
-        },
-        //中奖参数
-        getRewardNum: {
-            url: "api/customer/getRewardNum.do",
-            method: "post"
-        },
-        //中奖列表
-        getRewardList: {
-            url: "api/customer/getRewardList.do",
-            method: "post"
-        },
-        //我的中奖列表
-        getCustomerReward: {
-            url: "api/customer/getCustomerReward.do",
-            method: "post"
-        },
-        //我的中奖列表
-        getSysProduct: {
-            url: "api/common/getSysProduct.do",
-            method: "post"
-        },
-        //我的中奖列表
-        transferAccounts: {
-            url: "api/convert/transferAccounts.do",
-            method: "post"
+        forgetpwd: {
+            url: "forgetpwd",
+        },
+        //获取我的资产
+        getaccount: {
+            url: "getaccount"
+        },
+        //获取我的推广记录
+        getmymxtension: {
+            url: 'getmymxtension'
+        },
+        //获取账单记录
+        getbill: {
+            url: "getbill"
+        },
+        //获取我的挂单记录
+        getmyentru: {
+            url: 'getmyentru'
+        },
+        //获取我的成交记录
+        getmyrecord: {
+            url: 'getmyrecord'
+        },
+        //获取我的提现记录
+        getmyrecharge: {
+            url: 'getmyrecharge'
+        },
+        //获取我的充值记录
+        getmyput: {
+            url: 'getmyput'
+        },
+        //获取历史工单
+        gethisorder: {
+            url: "gethisorder"
+        },
+        //添加工单记录
+        addorder: {
+            url: 'addorder'
+        },
+        //获取充值地址
+        getaddress: {
+            url: "getaddress"
+        },
+        //可用余额和单日最大可提现额度
+        getdaynumber: {
+            url: "getdaynumber"
+        },
+        //提币
+        outcoin: {
+            url: "outcoin"
+        },
+        //获取我的地址通讯录
+        getoutaddress: {
+            url: "getoutaddress"
+        },
+        //根据主币种 获取交易币种
+        getTradCoin: {
+            url: "getTradCoin"
+        },
+        //新增我的地址通讯录
+        addoutaddress: {
+            url: "addoutaddress"
+        },
+        //删除我的地址通讯录
+        deloutaaddress: {
+            url: "deloutaaddress"
+        },
+        //积分充值
+        coinin: {
+            url: "coinin"
+        },
+        //K线图
+        kline: {
+            url: "kline"
+        },
+        //买入五档图
+        buyorder: {
+            url: 'buyorder'
+        },
+        //卖出五档图
+        sellorder: {
+            url: 'sellorder'
+        },
+        //查看全站交易
+        gettoporder: {
+            url: 'gettoporder'
+        },
+        //获取币种信息
+        getcoininfo: {
+            url: "getcoininfo"
+        },
+        //获取用户的资产
+        gettradaccount: {
+            url: 'gettradaccount'
+        },
+        //查看我的当前委托
+        getentrust: {
+            url: "getentrust"
+        },
+        //撤销委托记录
+        clearentrust: {
+            url: "clearentrust"
+        },
+        //查看历史委托
+        gethistoryorder: {
+            url: 'gethistoryorder'
+        },
+        getotcorder: {
+            url: 'getotcorder'
+        },
+        getotcorderbycoin: {
+            url: 'getotcorderbycoin'
+        },
+        // otc 账号信息
+        getotcbank: {
+            url: 'getotcbank'
+        },
+        //买入
+        forbuy: {
+            url: 'forbuy'
+        },
+        //卖出
+        forsell: {
+            url: 'forsell'
+        },
+        //获取c2c币种
+        getc2ccoin: {
+            url: 'getc2ccoin'
+        },
+        //获取的trade记录
+        gettradorder: {
+            url: 'gettradorder'
+        },
+        //获取c2c订单
+        getc2corder: {
+            url: 'getc2corder'
+        },
+        //根据币种获取信息
+        getc2callorder: {
+            url: 'getc2callorder'
+        },
+        //根据token和币种查询该用户是否有未完成的订单
+        getc2corderbycoin: {
+            url: 'getc2corderbycoin'
+        },
+        //发布C2C买入订单
+        addbuyc2c: {
+            url: 'addbuyc2c'
+        },
+        //发布C2C卖出订单
+        addsellc2c: {
+            url: 'addsellc2c'
+        },
+        //上传接口
+        img: {
+            url: 'img',
+        },
+        //问题中心
+        getquest: {
+            url: 'getquest'
+        },
+        // 查看用户绑定状态..
+        saftyState: {
+            url: "state"
+        },
+        //安全日志
+        logsafe: {
+            url: 'logsafe'
+        },
+        //登录日志
+        loglogin: {
+            url: 'loglogin'
+        },
+        //绑定邮箱
+        bindemail: {
+            url: "bindemail"
+        },
+        //绑定银行卡
+        addbank: {
+            url: 'addbank'
+        },
+        // 获取google验证码
+        getgooglekey: {
+            url: "getgooglekey"
+        },
+        //绑定谷歌验证码
+        addgoogle: {
+            url: 'addgoogle'
+        },
+        //实名认证
+        realynanme: {
+            url: 'realynanme'
+        },
+        getotccoin: {
+            url: 'getotccoin'
+        },
+        //otc买入
+        otcbuy: {
+            url: 'otcbuy'
+        },
+        //otc卖出
+        otcsell: {
+            url: 'otcsell'
+        },
+        //c2c订单
+        getc2chistory: {
+            url: 'getc2chistory'
+        },
+        //撤销我发布的订单
+        clearc2c: {
+            url: "clearc2c"
+        },
+        setrealyok: {
+            url: "setrealyok"
+        },
+        setsendok: {
+            url: "setsendok"
+        },
+        getmyc2ctrad: {
+            url: "getmyc2ctrad"
+        },
+        //市场买入c2c
+        c2cbuytrad: {
+            url: "c2cbuytrad"
+        },
+        //市场卖出c2c
+        c2cselltrad: {
+            url: "c2cselltrad"
+        },
+        //上币申请
+        addvoterequest: {
+            url: 'addvoterequest'
+        },
+        //注册时获取邮箱验证码
+        setemailcode: {
+            url: 'setemailcode'
+        },
+        //登录时获取邮箱验证码
+        sendemailcode: {
+            url: 'sendemailcode'
+        },
+        //发送验证码
+        code: {
+            url: "code"
+        },
+        //绑定手机号
+        addtel: {
+            url: "addtel"
         }
     }
 }());

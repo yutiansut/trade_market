@@ -14,7 +14,6 @@
         <div class="item flex flex-h-center flex-v-center">
           <div
             class="icon"
-            :class="'icon-'+i"
             :style="{backgroundImage:'url('+(active==i?item.icon.active:item.icon.normal)+')'}"
           ></div>
           <!-- <div
@@ -38,23 +37,15 @@
   .icon {
     width: 2.2rem;
     height: 2.2rem;
-    background-size: 100% auto;
+    background-size: 80% auto;
     background-repeat: no-repeat;
-  }
-  .icon-1 {
-    background-position: 0 -2.2rem;
-  }
-  .icon-2 {
-    background-position: 0 -4.5rem;
-  }
-  .icon-3 {
-    background-position: 0 -6.6rem;
+    background-position: center;
   }
   span {
     display: block;
     margin-top: 0.1em;
     &.active {
-      color: #333;
+      color: #d0a771;
     }
   }
 }
@@ -68,40 +59,72 @@ export default {
         {
           label: "首页",
           icon: {
-            normal: "",
-            active: ""
+            normal: this.assetConfig.imgs.tab_1_default,
+            active: this.assetConfig.imgs.tab_1_selected
           },
           link: "/home"
+        },
+        {
+          label: "交易",
+          icon: {
+            normal: this.assetConfig.imgs.tab_2_default,
+            active: this.assetConfig.imgs.tab_2_selected
+          },
+          link: "/trade"
+        },
+        {
+          label: "C2C",
+          icon: {
+            normal: this.assetConfig.imgs.tab_3_default,
+            active: this.assetConfig.imgs.tab_3_selected
+          },
+          link: "/c2c"
+        },
+        {
+          label: "OTC",
+          icon: {
+            normal: this.assetConfig.imgs.tab_4_default,
+            active: this.assetConfig.imgs.tab_4_selected
+          },
+          link: "/otc"
+        },
+        {
+          label: "资产",
+          icon: {
+            normal: this.assetConfig.imgs.tab_5_default,
+            active: this.assetConfig.imgs.tab_5_selected
+          },
+          link: "/asset"
         }
       ]
     };
   },
   computed: {
     showFooter() {
-      return this.$store.state.showFooter;
+      return this.Store.state.showFooter;
     },
     active() {
-      return this.$store.state.footerItemIndex;
+      return this.Store.state.footerItemIndex;
     }
   },
   mounted() {
     this.tabConfig.map((item, i) => {
       if (this.$route.path == item.link) {
-        this.$store.commit("setFooterItem", i);
+        this.Store.commit("setFooterItem", i);
         return;
       }
     });
   },
   methods: {
     onChange(i) {
-      this.$store.commit("setFooterItem", i);
+      this.Store.commit("setFooterItem", i);
     }
   },
   watch: {
     $route(to, from) {
       this.tabConfig.map((item, i) => {
         if (to.path == item.link) {
-          this.$store.commit("setFooterItem", i);
+          this.Store.commit("setFooterItem", i);
           return;
         }
       });

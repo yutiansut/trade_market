@@ -8,7 +8,7 @@
     <form class="check-form">
       <div
         v-show='type==0'
-        class="code-input flex flex-between font-14"
+        class="input-wrap flex flex-between font-14"
       >
         <input
           type="text"
@@ -18,7 +18,7 @@
       </div>
       <div
         v-show='type==1'
-        class="code-input flex flex-between font-14"
+        class="input-wrap flex flex-between font-14"
       >
         <input
           type="text"
@@ -28,7 +28,7 @@
       </div>
       <div
         v-show='type==2'
-        class="code-input flex flex-between font-14"
+        class="input-wrap flex flex-between font-14"
       >
         <input
           type="text"
@@ -55,13 +55,13 @@ export default {
       tabItem: ["手机验证", "邮箱验证", "谷歌验证"]
     };
   },
-  beforeRouterEnter(to, from, next) {
-    if (from.name == "Login" && this.Store.state.isCheckLogin) {
-      next();
-    } else {
-      next({ path: "/user/login" });
-    }
-  },
+  // beforeRouterEnter(to, from, next) {
+  //   if (from.name == "Login" && this.Store.state.isCheckLogin) {
+  //     next();
+  //   } else {
+  //     next({ path: "/user/login" });
+  //   }
+  // },
   methods: {
     getCode() {},
     onTabChange(i) {
@@ -82,7 +82,7 @@ export default {
 }
 .check-form {
   margin-top: 6rem;
-  .code-input {
+  .input-wrap {
     line-height: 4rem;
   }
   .van-cell {
