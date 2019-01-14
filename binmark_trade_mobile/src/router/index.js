@@ -13,6 +13,7 @@ const Resetpassword = r => require(["@/view/user/Resetpassword"], r);
 const News = r => require(["@/view/news/newsMain"], r);
 const newsList = r => require(["@/view/news/newsList"], r);
 const newsDetail = r => require(["@/view/news/newsDetail"], r);
+const coinTrade = r => require(["@/view/trade/coinTrade"], r);
 const routes = [
   {
     path: "/",
@@ -91,6 +92,11 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: "/trade/coin_trade",
+    name: 'coinTrade',
+    component: coinTrade
   }
 ];
 export default new Router({ routes });

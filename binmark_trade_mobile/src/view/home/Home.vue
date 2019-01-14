@@ -1,16 +1,19 @@
 <template>
   <div class="app-body overflow-y">
+    <!-- 侧栏滑块 -->
+    <slide-pop
+      @onClose='closeSlide'
+      :showPop='showPop'
+    >
+      <user-aside slot='content'></user-aside>
+    </slide-pop>
     <div class="head">
-      <div class="home-header p-rel flex flex-v-center">
-        <img
-          class="thumb-30 thumb-round avatar"
-          :src="assetConfig.imgs.user_head_portrait"
-        >
+      <app-header @onHeadClick='showSlide'>
         <img
           class="logo abs-vh-center"
-          :src="assetConfig.imgs.logo_1"
+          :src="assetConfig.imgs.logo_2"
         >
-      </div>
+      </app-header>
       <!-- banner -->
       <div class="banner">
         <swiper :options='BannerSwiperOptions'>
@@ -68,9 +71,10 @@
     <div class="coin-list">
       <div class="list-item van-hairline--bottom">
         <van-row>
-          <van-col span='3'><img
+          <van-col span='2'>
+            <img
               class="thumb-25"
-              src=""
+              :src="assetConfig.imgs.user_head_portrait"
             ></van-col>
           <van-col span='8'>
             <div class="font-15 font-bold">USDT</div>
@@ -79,7 +83,7 @@
               <span>1564646</span>
             </div>
           </van-col>
-          <van-col span='8'>
+          <van-col span='9'>
             <div class="font-15 font-bold">0101616</div>
             <div class="color-666">1.5</div>
           </van-col>
@@ -94,10 +98,14 @@
 </template>
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import slidePop from "@/components/other/slidePop";
+import appHeader from "@/components/header/appHeader";
+import userAside from "@/components/slideContent/UserAside";
 export default {
-  components: { swiper, swiperSlide },
+  components: { swiper, swiperSlide, slidePop, appHeader, userAside },
   data() {
     return {
+      showPop: false,
       banners: [
         this.assetConfig.imgs.banner_1,
         this.assetConfig.imgs.banner_2,
@@ -108,7 +116,6 @@ export default {
         loop: true,
         effect: "coverflow",
         slidesPerView: 1,
-        height: 170,
         speed: 800,
         coverflowEffect: {
           rotate: 30,
@@ -126,27 +133,36 @@ export default {
       coinid: ""
     };
   },
-  mounted() {}
+  mounted() {},
+  methods: {
+    showSlide() {
+      this.showPop = true;
+    },
+    closeSlide() {
+      this.showPop = false;
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
 $padding-between: 1.25rem;
 .head {
-  padding: 0 $padding-between;
   background: #fff;
-  .home-header {
-    height: 5rem;
-  }
   .logo {
-    height: 2.8rem;
+    height: 2.6rem;
   }
   .banner {
+    height: 15rem;
+    overflow: hidden;
     .banner-img {
       width: 100%;
     }
   }
-  .notice-detail {
-    @include textVcenter(50px);
+  .notice-bar {
+    padding: 0 $padding-between;
+    .notice-detail {
+      @include textVcenter(50px);
+    }
   }
 }
 .coin-list {
@@ -182,6 +198,9 @@ $padding-between: 1.25rem;
     flex-direction: column;
     justify-content: space-around;
     height: 4rem;
+    &:nth-child(2) {
+      padding-left: 0.5rem;
+    }
   }
   .rise {
     display: inline-block;
