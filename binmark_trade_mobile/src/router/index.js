@@ -84,6 +84,7 @@ const routes = [
       },
       {
         path: "/news/detail/:id",
+        name: "newsDetail",
         component: newsDetail,
         meta: {
           title: "公告详情"

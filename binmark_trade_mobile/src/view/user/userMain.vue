@@ -2,7 +2,7 @@
 <template>
   <div class="wh-full">
     <my-header titleText=""></my-header>
-    <div class="account-main">
+    <div class="account-main wh-full">
       <router-view></router-view>
     </div>
   </div>
@@ -18,5 +18,6 @@ export default {
 .account-main {
   padding: 2.7vh 8vw 0 8vw;
   box-sizing: border-box;
+  background: #fff;
 }
 </style>

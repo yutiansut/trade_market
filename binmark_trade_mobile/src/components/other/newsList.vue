@@ -6,7 +6,7 @@
         v-text="newsTitle"
       ></p>
       <p
-        class="body color-666"
+        class="body font-14 color-666"
         v-text="content"
       ></p>
       <p
@@ -14,6 +14,7 @@
         v-text="date"
       ></p>
     </router-link>
+    <div class="break-line"></div>
   </van-row>
 </template>
 <script>
@@ -31,6 +32,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.break-line {
+  @include breakLine();
+}
 .list-item {
   overflow: hidden;
   padding: 0 1rem;
@@ -47,7 +51,7 @@ export default {
   a {
     display: block;
     padding: 1rem 0;
-    border-bottom: 1px solid #eee;
+    // border-bottom: 1px solid #eee;
   }
 }
 </style>

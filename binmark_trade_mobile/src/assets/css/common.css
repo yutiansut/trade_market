@@ -111,28 +111,6 @@ rem {
 .m-10 {
   margin: 1rem;
 }
-/*字体大小*/
-.font-12 {
-  font-size: 1.2rem;
-}
-.font-14 {
-  font-size: 1.4rem;
-}
-.font-16 {
-  font-size: 1.6rem;
-}
-.font-18 {
-  font-size: 1.8rem;
-}
-.font-20 {
-  font-size: 2rem;
-}
-.font-22 {
-  font-size: 2.2rem;
-}
-.font-24 {
-  font-size: 2.4rem;
-}
 /* 字重 */
 .font-bit-bold {
   font-weight: 500;
@@ -209,23 +187,6 @@ img {
   border-radius: 0;
 }
 
-/* 缩虐图尺寸 --rounded 圆形*/
-.thumb-20 {
-  width: 20px;
-  height: 20px;
-}
-.thumb-30 {
-  width: 30px;
-  height: 30px;
-}
-.thumb-40 {
-  width: 40px;
-  height: 40px;
-}
-.thumb-50 {
-  width: 50px;
-  height: 50px;
-}
 /* 文本对齐 */
 .txt-center {
   text-align: center;

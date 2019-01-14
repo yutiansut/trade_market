@@ -3,13 +3,12 @@
     <div class="head">
       <div class="home-header p-rel flex flex-v-center">
         <img
-          class="thumb-30 avatar"
-          alt=""
+          class="thumb-30 thumb-round avatar"
+          :src="assetConfig.imgs.user_head_portrait"
         >
         <img
           class="logo abs-vh-center"
           :src="assetConfig.imgs.logo_1"
-          alt=""
         >
       </div>
       <!-- banner -->

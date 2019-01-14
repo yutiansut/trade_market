@@ -42,9 +42,10 @@
   }
 }
 // 重置vant 库默认样式
-.van-ellipsis {
-  font-size: 1.4rem;
+.van-nav-bar .van-icon {
+  color: inherit;
 }
+
 .van-field {
   padding: 1rem 0;
 }

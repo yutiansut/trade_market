@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .van-nav-bar {
   font-size: 1.4em;
   .van-icon {

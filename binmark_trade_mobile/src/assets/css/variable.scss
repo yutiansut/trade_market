@@ -109,8 +109,9 @@ button {
   line-height: $height;
 }
 
-@mixin breakLine($height: 1rem, $bgcolor: #e1e1e1, $width: 100%) {
+@mixin breakLine($height: 1px, $bgcolor: #ebedf0, $width: 100%) {
   height: $height;
   background-color: $bgcolor;
   width: $width;
+  transform: scaleY(0.5);
 }
