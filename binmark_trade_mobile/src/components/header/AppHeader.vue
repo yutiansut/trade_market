@@ -1,11 +1,15 @@
 <template>
-  <div class="app-header p-rel flex flex-v-center">
+  <div class="app-header p-rel flex flex-v-center flex-between">
     <img
+      :style="{visibility:iconLeft?'visable':'hidden'}"
       @click="onHeadClick"
       class="thumb-30 thumb-round"
-      :src="iconLeft ||assetConfig.imgs.user_head_portrait"
+      :src="iconLeft"
     >
-    <slot></slot>
+    <slot name='title'></slot>
+    <div class="header-rt">
+      <slot name="right"></slot>
+    </div>
   </div>
 </template>
 <script>

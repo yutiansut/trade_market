@@ -14,6 +14,8 @@ const News = r => require(["@/view/news/newsMain"], r);
 const newsList = r => require(["@/view/news/newsList"], r);
 const newsDetail = r => require(["@/view/news/newsDetail"], r);
 const coinTrade = r => require(["@/view/trade/coinTrade"], r);
+const entrustDetail = r => require(["@/view/trade/entrustDetail"], r);
+const c2cTrade = r => require(["@/view/trade/c2cTrade"], r);
 const routes = [
   {
     path: "/",
@@ -26,10 +28,25 @@ const routes = [
         component: Home,
         name: "Home",
         meta: {
-          title: "首页",
-          removeHeader: true
+          title: "首页"
         }
-      }
+      },
+      {
+        path: "/trade/coin_trade",
+        name: 'coinTrade',
+        component: coinTrade,
+        meta: {
+          title: "交易"
+        }
+      },
+      {
+        path: "/trade/c2c_trade",
+        name: 'c2cTrade',
+        component: c2cTrade,
+        meta: {
+          title: "c2c交易"
+        }
+      },
     ]
   },
   {
@@ -93,10 +110,14 @@ const routes = [
       }
     ]
   },
+
   {
-    path: "/trade/coin_trade",
-    name: 'coinTrade',
-    component: coinTrade
+    path: "/trade/entrust_detail",
+    name: "entrustDetail",
+    component: entrustDetail,
+    meta: {
+      title: "委托详情"
+    }
   }
 ];
 export default new Router({ routes });

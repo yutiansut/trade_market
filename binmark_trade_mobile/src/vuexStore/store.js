@@ -20,7 +20,10 @@ export default new Vuex.Store({
       title: "新闻标题",
       content: "呢日用就购I爱干净偶尔加盖",
       date: '2018/8/8'
-    }]
+    }],
+    maincoinid: "",
+    tradecoinid: "",
+    coinInfo: {}
   },
   mutations: {
     loginState(state) {

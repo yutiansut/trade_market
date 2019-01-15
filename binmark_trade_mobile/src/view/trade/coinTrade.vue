@@ -1,22 +1,34 @@
 <template>
   <div class="wh-full app-body">
+    <!-- 侧栏滑块 -->
+    <slide-pop
+      @onClose='closeSlide'
+      :showPop='showPop'
+    >
+      <trade-aside slot="content"></trade-aside>
+    </slide-pop>
+    <!-- 头部 -->
     <app-header
       :iconLeft='assetConfig.imgs.nav_transaction_menu'
       @onHeadClick='showSlide'
     >
-      <div class="coin font-16 abs-vh-center">BTC/USDT</div>
+      <div
+        slot="title"
+        class="coin font-16 abs-vh-center"
+      >BTC/USDT</div>
     </app-header>
+    <!-- 交易区 -->
     <div class="trade-panel flex flex-between">
       <!-- 买入卖出 -->
       <div class="form-box p-rel">
         <div class="btn-box flex flex-between h-35">
           <div
-            @click="toggleType"
+            @click="toggleType(0)"
             :class="type==0&&'active-0'"
             class="font-16 font-bold"
           >买入</div>
           <div
-            @click="toggleType"
+            @click="toggleType(1)"
             :class="type==1&&'active-1'"
             class="font-16 font-bold"
           >卖出</div>
@@ -50,6 +62,7 @@
               span='6'
             >
               <div
+                :class="numLevel==item.val &&'active'"
                 @click="getNum(item.val)"
                 v-text="item.label"
               ></div>
@@ -116,20 +129,88 @@
         </div>
       </div>
     </div>
+    <!-- 交易记录 -->
+    <div class="trade-record">
+      <van-tabs
+        color='#b72026'
+        line-width='30'
+        v-model="tabActive"
+      >
+        <van-tab title="当前委托">
+          <div class="record-table">
+            <van-row class="thead color-666 flex flex-v-center h-45">
+              <van-col span='6 font-14'>市场</van-col>
+              <van-col span='7 font-14'>价格</van-col>
+              <van-col span='7 font-14'>成交量/数量</van-col>
+              <van-col span='4 font-14 txt-rt'>操作</van-col>
+            </van-row>
+            <div class="tbody">
+              <van-row class="flex flex-v-center">
+                <van-col span='6 font-14'>
+                  <div class="font-14 font-bold">BTC/USDT</div>
+                  <small class="color-999">07-17</small>
+                </van-col>
+                <van-col span='7 font-14 color-success'>
+                  <div class="font-14 font-bold">1519159</div>
+                  <small>卖出</small>
+                </van-col>
+                <van-col span='7 font-14'>
+                  <div class="font-14 font-bold">1</div>
+                  <small class="color-999">116516</small>
+                </van-col>
+                <van-col span='4 font-14 txt-rt'>
+                  <button class="btn-mini btn-success">撤单</button>
+                </van-col>
+              </van-row>
+            </div>
+          </div>
+        </van-tab>
+        <van-tab title="历史委托">
+          <div class="record-table">
+            <van-row class="thead color-666 flex flex-v-center h-45">
+              <van-col span='9 font-14'>市场</van-col>
+              <van-col span='8 font-14'>价格</van-col>
+              <van-col span='7 font-14 txt-rt'>成交量/数量</van-col>
+            </van-row>
+            <div class="tbody">
+              <van-row class="flex flex-v-center">
+                <van-col span='9 font-14'>
+                  <div class="font-14 font-bold">BTC/USDT</div>
+                  <small class="color-999">07-17</small>
+                </van-col>
+                <van-col span='8 font-14 color-success'>
+                  <div class="font-14 font-bold">1519159</div>
+                  <small>卖出</small>
+                </van-col>
+                <van-col span='7 font-14 txt-rt'>
+                  <div class="font-14 font-bold">1</div>
+                  <small class="color-999">116516</small>
+                </van-col>
+              </van-row>
+            </div>
+          </div>
+        </van-tab>
+      </van-tabs>
+    </div>
   </div>
+
 </template>
 <script>
 import appHeader from "@/components/header/appHeader";
+import slidePop from "@/components/other/slidePop";
+import tradeAside from "@/components/slideContent/TradeAside";
 export default {
-  components: { appHeader },
+  components: { appHeader, slidePop, tradeAside },
   data() {
     return {
+      showPop: false,
       type: 0,
       number: "",
       price: "",
       rise: 0,
       balance: 0,
       available: 0,
+      numLevel: 0,
       fastInputNum: [
         {
           label: "25%",
@@ -147,7 +228,8 @@ export default {
           label: "100%",
           val: 1
         }
-      ]
+      ],
+      tabActive: 0
     };
   },
 
@@ -162,11 +244,19 @@ export default {
       this.price = "";
     },
     onSubmit() {},
-    toggleType() {
-      this.type = this.type == 0 ? 1 : 0;
+    toggleType(type) {
+      this.type = type * 1;
       this.resetForm();
     },
-    getNum(val) {}
+    getNum(val) {
+      this.numLevel = val;
+    },
+    showSlide() {
+      this.showPop = true;
+    },
+    closeSlide() {
+      this.showPop = false;
+    }
   }
 };
 </script>
@@ -232,37 +322,45 @@ export default {
   .available {
     margin-top: 0.5rem;
   }
+  .table {
+    .rise {
+      line-height: 25px;
+    }
+  }
+  .tbody {
+    line-height: 25px;
+    height: 125px;
+    .van-col {
+      position: relative;
+      z-index: 99;
+    }
+    .progress {
+      width: 100%;
+      height: 100%;
+      z-index: 9;
+      left: 0;
+      top: 0;
+      background-color: #f6f6f6;
+      opacity: 0.4;
+    }
+  }
 }
 .fast-input {
-  line-height: 30px;
   margin-top: 1rem;
-  .van-col > div {
-    text-align: center;
-    background: #f5f5f5;
-  }
-}
-.table {
-  .rise {
-    line-height: 25px;
-  }
-}
-.tbody {
-  line-height: 25px;
-  height: 125px;
   .van-col {
-    position: relative;
-    z-index: 99;
+    > div {
+      @include textVcenter(30px);
+      border: 1px solid transparent;
+      box-sizing: border-box;
+      text-align: center;
+      background: #f5f5f5;
+    }
   }
-  .progress {
-    width: 100%;
-    height: 100%;
-    z-index: 9;
-    left: 0;
-    top: 0;
-    background-color: #f6f6f6;
-    opacity: 0.4;
+  div.active {
+    border-color: $color-danger;
   }
 }
+
 .trade-trend {
   padding: 0 1rem;
   .thead {
@@ -284,6 +382,26 @@ export default {
     display: block;
     width: 40%;
     text-align: right;
+  }
+}
+.trade-record {
+  margin-top: 1rem;
+}
+.record-table {
+  .thead {
+    padding: 0 1rem;
+  }
+  .tbody {
+    padding: 0 1rem;
+    background: #fff;
+    .van-row {
+      padding: 1rem 0;
+    }
+    .van-col {
+      > div:first-child {
+        margin-bottom: 0.3rem;
+      }
+    }
   }
 }
 </style>

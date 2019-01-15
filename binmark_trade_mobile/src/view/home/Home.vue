@@ -8,8 +8,12 @@
       <user-aside slot='content'></user-aside>
     </slide-pop>
     <div class="head">
-      <app-header @onHeadClick='showSlide'>
+      <app-header
+        :iconLeft='assetConfig.imgs.user_head_portrait'
+        @onHeadClick='showSlide'
+      >
         <img
+          slot='title'
           class="logo abs-vh-center"
           :src="assetConfig.imgs.logo_2"
         >

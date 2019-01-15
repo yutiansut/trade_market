@@ -70,7 +70,7 @@ export default {
             normal: this.assetConfig.imgs.tab_2_default,
             active: this.assetConfig.imgs.tab_2_selected
           },
-          link: "/trade"
+          link: "/trade/coin_trade"
         },
         {
           label: "C2C",
@@ -78,7 +78,7 @@ export default {
             normal: this.assetConfig.imgs.tab_3_default,
             active: this.assetConfig.imgs.tab_3_selected
           },
-          link: "/c2c"
+          link: "/trade/c2c_trade"
         },
         {
           label: "OTC",
@@ -86,7 +86,7 @@ export default {
             normal: this.assetConfig.imgs.tab_4_default,
             active: this.assetConfig.imgs.tab_4_selected
           },
-          link: "/otc"
+          link: "/trade/otc_trade"
         },
         {
           label: "资产",

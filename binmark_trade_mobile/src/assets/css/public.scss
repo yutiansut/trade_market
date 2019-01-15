@@ -45,6 +45,16 @@
 .van-nav-bar .van-icon {
   color: inherit;
 }
+.van-tab,
+.van-tag--large {
+  font-size: 1.25rem;
+}
+.van-tab {
+  font-weight: bold;
+}
+.van-tab--active {
+  color: $color-danger;
+}
 
 .van-field {
   padding: 1rem 0;
