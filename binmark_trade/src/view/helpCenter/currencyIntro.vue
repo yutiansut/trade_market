@@ -171,14 +171,12 @@ export default {
     }
   }
   dl {
+    line-height: 1.8;
     dt {
       font-size: $font-large;
       padding-bottom: 14px;
       border-bottom: $default-border;
       margin-top: 40px;
-    }
-    dd {
-      line-height: 1.8;
     }
   }
   .properties {

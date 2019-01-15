@@ -88,12 +88,13 @@ export default {};
 .main-container {
   width: $content-width;
   margin: 0 auto;
+  line-height: 1.5;
   .l_content {
     border-radius: 3px;
     overflow: hidden;
     padding: 30px;
     background: #f1f1f1;
-    line-height: 1.8;
+     line-height: 2;
   }
   .paragraph {
     display: block;

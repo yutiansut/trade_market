@@ -33,7 +33,7 @@
         >
         </span>
       </span>
-      <div
+      <!-- <div
         ref='dropDown'
         class="drop-down p-rel"
       >
@@ -54,14 +54,13 @@
           >
           </li>
         </ul>
-      </div>
+      </div> -->
       <div
         ref='dropDown'
         class="drop-down p-rel"
       >
         <span>
           <i class="iconfont icon-yonghu fl"></i>
-          <em class="level">vip{{userData.viplevel}}&nbsp;</em>
           <em v-text="userData.member"></em>
           <i class="iconfont icon-xiala fr"></i>
         </span>
@@ -157,22 +156,9 @@ export default {
       ],
       userDropDown: [
         {
-          label: "安全中心",
-          i18nKey: "securityCenter",
-          link: "/account/security",
-          icon: ""
-        },
-        {
-          label: "身份认证",
-          i18nKey: "identify",
-          link: "/account/identify",
-          icon: ""
-        },
-        {
-          i18nKey: "label111",
-          label: "提交工单",
-          link: "/account/work_order",
-          icon: ""
+          label: "个人中心",
+          i18nKey: "label176",
+          link: "/my"
         }
       ],
       member: "",

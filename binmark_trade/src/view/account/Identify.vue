@@ -292,7 +292,7 @@ export default {
               showClose: false,
               confirmButtonText: "返回首页"
             }).then(() => {
-              this.navigateTo("/account/security");
+              this.navigateTo("/");
             });
           }
         } else {
