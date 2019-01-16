@@ -147,8 +147,7 @@ export default {
           return false;
         }
         this.successMsg(res.msg || "添加成功");
-        let obj = Object.assign({}, this.formData);
-        this.addrList.unshift(obj);
+        this.getMyAddress();
         return Promise.resolve();
       });
     },
