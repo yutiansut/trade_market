@@ -217,6 +217,7 @@
     <charge-box
       :showCharge='showChargeDialog'
       @closeModel='dialogClose(1)'
+      :coin='coinInfo.name'
       :chargeAddress='chargeAddress'
     >
     </charge-box>

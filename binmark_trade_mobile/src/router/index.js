@@ -16,6 +16,11 @@ const newsDetail = r => require(["@/view/news/newsDetail"], r);
 const coinTrade = r => require(["@/view/trade/coinTrade"], r);
 const entrustDetail = r => require(["@/view/trade/entrustDetail"], r);
 const c2cTrade = r => require(["@/view/trade/c2cTrade"], r);
+const c2cTradeConfirm = r => require(["@/view/trade/c2cTradeConfirm"], r);
+const c2cMatch = r => require(["@/view/trade/c2cMatch"], r);
+const orderDetail = r => require(["@/view/trade/orderDetail"], r);
+const otcTrade = r => require(["@/view/trade/otcTrade"], r);
+const tradeStatement = r => require(["@/view/trade/tradeStatement"], r);
 const routes = [
   {
     path: "/",
@@ -45,6 +50,14 @@ const routes = [
         component: c2cTrade,
         meta: {
           title: "c2c交易"
+        }
+      },
+      {
+        path: "/trade/otc_trade",
+        name: 'otcTrade',
+        component: otcTrade,
+        meta: {
+          title: "OTC交易"
         }
       },
     ]
@@ -110,7 +123,6 @@ const routes = [
       }
     ]
   },
-
   {
     path: "/trade/entrust_detail",
     name: "entrustDetail",
@@ -118,6 +130,35 @@ const routes = [
     meta: {
       title: "委托详情"
     }
-  }
+  },
+  {
+    path: "/trade/trade_confirm",
+    name: "c2cTradeConfirm",
+    component: c2cTradeConfirm
+  },
+  {
+    path: "/trade/c2c_match",
+    name: "c2cMatch",
+    component: c2cMatch,
+    meta: {
+      title: "最近匹配订单"
+    }
+  },
+  {
+    path: "/trade/order_detail",
+    name: "orderDetail",
+    component: orderDetail,
+    meta: {
+      title: "订单详情"
+    }
+  },
+  {
+    path: "/trade/tradeStatement",
+    name: "tradeStatement",
+    component: tradeStatement,
+    meta: {
+      title: "交易须知"
+    }
+  },
 ];
 export default new Router({ routes });

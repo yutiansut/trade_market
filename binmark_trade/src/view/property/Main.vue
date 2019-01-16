@@ -38,12 +38,10 @@ export default {
   font-weight: bold;
   a::before {
     position: relative;
-    top: 2px;
     display: inline-block;
     margin: 0 5px;
     content: "/";
     color: #333 !important;
-    font-size: 20px;
   }
   a:first-child::before {
     content: "";

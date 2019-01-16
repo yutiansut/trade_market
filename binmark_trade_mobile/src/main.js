@@ -21,7 +21,8 @@ import {
   Icon,
   Tag,
   Tab,
-  Tabs
+  Tabs,
+  Actionsheet
 } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
@@ -36,6 +37,7 @@ Vue.use(Tabbar)
   .use(Tab)
   .use(Tabs)
   .use(NoticeBar)
+  .use(Actionsheet)
 /**
  * 引入全局组件
  */

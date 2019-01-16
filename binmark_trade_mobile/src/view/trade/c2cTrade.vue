@@ -7,6 +7,7 @@
         class="coin font-16 abs-vh-center"
       >USDT</div>
       <div
+        @click.self="actionTrigger"
         slot="right"
         class="font-14 h-35 flex flex-v-center color-999"
       >选择币种</div>
@@ -103,7 +104,7 @@
             <dl class="order">
               <dt class="font-bold flex flex-between">
                 <span class="font-16">你是YY</span>
-                <span class="status color-danger">进行中</span>
+                <span class="status color-666">已完成</span>
               </dt>
               <dd class="flex flex-between">
                 <div>
@@ -176,6 +177,12 @@
         </div>
       </div>
     </div>
+    <!-- 币种上拉菜单 -->
+    <van-actionsheet
+      v-model="showActionSheet"
+      :actions="tradeCoins"
+      @select="onSelect"
+    />
   </div>
 </template>
 <script>
@@ -184,10 +191,28 @@ export default {
   components: { appHeader },
   data() {
     return {
+      showActionSheet: false,
+      tradeCoins: [
+        {
+          name: "USDT"
+        },
+        {
+          name: "BTH"
+        }
+      ],
+      tradecoinid: "",
       active: 2,
       price: "",
       number: ""
     };
+  },
+  methods: {
+    actionTrigger() {
+      this.showActionSheet = true;
+    },
+    onSelect(item) {
+      this.showActionSheet = false;
+    }
   }
 };
 </script>
