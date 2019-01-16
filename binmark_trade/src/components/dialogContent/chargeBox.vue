@@ -32,9 +32,9 @@
       </div>
       <div class="warning color-666">
         <template v-if="$i18n.locale=='en-US'">
-          Please send the number of {{coin}} you need to recharge to this address via the ETH client or online wallet. After the transmission is completed, the system will automatically recharge the virtual currency to your account on the site after 12 confirmations. 12 confirmations take about 0.5 to 1 hour, please be patient. The same address can be recharged multiple times without affecting the account. The minimum recharge amount is 0.0001.
+          Please send the number of {{coin}} you need to recharge to this address via the {{coin}} client or online wallet. After the transmission is completed, the system will automatically recharge the virtual currency to your account on the site after 12 confirmations. 12 confirmations take about 0.5 to 1 hour, please be patient. The same address can be recharged multiple times without affecting the account. The minimum recharge amount is 0.0001.
         </template>
-        <template v-if="$i18n.locale=='zh-CN'">请通过 {{coin}} 客户端或在线钱包将您需要充值的ETH数目发送到该地址。
+        <template v-if="$i18n.locale=='zh-CN'">请通过 {{coin}} 客户端或在线钱包将您需要充值的{{coin}}数目发送到该地址。
           发送完成后，系统会自动在此交易获得 12 个确认后将该笔虚拟币充值到您在本站的账户，12 个确认需要大约 0.5 到 1 小时时间，请耐心等待。
           同一个地址可多次充值，不影响到账。最小充值金额0.0001。</template>
       </div>

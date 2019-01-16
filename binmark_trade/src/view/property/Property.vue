@@ -123,10 +123,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <div class="tips font-12 color-999">
+        <!-- <div class="tips font-12 color-999">
           <template v-if="$i18n.locale=='zh-CN'">USDT提现地址支持比特币BTC和以太坊ETH ERC20格式</template>
           <template v-if="$i18n.locale=='en-US'">USDT address supports BTC formated address and ETH ERC200 formated address</template>
-        </div>
+        </div> -->
         <el-form-item :label='$t("addressName")||"地址名称"'>
           <el-input
             v-model="addressName"
@@ -134,12 +134,12 @@
           >
           </el-input>
         </el-form-item>
-        <div class="tips font-12 color-999">
+        <!-- <div class="tips font-12 color-999">
           <template v-if="$i18n.locale=='zh-CN'">提现成功后，系统会记住您的提现地址，以便下次使用，填写“地址名称”可便于您分辨钱包地址</template>
           <template v-if="$i18n.locale=='en-US'">After the withdrawal is done, the system will save your withdrawal address for the next time,
             fill in 'address name' will help you distinguish wallet addresses better.
           </template>
-        </div>
+        </div> -->
         <el-form-item :label='$t("withdrawAmount")||"提现数额（币数）"'>
           <el-input
             v-model="formData.number"
@@ -565,6 +565,7 @@ export default {
   }
   .tips {
     margin-top: 5px;
+    line-height: 1.5;
   }
   button {
     margin-top: 15px;
