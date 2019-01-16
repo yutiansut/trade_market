@@ -94,7 +94,7 @@ export default {
             normal: this.assetConfig.imgs.tab_5_default,
             active: this.assetConfig.imgs.tab_5_selected
           },
-          link: "/asset"
+          link: "/user/property"
         }
       ]
     };

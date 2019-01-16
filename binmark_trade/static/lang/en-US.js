@@ -395,6 +395,7 @@ module.exports = {
     label176: "User center",
     label177: "Total asset",
     label178: "VIP",
+    label179: "Price(RMB)",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",

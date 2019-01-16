@@ -2,15 +2,15 @@ import myStorage from './myStorage';
 // 添加自选
 function addCustomList(data) {
     let customList = myStorage.get("customList");
-    if (customList && customList[0]) {
-        customList.map(item => {
+    if (customList && customList.length > 0) {
+        customList.map((item, i) => {
             if (
-                item.coinid != data.coinid ||
-                item.maincoinid != data.maincoinid
+                item.coinid == data.coinid
             ) {
-                customList.push(data);
+                customList.splice(i, 1);
             }
         });
+        customList.push(data);
     } else {
         customList = [];
         customList.push(data);
@@ -45,7 +45,8 @@ function matchCustomList(rawData) {
                     dItem.coinid == cItem.coinid &&
                     dItem.maincoinid == cItem.maincoinid
                 ) {
-                    rawData[j] = customList[i];
+
+                    rawData[j].isMyLike = true;
                 }
             });
         });

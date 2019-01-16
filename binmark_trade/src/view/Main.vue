@@ -38,13 +38,14 @@
             suffix-icon="el-icon-search"
           >
           </el-input>
+          <!-- 选项卡 -->
           <ul class="tab-card">
             <li
               class="p-rel"
               v-for="(item,i) in mainCoinModel.maincoin"
               :key="item.id"
               :class="currentCoinId==item.coinid?'active':''"
-              @click="onTabChange($event,i,item.coinid)"
+              @click="onTabChange($event,i,item)"
             >
               {{item.coinid}}&nbsp;{{$t('trade')}}
               <!-- <span v-if='i<mainCoinModel.maincoin.length-1' class="dot abs-v-center"></span> -->
@@ -60,11 +61,12 @@
         </div>
         <el-table
           style="width:100%;font-size:16px;border-top:1px solid #eee;"
+          :fit='true'
           :data='tableData'
           v-loading='loading'
         >
           <el-table-column
-            width='200'
+            width='180'
             class-name='el-tab-col-1'
             :label="$t('currencyPair')||'货币对'"
           >
@@ -84,7 +86,7 @@
             </div>
           </el-table-column>
           <el-table-column
-            width='150'
+            width='80'
             :label="$t('status')||'状态'"
           >
             <span
@@ -94,8 +96,14 @@
             >
             </span>
           </el-table-column>
-          <el-table-column :label="$t('price')||'价格'">
-            <template slot-scope="scope">{{scope.row.prise*1}}</template>
+          <el-table-column
+            width='150'
+            :label="$t('price')||'价格'"
+          >
+            <template slot-scope="scope">{{scope.row.prise*1}}&nbsp;{{currentMainCoin.icon}}</template>
+          </el-table-column>
+          <el-table-column :label="$t('label179')">
+            <template slot-scope="scope">≈&nbsp;{{scope.row.cny*1}}</template>
           </el-table-column>
           <el-table-column :label="'24H '+$t('highestPrice')||'最高价'">
             <template slot-scope="scope">{{scope.row.height*1}}</template>
@@ -106,7 +114,6 @@
           <el-table-column :label="'24H '+$t('volumn')||'成交量'">
             <template slot-scope="scope">{{scope.row.number*1}}</template>
           </el-table-column>
-          <!-- <el-table-column :label="$t('priceTrends')+'（3'+$t('day')+'）'"></el-table-column> -->
           <el-table-column
             :label="($t('priceChange')||'涨跌')+'（'+($t('day')||'日')+'）'"
             width='120px;'
@@ -119,7 +126,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column width='150'>
+          <el-table-column width='100'>
             <div
               class="btn-container flex flex-between"
               slot-scope="scope"
@@ -130,12 +137,12 @@
                 class="trade-btn btn-small btn-danger btn-hover"
               >
               </button>
-              <button
+              <!-- <button
                 v-text="$t('label133')"
                 @click="goTrade('/kline_trade',scope.row)"
                 class="trade-btn btn-small btn-success btn-hover"
               >
-              </button>
+              </button> -->
             </div>
           </el-table-column>
           <el-table-column
@@ -186,6 +193,7 @@ export default {
         s_0: "禁用",
         s_1: "可用"
       },
+      currentMainCoin: "",
       searchVal: "",
       tableData: [],
       rawData: [],
@@ -203,11 +211,14 @@ export default {
     if (mainCoinModel.coinid) {
       this.getTradCoin(mainCoinModel.coinid);
       this.currentCoinId = mainCoinModel.coinid;
+      this.currentMainCoin = mainCoinModel.maincoin[0];
       return;
     }
     this.$bus.on("mainCoinLoad", coin => {
       this.currentCoinId = coin;
       this.getTradCoin(coin);
+      this.currentMainCoin = mainCoinModel.maincoin[0];
+      console.log(this.currentMainCoin);
     });
   },
   beforeDestroy() {
@@ -244,10 +255,12 @@ export default {
         }
       }
     },
-    onTabChange(e, index, coinid) {
-      if (coinid == this.currentCoinId) return;
-      this.currentCoinId = coinid;
-      this.getTradCoin(coinid);
+    onTabChange(e, index, item) {
+      console.log(item);
+      if (item.coinid == this.currentCoinId) return;
+      this.currentCoinId = item.coinid;
+      this.currentMainCoin = item;
+      this.getTradCoin(item.coinid);
     },
     // 获取所有币种列表
     getAllCoin() {
@@ -276,8 +289,13 @@ export default {
         console.log(`交易币种:${JSON.stringify(res)}`);
         this.loading = false;
         if (res && res.code != "0") return this.getDataFaild(res.msg);
-        if (res.data && res.data.list && res.data.list[0]) {
+        if (res.data && res.data.list) {
           this.tableData = matchCustomList(res.data.list);
+          this.tableData.map(item => {
+            if (item.prise && this.currentMainCoin.cny) {
+              item.cny = (item.prise * this.currentMainCoin.cny).toFixed(6);
+            }
+          });
           this.rawData = res.data.list.slice(0);
         }
       });
@@ -356,7 +374,7 @@ span.status_1 {
   color: #999;
 }
 .content {
-  width: $content-width;
+  width: 70%;
   @include hCenter;
   .option {
     text-align: center;

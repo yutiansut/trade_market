@@ -21,6 +21,7 @@ const c2cMatch = r => require(["@/view/trade/c2cMatch"], r);
 const orderDetail = r => require(["@/view/trade/orderDetail"], r);
 const otcTrade = r => require(["@/view/trade/otcTrade"], r);
 const tradeStatement = r => require(["@/view/trade/tradeStatement"], r);
+const Property = r => require(["@/view/myproperty/Property"], r);
 const routes = [
   {
     path: "/",
@@ -58,6 +59,14 @@ const routes = [
         component: otcTrade,
         meta: {
           title: "OTC交易"
+        }
+      },
+      {
+        path: "/user/property",
+        name: 'Property',
+        component: Property,
+        meta: {
+          title: "我的资产"
         }
       },
     ]

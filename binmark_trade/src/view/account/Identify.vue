@@ -290,9 +290,9 @@ export default {
           if (this.bindState.idcardstate >= 2) {
             this.$alert(this.$t("label152"), this.$t("label140"), {
               showClose: false,
-              confirmButtonText: "返回首页"
+              confirmButtonText: "返回个人中心"
             }).then(() => {
-              this.navigateTo("/");
+              this.navigateTo("/my/order_detail");
             });
           }
         } else {

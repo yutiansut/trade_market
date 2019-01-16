@@ -47,10 +47,11 @@
             {{scope.row.usable*1}}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="islock"
-          :label="$t('marketMoney')||'挂单金额'"
-        ></el-table-column>
+        <el-table-column :label="$t('marketMoney')||'挂单金额'">
+          <span slot-scope="scope">
+            {{scope.row.disable*1}}
+          </span>
+        </el-table-column>
         <el-table-column :label="$t('total')||'累计'">
           <template slot-scope='scope'>
             {{scope.row.allnumber*1}}
