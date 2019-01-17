@@ -45,7 +45,7 @@
         </van-row>
       </div>
     </div>
-    <button class="confirm-btn btn-block btn-active btn-large btn-primary">确定下单</button>
+    <button class="confirm-btn btn-block riple btn-large btn-primary">确定下单</button>
   </div>
 </template>
 <script>

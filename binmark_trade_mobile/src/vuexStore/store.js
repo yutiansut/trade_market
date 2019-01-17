@@ -15,15 +15,11 @@ export default new Vuex.Store({
       title: "新闻标题",
       content: "呢日用就购I爱干净偶尔加盖",
       date: '2018/8/8'
-    }, {
-      id: '2',
-      title: "新闻标题",
-      content: "呢日用就购I爱干净偶尔加盖",
-      date: '2018/8/8'
     }],
     maincoinid: "",
     tradecoinid: "",
-    coinInfo: {}
+    coinInfo: {},
+    coinPropertyInfo: {}
   },
   mutations: {
     loginState(state) {
@@ -50,6 +46,18 @@ export default new Vuex.Store({
     },
     updateNewsList(state, arr) {
       state.newsList = arr;
+    },
+    updateMainCoinid(state, val) {
+      state.maincoinid = val;
+    },
+    updateTradeCoinid(state, val) {
+      state.tradecoinid = val;
+    },
+    setCoinInfo(state, obj) {
+      state.coinInfo = obj;
+    },
+    setCoinPropertyInfo(state, obj) {
+      state.coinPropertyInfo = obj;
     }
   },
   actions: {

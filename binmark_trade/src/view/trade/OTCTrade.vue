@@ -189,8 +189,9 @@
                 <span
                   @click="showOrderDetail(scope.row)"
                   :class="scope.row.state=='0'?'color-danger':'color-success'"
-                  v-text="scope.row.state=='0'?'待付款':'已完成'"
+                  v-text="scope.row.state=='0'?'确认中':scope.row.state=='1'?'完成':'被驳回'"
                 ></span>
+
               </template>
             </el-table-column>
           </el-table>
@@ -282,7 +283,7 @@
           <span
             class="span-rt"
             :class="orderStatus=='0'?'color-danger':'color-success'"
-            v-text="orderStatus==0?$t('label128'):$t('completed')"
+            v-text="orderStatus=='0'?'确认中':orderStatus=='1'?'完成':'被驳回'"
           >
           </span>
         </div>
@@ -524,9 +525,15 @@ export default {
         coin: this.coinInfo.coinid,
         number: this.sellForm.number,
         total: this.sellTotal
-      }).catch(err => {
-        console.log(res.msg);
-      });
+      })
+        .then(res => {
+          this.showDialog = true;
+          this.bankInfo.amount = this.sellTotal;
+          this.myBalance = this.myBalance - this.sellForm.amount;
+        })
+        .catch(err => {
+          console.log(res.msg);
+        });
     },
     // 买入操作
     buyHandle() {

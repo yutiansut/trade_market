@@ -22,6 +22,11 @@ const orderDetail = r => require(["@/view/trade/orderDetail"], r);
 const otcTrade = r => require(["@/view/trade/otcTrade"], r);
 const tradeStatement = r => require(["@/view/trade/tradeStatement"], r);
 const Property = r => require(["@/view/myproperty/Property"], r);
+const propertyDetail = r => require(["@/view/myproperty/PropertyDetail"], r);
+const Recharge = r => require(["@/view/myproperty/Recharge"], r);
+const WithDraw = r => require(["@/view/myproperty/WithDraw"], r);
+const PropertyRecord = r => require(["@/view/myproperty/PropertyRecord"], r);
+const DetailRecord = r => require(["@/view/myproperty/DetailRecord"], r)
 const routes = [
   {
     path: "/",
@@ -62,7 +67,7 @@ const routes = [
         }
       },
       {
-        path: "/user/property",
+        path: "/property",
         name: 'Property',
         component: Property,
         meta: {
@@ -169,5 +174,45 @@ const routes = [
       title: "交易须知"
     }
   },
+  {
+    path: "/property/property_detail",
+    name: "propertyDetail",
+    component: propertyDetail,
+    meta: {
+      title: "币种账户"
+    }
+  },
+  {
+    path: "/property/recharge",
+    name: "Recharge",
+    component: Recharge,
+    meta: {
+      title: "充值"
+    }
+  },
+  {
+    path: "/property/withdraw",
+    name: "WithDraw",
+    component: WithDraw,
+    meta: {
+      title: "提现"
+    }
+  },
+  {
+    path: "/property/record",
+    name: "PropertyRecord",
+    component: PropertyRecord,
+    meta: {
+      title: "账户记录"
+    }
+  },
+  {
+    path: "/property/detail_record",
+    name: "DetailRecord",
+    component: DetailRecord,
+    meta: {
+      title: "记录详情"
+    }
+  }
 ];
 export default new Router({ routes });

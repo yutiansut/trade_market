@@ -19,7 +19,7 @@
       <div
         @click="navigateTo('/trade/tradeStatement')"
         slot="right"
-        class="font-14 h-35 flex flex-v-center color-999"
+        class="font-14 h-35 riple flex flex-v-center color-999"
       >交易须知</div>
     </app-header>
     <div class="content overflow-y">
@@ -46,7 +46,7 @@
               <div class="label">CNY</div>
             </div>
             <p class="tips color-danger">*&nbsp;仅支持银行卡支付，支付期限不限</p>
-            <button class="btn-block btn-large btn-block btn-danger">买入</button>
+            <button class="btn-block btn-large riple btn-block btn-danger">买入</button>
           </div>
         </van-tab>
         <!-- 卖出 -->
@@ -68,7 +68,7 @@
               <div class="label">CNY</div>
             </div>
             <p class="tips color-danger">*&nbsp;仅支持银行卡支付，支付期限不限</p>
-            <button class="btn-block btn-large btn-block btn-success">卖出</button>
+            <button class="btn-block btn-large riple btn-block btn-success">卖出</button>
           </div>
         </van-tab>
         <!-- 我的订单 -->
@@ -106,7 +106,7 @@
   </div>
 </template>
 <script>
-import appHeader from "@/components/header/appHeader";
+import appHeader from "@/components/header/AppHeader";
 export default {
   components: { appHeader },
   data() {

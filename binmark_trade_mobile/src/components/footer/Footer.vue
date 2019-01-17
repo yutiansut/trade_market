@@ -7,6 +7,7 @@
       v-model="active"
     >
       <van-tabbar-item
+        class="riple"
         v-for="(item,i) in tabConfig"
         :key="i"
         :to='item.link'
@@ -16,11 +17,6 @@
             class="icon"
             :style="{backgroundImage:'url('+(active==i?item.icon.active:item.icon.normal)+')'}"
           ></div>
-          <!-- <div
-          v-show="active!=i"
-          class="icon"
-          :style="{backgroundImage:'url('+item.icon.normal+')'}"
-        ></div> -->
           <span
             :class="active==i?'active':'color-999'"
             v-text="item.label"
@@ -94,7 +90,7 @@ export default {
             normal: this.assetConfig.imgs.tab_5_default,
             active: this.assetConfig.imgs.tab_5_selected
           },
-          link: "/user/property"
+          link: "/property"
         }
       ]
     };

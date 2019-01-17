@@ -24,7 +24,7 @@
       />
       <button
         :disabled='disabled'
-        class="btn-block btn-primary btn-large btn-default btn-active"
+        class="btn-block btn-primary btn-large btn-default riple"
       >登录</button>
       <p class="login-links color-999 font-14 flex flex-between">
         <router-link to=''>忘记密码</router-link>

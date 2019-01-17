@@ -49,7 +49,7 @@
       v-model="recommender"
       placeholder="推荐人ID（选填）"
     />
-    <button class="btn-submit btn-block btn-primary btn-large btn-default btn-active">下一步</button>
+    <button class="btn-submit btn-block btn-primary btn-large btn-default riple">下一步</button>
   </form>
 </template>
 <script>

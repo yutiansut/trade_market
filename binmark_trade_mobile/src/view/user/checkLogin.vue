@@ -38,7 +38,7 @@
       <div class="van-hairline--bottom"></div>
       <button
         :disabled='disabled'
-        class="btn-block btn-danger btn-large btn-default btn-active"
+        class="btn-block btn-danger btn-large btn-default riple"
       >确认</button>
     </form>
   </div>

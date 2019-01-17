@@ -35,7 +35,7 @@
               >
               <div class="label">USDT</div>
             </div>
-            <button class="btn-block btn-large btn-block btn-danger">买入</button>
+            <button class="btn-block btn-large riple btn-block btn-danger">买入</button>
           </div>
         </van-tab>
         <!-- 卖出 -->
@@ -56,7 +56,7 @@
               >
               <div class="label">USDT</div>
             </div>
-            <button class="btn-block btn-large btn-block btn-success">卖出</button>
+            <button class="btn-block btn-large riple btn-block btn-success">卖出</button>
           </div>
         </van-tab>
         <!-- 我的订单 -->
@@ -138,6 +138,7 @@
           </div>
         </van-tab>
       </van-tabs>
+      <!-- 市场挂单 -->
       <div
         v-show="active<=1"
         class="market-list"
@@ -171,7 +172,7 @@
               class="flex col-last"
               span='6'
             >
-              <button class="btn-rounded btn-danger btn-active thumb-40 font-14">买入</button>
+              <button class="btn-rounded btn-danger riple thumb-40 font-14">买入</button>
             </van-col>
           </van-row>
         </div>
@@ -186,7 +187,7 @@
   </div>
 </template>
 <script>
-import appHeader from "@/components/header/appHeader";
+import appHeader from "@/components/header/AppHeader";
 export default {
   components: { appHeader },
   data() {

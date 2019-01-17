@@ -8,6 +8,9 @@ import 'swiper/dist/css/swiper.css'
  */
 import Store from "@/vuexStore/store";
 import router from "@/router/index";
+import VueClipboard from 'vue-clipboard2';
+VueClipboard.config.autoSetContainer = true; // add this line
+Vue.use(VueClipboard)
 import {
   Tabbar,
   TabbarItem,
@@ -22,6 +25,7 @@ import {
   Tag,
   Tab,
   Tabs,
+  Toast,
   Actionsheet
 } from "vant";
 Vue.use(Tabbar)
@@ -38,6 +42,7 @@ Vue.use(Tabbar)
   .use(Tabs)
   .use(NoticeBar)
   .use(Actionsheet)
+  .use(Toast)
 /**
  * 引入全局组件
  */

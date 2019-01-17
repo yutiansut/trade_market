@@ -103,7 +103,7 @@
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import slidePop from "@/components/other/slidePop";
-import appHeader from "@/components/header/appHeader";
+import appHeader from "@/components/header/AppHeader";
 import userAside from "@/components/slideContent/UserAside";
 export default {
   components: { swiper, swiperSlide, slidePop, appHeader, userAside },

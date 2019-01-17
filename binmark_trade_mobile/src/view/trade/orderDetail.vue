@@ -46,7 +46,7 @@
       </dl>
     </div>
     <button
-      class="confirm-btn btn-block btn-active btn-large btn-primary"
+      class="confirm-btn btn-block riple btn-large btn-primary"
       v-text="btnText"
     ></button>
   </div>

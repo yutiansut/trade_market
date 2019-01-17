@@ -75,11 +75,11 @@
           </div>
           <button
             v-show="type==0"
-            class="btn-large btn-block btn-active btn-danger"
+            class="btn-large btn-block riple btn-danger"
           >买入</button>
           <button
             v-show="type==1"
-            class="btn-large btn-block btn-active btn-success"
+            class="btn-large btn-block riple btn-success"
           >卖出</button>
         </form>
       </div>
@@ -196,7 +196,7 @@
 
 </template>
 <script>
-import appHeader from "@/components/header/appHeader";
+import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import tradeAside from "@/components/slideContent/TradeAside";
 export default {

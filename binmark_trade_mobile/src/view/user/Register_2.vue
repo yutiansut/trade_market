@@ -12,7 +12,7 @@
       v-model="repassword"
       placeholder="请再次输入密码"
     />
-    <button class="btn-submit btn-block btn-primary btn-large btn-default btn-active">注册</button>
+    <button class="btn-submit btn-block btn-primary btn-large btn-default riple">注册</button>
   </form>
 </template>
 <script>

@@ -63,7 +63,7 @@
       <div class="van-hairline--bottom"></div>
       <button
         :disabled='disabled'
-        class="btn-submit btn-block btn-primary btn-large btn-default btn-active"
+        class="btn-submit btn-block btn-primary btn-large btn-default riple"
       >重置</button>
     </form>
   </div>

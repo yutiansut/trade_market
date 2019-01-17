@@ -49,7 +49,7 @@
           <div class="mobile-code-wrap p-rel">
             <el-input
               v-model="formData.code"
-              name='code'
+              autocomplete='off'
               :placeholder='veriType=="0"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
               :disabled="myCode?false:true"
             >
@@ -63,7 +63,7 @@
         </el-form-item>
         <el-form-item label='登录密码'>
           <el-input
-            name='password'
+            autocomplete='off'
             type='password'
             placeholder='请输入密码'
             v-model="formData.password"
@@ -74,7 +74,7 @@
         <el-form-item label='图形验证码'>
           <div class="code-wrap flex flex-between">
             <el-input
-              name='verCode'
+              autocomplete='off'
               placeholder='请输入验证码'
               v-model="formData.verCode"
               @blur="validate(formData.verCode,'verCode')"
