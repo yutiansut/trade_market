@@ -1,64 +1,92 @@
 <template>
-    <div class="content">
-        <div class="add-addr">
-            <el-form 
-                :inline='true'
-                label-position='top'
-                :model='formData'
-                @submit.native.prevent>
-                <div class="flex flex-between">
-                  <el-form-item :label='$t("currencyType")||"币种"' >
-                      <el-select name='currency' v-model='formData.coin'>
-                          <el-option v-for="item in mainCoin.maincoin" 
-                            :key='item.value' :label='item.coinid' :value="item.coinid">
-                          </el-option>
-                      </el-select>
-                  </el-form-item>
-                  <el-form-item :label='$t("withdrawAddress")||"提币地址"'>
-                      <el-input name='address' v-model="formData.address"></el-input>
-                  </el-form-item>
-                  <el-form-item :label='$t("note")||"备注"'>
-                      <el-input name='note' v-model="formData.title"></el-input>
-                  </el-form-item>
-                </div>
-                <button
-                  class="btn btn-block btn-large btn-danger btn-active"
-                  v-text="$t('add')||'添加'"
-                  @click="addMyAddress(formData)">
-                </button>
-            </el-form>
+  <div class="content">
+    <div class="add-addr">
+      <el-form
+        :inline='true'
+        label-position='top'
+        :model='formData'
+        @submit.native.prevent
+      >
+        <div class="flex flex-between">
+          <el-form-item :label='$t("currencyType")||"币种"'>
+            <el-select
+              name='currency'
+              v-model='formData.coin'
+            >
+              <el-option
+                v-for="item in allCoin"
+                :key='item.value'
+                :label='item.coin'
+                :value="item.coin"
+              >
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label='$t("withdrawAddress")||"提币地址"'>
+            <el-input
+              name='address'
+              v-model="formData.address"
+            ></el-input>
+          </el-form-item>
+          <el-form-item :label='$t("note")||"备注"'>
+            <el-input
+              name='note'
+              v-model="formData.title"
+            ></el-input>
+          </el-form-item>
         </div>
-        <div class="table-panel">
-            <div class="panel-head" v-text="$t('addressList')||'地址列表'"></div>
-            <el-table
-                v-loading='showLoading'
-                :data='addrList' 
-                :header-cell-style='changeStyle'>
-                <el-table-column :label="$t('currencyType')||'币种'">
-                  <template slot-scope="scope">
-                    {{scope.row.coin||scope.row.coinid}}
-                  </template>
-                </el-table-column>
-                <el-table-column prop='address' :label="$t('withdrawAddress')||'提币地址'"></el-table-column>
-                <el-table-column prop='title' :label="$t('note')||'备注'"></el-table-column>
-                <el-table-column width='150'
-                    :label="$t('operation')||'操作'">
-                    <div class="operation color-danger txt-rt"
-                      @click="delAddr(scope.row.autoid,scope.$index)"
-                      slot-scope="scope"
-                      v-text="$t('delete')||'删除'">
-                    </div>
-                </el-table-column>
-            </el-table>
-        </div>
+        <button
+          class="btn btn-block btn-large btn-danger btn-active"
+          v-text="$t('add')||'添加'"
+          @click="addMyAddress(formData)"
+        >
+        </button>
+      </el-form>
     </div>
+    <div class="table-panel">
+      <div
+        class="panel-head"
+        v-text="$t('addressList')||'地址列表'"
+      ></div>
+      <el-table
+        v-loading='showLoading'
+        :data='addrList'
+        :header-cell-style='changeStyle'
+      >
+        <el-table-column :label="$t('currencyType')||'币种'">
+          <template slot-scope="scope">
+            {{scope.row.coin||scope.row.coinid}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop='address'
+          :label="$t('withdrawAddress')||'提币地址'"
+        ></el-table-column>
+        <el-table-column
+          prop='title'
+          :label="$t('note')||'备注'"
+        ></el-table-column>
+        <el-table-column
+          width='150'
+          :label="$t('operation')||'操作'"
+        >
+          <div
+            class="operation color-danger txt-rt"
+            @click="delAddr(scope.row.autoid,scope.$index)"
+            slot-scope="scope"
+            v-text="$t('delete')||'删除'"
+          >
+          </div>
+        </el-table-column>
+      </el-table>
+    </div>
+  </div>
 </template>
 <script>
-import mainCoinModel from "@/model/allCoinModel.js";
 export default {
   data() {
     return {
-      mainCoin: mainCoinModel,
+      allCoin: "",
       formData: {
         coin: "",
         address: "",
@@ -75,12 +103,22 @@ export default {
       path: this.$route.path
     };
     this.getMyAddress();
+    this.getallcoin();
   },
   beforeRouteLeave(to, from, next) {
     this.routeModel.assetsRoutes = null;
     next();
   },
   methods: {
+    getallcoin() {
+      this.request(this.api.allcoin).then(res => {
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return false;
+        }
+        res.data && res.data.list && (this.allCoin = res.data.list);
+      });
+    },
     changeStyle({ columnIndex }) {
       if (columnIndex == 3) {
         return "text-align:right;";
@@ -109,8 +147,7 @@ export default {
           return false;
         }
         this.successMsg(res.msg || "添加成功");
-        let obj = Object.assign({}, this.formData);
-        this.addrList.unshift(obj);
+        this.getMyAddress();
         return Promise.resolve();
       });
     },

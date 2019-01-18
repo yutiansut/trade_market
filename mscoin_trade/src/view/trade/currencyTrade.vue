@@ -1017,12 +1017,12 @@ $border: 1px solid #e5e5e5;
     padding: 0 8px;
     span {
       display: block;
-      flex: 2;
+      flex: 1.5;
       &:first-child {
         flex: 1;
       }
       &:last-child {
-        flex: 1;
+        flex: 1.5;
       }
     }
   }

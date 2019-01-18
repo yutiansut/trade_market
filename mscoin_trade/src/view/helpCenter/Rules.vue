@@ -29,7 +29,7 @@ export default {};
     color: #2f2f2f;
     word-break: break-word;
     word-break: break-all;
-    line-height: 1.5;
+    line-height: 2;
     b {
       display: block;
       margin: 15px 0;

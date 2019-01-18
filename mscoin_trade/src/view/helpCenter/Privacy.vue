@@ -94,6 +94,7 @@ export default {};
     overflow: hidden;
     padding: 30px;
     background: #f1f1f1;
+     line-height: 2;
   }
   .paragraph {
     display: block;

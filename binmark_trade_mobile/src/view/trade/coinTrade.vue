@@ -132,7 +132,7 @@
     <!-- 交易记录 -->
     <div class="trade-record">
       <van-tabs
-        color='#b72026'
+        color='#fe0042'
         line-width='30'
         v-model="tabActive"
       >

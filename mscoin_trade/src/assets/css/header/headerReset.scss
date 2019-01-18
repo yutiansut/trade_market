@@ -20,7 +20,7 @@
     .nav-item {
       &:hover,
       &.active {
-        background: $hover-bg-color;
+        background: $bg-dark;
         > a {
           color: $bg-white;
         }
@@ -31,9 +31,9 @@
     .sub-nav-item {
       &:hover,
       &:active {
-        background: $hover-bg-color;
+        background: $bg-white;
         a {
-          color: #fff;
+          color: $bg-dark;
         }
       }
     }

@@ -66,3 +66,11 @@ $color-primary: #ab1e24;
     color: $color-primary;
   }
 }
+.el-menu {
+  border-right: none;
+  .el-menu-item,
+  .el-submenu__title {
+    height: 46px;
+    line-height: 46px;
+  }
+}

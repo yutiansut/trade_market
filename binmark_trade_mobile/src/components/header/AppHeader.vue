@@ -29,6 +29,6 @@ export default {
 .app-header {
   height: 4.5rem;
   padding: 0 1.25rem;
-  background: #323742;
+  background: #323c46;
 }
 </style>

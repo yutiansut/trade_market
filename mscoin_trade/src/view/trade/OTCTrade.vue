@@ -187,9 +187,22 @@
             >
               <template slot-scope="scope">
                 <span
+                  v-if="scope.row.type==0&&scope.row.state==0"
                   @click="showOrderDetail(scope.row)"
-                  :class="scope.row.state=='0'?'color-danger':'color-success'"
-                  v-text="scope.row.state=='0'?'待付款':'已完成'"
+                  class="color-danger"
+                  v-text="$t('label128')"
+                ></span>
+                <span
+                  v-else-if="scope.row.type==1&&scope.row.state==0"
+                  @click="showOrderDetail(scope.row)"
+                  class="color-danger"
+                  v-text="$t('label180')"
+                ></span>
+                <span
+                  v-else
+                  @click="showOrderDetail(scope.row)"
+                  class="color-success"
+                  v-text="$t('completed')"
                 ></span>
               </template>
             </el-table-column>
@@ -282,7 +295,7 @@
           <span
             class="span-rt"
             :class="orderStatus=='0'?'color-danger':'color-success'"
-            v-text="orderStatus==0?$t('label128'):$t('completed')"
+            v-text="orderStatus=='0'?$t('label128'):$t('completed')"
           >
           </span>
         </div>
@@ -471,23 +484,16 @@ export default {
         this.errMsg("label120" || "请登录后操作");
         return false;
       }
-      // if (!this.canTrade) {
-      //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-      //     confirmButtonText: "去认证",
-      //     type: "warning"
-      //   }).then(() => {
-      //     this.navigateTo("/account/security");
-      //   });
-      //   return false;
-      // }
       return true;
     },
     // 获取订单备注
     showOrderDetail(data) {
-      this.orderStatus = data.state;
-      this.showDialog = true;
-      this.bankInfo.amount = data.zj;
-      this.getNote();
+      if (data.type == 0) {
+        this.orderStatus = data.state;
+        this.showDialog = true;
+        this.bankInfo.amount = data.zj;
+        this.getNote();
+      }
     },
     handleConfirm(api, param) {
       return this.request(api, {
@@ -524,9 +530,14 @@ export default {
         coin: this.coinInfo.coinid,
         number: this.sellForm.number,
         total: this.sellTotal
-      }).catch(err => {
-        console.log(res.msg);
-      });
+      })
+        .then(res => {
+          this.bankInfo.amount = this.sellTotal;
+          this.myBalance = this.myBalance - this.sellForm.number;
+        })
+        .catch(err => {
+          console.log(res.msg);
+        });
     },
     // 买入操作
     buyHandle() {

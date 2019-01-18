@@ -16,7 +16,7 @@
           <el-form-item :label='$t("label154")'>
             <el-input
               v-model="checkLoginData.account"
-              name='account'
+              autocomplete='off'
               :placeholder='$t("label162")'
             >
             </el-input>
@@ -24,8 +24,8 @@
           <el-form-item :label='$t("password")||"密码"'>
             <el-input
               v-model="checkLoginData.password"
-              name='password'
               type='password'
+              autocomplete='off'
               :placeholder='$t("pwdPlaceholder")||"请输入密码"'
               @blur="validate(checkLoginData.password,'password')"
             >
@@ -35,7 +35,6 @@
             <div class="code-wrap flex flex-between">
               <el-input
                 v-model="checkLoginData.verCode"
-                name='verCode'
                 :placeholder='$t("imgCodePlaceholder")||"请输入验证码"'
                 @blur="validate(checkLoginData.verCode,'verCode')"
               >

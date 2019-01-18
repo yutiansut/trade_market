@@ -47,10 +47,11 @@
             {{scope.row.usable*1}}
           </template>
         </el-table-column>
-        <el-table-column
-          prop="islock"
-          :label="$t('marketMoney')||'挂单金额'"
-        ></el-table-column>
+        <el-table-column :label="$t('marketMoney')||'挂单金额'">
+          <span slot-scope="scope">
+            {{scope.row.disable*1}}
+          </span>
+        </el-table-column>
         <el-table-column :label="$t('total')||'累计'">
           <template slot-scope='scope'>
             {{scope.row.allnumber*1}}
@@ -122,10 +123,10 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <div class="tips font-12 color-999">
+        <!-- <div class="tips font-12 color-999">
           <template v-if="$i18n.locale=='zh-CN'">USDT提现地址支持比特币BTC和以太坊ETH ERC20格式</template>
           <template v-if="$i18n.locale=='en-US'">USDT address supports BTC formated address and ETH ERC200 formated address</template>
-        </div>
+        </div> -->
         <el-form-item :label='$t("addressName")||"地址名称"'>
           <el-input
             v-model="addressName"
@@ -133,12 +134,12 @@
           >
           </el-input>
         </el-form-item>
-        <div class="tips font-12 color-999">
+        <!-- <div class="tips font-12 color-999">
           <template v-if="$i18n.locale=='zh-CN'">提现成功后，系统会记住您的提现地址，以便下次使用，填写“地址名称”可便于您分辨钱包地址</template>
           <template v-if="$i18n.locale=='en-US'">After the withdrawal is done, the system will save your withdrawal address for the next time,
             fill in 'address name' will help you distinguish wallet addresses better.
           </template>
-        </div>
+        </div> -->
         <el-form-item :label='$t("withdrawAmount")||"提现数额（币数）"'>
           <el-input
             v-model="formData.number"
@@ -149,13 +150,7 @@
           class="tips font-12 color-danger"
           v-html="commisionLabel"
         ></div>
-        <el-form-item :label='$t("fundPwd")||"资金密码"'>
-          <el-input
-            type='password'
-            v-model="formData.password"
-            :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'
-          ></el-input>
-        </el-form-item>
+
         <el-form-item :label="$t('label163')">
           <el-radio-group v-model="veriType">
             <el-radio
@@ -168,9 +163,18 @@
             >
               {{$t('label161')||'邮箱验证码'}}
             </el-radio>
+            <el-radio
+              label='2'
+              :disabled='bindGoogle?false:true'
+            >
+              {{$t('googleCode')||'谷歌验证码'}}
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label='veriType=="0"?$t("mobileCode"):$t("emailCode")'>
+        <el-form-item
+          v-if="veriType!='2'"
+          :label='veriType=="0"?$t("mobileCode"):$t("emailCode")'
+        >
           <div class="mobile-code-wrap p-rel">
             <el-input
               v-model="formData.code"
@@ -185,12 +189,21 @@
             >{{$t(this.codeTexti18n)}}{{second}}
             </div>
           </div>
-          <!-- <el-input v-model="formData.mobileCode" :placeholder='$t("mobileCodePlaceholder")||"请填写短信验证码"'></el-input> -->
         </el-form-item>
-        <el-form-item :label='$t("googleCode")||"谷歌验证码"'>
+        <el-form-item
+          v-else
+          :label='$t("googleCode")||"谷歌验证码"'
+        >
           <el-input
-            v-model="formData.google"
+            v-model="formData.code"
             :placeholder='$t("fillGoogleCode")||"请填写谷歌验证码"'
+          ></el-input>
+        </el-form-item>
+        <el-form-item :label='$t("fundPwd")||"资金密码"'>
+          <el-input
+            type='password'
+            v-model="formData.password"
+            :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'
           ></el-input>
         </el-form-item>
         <button
@@ -205,6 +218,7 @@
     <charge-box
       :showCharge='showChargeDialog'
       @closeModel='dialogClose(1)'
+      :coin='coinInfo.name'
       :chargeAddress='chargeAddress'
     >
     </charge-box>
@@ -230,17 +244,16 @@ export default {
         address: "",
         number: "",
         password: "",
-        code: "",
-        google: ""
+        code: ""
       },
       bindCellphone: false,
       bindEmail: false,
+      bindGoogle: false,
       errorLabel: {
-        address: "地址不能为空",
-        number: "数量不能为空",
-        password: "密码不能为空",
-        code: "手机验证码不能为空",
-        google: "谷歌验证码不能为空"
+        address: "label173",
+        number: "label174",
+        password: "label175",
+        code: "label172"
       },
       total: 0,
       codeTexti18n: "getMsgCode",
@@ -288,18 +301,35 @@ export default {
         return "text-align:right;";
       }
     },
+    initData() {
+      this.formData = {
+        address: "",
+        number: "",
+        password: "",
+        code: ""
+      };
+      this.getCodeTimes = 0;
+      this.canGetCode = true;
+      clearInterval(this.timer);
+      this.veriType = "0";
+      this.addressName = "";
+      this.codeTexti18n = "getMsgCode";
+    },
     getAccount() {
       this.showLoading = true;
       return this.request(this.api.getaccount, {
         search: null
       }).then(res => {
         console.log(`我的资产:${JSON.stringify(res)}`);
-        if (res && res.code != "0") return this.getDataFaild(res.code);
+        this.showLoading = false;
+        if (res && res.code != "0") {
+          this.getDataFaild(res.msg);
+          return;
+        }
         if (res.data && res.data.list) {
           this.myPropetyData = res.data.list;
           this.total = res.data.total;
           this.coinInfo = res.data.list[0];
-          this.showLoading = false;
         }
       });
     },
@@ -310,6 +340,7 @@ export default {
           this.bindState = res.data.list[0];
           this.bindCellphone = this.bindState.tel ? true : false;
           this.bindEmail = this.bindState.emailstate;
+          this.bindGoogle = this.bindState.googlestate;
           if (this.bindCellphone && !this.bindEmail) {
             this.veriType = "0";
           } else if (this.bindEmail && !this.bindCellphone) {
@@ -483,6 +514,7 @@ export default {
           this.successMsg(res.msg || "操作成功");
           this.dialogClose(0);
           this.getAccount();
+          this.initData();
         } else {
           this.errMsg(res.msg || "操作失败");
         }
@@ -533,6 +565,7 @@ export default {
   }
   .tips {
     margin-top: 5px;
+    line-height: 1.5;
   }
   button {
     margin-top: 15px;

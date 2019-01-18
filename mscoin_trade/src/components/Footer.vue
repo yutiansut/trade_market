@@ -85,11 +85,11 @@ export default {
           i18nKey: "aboutUs",
           title: "关于XX网",
           items: [
-            {
-              i18nKey: "aboutCompany",
-              label: "关于公司",
-              link: "/help_center/about"
-            },
+            // {
+            //   i18nKey: "aboutCompany",
+            //   label: "关于公司",
+            //   link: "/help_center/about"
+            // },
             {
               i18nKey: "contact",
               label: "联系我们",
@@ -147,11 +147,11 @@ export default {
               label: "常见问题",
               link: "/help_center/faq"
             },
-            {
-              i18nKey: "agreement",
-              label: "用户协议",
-              link: "http://47.95.213.181/binmark/static/services.pdf"
-            },
+            // {
+            //   i18nKey: "agreement",
+            //   label: "用户协议",
+            //   link: "http://47.95.213.181/binmark/static/services.pdf"
+            // },
             {
               i18nKey: "currencyProfile",
               label: "币种资料",

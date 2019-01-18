@@ -1,58 +1,99 @@
 <template>
-    <div class="content">
-        <div class="title font-18 font-bold" v-text="$t('label111')"></div>
-        <el-form
-            label-position='top'
-            label-width='120px'>
-            <el-form-item
-                class="form"
-                :label="$t('label112')">
-                <el-select
-                    v-model="formData.type"
-                    :placeholder="$t('label114')">
-                    <el-option :value="$t('recharge')"></el-option>
-                    <el-option :value="$t('withdraw')"></el-option>
-                    <el-option value="OTC"></el-option>
-                    <el-option value="C2C"></el-option>
-                    <el-option :value="$t('identify')"></el-option>
-                    <el-option :value="$t('googleAuth')"></el-option>
-                    <el-option :value="$t('label113')"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item
-                :label="$t('label117')">
-                <div :style="{backgroundImage:'url('+dialogImageUrl+')'}" class="upload-box fl p-rel">
-                    <i class="el-icon-plus p-abs abs-vh-center"></i>
-                    <input @change="upLoadFunc" class="wh-full" type="file">
-                </div>
-                <span class="upload-tip" v-html="$t('label151')"></span>
-            </el-form-item>
-            <el-form-item style="width:50%;" :label="$t('label115')" prop="desc">
-                <textarea v-model="formData.desc"></textarea>
-            </el-form-item>
-            <el-button @click="submitForm" type="warning">{{$t('submit')}}</el-button>
-        </el-form>
-        <div style="margin-top:20px;" class="title font-bold font-14" v-text="$t('label116')"></div>
-        <div class="workorder-record">
-            <div class="tip color-danger">{{$t('label118')}}</div>
-            <div class="record-content">
-                <div class="tab-item font-16">
-                    <a href="javasccript:" v-text="$t('label116')"></a>
-                </div>
-                <div class="replay">
-                    <div v-for="(item,i) in history" :key="i">
-                        <div class="question">
-                            <div class="title fl" v-text="item.title"></div>
-                            <div class="type fr color-danger" v-text="item.type"></div>
-                        </div>
-                        <div class="answer color-success">
-                            回复：<span v-text="item.reply"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  <div class="content">
+    <div
+      class="title font-18 font-bold"
+      v-text="$t('label111')"
+    ></div>
+    <el-form
+      label-position='top'
+      label-width='120px'
+    >
+      <el-form-item
+        class="form"
+        :label="$t('label112')"
+      >
+        <el-select
+          v-model="formData.type"
+          :placeholder="$t('label114')"
+        >
+          <el-option :value="$t('recharge')"></el-option>
+          <el-option :value="$t('withdraw')"></el-option>
+          <el-option value="OTC"></el-option>
+          <!-- <el-option value="C2C"></el-option> -->
+          <el-option :value="$t('identify')"></el-option>
+          <el-option :value="$t('googleAuth')"></el-option>
+          <el-option :value="$t('label113')"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item :label="$t('label117')">
+        <div
+          :style="{backgroundImage:'url('+dialogImageUrl+')'}"
+          class="upload-box fl p-rel"
+        >
+          <i class="el-icon-plus p-abs abs-vh-center"></i>
+          <input
+            @change="upLoadFunc"
+            class="wh-full"
+            type="file"
+          >
         </div>
+        <span
+          class="upload-tip"
+          v-html="$t('label151')"
+        ></span>
+      </el-form-item>
+      <el-form-item
+        style="width:50%;"
+        :label="$t('label115')"
+        prop="desc"
+      >
+        <textarea v-model="formData.desc"></textarea>
+      </el-form-item>
+      <el-button
+        @click="submitForm"
+        type="warning"
+      >{{$t('submit')}}</el-button>
+    </el-form>
+    <div
+      style="margin-top:20px;"
+      class="title font-bold font-14"
+      v-text="$t('label116')"
+    ></div>
+    <div class="workorder-record">
+      <div class="tip color-danger">{{$t('label118')}}</div>
+      <div class="record-content">
+        <div class="tab-item font-16">
+          <a
+            href="javasccript:"
+            v-text="$t('label116')"
+          ></a>
+        </div>
+        <div class="replay">
+          <div
+            v-for="(item,i) in history"
+            :key="i"
+          >
+            <div class="question">
+              <div
+                class="title fl"
+                v-text="item.title"
+              ></div>
+              <div
+                class="type fr color-danger"
+                v-text="item.type"
+              ></div>
+            </div>
+            <div
+              v-if="item.reply"
+              class="answer color-success"
+            >
+              回复：<span v-text="item.reply"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -63,26 +104,28 @@ export default {
         type: "",
         desc: ""
       },
-      options: [
-        {
-          label: "",
-          value: ""
-        }
-      ],
       dialogImageUrl: "",
       history: []
     };
   },
   mounted() {
-    this.request(this.api.gethisorder).then(res => {
-      if (res.code == "0") {
-        this.history = res.data.list;
-      } else {
-        this.errMsg(res.msg);
-      }
-    });
+    this.getHistory();
   },
   methods: {
+    initData() {
+      this.formData.type = "";
+      this.formData.desc = "";
+      this.dialogImageUrl = "";
+    },
+    getHistory() {
+      this.request(this.api.gethisorder).then(res => {
+        if (res.code == "0") {
+          this.history = res.data.list;
+        } else {
+          this.errMsg(res.msg);
+        }
+      });
+    },
     submitForm() {
       if (
         this.formData.type == "" ||
@@ -98,7 +141,9 @@ export default {
         url: this.dialogImageUrl,
         showLoading: true
       }).then(res => {
+        this.initData();
         if (res.code == "0") {
+          this.getHistory();
           this.successMsg(res.msg);
         } else {
           this.errMsg(res.msg);
@@ -142,6 +187,7 @@ export default {
 <style lang="scss" scoped>
 .question {
   overflow: hidden;
+  margin: 15px auto;
   .type {
     margin-left: 30px;
   }
@@ -176,6 +222,7 @@ export default {
 .replay > div {
   padding: 5px 0;
   border-top: 1px solid #dddddd;
+  line-height: 1.5;
   &:first-child {
     border-top: none;
   }

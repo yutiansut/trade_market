@@ -1,19 +1,18 @@
 <template>
-  <div class="container abs-v-center">
+  <div
+    v-if="!userData.isLogin"
+    class="container abs-v-center"
+  >
     <div
       class="win-title"
       v-text="$t('welcome')"
     ></div>
-    <div v-if="userData.isLogin">
+    <!-- <div v-if="userData.isLogin">
       <div class="user-info">
         <h3
           class="nick-name"
           v-text="userData.member"
         ></h3>
-        <!-- <div class="cellphone">
-          <span><em v-text="$t('accountId')"></em> ：{{userData.account}}</span>
-          <span class="color-primary"></span>
-        </div> -->
         <div><em v-text="$t('totalEstimate')"></em>：</div>
         <div class="wealth">
           <span
@@ -53,8 +52,8 @@
         >
         </button>
       </div>
-    </div>
-    <div v-else>
+    </div> -->
+    <div>
       <!-- 登录第一步 -->
       <template v-if="!checkLogin">
         <el-input
@@ -130,18 +129,6 @@
             {{$t('label161')||'邮箱验证码'}}
           </el-radio>
         </el-radio-group>
-        <!-- <el-input
-          v-show="loginData.type=='1'"
-          v-model='loginData.codeAccount'
-          :placeholder='$t("mobilePlaceholder")'
-        >
-        </el-input>
-        <el-input
-          v-show="loginData.type=='2'"
-          v-model='loginData.codeAccount'
-          :placeholder='$t("emailPlaceholder")'
-        >
-        </el-input> -->
         <div class="mobile-code-wrap p-rel">
           <el-input
             v-show="loginData.type!=''&&loginData.type!='0'"
@@ -208,25 +195,25 @@ export default {
       verCodeStr: "",
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       userData: this.userModel,
-      canSubmit: false
+      canSubmit: false,
+      getCodeTimes: 0
     };
   },
   mounted() {
     this.createCode(this.verCodeNumArr, 4);
-    this.$bus.on("userDataLoaded", data => {
+    this.$bus.on("onLogout", () => {
+      this.initData();
+    });
+    this.$bus.on("userLoaded", data => {
       if (data) {
         this.userData = data;
       }
-    });
-    this.$bus.on("onLogout", () => {
-      this.initData();
     });
   },
   methods: {
     // 获取用户信息
     getUserInfo() {
       this.request(this.api.userinfo).then(res => {
-        console.log(`个人信息:${JSON.stringify(res)}`);
         if (res.code == "0" && res.data) {
           this.userData = Object.assign({}, this.userData, {
             balance: res.data.amount * 1,
@@ -268,6 +255,7 @@ export default {
           this.codeText = "countDown";
         },
         onComplete: () => {
+          console.log(1);
           this.canGetCode = true;
           this.getCodeTimes > 0 && (this.codeTexti18n = "tryAgain");
         }

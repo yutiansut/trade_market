@@ -41,7 +41,7 @@
           </div>
         </div>
         <div class="form-group font-bold">
-          <div class="label color-666 font-14">手机费</div>
+          <div class="label color-666 font-14">手续费</div>
           <div class="form-input font-15 van-hairline--bottom">
             <input
               class="h-35"
@@ -71,28 +71,12 @@ $gap: 1rem;
 .content {
   background: #fff;
 }
-.form-group {
-  padding-top: 1.25rem;
-  padding-left: $gap;
-}
+
 .tips {
   padding: 0 $gap;
   margin-top: 1.25rem;
 }
-.form-input {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-sizing: border-box;
-  padding-right: $gap;
-  @include textVcenter(45px);
-  input::placeholder {
-    color: #ccc;
-  }
-  input {
-    width: 60%;
-  }
-}
+
 .bottom {
   background: #fff;
   padding: $gap;

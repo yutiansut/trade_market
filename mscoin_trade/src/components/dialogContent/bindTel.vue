@@ -16,8 +16,8 @@
         <!-- 手机号 -->
         <el-form-item :label='$t("cellphone")'>
           <el-input
+            autocomplete='off'
             v-model="formData.tel"
-            name='tel'
             @blur="validate(formData.tel,'tel')"
             :placeholder='$t("mobilePlaceholder")'
           >
@@ -27,8 +27,8 @@
         <el-form-item :label='$t("mobileCode")'>
           <div class="mobile-code-wrap p-rel">
             <el-input
+              autocomplete='off'
               v-model="formData.code"
-              name='code'
               :disabled="!myCode"
               @blur="validate(formData.code,'code')"
               :placeholder='myCode?$t("mobileCodePlaceholder"):$t("label170")'
@@ -44,9 +44,9 @@
         </el-form-item>
         <el-form-item :label='$t("password")'>
           <el-input
+            autocomplete='off'
             type='password'
             v-model="formData.password"
-            name='password'
             :placeholder='$t("pwdPlaceholder")'
           >
           </el-input>
@@ -56,7 +56,6 @@
           <div class="code-wrap flex flex-between">
             <el-input
               v-model="formData.imgCode"
-              name='imgCode'
               @blur="validate(formData.imgCode,'imgCode')"
               :placeholder='$t("imgCodePlaceholder")'
             >
@@ -106,7 +105,12 @@ export default {
       myCode: false,
       verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
       verCodeStr: "",
-      formData: null,
+      formData: {
+        password: "",
+        tel: "",
+        code: "",
+        imgCode: ""
+      },
       canSubmit: false
     };
   },

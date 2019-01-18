@@ -26,7 +26,13 @@ const propertyDetail = r => require(["@/view/myproperty/PropertyDetail"], r);
 const Recharge = r => require(["@/view/myproperty/Recharge"], r);
 const WithDraw = r => require(["@/view/myproperty/WithDraw"], r);
 const PropertyRecord = r => require(["@/view/myproperty/PropertyRecord"], r);
-const DetailRecord = r => require(["@/view/myproperty/DetailRecord"], r)
+const DetailRecord = r => require(["@/view/myproperty/DetailRecord"], r);
+const AccountMain = r => require(["@/view/account/Main"], r);
+const SecurityCenter = r => require(["@/view/account/SecurityCenter"], r);
+const ChangePassword = r => require(["@/view/account/ChangePassword"], r);
+const ChangeTradePassword = r => require(["@/view/account/ChangeTradePassword"], r);
+const BindEmail = r => require(["@/view/account/BindEmail"], r);
+const BindBank = r => require(["@/view/account/BindBank"], r);
 const routes = [
   {
     path: "/",
@@ -213,6 +219,51 @@ const routes = [
     meta: {
       title: "记录详情"
     }
+  },
+  {
+    path: "/account",
+    component: AccountMain,
+    children: [
+      {
+        path: "",
+        component: SecurityCenter,
+        meta: {
+          title: "安全中心"
+        }
+      },
+      {
+        path: "/account/changepwd",
+        name: "ChangePassword",
+        component: ChangePassword,
+        meta: {
+          title: "修改登录密码"
+        }
+      },
+      {
+        path: "/account/changetradepwd",
+        name: "ChangeTradePassword",
+        component: ChangeTradePassword,
+        meta: {
+          title: "修改交易密码"
+        }
+      },
+      {
+        path: "/account/bindemail",
+        name: "BindEmail",
+        component: BindEmail,
+        meta: {
+          title: "修改交易密码"
+        }
+      },
+      {
+        path: "/account/bindbank",
+        name: "BindBank",
+        component: BindBank,
+        meta: {
+          title: "修改交易密码"
+        }
+      }
+    ]
   }
 ];
 export default new Router({ routes });

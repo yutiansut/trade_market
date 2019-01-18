@@ -4,15 +4,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-/**
- * 处理promise 兼容
- */
-require('es6-promise').polyfill();
+
 /**
  * 注册并使用第三方类/库
  */
 import VueClipboard from 'vue-clipboard2';
 import VueI18n from 'vue-i18n';
+import ELEMENT from 'element-ui';
 import locale from 'element-ui/lib/locale';
 import enLocale from 'element-ui/lib/locale/lang/en';
 import zhLocale from 'element-ui/lib/locale/lang/zh-CN';
@@ -22,6 +20,10 @@ Vue.use(vueBus);
 Vue.use(VueI18n);
 Vue.use(ELEMENT, zhLocale);
 Vue.use(VueClipboard);
+/**
+ * 处理promise 兼容
+ */
+require('es6-promise').polyfill();
 /**
  * 方法
  */

@@ -2,7 +2,7 @@
   @include minWidth;
   @include hCenter;
   .hd-body {
-    background: $main-bg-color;
+    background: $bg-dark;
   }
   .nav-inner {
     padding: 0 30px;
@@ -15,7 +15,10 @@
       height: 100%;
       &:hover,
       &.active {
-        background: $hover-bg-color;
+        background: #fff;
+        > a {
+          color: $bg-dark;
+        }
       }
     }
   }
@@ -26,9 +29,9 @@
       // }
       &:hover,
       &.active {
-        background: $hover-bg-color;
+        background: #fff;
         a {
-          color: #fff;
+          color: $bg-dark;
         }
       }
     }

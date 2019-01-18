@@ -23,8 +23,10 @@
 .color-primary {
   color: $color-primary;
 }
-input {
-  appearance: none;
+input,
+button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
   outline: none;
   border: none;
 }
@@ -43,7 +45,7 @@ input {
     left: 0;
     pointer-events: none;
     //设置径向渐变
-    background-image: radial-gradient(circle, #ccc 10%, transparent 10.01%);
+    background-image: radial-gradient(circle, #555 10%, transparent 10.01%);
     background-repeat: no-repeat;
     background-position: 50%;
     transform: scale(10, 10);
@@ -58,11 +60,7 @@ input {
 }
 // 自定义button 按钮
 button {
-  appearance: none;
-  border: 1px solid transparent;
-  background: none;
-  border-radius: 0;
-  outline: none;
+  border-radius: 3px;
   cursor: pointer;
   text-align: center;
   &.btn-bordered {
@@ -187,6 +185,28 @@ button {
 .van-field {
   padding: 1rem 0;
 }
+.van-tabs__nav--card {
+  margin: 0 1rem;
+}
 .van-cell:not(:last-child)::after {
   left: 0;
+}
+// 表单输入框公用样式
+.form-group {
+  padding-top: 1.25rem;
+  padding-left: 1rem;
+  .form-input {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding-right: 1rem;
+    @include textVcenter(45px);
+    input::placeholder {
+      color: #ccc;
+    }
+    input {
+      width: 75%;
+    }
+  }
 }

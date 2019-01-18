@@ -33,7 +33,7 @@
         >
         </span>
       </span>
-      <div
+      <!-- <div
         ref='dropDown'
         class="drop-down p-rel"
       >
@@ -54,14 +54,14 @@
           >
           </li>
         </ul>
-      </div>
+      </div> -->
       <div
         ref='dropDown'
         class="drop-down p-rel"
       >
         <span>
           <i class="iconfont icon-yonghu fl"></i>
-          <em v-text="userData.member||'***'"></em>
+          <em v-text="userData.member"></em>
           <i class="iconfont icon-xiala fr"></i>
         </span>
         <ul
@@ -156,24 +156,12 @@ export default {
       ],
       userDropDown: [
         {
-          label: "安全中心",
-          i18nKey: "securityCenter",
-          link: "/account/security",
-          icon: ""
-        },
-        {
-          label: "身份认证",
-          i18nKey: "identify",
-          link: "/account/identify",
-          icon: ""
-        },
-        {
-          i18nKey: "label111",
-          label: "提交工单",
-          link: "/account/work_order",
-          icon: ""
+          label: "个人中心",
+          i18nKey: "label176",
+          link: "/my"
         }
       ],
+      member: "",
       langList: {
         id: 0,
         items: [
@@ -195,14 +183,11 @@ export default {
   mounted() {
     const h = getComputedStyle(this.$refs.dropDown).height;
     this.dropDownTop = h;
-    this.userData.isLogin = this.storage.get("isLogin");
+    Object.assign(this.userData, { isLogin: this.storage.get("isLogin") });
     if (this.userData.isLogin) {
       this.getUserInfo();
     }
     this.getVersion();
-  },
-  beforeDestroy() {
-    this.$bus.off("userDataLoaded");
   },
   methods: {
     dropDownHandle(link) {
@@ -217,9 +202,10 @@ export default {
             balance: res.data.amount * 1,
             tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
             email: res.data.userinfo[0] && res.data.userinfo[0].email,
-            member: res.data.userinfo[0] && res.data.userinfo[0].member
+            member: res.data.userinfo[0] && res.data.userinfo[0].member,
+            viplevel: res.data.userinfo[0] && res.data.userinfo[0].viplevel
           });
-          this.$bus.emit("userDataLoaded", this.userData);
+          this.$bus.emit("userLoaded", this.userData);
         } else {
           this.errMsg(res.msg);
         }
@@ -327,7 +313,6 @@ $ml: 25px;
     min-width: 100%;
     background: $bg-dark;
     display: none;
-
     li {
       @include textVcenter;
       color: #fff;
@@ -335,7 +320,8 @@ $ml: 25px;
       text-align: left;
       padding: 0 40px 0 20px;
       &:hover {
-        background: $main-bg-color;
+        background: $bg-white;
+        color: $bg-dark;
       }
     }
   }

@@ -24,7 +24,7 @@
     </app-header>
     <div class="content overflow-y">
       <van-tabs
-        color="#b72026"
+        color="#fe0042"
         v-model="active"
       >
         <!-- 买入 -->

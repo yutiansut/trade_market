@@ -14,8 +14,8 @@
       >
         <el-form-item :label='$t("label154")'>
           <el-input
+            autocomplete='off'
             v-model.trim="registerData.account"
-            name='account'
             :placeholder='$t("label158")'
             @blur="validate(registerData.account,'account')"
           >
@@ -36,8 +36,8 @@
           :label='$t("cellphone")||"手机号"'
         >
           <el-input
+            autocomplete='off'
             v-model.trim="registerData.accountCode"
-            name='cellphone'
             :placeholder='$t("mobilePlaceholder")||"请输入手机号"'
             maxlength='11'
             @blur="validate(registerData.accountCode,'accountCode')"
@@ -49,8 +49,8 @@
           :label='$t("email")||"邮箱"'
         >
           <el-input
+            autocomplete='off'
             v-model.trim="registerData.accountCode"
-            name='email'
             :placeholder='$t("emailPlaceholder")||"请输入邮箱"'
             @blur="validate(registerData.accountCode,'accountCode')"
           >
@@ -60,8 +60,8 @@
         <el-form-item :label='registerData.type=="1"?$t("mobileCode"):$t("label161")'>
           <div class="mobile-code-wrap p-rel">
             <el-input
+              autocomplete='off'
               v-model="registerData.formCode"
-              name='formCode'
               :placeholder='myCode?registerData.type=="1"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder"):$t("label170")'
               :disabled="!myCode"
             >
@@ -75,8 +75,8 @@
         </el-form-item>
         <el-form-item :label='$t("loginPwd")||"登录密码"'>
           <el-input
+            autocomplete='off'
             v-model="registerData.password"
-            name='password'
             type='password'
             :placeholder='$t("pwdPlaceholder")||"请输入密码"'
             @blur="validate(registerData.password,'password')"
@@ -85,8 +85,8 @@
         </el-form-item>
         <el-form-item :label='$t("loginRepass")||"确认登录密码"'>
           <el-input
+            autocomplete='off'
             v-model="registerData.repassword"
-            name='password'
             type='password'
             :placeholder='$t("pwdPlaceholder")||"请再次输入密码"'
             @blur="validate(registerData.repassword,'repassword')"
@@ -96,8 +96,8 @@
         <el-form-item :label='$t("imgCode")||"图形验证码"'>
           <div class="code-wrap flex flex-between">
             <el-input
+              autocomplete='off'
               v-model="registerData.verCode"
-              name='verCode'
               :placeholder='$t("imgCodePlaceholder")||"请输入图形验证码"'
               @blur="validate(registerData.verCode,'verCode')"
             >
@@ -116,8 +116,8 @@
         </el-form-item>
         <el-form-item :label='$t("recommender")||"邀请人（选填）"'>
           <el-input
+            autocomplete='off'
             v-model="registerData.recommender"
-            name='recommender'
             :placeholder='$t("recommenderPlaceholder")||"请输入邀请人账号"'
           >
           </el-input>

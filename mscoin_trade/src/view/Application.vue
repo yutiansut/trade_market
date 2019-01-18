@@ -1,32 +1,65 @@
 <template>
-    <div class="main">
-        <my-header class="header-main">
-            <login-bar></login-bar>
-        </my-header>
-        <img class="banner" :src="banner" alt="">
-        <div class="form-wrap p-rel">
-            <div class="title font-bold" v-html="$t('label110')"></div>
-            <div class="form">
-                <el-form label-position='top' @submit.native.prevent>
-                  <template v-for="(item,key) in formData">
-                    <el-form-item
-                      :label='$t(item.labeli18n)||item.label'
-                      :key='key'>
-                      <el-input name='mobile'
-                        v-model="item.val"
-                        :placeholder='$t(item.placeholderi18n)||item.placeholder'>
-                      </el-input>
-                    </el-form-item>
-                  </template>
-                </el-form>
-                <button
-                  @click="onSubmit"
-                  v-text="$t('submitApplication')||'提交上线申请'"
-                  class="btn btn-large btn-block btn-active btn-danger">
-                </button>
-            </div>
-        </div>
-        <!-- <div class="requirement">
+  <div class="main">
+    <my-header class="header-main">
+      <login-bar></login-bar>
+    </my-header>
+    <img
+      class="banner"
+      :src="banner"
+      alt=""
+    >
+    <div class="form-wrap p-rel">
+      <div
+        class="title font-bold"
+        v-html="$t('label110')"
+      ></div>
+      <div class="form">
+        <el-form
+          label-position='top'
+          @submit.native.prevent
+        >
+          <template v-for="(item,key) in formData">
+            <el-form-item
+              :label='$t(item.labeli18n)||item.label'
+              :key='key'
+            >
+              <el-input
+                v-if='item.labeli18n!="logoUrl"'
+                name='mobile'
+                v-model="item.val"
+                :placeholder='$t(item.placeholderi18n)||item.placeholder'
+              >
+              </el-input>
+              <div
+                v-else
+                class="p-rel upload-zone"
+              >
+                {{$t('label171')}}
+                <input
+                  class="p-abs abs-vh-center"
+                  @change="uploadLogo($event)"
+                  type='file'
+                >
+                <a
+                  v-if="formData.logoLink.val"
+                  class="color-danger p-abs"
+                  :href="formData.logoLink.val"
+                  v-text="formData.logoLink.val"
+                ></a>
+              </div>
+
+            </el-form-item>
+          </template>
+        </el-form>
+        <button
+          @click="onSubmit"
+          v-text="$t('submitApplication')||'提交上线申请'"
+          class="btn btn-large btn-block btn-active btn-danger"
+        >
+        </button>
+      </div>
+    </div>
+    <!-- <div class="requirement">
             <template v-for='(item,i) in rules'>
             <dl :key='i'>
                 <dt v-text="item.title"></dt>
@@ -34,10 +67,11 @@
             </dl>
             </template>
         </div> -->
-        <my-footer></my-footer>
-    </div>
+    <my-footer></my-footer>
+  </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -310,6 +344,31 @@ export default {
           }
         });
       }
+    },
+    uploadLogo(e) {
+      let file = e.target.files[0];
+      let { name } = file;
+      let formData = new FormData();
+      let options = {
+        headers: {
+          "Content-Type": "MultipartFile/form-data"
+        },
+        method: "post"
+      };
+      if (!/\.(jpg|png)$/.test(name)) {
+        this.$message.error("图片格式需为jpg或者png");
+        return;
+      }
+      formData.append("imgurl", file);
+      options.data = formData;
+      options.url = `${this.api.baseURL}/img`;
+      axios(options).then(res => {
+        if (res.data.code == "0") {
+          this.successMsg(res.msg || "上传成功");
+          console.log(res.data.data.isFlag);
+          this.formData.logoLink.val = res.data.data.isFlag;
+        }
+      });
     }
   }
 };
@@ -327,6 +386,31 @@ export default {
   border: $default-border;
   border-radius: 4px;
   background: $bg-white;
+}
+.upload-zone {
+  display: inline-block;
+  height: 40px;
+  width: 200px;
+  text-align: center;
+  line-height: 40px;
+  background: $color-success;
+  border-radius: 2px;
+  color: #fff;
+  input {
+    width: 100%;
+    opacity: 0;
+    z-index: 999;
+    cursor: pointer;
+  }
+  a {
+    left: 210px;
+    display: block;
+    top: 0;
+    overflow: hidden;
+    max-width: 500px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 .requirement {
   margin-top: 25px;

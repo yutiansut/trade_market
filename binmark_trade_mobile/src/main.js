@@ -26,7 +26,7 @@ import {
   Tab,
   Tabs,
   Toast,
-  Actionsheet
+  Actionsheet,
 } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)

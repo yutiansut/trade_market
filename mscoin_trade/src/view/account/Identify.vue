@@ -16,7 +16,7 @@
         </dl>
         <div style="margin-top:30px;">手持白纸请手写以下内容，内容不符者不予通过。<span class="color-warning">
             “本人知晓虚拟币投资风险巨大，自愿参与，自担风险，保证身份信息不提供给他人，
-            不使用Binmark账号进行非法行为，如有违反，本人愿意承担法律风险。”以下图片仅作为示例，
+            不使用binmark账号进行非法行为，如有违反，本人愿意承担法律风险。”以下图片仅作为示例，
             请提交您本人的身份材料照片。照片勿进行PS处理！
           </span>
         </div>
@@ -290,9 +290,9 @@ export default {
           if (this.bindState.idcardstate >= 2) {
             this.$alert(this.$t("label152"), this.$t("label140"), {
               showClose: false,
-              confirmButtonText: "返回首页"
+              confirmButtonText: "返回个人中心"
             }).then(() => {
-              this.navigateTo("/");
+              this.navigateTo("/my/order_detail");
             });
           }
         } else {
@@ -312,6 +312,7 @@ export default {
         if (res.code == "0") {
           this.successMsg(res.msg || "操作成功");
           this.bindState.idcardstate = "1";
+          this.navigateTo("/");
         } else {
           this.errMsg(res.msg || "操作失败");
         }

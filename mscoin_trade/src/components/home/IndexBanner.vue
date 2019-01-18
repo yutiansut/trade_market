@@ -1,7 +1,6 @@
 <template>
   <div class="index-banner p-rel">
     <el-carousel
-      v-show="bannerList.length>0"
       :interval="5000"
       :height='bannerHeight>0?(bannerHeight+"px"):(bannerMinHeight+"px")'
     >
