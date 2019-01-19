@@ -58,18 +58,11 @@
 export default {};
 </script>
 <style lang="scss" scoped>
-.container {
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: column;
-  justify-content: space-between;
-}
 .form-group {
   margin-top: 1rem;
 }
-
 .message-code {
-  color: #3388ff;
+  color: $color-info;
   border-radius: 45px;
 }
 .btn-group {

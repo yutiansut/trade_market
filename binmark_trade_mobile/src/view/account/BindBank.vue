@@ -4,7 +4,7 @@
       <div class="form-group">
         <div class="label color-666 font-14">户主</div>
         <div class="form-input font-15 van-hairline--bottom">
-          <span class="font-bold">先生</span>
+          <span class="font-bold color-666">先生</span>
         </div>
       </div>
       <div class="form-group">
@@ -54,20 +54,10 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.container {
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: column;
-  justify-content: space-between;
-}
 .form-group {
   margin-top: 1rem;
 }
 
-.message-code {
-  color: #3388ff;
-  border-radius: 45px;
-}
 .btn-group {
   padding: 1rem;
 }

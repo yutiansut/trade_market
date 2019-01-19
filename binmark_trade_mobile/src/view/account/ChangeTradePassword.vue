@@ -31,10 +31,6 @@ export default {
 <style lang="scss" scoped>
 .container {
   padding-top: 2rem;
-  display: flex;
-  box-sizing: border-box;
-  flex-direction: column;
-  justify-content: space-between;
 }
 .btn-group {
   padding: 1rem;

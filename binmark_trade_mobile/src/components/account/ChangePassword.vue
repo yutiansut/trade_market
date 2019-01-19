@@ -1,6 +1,6 @@
 <template>
   <div>
-    <form>
+    <form @submit.prevent>
       <van-tabs
         type='card'
         v-model="myType"
@@ -11,7 +11,7 @@
       <div class="form-group">
         <div
           class="label color-666 font-14"
-          v-text="type==0?'手机验证码':'邮箱验证码'"
+          v-text="myType==0?'手机验证码':'邮箱验证码'"
         ></div>
         <div class="form-input font-15 van-hairline--bottom">
           <input
@@ -19,7 +19,7 @@
             autocomplete="off"
             class="h-35"
             type="text"
-            :placeholder="type==0?'请输入手机验证码':'请输入邮箱验证码'"
+            :placeholder="myType==0?'请输入手机验证码':'请输入邮箱验证码'"
           >
           <span class="message-code riple">获取验证码</span>
         </div>
@@ -86,7 +86,7 @@ export default {
 }
 
 .message-code {
-  color: #3388ff;
+  color: $color-info;
   border-radius: 45px;
 }
 </style>

@@ -3,7 +3,6 @@ Vue.use(Router);
 const Main = r => require(["@/view/Main"], r);
 const Home = r => require(["@/view/home/Home"], r);
 const userMain = r => require(["@/view/user/userMain"], r);
-const User = r => require(["@/view/user/User"], r);
 const Login = r => require(["@/view/user/Login"], r);
 const checkLogin = r => require(["@/view/user/checkLogin"], r);
 const Register = r => require(["@/view/user/Register"], r);
@@ -33,6 +32,16 @@ const ChangePassword = r => require(["@/view/account/ChangePassword"], r);
 const ChangeTradePassword = r => require(["@/view/account/ChangeTradePassword"], r);
 const BindEmail = r => require(["@/view/account/BindEmail"], r);
 const BindBank = r => require(["@/view/account/BindBank"], r);
+const GoogleAuth = r => require(["@/view/account/GoogleAuth"], r);
+const Identify = r => require(["@/view/account/Identify"], r);
+// 日志记录
+const AccountLogs = r => require(["@/view/account/AccountLogs"], r);
+const LoginLogs = r => require(["@/view/account/LoginLogs"], r);
+// 文章资料
+const ArticleMain = r => require(["@/view/articles/ArticleMain"], r);
+const AboutTrade = r => require(["@/view/articles/AboutTrade"], r);
+const Fee = r => require(["@/view/articles/Fee"], r);
+const CoinInfo = r => require(["@/view/articles/CoinInfo"], r);
 const routes = [
   {
     path: "/",
@@ -154,7 +163,10 @@ const routes = [
   {
     path: "/trade/trade_confirm",
     name: "c2cTradeConfirm",
-    component: c2cTradeConfirm
+    component: c2cTradeConfirm,
+    meta: {
+      title: "订单确认"
+    }
   },
   {
     path: "/trade/c2c_match",
@@ -262,6 +274,60 @@ const routes = [
         meta: {
           title: "修改交易密码"
         }
+      },
+      {
+        path: "/account/google_auth",
+        name: "GoogleAuth",
+        component: GoogleAuth,
+        meta: {
+          title: "谷歌验证"
+        }
+      },
+      {
+        path: "/account/identify",
+        name: "Identify",
+        component: Identify,
+        meta: {
+          title: "身份认证"
+        }
+      },
+      {
+        path: "/account/account_log",
+        name: "AccountLogs",
+        component: AccountLogs,
+        meta: {
+          title: "安全日志"
+        }
+      },
+      {
+        path: "/account/login_logs",
+        name: "LoginLogs",
+        component: LoginLogs,
+        meta: {
+          title: "登录日志"
+        }
+      }
+    ]
+  },
+  {
+    path: '/articles',
+    component: ArticleMain,
+    children: [
+      {
+        path: "",
+        component: AboutTrade,
+        meta: { title: "问题中心" }
+      },
+      {
+        path: "/articles/fee",
+        name: "Fee",
+        component: Fee,
+        meta: { title: "费率" }
+      },
+      {
+        path: "/articles/coininfo",
+        component: CoinInfo,
+        meta: { title: "币种资料" }
       }
     ]
   }

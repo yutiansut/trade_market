@@ -1,9 +1,7 @@
 <template>
   <div class="app-main wh-full">
     <my-header></my-header>
-    <div class="app-body overflow-y h-full">
-      <router-view></router-view>
-    </div>
+    <router-view></router-view>
   </div>
 </template>
 <script>
@@ -13,7 +11,12 @@ export default {};
 .van-tabs__nav--card {
   margin: 0 1rem;
 }
-.app-body {
+
+.container {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: space-between;
   background: #fff;
 }
 </style>
