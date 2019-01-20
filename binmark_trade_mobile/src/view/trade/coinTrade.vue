@@ -1,66 +1,34 @@
 <template>
   <div class="wh-full app-body">
     <!-- 侧栏滑块 -->
-    <slide-pop
-      @onClose='closeSlide'
-      :showPop='showPop'
-    >
+    <slide-pop @onClose="toggleSlideShow" :showPop="showPop">
       <trade-aside slot="content"></trade-aside>
     </slide-pop>
     <!-- 头部 -->
-    <app-header
-      :iconLeft='assetConfig.imgs.nav_transaction_menu'
-      @onHeadClick='showSlide'
-    >
-      <div
-        slot="title"
-        class="coin font-16 abs-vh-center"
-      >BTC/USDT</div>
+    <app-header :iconLeft="assetConfig.imgs.nav_transaction_menu" @onHeadClick="toggleSlideShow">
+      <div slot="title" class="coin font-16 abs-vh-center">BTC/USDT</div>
     </app-header>
     <!-- 交易区 -->
     <div class="trade-panel flex flex-between">
       <!-- 买入卖出 -->
       <div class="form-box p-rel">
         <div class="btn-box flex flex-between h-35">
-          <div
-            @click="toggleType(0)"
-            :class="type==0&&'active-0'"
-            class="font-16 font-bold"
-          >买入</div>
-          <div
-            @click="toggleType(1)"
-            :class="type==1&&'active-1'"
-            class="font-16 font-bold"
-          >卖出</div>
+          <div @click="toggleType(0)" :class="type==0&&'active-0'" class="font-16 font-bold">买入</div>
+          <div @click="toggleType(1)" :class="type==1&&'active-1'" class="font-16 font-bold">卖出</div>
         </div>
         <p class="price-label color-999">限价</p>
         <form @submit.prevent="onSubmit">
           <div class="from-group flex flex-between flex-v-center font-14 h-45">
-            <input
-              v-model.number='price'
-              type="text"
-              placeholder="价格"
-            >
+            <input v-model.number="price" type="text" placeholder="价格">
           </div>
           <div class="from-group flex flex-between flex-v-center font-14 h-45">
-            <input
-              v-model.number='number'
-              type="text"
-              placeholder="数量"
-            >
+            <input v-model.number="number" type="text" placeholder="数量">
             <span class="label">USDT</span>
           </div>
           <div class="available font-13 color-danger">可用：1216165&nbsp;USDT</div>
           <!-- 快速输入数量 -->
-          <van-row
-            class="fast-input h-30"
-            gutter='6'
-          >
-            <van-col
-              v-for="(item,i) in fastInputNum"
-              :key='i'
-              span='6'
-            >
+          <van-row class="fast-input h-30" gutter="6">
+            <van-col v-for="(item,i) in fastInputNum" :key="i" span="6">
               <div
                 :class="numLevel==item.val &&'active'"
                 @click="getNum(item.val)"
@@ -68,45 +36,26 @@
               ></div>
             </van-col>
           </van-row>
-          <div class="total font-16 font-bold color-666">交易额：<span
-              class="color-danger"
-              v-text="total"
-            ></span>
+          <div class="total font-16 font-bold color-666">
+            交易额：
+            <span class="color-danger" v-text="total"></span>
           </div>
-          <button
-            v-show="type==0"
-            class="btn-large btn-block riple btn-danger"
-          >买入</button>
-          <button
-            v-show="type==1"
-            class="btn-large btn-block riple btn-success"
-          >卖出</button>
+          <button v-show="type==0" class="btn-large btn-block riple btn-danger">买入</button>
+          <button v-show="type==1" class="btn-large btn-block riple btn-success">卖出</button>
         </form>
       </div>
       <!-- 行情 -->
       <div class="trade-trend">
         <div class="table">
           <van-row class="thead h-35 color-666">
-            <van-col
-              class="font-13"
-              span='12'
-            >价格</van-col>
-            <van-col
-              class="txt-rt font-13"
-              span='12'
-            >数量</van-col>
+            <van-col class="font-13" span="12">价格</van-col>
+            <van-col class="txt-rt font-13" span="12">数量</van-col>
           </van-row>
           <div class="tbody">
             <van-row class="h-25 p-rel">
               <div class="progress p-abs"></div>
-              <van-col
-                class="font-13 color-success"
-                span='12'
-              >1321</van-col>
-              <van-col
-                class="txt-rt font-13"
-                span='12'
-              >1321</van-col>
+              <van-col class="font-13 color-success" span="12">1321</van-col>
+              <van-col class="txt-rt font-13" span="12">1321</van-col>
             </van-row>
           </div>
           <div
@@ -116,14 +65,8 @@
           <div class="tbody">
             <van-row class="h-25 p-rel">
               <div class="progress p-abs"></div>
-              <van-col
-                class="font-13 color-danger"
-                span='12'
-              >1321</van-col>
-              <van-col
-                class="txt-rt font-13"
-                span='12'
-              >1321</van-col>
+              <van-col class="font-13 color-danger" span="12">1321</van-col>
+              <van-col class="txt-rt font-13" span="12">1321</van-col>
             </van-row>
           </div>
         </div>
@@ -131,34 +74,30 @@
     </div>
     <!-- 交易记录 -->
     <div class="trade-record">
-      <van-tabs
-        color='#fe0042'
-        line-width='30'
-        v-model="tabActive"
-      >
+      <van-tabs color="#fe0042" line-width="30" v-model="tabActive">
         <van-tab title="当前委托">
           <div class="record-table">
             <van-row class="thead color-666 flex flex-v-center h-45">
-              <van-col span='6 font-14'>市场</van-col>
-              <van-col span='7 font-14'>价格</van-col>
-              <van-col span='7 font-14'>成交量/数量</van-col>
-              <van-col span='4 font-14 txt-rt'>操作</van-col>
+              <van-col span="6 font-14">市场</van-col>
+              <van-col span="7 font-14">价格</van-col>
+              <van-col span="7 font-14">成交量/数量</van-col>
+              <van-col span="4 font-14 txt-rt">操作</van-col>
             </van-row>
             <div class="tbody">
               <van-row class="flex flex-v-center">
-                <van-col span='6 font-14'>
+                <van-col span="6 font-14">
                   <div class="font-14 font-bold">BTC/USDT</div>
                   <small class="color-999">07-17</small>
                 </van-col>
-                <van-col span='7 font-14 color-success'>
+                <van-col span="7 font-14 color-success">
                   <div class="font-14 font-bold">1519159</div>
                   <small>卖出</small>
                 </van-col>
-                <van-col span='7 font-14'>
+                <van-col span="7 font-14">
                   <div class="font-14 font-bold">1</div>
                   <small class="color-999">116516</small>
                 </van-col>
-                <van-col span='4 font-14 txt-rt'>
+                <van-col span="4 font-14 txt-rt">
                   <button class="btn-mini btn-success">撤单</button>
                 </van-col>
               </van-row>
@@ -168,21 +107,21 @@
         <van-tab title="历史委托">
           <div class="record-table">
             <van-row class="thead color-666 flex flex-v-center h-45">
-              <van-col span='9 font-14'>市场</van-col>
-              <van-col span='8 font-14'>价格</van-col>
-              <van-col span='7 font-14 txt-rt'>成交量/数量</van-col>
+              <van-col span="9 font-14">市场</van-col>
+              <van-col span="8 font-14">价格</van-col>
+              <van-col span="7 font-14 txt-rt">成交量/数量</van-col>
             </van-row>
             <div class="tbody">
               <van-row class="flex flex-v-center">
-                <van-col span='9 font-14'>
+                <van-col span="9 font-14">
                   <div class="font-14 font-bold">BTC/USDT</div>
                   <small class="color-999">07-17</small>
                 </van-col>
-                <van-col span='8 font-14 color-success'>
+                <van-col span="8 font-14 color-success">
                   <div class="font-14 font-bold">1519159</div>
                   <small>卖出</small>
                 </van-col>
-                <van-col span='7 font-14 txt-rt'>
+                <van-col span="7 font-14 txt-rt">
                   <div class="font-14 font-bold">1</div>
                   <small class="color-999">116516</small>
                 </van-col>
@@ -193,17 +132,17 @@
       </van-tabs>
     </div>
   </div>
-
 </template>
 <script>
 import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import tradeAside from "@/components/slideContent/TradeAside";
+import Mixin from "@/mixin/mixin";
 export default {
   components: { appHeader, slidePop, tradeAside },
+  mixins: [Mixin],
   data() {
     return {
-      showPop: false,
       type: 0,
       number: "",
       price: "",
@@ -243,19 +182,12 @@ export default {
       this.number = "";
       this.price = "";
     },
-    onSubmit() {},
-    toggleType(type) {
-      this.type = type * 1;
-      this.resetForm();
+    toggleType(index) {
+      this.type = index;
     },
+    onSubmit() {},
     getNum(val) {
       this.numLevel = val;
-    },
-    showSlide() {
-      this.showPop = true;
-    },
-    closeSlide() {
-      this.showPop = false;
     }
   }
 };

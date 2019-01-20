@@ -147,9 +147,10 @@ const Utils = (function () {
             if (this.dataType(config) !== "object") {
                 console.log("参数必须是Object 类型");
                 return;
-            }
+            };
+
             let defaultConfig = {
-                'count': 60,//倒计时其实数
+                'count': 60,//倒计时时长
                 'onStart': null,
                 'duration': 1000,//倒计时周期
                 'onCounting': null,//倒计时回调函数

@@ -1,16 +1,10 @@
 <template>
   <div class="content app-body overflow-y h-full">
     <!-- 侧栏滑块 -->
-    <slide-pop
-      @onClose='closeSlide'
-      :showPop='showPop'
-    >
-      <user-aside slot='content'></user-aside>
+    <slide-pop @onClose="closeSlide" :showPop="showPop">
+      <user-aside slot="content"></user-aside>
     </slide-pop>
-    <app-header
-      @onHeadClick='showSlide'
-      :iconLeft='assetConfig.imgs.user_head_portrait'
-    >
+    <app-header @onHeadClick="showSlide" :iconLeft="assetConfig.imgs.user_head_portrait">
       <div
         slot="title"
         class="header-title font-16 font-bold abs-vh-center"
@@ -30,21 +24,21 @@
     </div>
     <div class="account-list">
       <div class="list-item van-hairline--bottom">
-        <router-link to='/property/property_detail'>
+        <router-link to="/property/property_detail">
           <div class="item-title flex flex-v-center flex-between">
             <span class="font-18 font-bold">USDT</span>
-            <van-icon name='arrow'></van-icon>
+            <van-icon name="arrow"></van-icon>
           </div>
           <van-row>
-            <van-col span='8'>
+            <van-col span="8">
               <div>可用</div>
               <div>1315646</div>
             </van-col>
-            <van-col span='8'>
+            <van-col span="8">
               <div>锁定</div>
               <div>1315646</div>
             </van-col>
-            <van-col span='8'>
+            <van-col span="8">
               <div>折合（CNY）</div>
               <div>1315646</div>
             </van-col>
@@ -58,12 +52,12 @@
 import appHeader from "@/components/header/AppHeader.vue";
 import slidePop from "@/components/other/slidePop";
 import userAside from "@/components/slideContent/UserAside";
+import Mixin from "@/mixin/mixin";
 export default {
   components: { appHeader, slidePop, userAside },
+  mixins: [Mixin],
   data() {
-    return {
-      showPop: false
-    };
+    return {};
   },
   methods: {
     goRecord() {},

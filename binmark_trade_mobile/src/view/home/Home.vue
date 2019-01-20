@@ -1,97 +1,64 @@
 <template>
   <div class="app-body overflow-y">
     <!-- 侧栏滑块 -->
-    <slide-pop
-      @onClose='closeSlide'
-      :showPop='showPop'
-    >
-      <user-aside slot='content'></user-aside>
+    <slide-pop @onClose="toggleSlideShow" :showPop="showPop">
+      <user-aside slot="content"></user-aside>
     </slide-pop>
     <div class="head">
-      <app-header
-        :iconLeft='assetConfig.imgs.user_head_portrait'
-        @onHeadClick='showSlide'
-      >
-        <img
-          slot='title'
-          class="logo abs-vh-center"
-          :src="assetConfig.imgs.logo_2"
-        >
+      <app-header :iconLeft="assetConfig.imgs.user_head_portrait" @onHeadClick="toggleSlideShow">
+        <img slot="title" class="logo abs-vh-center" :src="assetConfig.imgs.logo_2">
       </app-header>
       <!-- banner -->
       <div class="banner">
-        <swiper :options='BannerSwiperOptions'>
-          <swiper-slide
-            v-for="(item,i) in banners"
-            :key='i'
-          >
-            <img
-              class="banner-img"
-              :src="item"
-              alt=""
-            >
+        <swiper :options="BannerSwiperOptions">
+          <swiper-slide v-for="(item,i) in banners" :key="i">
+            <img class="banner-img" :src="item" alt>
           </swiper-slide>
         </swiper>
       </div>
       <!-- 公告 -->
       <van-row class="notice-bar font-14 h-50">
-        <van-col
-          class="flex h-50 flex-v-center"
-          span='3'
-        ><img
-            class="icon-notice h-30"
-            :src="assetConfig.imgs.notice_logo"
-            alt=""
-          ></van-col>
-        <van-col span='21'>
-          <swiper
-            class="h-50"
-            :options='noticeSwiper'
-          >
+        <van-col class="flex h-50 flex-v-center" span="3">
+          <img class="icon-notice h-30" :src="assetConfig.imgs.notice_logo" alt>
+        </van-col>
+        <van-col span="21">
+          <swiper class="h-50" :options="noticeSwiper">
             <swiper-slide>
               <van-row class="notice-detail">
-                <van-col span='20'>
-                  <router-link to=''>标题</router-link>
+                <van-col span="20">
+                  <router-link to>标题</router-link>
                 </van-col>
-                <van-col
-                  class="color-666 txt-rt"
-                  span='4'
-                >10-08</van-col>
+                <van-col class="color-666 txt-rt" span="4">10-08</van-col>
               </van-row>
             </swiper-slide>
           </swiper>
         </van-col>
-        <van-col span='4'></van-col>
+        <van-col span="4"></van-col>
       </van-row>
     </div>
     <!-- 币种列表 -->
     <div class="tab h-45 flex flex-v-center">
-      <a
-        href="javascript:"
-        class="font-16 font-bold active"
-      >USDT</a>
+      <a href="javascript:" class="font-16 font-bold active">USDT</a>
     </div>
     <div class="van-hairline--bottom"></div>
     <div class="coin-list">
       <div class="list-item van-hairline--bottom">
         <van-row>
-          <van-col span='2'>
-            <img
-              class="thumb-25"
-              :src="assetConfig.imgs.user_head_portrait"
-            ></van-col>
-          <van-col span='8'>
+          <van-col span="2">
+            <img class="thumb-25" :src="assetConfig.imgs.user_head_portrait">
+          </van-col>
+          <van-col span="8">
             <div class="font-15 font-bold">USDT</div>
             <div class="color-666">
               <span>24h量&nbsp;</span>
               <span>1564646</span>
             </div>
           </van-col>
-          <van-col span='9'>
+          <van-col span="9">
             <div class="font-15 font-bold">0101616</div>
             <div class="color-666">1.5</div>
           </van-col>
-          <van-col span='5'>
+          <van-col span="5">
             <span class="rise font-16 down">1%</span>
           </van-col>
         </van-row>
@@ -103,13 +70,14 @@
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import slidePop from "@/components/other/slidePop";
-import appHeader from "@/components/header/AppHeader";
 import userAside from "@/components/slideContent/UserAside";
+import appHeader from "@/components/header/AppHeader";
+import Mixin from "@/mixin/mixin";
 export default {
   components: { swiper, swiperSlide, slidePop, appHeader, userAside },
+  mixins: [Mixin],
   data() {
     return {
-      showPop: false,
       banners: [
         this.assetConfig.imgs.banner_1,
         this.assetConfig.imgs.banner_2,
@@ -138,18 +106,11 @@ export default {
     };
   },
   mounted() {},
-  methods: {
-    showSlide() {
-      this.showPop = true;
-    },
-    closeSlide() {
-      this.showPop = false;
-    }
-  }
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>
-$padding-between: 1.25rem;
+$gap: 1.25rem;
 .head {
   background: #fff;
   .logo {
@@ -163,7 +124,7 @@ $padding-between: 1.25rem;
     }
   }
   .notice-bar {
-    padding: 0 $padding-between;
+    padding: 0 $gap;
     .notice-detail {
       @include textVcenter(50px);
     }
@@ -172,12 +133,12 @@ $padding-between: 1.25rem;
 .coin-list {
   background: #fff;
   .list-item {
-    padding: 0 $padding-between;
+    padding: 0 $gap;
   }
 }
 .tab {
   margin-top: 1.25rem;
-  padding: 0 $padding-between;
+  padding: 0 $gap;
   background: #fff;
   a {
     display: block;

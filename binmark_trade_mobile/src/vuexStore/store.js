@@ -1,5 +1,4 @@
 import Vuex from "vuex";
-import { stat } from "fs";
 Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
@@ -19,6 +18,7 @@ export default new Vuex.Store({
     maincoinid: "",
     tradecoinid: "",
     coinInfo: {},
+    userInfo: {},
     coinPropertyInfo: {}
   },
   mutations: {
@@ -58,6 +58,9 @@ export default new Vuex.Store({
     },
     setCoinPropertyInfo(state, obj) {
       state.coinPropertyInfo = obj;
+    },
+    getUserInfo(state, obj) {
+      state.userInfo = obj;
     }
   },
   actions: {
@@ -69,6 +72,9 @@ export default new Vuex.Store({
     },
     getNewsList(ctx, data) {
       ctx.commit('updateNewsList', data)
+    },
+    updateUserinfo(ctx, data) {
+      ctx.commit('getUserInfo', data)
     }
   }
 });

@@ -1,35 +1,22 @@
 <template>
   <div class="user-aside w-full">
-    <div
-      :style="{backgroundImage:'url('+assetConfig.imgs.sideslip_bg+')'}"
-      class="user-info"
-    >
+    <div :style="{backgroundImage:'url('+assetConfig.imgs.sideslip_bg+')'}" class="user-info">
       <div class="user-id font-20">1523489494</div>
       <span class="color-666 font-14">账号Id:</span>
     </div>
     <div class="nav-bar">
       <router-link
         v-for="(item,i) in navBar"
-        :key='i'
-        :to='item.link'
+        :key="i"
+        :to="item.link"
         :class="(i+1)%4==0&&'van-hairline--bottom'"
       >
         <div class="bar-item flex flex-v-center flex-between">
           <div class="label flex flex-v-center">
-            <img
-              class="icon-img"
-              :src="item.icon"
-            >
-            <div
-              class="font-14"
-              v-text="item.label"
-            ></div>
+            <img class="icon-img" :src="item.icon">
+            <div class="font-14" v-text="item.label"></div>
           </div>
-          <van-icon
-            color='#999'
-            size='1.2rem'
-            name="arrow"
-          />
+          <van-icon color="#999" size="1.2rem" name="arrow"/>
         </div>
       </router-link>
     </div>
@@ -43,7 +30,7 @@ export default {
       navBar: [
         {
           label: "安全中心",
-          link: "",
+          link: "/account",
           icon: this.assetConfig.imgs.user_icon_1
         },
         {
@@ -53,7 +40,7 @@ export default {
         },
         {
           label: "币种资料",
-          link: "",
+          link: "/articles/coininfo",
           icon: this.assetConfig.imgs.user_icon_3
         },
         {
@@ -63,12 +50,12 @@ export default {
         },
         {
           label: "费率标准",
-          link: "",
+          link: "/articles/fee",
           icon: this.assetConfig.imgs.user_icon_5
         },
         {
           label: "有问必答",
-          link: "",
+          link: "/articles",
           icon: this.assetConfig.imgs.user_icon_6
         },
         {

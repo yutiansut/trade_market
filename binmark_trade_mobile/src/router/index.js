@@ -86,7 +86,8 @@ const routes = [
         name: 'Property',
         component: Property,
         meta: {
-          title: "我的资产"
+          title: "我的资产",
+          auth: true
         }
       },
     ]
