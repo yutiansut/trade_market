@@ -42,6 +42,7 @@ const ArticleMain = r => require(["@/view/articles/ArticleMain"], r);
 const AboutTrade = r => require(["@/view/articles/AboutTrade"], r);
 const Fee = r => require(["@/view/articles/Fee"], r);
 const CoinInfo = r => require(["@/view/articles/CoinInfo"], r);
+const AccountCenter = r => require(["@/view/account/AccountCenter"], r);
 const routes = [
   {
     path: "/",
@@ -306,6 +307,14 @@ const routes = [
         component: LoginLogs,
         meta: {
           title: "登录日志"
+        }
+      },
+      {
+        path: "/account/center",
+        name: "AccountCenter",
+        component: AccountCenter,
+        meta: {
+          title: "账户管理"
         }
       }
     ]

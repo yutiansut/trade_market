@@ -9,12 +9,9 @@ export default new Vuex.Store({
     footerItemIndex: 0,
     showHeaderBack: false,
     showMainHeader: true,
-    newsList: [{
-      id: '1',
-      title: "新闻标题",
-      content: "呢日用就购I爱干净偶尔加盖",
-      date: '2018/8/8'
-    }],
+    newsList: [],
+    mainCoin: [],
+    tradeCoin: [],
     maincoinid: "",
     tradecoinid: "",
     coinInfo: {},
@@ -22,8 +19,8 @@ export default new Vuex.Store({
     coinPropertyInfo: {}
   },
   mutations: {
-    loginState(state) {
-      state.isLogin = !state.isLogin;
+    loginState(state, val) {
+      state.isLogin = val;
     },
     checkLoginState(state) {
       state.isCheckLogin = !state.isCheckLogin
@@ -47,6 +44,12 @@ export default new Vuex.Store({
     updateNewsList(state, arr) {
       state.newsList = arr;
     },
+    updateMainCoin(state, obj) {
+      state.mainCoin = obj;
+    },
+    updateTradeCoin(state, obj) {
+      state.tradeCoin = obj;
+    },
     updateMainCoinid(state, val) {
       state.maincoinid = val;
     },
@@ -64,10 +67,10 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    changeLoginState(ctx) {
-      ctx.commit("loginState");
+    updateLoginState(ctx, val) {
+      ctx.commit("loginState", val);
     },
-    changeCheckLoginState(ctx) {
+    updateCheckLoginState(ctx) {
       ctx.commit('checkLoginState')
     },
     getNewsList(ctx, data) {
@@ -75,6 +78,12 @@ export default new Vuex.Store({
     },
     updateUserinfo(ctx, data) {
       ctx.commit('getUserInfo', data)
+    },
+    getMainCoin(ctx, data) {
+      ctx.commit('updateMainCoin', data);
+    },
+    getTradeCoin(ctx, data) {
+      ctx.commit('updateTradeCoin', data);
     }
   }
 });

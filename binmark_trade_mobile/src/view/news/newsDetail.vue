@@ -6,11 +6,11 @@
     ></div>
     <span
       class="color-999"
-      v-text="newsDetail.date"
+      v-text="newsDetail.writedate"
     ></span>
     <div
       class="news-content font-14"
-      v-text="newsDetail.content"
+      v-text="newsDetail.con"
     ></div>
   </div>
 </template>

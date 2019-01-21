@@ -1,6 +1,9 @@
 <template>
   <div class="user-aside w-full">
-    <div :style="{backgroundImage:'url('+assetConfig.imgs.sideslip_bg+')'}" class="user-info">
+    <div
+      :style="{backgroundImage:'url('+assetConfig.imgs.sideslip_bg+')'}"
+      class="user-info"
+    >
       <div class="user-id font-20">1523489494</div>
       <span class="color-666 font-14">账号Id:</span>
     </div>
@@ -13,16 +16,27 @@
       >
         <div class="bar-item flex flex-v-center flex-between">
           <div class="label flex flex-v-center">
-            <img class="icon-img" :src="item.icon">
-            <div class="font-14" v-text="item.label"></div>
+            <img
+              class="icon-img"
+              :src="item.icon"
+            >
+            <div
+              class="font-14"
+              v-text="item.label"
+            ></div>
           </div>
-          <van-icon color="#999" size="1.2rem" name="arrow"/>
+          <van-icon
+            color="#999"
+            size="1.2rem"
+            name="arrow"
+          />
         </div>
       </router-link>
     </div>
   </div>
 </template>
 <script>
+import { getUserInfo } from "@/vuexStore/storeService.js";
 export default {
   name: "user-aside",
   data() {
@@ -75,6 +89,11 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    if (this.Store.state.isLogin) {
+      getUserInfo();
+    }
   }
 };
 </script>

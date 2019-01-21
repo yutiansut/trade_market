@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "http://www.binmark.io/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.binmark.io/echo/" : "ws://192.168.5.51:8080/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "https://www.binmark.io/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "wss://www.binmark.io/echo/" : "ws://192.168.5.51:8080/echo/",
         // 首页banner
         banner: {
             url: "banner",
@@ -151,7 +151,7 @@ let apiCfg = (function () {
             url: "getoutaddress"
         },
         //根据主币种 获取交易币种
-        getTradCoin: {
+        gettradecoin: {
             url: "getTradCoin"
         },
         //新增我的地址通讯录

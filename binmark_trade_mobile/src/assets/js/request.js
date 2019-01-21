@@ -1,8 +1,9 @@
 import qs from 'qs';
 import axios from 'axios';
-import router from "../../router/index";
 import { Toast } from "vant";
 import api from '@/config/apiConfig.js';
+import myStorage from './myStorage';
+import Store from '@/vuexStore/store';
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
     axios.interceptors.request.use(
@@ -19,7 +20,6 @@ const ajaxRequest = (function () {
             return Promise.reject(error);
         }
     );
-
     axios.interceptors.response.use(
         response => {
             return response;
@@ -31,16 +31,53 @@ const ajaxRequest = (function () {
 
     function errorState(response) {
         Toast.clear();
-        if (
-            response &&
-            (response.status === 200 ||
-                response.status === 304 ||
-                response.status === 400)
-        ) {
-            return response.data;
-        };
+        let errMsg = "";
+        switch (response.status) {
+            case 400:
+                errMsg = '请求错误'
+                break;
+            case 401:
+                errMsg = '未授权，请登录'
+                break
+
+            case 403:
+                errMsg = '拒绝访问'
+                break
+
+            case 404:
+                errMsg = `请求地址出错: ${err.response.config.url}`
+                break
+
+            case 408:
+                errMsg = '请求超时'
+                break
+
+            case 500:
+                errMsg = '服务器内部错误'
+                break
+
+            case 501:
+                errMsg = '服务未实现'
+                break
+
+            case 502:
+                errMsg = '网关错误'
+                break
+
+            case 503:
+                errMsg = '服务不可用'
+                break
+
+            case 504:
+                errMsg = '网关超时'
+                break
+
+            case 505:
+                errMsg = 'HTTP版本不受支持'
+                break
+        }
         Toast({
-            message: "网络不给力",
+            message: errMsg,
             position: "bottom"
         });
     };
@@ -51,34 +88,18 @@ const ajaxRequest = (function () {
         let msg = null;
         //统一判断后端返回的错误码
         switch (code) {
-            case '0':
-                break;
-            case '1':
-                msg = response.data.msg || "网络不给力";
-                Toast({
-                    message: msg,
-                    position: 'bottom'
-                });
-                break;
-            case '2':
-                msg = "登录信息已失效！";
-                if (router.history.current.path != '/login') {
-                    router.push({ path: "/login" });
-                }
-                Toast({
-                    message: msg,
-                    position: 'bottom'
-                });
+            case -1:
+                myStorage.remove('token');
+                Store.dispatch('updateLoginState', false);
+                myStorage.set('isLogin', Store.state.isLogin);
                 break;
         }
-
     };
     return (opts, data) => {
         let Public = {
             //公共参数
             token: localStorage.getItem("token")
         };
-
         let httpDefaultOpts = {
             //http默认配置
             method: opts.method ? opts.method : 'post',
