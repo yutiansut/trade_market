@@ -76,7 +76,7 @@ Object.assign(Vue.prototype, {
   redirectTo(pathName, params) {
     let data = {
       path: pathName,
-      params: params
+      query: params
     };
     if (!params) delete data.params;
     router.replace(data);
@@ -84,7 +84,7 @@ Object.assign(Vue.prototype, {
   navigateTo(pathName, params) {
     let data = {
       path: pathName,
-      params: params
+      query: params
     };
     if (!params) delete data.params;
     router.push(data);
