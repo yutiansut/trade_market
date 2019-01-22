@@ -102,9 +102,8 @@ const Login = async (account, type, code) => {
             type: type,
             code: code
         });
-        if (result.code == 0) {
-            return result;
-        }
+        let data = handelResult(result);
+        return data;
     } catch (err) {
         console.log(err);
     }

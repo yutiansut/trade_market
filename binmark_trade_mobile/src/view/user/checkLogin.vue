@@ -1,57 +1,20 @@
 <template>
   <div class="login user-entry">
-    <tab-bar
-      my-class='tab-bar'
-      @onTabChange='onTabChange'
-      :tabItem='tabItem'
-    ></tab-bar>
-    <form
-      @submit.prevent="onSubmit"
-      class="check-form"
-    >
-      <div
-        v-show='type==0'
-        class="input-wrap flex flex-between font-14"
-      >
-        <input
-          v-model="code"
-          type="text"
-          placeholder="请输入手机验证码"
-        >
-        <span
-          @click="getCode"
-          class="color-primary "
-        >{{codeText}}</span>
+    <tab-bar my-class="tab-bar" @onTabChange="onTabChange" :tabItem="tabItem"></tab-bar>
+    <form @submit.prevent="onSubmit" class="check-form">
+      <div v-show="tabIndex==0" class="input-wrap flex flex-between font-14">
+        <input v-model="code" type="text" placeholder="请输入手机验证码">
+        <span @click="getCode" class="color-primary">{{codeText}}</span>
       </div>
-      <div
-        v-show='type==2'
-        class="input-wrap flex flex-between font-14"
-      >
-        <input
-          v-model="code"
-          type="text"
-          placeholder="请输入邮箱验证码"
-        >
-        <span
-          @click="getCode"
-          class="color-primary "
-        >{{codeText}}</span>
+      <div v-show="tabIndex==2" class="input-wrap flex flex-between font-14">
+        <input v-model="code" type="text" placeholder="请输入邮箱验证码">
+        <span @click="getCode" class="color-primary">{{codeText}}</span>
       </div>
-      <div
-        v-show='type==1'
-        class="input-wrap flex flex-between font-14"
-      >
-        <input
-          v-model="code"
-          type="text"
-          placeholder="请输入谷歌验证码"
-        >
+      <div v-show="tabIndex==1" class="input-wrap flex flex-between font-14">
+        <input v-model="code" type="text" placeholder="请输入谷歌验证码">
       </div>
       <div class="van-hairline--bottom"></div>
-      <button
-        :disabled='disabled'
-        class="btn-block btn-danger btn-large btn-default riple"
-      >确认</button>
+      <button :disabled="disabled" class="btn-block btn-danger btn-large btn-default riple">确认</button>
     </form>
   </div>
 </template>
@@ -62,9 +25,10 @@ export default {
   mixins: [verCodeMixin],
   data() {
     return {
-      type: 0,
+      loginType: 1,
+      tabIndex: 0,
       account: "",
-      codeType: "1",
+      codeType: "2",
       tabItem: []
     };
   },
@@ -91,18 +55,11 @@ export default {
     if (this.Store.state.checkLoginState.isemail) {
       this.tabItem.push("邮箱验证");
     }
+    this.account = this.Store.state.checkLoginState.tel;
   },
   methods: {
     getCode() {
       this.timeCountDown();
-      let { tel, email } = this.Store.state.checkLoginState;
-      if (this.type == 0) {
-        this.codeType = 2;
-        this.account = tel;
-      } else if (this.type == 2) {
-        this.codeType = 3;
-        this.account = email;
-      }
       setCode(this.account, this.codeType).then(res => {
         this.$toast({
           message: res.msg,
@@ -111,15 +68,31 @@ export default {
       });
     },
     onSubmit() {
-      Login(this.account, this.type, this.code).then(res => {
+      Login(this.account, this.loginType, this.code).then(data => {
         this.Store.dispatch("updateLoginState", true);
-        this.Store.dispatch("updateUserinfo", res.data.userInfo[0]);
-        this.storage.set("token", res.data.token);
+        this.Store.dispatch("updateUserinfo", data.userInfo[0]);
+        this.storage.set("token", data.token);
         this.storage.set("isLogin", true);
+        this.navigateTo("/home");
       });
     },
     onTabChange(i) {
-      this.type = i;
+      this.tabIndex = i;
+      let { tel, email } = this.Store.state.checkLoginState;
+      if (i == 0) {
+        //手机验证
+        this.loginType = 1;
+        this.codeType = 2;
+        this.account = tel;
+      } else if (i == 1) {
+        // 谷歌验证
+        this.loginType = 0;
+      } else {
+        //邮箱验证
+        this.loginType = 2;
+        this.codeType = 3;
+        this.account = email;
+      }
     }
   }
 };

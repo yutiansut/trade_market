@@ -104,7 +104,9 @@ const routes = [
         name: "Login",
         component: Login,
         meta: {
-          removeHeader: true
+          removeHeader: true,
+          title: "登录",
+          auth: false,
         }
       },
       {
@@ -112,7 +114,8 @@ const routes = [
         path: "/userentry/check_login",
         component: checkLogin,
         meta: {
-          auth: false
+          title: "登录验证",
+          auth: false,
         }
       },
       {
