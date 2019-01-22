@@ -40,18 +40,49 @@
   </div>
 </template>
 <script>
+import { checkLogin } from "@/vuexStore/storeService.js";
 export default {
   data() {
     return {
-      disabled: false,
       account: "",
       password: ""
     };
   },
+  mounted() {},
+  computed: {
+    disabled() {
+      if (!this.account || !this.password) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
   methods: {
-    getCode() {},
+    validate() {
+      if (!this.Util.isUserName(this.account)) {
+        this.$toast({
+          message: "用户名必须由6-12位字母及数字组成",
+          position: "bottom"
+        });
+        return false;
+      }
+      if (!this.Util.isPassword(this.password)) {
+        this.$toast({
+          message: "密码必须为6-12位字符",
+          position: "bottom"
+        });
+        return false;
+      }
+      return true;
+    },
     onSubmit() {
-      console.log();
+      if (this.validate()) {
+        checkLogin(this.account, this.password).then(res => {
+          this.Store.dispatch("updateCheckLoginState", res);
+          this.navigateTo("/userentry/check_login");
+        });
+      }
     },
     onTabChange() {}
   }

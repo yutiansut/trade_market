@@ -3,12 +3,12 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     isLogin: false,
-    isCheckLogin: false,
     showFooter: true,
     headerTitle: "",
     footerItemIndex: 0,
     showHeaderBack: false,
     showMainHeader: true,
+    checkLoginState: {},
     newsList: [],
     mainCoin: [],
     tradeCoin: [],
@@ -21,9 +21,6 @@ export default new Vuex.Store({
   mutations: {
     loginState(state, val) {
       state.isLogin = val;
-    },
-    checkLoginState(state) {
-      state.isCheckLogin = !state.isCheckLogin
     },
     footerShow(state, newVal) {
       state.showFooter = newVal;
@@ -64,14 +61,17 @@ export default new Vuex.Store({
     },
     getUserInfo(state, obj) {
       state.userInfo = obj;
+    },
+    checkLoginState(state, data) {
+      Object.assign(state.checkLoginState, data);
     }
   },
   actions: {
     updateLoginState(ctx, val) {
       ctx.commit("loginState", val);
     },
-    updateCheckLoginState(ctx) {
-      ctx.commit('checkLoginState')
+    updateCheckLoginState(ctx, data) {
+      ctx.commit('checkLoginState', data)
     },
     getNewsList(ctx, data) {
       ctx.commit('updateNewsList', data)

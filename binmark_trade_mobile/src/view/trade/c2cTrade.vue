@@ -1,12 +1,21 @@
 <template>
   <div class="main h-full">
     <!-- 侧栏滑块 -->
-    <slide-pop @onClose="toggleSlideShow" :showPop="showPop">
+    <slide-pop
+      @onClose="toggleSlideShow"
+      :showPop="showPop"
+    >
       <user-aside slot="content"></user-aside>
     </slide-pop>
     <!-- header -->
-    <app-header :iconLeft="assetConfig.imgs.user_head_portrait" @onHeadClick="toggleSlideShow">
-      <div slot="title" class="coin font-16 abs-vh-center">USDT</div>
+    <app-header
+      :iconLeft="assetConfig.imgs.user_head_portrait"
+      @onHeadClick="toggleSlideShow"
+    >
+      <div
+        slot="title"
+        class="coin font-16 abs-vh-center"
+      >USDT</div>
       <div
         @click.self="actionTrigger"
         slot="right"
@@ -14,17 +23,26 @@
       >选择币种</div>
     </app-header>
     <div class="content overflow-y">
-      <van-tabs color="#fe0042" v-model="active">
+      <van-tabs
+        color="#fe0042"
+        v-model="active"
+      >
         <!-- 买入 -->
         <van-tab title="买入">
           <div class="form">
             <div class="guide-price color-999 font-14">指导价：12321</div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="价格">
+              <input
+                type="text"
+                placeholder="价格"
+              >
               <div class="label">USDT</div>
             </div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="数量">
+              <input
+                type="text"
+                placeholder="数量"
+              >
               <div class="label">USDT</div>
             </div>
             <button class="btn-block btn-large riple btn-block btn-danger">买入</button>
@@ -35,11 +53,17 @@
           <div class="form">
             <div class="guide-price color-999 font-14">指导价：12321</div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="价格">
+              <input
+                type="text"
+                placeholder="价格"
+              >
               <div class="label">USDT</div>
             </div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="数量">
+              <input
+                type="text"
+                placeholder="数量"
+              >
               <div class="label">USDT</div>
             </div>
             <button class="btn-block btn-large riple btn-block btn-success">卖出</button>
@@ -125,7 +149,10 @@
         </van-tab>
       </van-tabs>
       <!-- 市场挂单 -->
-      <div v-show="active<=1" class="market-list">
+      <div
+        v-show="active<=1"
+        class="market-list"
+      >
         <div class="font-14 color-999 font-bold">市场挂单（只显示在线商家）</div>
         <div class="list-item">
           <van-row class="item flex flex-v-center">
@@ -151,7 +178,10 @@
                 <span>2017/8/8</span>
               </p>
             </van-col>
-            <van-col class="flex col-last" span="6">
+            <van-col
+              class="flex col-last"
+              span="6"
+            >
               <button class="btn-rounded btn-danger riple thumb-40 font-14">买入</button>
             </van-col>
           </van-row>
@@ -159,17 +189,21 @@
       </div>
     </div>
     <!-- 币种上拉菜单 -->
-    <van-actionsheet v-model="showActionSheet" :actions="tradeCoins" @select="onSelect"/>
+    <van-actionsheet
+      v-model="showActionSheet"
+      :actions="tradeCoins"
+      @select="onSelect"
+    />
   </div>
 </template>
 <script>
 import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import userAside from "@/components/slideContent/UserAside";
-import Mixin from "@/mixin/mixin";
+import { asideMixin } from "@/mixin/mixin";
 export default {
   components: { appHeader, slidePop, userAside },
-  mixins: [Mixin],
+  mixins: [asideMixin],
   data() {
     return {
       showActionSheet: false,

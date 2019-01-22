@@ -277,7 +277,7 @@ export default {
   computed: {
     commisionLabel() {
       return `${this.$t("commision") || "手续费"}：${this.coinInfo.outgas *
-        1}%`;
+        100}%+${this.coinInfo.tradgas}`;
     },
     myBalance() {
       return `${this.myAccount.usable * 1 || "0"}&nbsp;${this.coinInfo.name}`;

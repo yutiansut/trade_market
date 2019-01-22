@@ -59,6 +59,7 @@ export default {
         user_icon_9: require('../assets/images/user_icon_9.png'),
         user_icon_10: require('../assets/images/user_icon_10.png'),
         user_icon_11: require('../assets/images/user_icon_11.png'),
-        user_problem_add: require('../assets/images/user_problem_add.png')
+        user_problem_add: require('../assets/images/user_problem_add.png'),
+        default: require("../assets/images/default.png")
     }
 }

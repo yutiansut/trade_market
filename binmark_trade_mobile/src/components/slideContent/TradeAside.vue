@@ -4,33 +4,40 @@
       color='#b72026'
       line-width='30'
       v-model="tabActive"
+      @click="onClick"
     >
-      <van-tab title="USDT"></van-tab>
-      <van-tab title="BTC"></van-tab>
-      <van-tab title="ETH"></van-tab>
+      <van-tab
+        v-for="(item,i) in Store.state.mainCoin"
+        :key='i'
+        :title="item.coinid"
+      ></van-tab>
     </van-tabs>
     <div class="coin-list">
       <van-row
+        v-for="(item,i) in Store.state.tradeCoin"
+        :key='i'
         @click="onRowClick"
         class="h-50 flex flex-v-center"
       >
         <van-col
-          span='6'
+          span='8'
           class="font-14 font-bold"
+          v-text="item.coinid"
         >
-          USDT
         </van-col>
         <van-col
-          span='9'
+          span='8'
           class="font-14"
+          :class='item.rise>0?"color-danger":"color-success"'
+          v-text="item.number*1"
         >
-          0.251515
         </van-col>
         <van-col
-          span='9'
+          span='8'
           class="font-14 txt-rt"
+          :class='item.rise>0?"color-danger":"color-success"'
+          v-text="item.rise*1+'%'"
         >
-          -0.72%
         </van-col>
       </van-row>
     </div>
@@ -47,12 +54,18 @@ export default {
   methods: {
     onRowClick() {
       this.$emit("onRowClick");
+    },
+    onClick(index, title) {
+      this.$emit("onTabClick", title);
     }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+.van-tabs__nav--line {
+  padding: 0 1rem;
+}
 .coin-list {
   .van-row {
     position: relative;

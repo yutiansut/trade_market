@@ -1,14 +1,30 @@
 <template>
   <div class="main h-full">
     <!-- 侧栏滑块 -->
-    <slide-pop @onClose="toggleSlideShow" :showPop="showPop">
+    <slide-pop
+      @onClose="toggleSlideShow"
+      :showPop="showPop"
+    >
       <user-aside slot="content"></user-aside>
     </slide-pop>
     <!-- header -->
-    <app-header @onHeadClick="toggleSlideShow" :iconLeft="assetConfig.imgs.user_head_portrait">
-      <div @click.self="actionTrigger" slot="title" class="coin h-full font-16 abs-vh-center">USDT
-        <van-icon v-show="!icon" :name="assetConfig.imgs.nav_otc_arrow_down"/>
-        <van-icon v-show="icon" :name="assetConfig.imgs.nav_otc_arrow_upper"/>
+    <app-header
+      @onHeadClick="toggleSlideShow"
+      :iconLeft="assetConfig.imgs.user_head_portrait"
+    >
+      <div
+        @click.self="actionTrigger"
+        slot="title"
+        class="coin h-full font-16 abs-vh-center"
+      >USDT
+        <van-icon
+          v-show="!icon"
+          :name="assetConfig.imgs.nav_otc_arrow_down"
+        />
+        <van-icon
+          v-show="icon"
+          :name="assetConfig.imgs.nav_otc_arrow_upper"
+        />
       </div>
       <div
         @click="navigateTo('/trade/tradeStatement')"
@@ -17,17 +33,26 @@
       >交易须知</div>
     </app-header>
     <div class="content overflow-y">
-      <van-tabs color="#fe0042" v-model="active">
+      <van-tabs
+        color="#fe0042"
+        v-model="active"
+      >
         <!-- 买入 -->
         <van-tab title="买入">
           <div class="form">
             <div class="guide-price color-999 font-14">1&nbsp;ETH&nbsp;折合&nbsp;5&nbsp;CNY</div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="价格">
+              <input
+                type="text"
+                placeholder="价格"
+              >
               <div class="label">USDT</div>
             </div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="数量">
+              <input
+                type="text"
+                placeholder="数量"
+              >
               <div class="label">CNY</div>
             </div>
             <p class="tips color-danger">*&nbsp;仅支持银行卡支付，支付期限不限</p>
@@ -39,11 +64,17 @@
           <div class="form">
             <div class="guide-price color-999 font-14">指导价：12321</div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="价格">
+              <input
+                type="text"
+                placeholder="价格"
+              >
               <div class="label">USDT</div>
             </div>
             <div class="input-wrap font-14 flex flex-v-center flex-between van-hairline--bottom">
-              <input type="text" placeholder="数量">
+              <input
+                type="text"
+                placeholder="数量"
+              >
               <div class="label">CNY</div>
             </div>
             <p class="tips color-danger">*&nbsp;仅支持银行卡支付，支付期限不限</p>
@@ -77,17 +108,21 @@
       </van-tabs>
     </div>
     <!-- 币种上拉菜单 -->
-    <van-actionsheet v-model="showActionSheet" :actions="tradeCoins" @select="onSelect"/>
+    <van-actionsheet
+      v-model="showActionSheet"
+      :actions="tradeCoins"
+      @select="onSelect"
+    />
   </div>
 </template>
 <script>
 import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import userAside from "@/components/slideContent/UserAside";
-import Mixin from "@/mixin/mixin";
+import { asideMixin } from "@/mixin/mixin";
 export default {
   components: { appHeader, slidePop, userAside },
-  mixins: [Mixin],
+  mixins: [asideMixin],
   data() {
     return {
       showActionSheet: false,

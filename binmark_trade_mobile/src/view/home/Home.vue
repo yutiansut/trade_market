@@ -26,8 +26,9 @@
             :key="i"
           >
             <img
+              :onerror='errorGoodsImg'
               class="banner-img"
-              :src="item.bannerUrl"
+              :src="item.bannerUrl?item.bannerUrl:errorGoodsImg"
             >
           </swiper-slide>
         </swiper>
@@ -93,8 +94,9 @@
         <van-row>
           <van-col span="2">
             <img
+              :src="item.logo?item.logo:errorGoodsImg"
+              :onerror="errorGoodsImg"
               class="thumb-25"
-              :src="item.logo"
             >
           </van-col>
           <van-col span="8">
@@ -128,20 +130,15 @@
   </div>
 </template>
 <script>
-import {
-  getNewsList,
-  getMainCoin,
-  getTradeCoin,
-  getIndexBanner
-} from "@/vuexStore/storeService.js";
+import { getNewsList, getIndexBanner } from "@/vuexStore/storeService.js";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import slidePop from "@/components/other/slidePop";
 import userAside from "@/components/slideContent/UserAside";
 import appHeader from "@/components/header/AppHeader";
-import Mixin from "@/mixin/mixin";
+import { asideMixin, coinTradeMixin } from "@/mixin/mixin";
 export default {
   components: { swiper, swiperSlide, slidePop, appHeader, userAside },
-  mixins: [Mixin],
+  mixins: [asideMixin, coinTradeMixin],
   data() {
     return {
       banners: [],
@@ -165,27 +162,24 @@ export default {
         autoplay: true,
         speed: 300
       },
+      errorGoodsImg: `this.src="${this.assetConfig.imgs.default}"`,
       activeIndex: 0,
-      coinSymbol: "",
       mainCoinInfo: {}
     };
   },
   mounted() {
-    // 新闻列表
-    getNewsList();
-    //获取主币种
-    getMainCoin().then(list => {
-      this.mainCoinInfo = list[0];
-      getTradeCoin(this.mainCoinInfo.coinid);
-    });
     this.getBanner();
-    // 获取banner图片
+    this.getCoinData().then(list => {
+      this.mainCoinInfo = list[0];
+      list && this.getTradeCoin(list[0].coinid);
+    });
+    getNewsList();
   },
   methods: {
     onMainCoinChange(item, index) {
       this.activeIndex = index;
       this.mainCoinInfo = item;
-      getTradeCoin(this.mainCoinInfo.coinid);
+      this.getTradeCoin(item.coinid);
     },
     getBanner() {
       if (window.sessionStorage && window.sessionStorage.getItem("banner")) {

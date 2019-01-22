@@ -93,6 +93,9 @@ const ajaxRequest = (function () {
                 Store.dispatch('updateLoginState', false);
                 myStorage.set('isLogin', Store.state.isLogin);
                 break;
+            case 0:
+
+                break;
         }
     };
     return (opts, data) => {

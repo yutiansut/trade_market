@@ -1,10 +1,16 @@
 <template>
   <div class="content app-body overflow-y h-full">
     <!-- 侧栏滑块 -->
-    <slide-pop @onClose="closeSlide" :showPop="showPop">
+    <slide-pop
+      @onClose="closeSlide"
+      :showPop="showPop"
+    >
       <user-aside slot="content"></user-aside>
     </slide-pop>
-    <app-header @onHeadClick="showSlide" :iconLeft="assetConfig.imgs.user_head_portrait">
+    <app-header
+      @onHeadClick="showSlide"
+      :iconLeft="assetConfig.imgs.user_head_portrait"
+    >
       <div
         slot="title"
         class="header-title font-16 font-bold abs-vh-center"
@@ -52,10 +58,10 @@
 import appHeader from "@/components/header/AppHeader.vue";
 import slidePop from "@/components/other/slidePop";
 import userAside from "@/components/slideContent/UserAside";
-import Mixin from "@/mixin/mixin";
+import { asideMixin } from "@/mixin/mixin";
 export default {
   components: { appHeader, slidePop, userAside },
-  mixins: [Mixin],
+  mixins: [asideMixin],
   data() {
     return {};
   },

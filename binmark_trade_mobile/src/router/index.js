@@ -101,6 +101,7 @@ const routes = [
     children: [
       {
         path: "/userentry/login",
+        name: "Login",
         component: Login,
         meta: {
           removeHeader: true

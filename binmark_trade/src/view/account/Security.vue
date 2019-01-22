@@ -311,7 +311,7 @@ export default {
   },
   data() {
     return {
-      dialogId: "googleAccount",
+      dialogId: "",
       bindState: {
         emailstate: "0"
       },

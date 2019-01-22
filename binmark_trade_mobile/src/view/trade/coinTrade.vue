@@ -5,7 +5,10 @@
       @onClose="toggleSlideShow"
       :showPop="showPop"
     >
-      <trade-aside slot="content"></trade-aside>
+      <trade-aside
+        @onTabClick='onClick'
+        slot="content"
+      ></trade-aside>
     </slide-pop>
     <!-- 头部 -->
     <app-header
@@ -15,7 +18,8 @@
       <div
         slot="title"
         class="coin font-16 abs-vh-center"
-      >BTC/USDT</div>
+        v-text="coins"
+      ></div>
     </app-header>
     <!-- 交易区 -->
     <div class="trade-panel flex flex-between">
@@ -25,13 +29,13 @@
           <div
             @click="toggleType(0)"
             :class="type==0&&'active-0'"
-            class="font-16 font-bold"
-          >买入</div>
+            class="font-14 font-bold"
+          >买入{{Store.state.tradecoinid}}</div>
           <div
             @click="toggleType(1)"
             :class="type==1&&'active-1'"
-            class="font-16 font-bold"
-          >卖出</div>
+            class="font-14 font-bold"
+          >卖出{{Store.state.tradecoinid}}</div>
         </div>
         <p class="price-label color-999">限价</p>
         <form @submit.prevent="onSubmit">
@@ -41,6 +45,11 @@
               type="text"
               placeholder="价格"
             >
+            <span
+              class="label"
+              v-text="Store.state.maincoinid"
+            >
+            </span>
           </div>
           <div class="from-group flex flex-between flex-v-center font-14 h-45">
             <input
@@ -48,7 +57,10 @@
               type="text"
               placeholder="数量"
             >
-            <span class="label">USDT</span>
+            <span
+              class="label"
+              v-text="Store.state.tradecoinid"
+            ></span>
           </div>
           <div class="available font-13 color-danger">可用：1216165&nbsp;USDT</div>
           <!-- 快速输入数量 -->
@@ -200,10 +212,10 @@
 import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import tradeAside from "@/components/slideContent/TradeAside";
-import Mixin from "@/mixin/mixin";
+import { asideMixin, coinTradeMixin } from "@/mixin/mixin";
 export default {
   components: { appHeader, slidePop, tradeAside },
-  mixins: [Mixin],
+  mixins: [asideMixin, coinTradeMixin],
   data() {
     return {
       type: 0,
@@ -213,8 +225,6 @@ export default {
       balance: 0,
       available: 0,
       numLevel: 0,
-      maincoin: "",
-      tradecoin: "",
       fastInputNum: [
         {
           label: "25%",
@@ -238,12 +248,24 @@ export default {
   },
   mounted() {
     let { maincoinid, tradecoinid } = this.$route.query;
-    this.maincoin = maincoinid;
-    this.tradecoin = tradecoinid;
+    if (maincoinid && tradecoinid) {
+      this.getCoinData().then(list => {
+        list && this.getTradeCoin(maincoinid, tradecoinid);
+      });
+    } else {
+      this.getCoinData().then(list => {
+        list && this.getTradeCoin(list[0].coinid);
+      });
+    }
   },
   computed: {
     total() {
       return this.number * this.price;
+    },
+    coins() {
+      if (this.Store.state.tradecoinid && this.Store.state.maincoinid) {
+        return this.Store.state.tradecoinid + "/" + this.Store.state.maincoinid;
+      }
     }
   },
   methods: {
@@ -254,9 +276,28 @@ export default {
     toggleType(index) {
       this.type = index;
     },
+    onClick(coinid) {
+      if (coinid) this.getTradeCoin(coinid);
+    },
     onSubmit() {},
     getNum(val) {
       this.numLevel = val;
+    }
+  },
+  watch: {
+    coins(val) {
+      let [tradecoin, maincoin] = val.split("/");
+      Promise.all([
+        this.getAvailable(maincoin),
+        this.getAvailable(tradecoin)
+      ]).then(res => {
+        try {
+          this.available = res[1].usable;
+          this.balance = res[0].usable;
+        } catch (err) {
+          console.log(err);
+        }
+      });
     }
   }
 };

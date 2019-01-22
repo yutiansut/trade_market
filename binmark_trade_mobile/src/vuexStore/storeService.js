@@ -23,7 +23,7 @@ function isEmptyObject(obj) {
         return false;
     }
     return true;
-}
+};
 // 获取新闻列表
 const getNewsList = async () => {
     try {
@@ -34,7 +34,7 @@ const getNewsList = async () => {
     } catch (err) {
         console.log(err);
     }
-}
+};
 // 获取用户信息
 const getUserInfo = async () => {
     try {
@@ -45,7 +45,7 @@ const getUserInfo = async () => {
     } catch (err) {
         console.log(err);
     }
-}
+};
 // 获取主币种
 const getMainCoin = async () => {
     try {
@@ -57,9 +57,9 @@ const getMainCoin = async () => {
     } catch (err) {
         console.log(err);
     }
-}
+};
 //获取交易币种
-const getTradeCoin = async (coinid) => {
+const getTradeCoin = async coinid => {
     try {
         let result = await Request(apiConfig.gettradecoin, { maincoin: coinid });
         let data = handelResult(result);
@@ -68,7 +68,7 @@ const getTradeCoin = async (coinid) => {
     } catch (err) {
         console.log(err);
     }
-}
+};
 // 获取首页banner
 const getIndexBanner = async () => {
     try {
@@ -79,13 +79,89 @@ const getIndexBanner = async () => {
         };
         return data.list;
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
-}
+};
+// 获取可用
+const getAvailable = async coinid => {
+    try {
+        let result = await Request(apiConfig.getdaynumber, {
+            coin: coinid
+        });
+        let data = handelResult(result);
+        return data.list[0];
+    } catch (err) {
+        console.log(err);
+    }
+};
+//登录
+const Login = async (account, type, code) => {
+    try {
+        let result = await Request(apiConfig.login, {
+            account: account,
+            type: type,
+            code: code
+        });
+        if (result.code == 0) {
+            return result;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
+//登录验证
+const checkLogin = async (account, password) => {
+    try {
+        let result = await Request(apiConfig.checklogin, {
+            account: account,
+            password: password
+        });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
+};
+//注册
+const Register = async formData => {
+    try {
+        let result = await Request(apiConfig.register, {
+            account: formData.account,
+            password: formData.password,
+            type: formData.type,
+            password: formData.password,
+            code: formData.code,
+            parent: formData.parent
+        });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
+};
+//获取验证码
+const setCode = async (account, type) => {
+    try {
+        let result = await Request(apiConfig.code, {
+            account: account,
+            type: type
+        });
+        if (result.code == 0) {
+            return result
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
 export {
     getNewsList,
     getUserInfo,
     getMainCoin,
     getTradeCoin,
-    getIndexBanner
+    getIndexBanner,
+    getAvailable,
+    Login,
+    checkLogin,
+    Register,
+    setCode
 }
