@@ -2,18 +2,19 @@
   <div class="wh-full app-body">
     <!-- 侧栏滑块 -->
     <slide-pop
-      @onClose="toggleSlideShow"
+      @onClose="slideClose"
       :showPop="showPop"
     >
       <trade-aside
-        @onTabClick='onClick'
+        @onTabClick.self='onTabClick'
+        @onRowClick.self='onRowClick'
         slot="content"
       ></trade-aside>
     </slide-pop>
     <!-- 头部 -->
     <app-header
       :iconLeft="assetConfig.imgs.nav_transaction_menu"
-      @onHeadClick="toggleSlideShow"
+      @onHeadClick="slideShow"
     >
       <div
         slot="title"
@@ -38,7 +39,7 @@
           >卖出{{Store.state.tradecoinid}}</div>
         </div>
         <p class="price-label color-999">限价</p>
-        <form @submit.prevent="onSubmit">
+        <form @submit.prevent>
           <div class="from-group flex flex-between flex-v-center font-14 h-45">
             <input
               v-model.number="price"
@@ -62,7 +63,10 @@
               v-text="Store.state.tradecoinid"
             ></span>
           </div>
-          <div class="available font-13 color-danger">可用：1216165&nbsp;USDT</div>
+          <div
+            class="available font-13 color-danger"
+            v-html="availableLabel"
+          ></div>
           <!-- 快速输入数量 -->
           <van-row
             class="fast-input h-30"
@@ -88,16 +92,18 @@
             ></span>
           </div>
           <button
+            @click="forBuy"
             v-show="type==0"
             class="btn-large btn-block riple btn-danger"
           >买入</button>
           <button
+            @click="forSell"
             v-show="type==1"
             class="btn-large btn-block riple btn-success"
           >卖出</button>
         </form>
       </div>
-      <!-- 行情 -->
+      <!-- 买入卖出五档图-->
       <div class="trade-trend">
         <div class="table">
           <van-row class="thead h-35 color-666">
@@ -110,35 +116,55 @@
               span="12"
             >数量</van-col>
           </van-row>
+          <!-- 卖出五档图 -->
           <div class="tbody">
-            <van-row class="h-25 p-rel">
-              <div class="progress p-abs"></div>
-              <van-col
-                class="font-13 color-success"
-                span="12"
-              >1321</van-col>
-              <van-col
-                class="txt-rt font-13"
-                span="12"
-              >1321</van-col>
-            </van-row>
+            <div
+              @click='OrderClick(item)'
+              v-for="(item,i) in SellOrder"
+              :key='i'
+            >
+              <van-row class="h-25 riple p-rel">
+                <div
+                  :style='{width:(item.total/sellListTotal)*100+"%"}'
+                  class="progress p-abs"
+                ></div>
+                <van-col
+                  class="font-13 color-success"
+                  span="12"
+                >{{item.price*1}}</van-col>
+                <van-col
+                  class="txt-rt font-13"
+                  span="12"
+                >{{item.number*1}}</van-col>
+              </van-row>
+            </div>
           </div>
           <div
-            :class="rise>0?'color-danger':'color-success'"
+            :class="coinInfo.prise>0?'color-danger':'color-success'"
             class="rise txt-center font-14 h-25"
-          >最新价 {{rise}}</div>
+          >最新价 {{coinInfo.prise?coinInfo.prise*1:0}}</div>
+          <!-- 买入五档图 -->
           <div class="tbody">
-            <van-row class="h-25 p-rel">
-              <div class="progress p-abs"></div>
-              <van-col
-                class="font-13 color-danger"
-                span="12"
-              >1321</van-col>
-              <van-col
-                class="txt-rt font-13"
-                span="12"
-              >1321</van-col>
-            </van-row>
+            <div
+              @click='OrderClick(item)'
+              v-for="(item,i) in BuyOrder"
+              :key='i'
+            >
+              <van-row class="h-25 riple p-rel">
+                <div
+                  :style='{width:(item.total/buyListTotal)*100+"%"}'
+                  class="progress p-abs"
+                ></div>
+                <van-col
+                  class="font-13 color-success"
+                  span="12"
+                >{{item.price*1}}</van-col>
+                <van-col
+                  class="txt-rt font-13"
+                  span="12"
+                >{{item.number*1}}</van-col>
+              </van-row>
+            </div>
           </div>
         </div>
       </div>
@@ -151,7 +177,10 @@
         v-model="tabActive"
       >
         <van-tab title="当前委托">
-          <div class="record-table">
+          <div
+            v-if="Store.state.isLogin"
+            class="record-table"
+          >
             <van-row class="thead color-666 flex flex-v-center h-45">
               <van-col span="6 font-14">市场</van-col>
               <van-col span="7 font-14">价格</van-col>
@@ -180,7 +209,10 @@
           </div>
         </van-tab>
         <van-tab title="历史委托">
-          <div class="record-table">
+          <div
+            v-if="Store.state.isLogin"
+            class="record-table"
+          >
             <van-row class="thead color-666 flex flex-v-center h-45">
               <van-col span="9 font-14">市场</van-col>
               <van-col span="8 font-14">价格</van-col>
@@ -205,6 +237,14 @@
           </div>
         </van-tab>
       </van-tabs>
+      <div
+        class="h-45 unlogin font-16 txt-center"
+        v-if='!Store.state.isLogin'
+      >请先&nbsp;<router-link
+          to='/userentry/login'
+          class="color-info"
+        >登录</router-link>
+      </div>
     </div>
   </div>
 </template>
@@ -213,6 +253,15 @@ import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import tradeAside from "@/components/slideContent/TradeAside";
 import { asideMixin, coinTradeMixin } from "@/mixin/mixin";
+import { sumCalc } from "@/assets/js/commonFunc.js";
+import {
+  currentEntrust,
+  entrustRecord,
+  getCoinInfo,
+  getBuyOrder,
+  getSellOrder,
+  tradeHandle
+} from "../../vuexStore/storeService.js";
 export default {
   components: { appHeader, slidePop, tradeAside },
   mixins: [asideMixin, coinTradeMixin],
@@ -221,7 +270,6 @@ export default {
       type: 0,
       number: "",
       price: "",
-      rise: 0,
       balance: 0,
       available: 0,
       numLevel: 0,
@@ -243,7 +291,13 @@ export default {
           val: 1
         }
       ],
-      tabActive: 0
+      tabActive: 0,
+      entrustList: [],
+      entrustRecord: [],
+      coinInfo: {},
+      SellOrder: [],
+      BuyOrder: [],
+      init: false
     };
   },
   mounted() {
@@ -254,42 +308,82 @@ export default {
       });
     } else {
       this.getCoinData().then(list => {
-        list && this.getTradeCoin(list[0].coinid);
+        try {
+          this.getTradeCoin(list[0].coinid);
+        } catch (error) {
+          console.log(err);
+        }
       });
     }
   },
   computed: {
     total() {
-      return this.number * this.price;
+      return `${(this.number * this.price).toFixed(2)}`;
     },
     coins() {
       if (this.Store.state.tradecoinid && this.Store.state.maincoinid) {
         return this.Store.state.tradecoinid + "/" + this.Store.state.maincoinid;
       }
+    },
+    availableLabel() {
+      if (this.type == 0) {
+        return `可兑换：${this.available || 0}&nbsp;${this.Store.state
+          .maincoinid || ""}`;
+      } else {
+        return `可用：${this.balance || 0}&nbsp;${this.Store.state
+          .tradecoinid || ""}`;
+      }
+    },
+    //最新买入总计
+    buyListTotal() {
+      let total = 0;
+      this.BuyOrder.map(item => {
+        total += item.price * item.number;
+      });
+      return total;
+    },
+    //最新卖出总计
+    sellListTotal() {
+      let total = 0;
+      this.SellOrder.map(item => {
+        total += item.price * item.number;
+      });
+      return total;
     }
   },
   methods: {
-    resetForm() {
-      this.number = "";
-      this.price = "";
+    validate() {
+      if (this.total == 0 || isNaN(this.total)) {
+        this.$toast({ message: "价格或者数量不合法" });
+        return false;
+      }
+      return true;
     },
-    toggleType(index) {
-      this.type = index;
-    },
-    onClick(coinid) {
-      if (coinid) this.getTradeCoin(coinid);
-    },
-    onSubmit() {},
-    getNum(val) {
-      this.numLevel = val;
-    }
-  },
-  watch: {
-    coins(val) {
-      let [tradecoin, maincoin] = val.split("/");
+    loadData(maincoinid, tradecoinid) {
+      currentEntrust(maincoinid, tradecoinid);
+      entrustRecord(maincoinid, tradecoinid);
+      getCoinInfo(maincoinid, tradecoinid).then(res => {
+        this.coinInfo = res;
+      });
+      getSellOrder(maincoinid, tradecoinid).then(res => {
+        try {
+          // 求和
+          this.SellOrder = sumCalc(res, "price", "number");
+        } catch (err) {
+          console.log(err);
+        }
+      });
+      getBuyOrder(maincoinid, tradecoinid).then(res => {
+        try {
+          // 求和
+          this.BuyOrder = sumCalc(res, "price", "number");
+        } catch (err) {
+          console.log(err);
+        }
+      });
       Promise.all([
-        this.getAvailable(maincoin),
-        this.getAvailable(tradecoin)
+        this.getAvailable(maincoinid),
+        this.getAvailable(tradecoinid)
       ]).then(res => {
         try {
           this.available = res[1].usable;
@@ -298,6 +392,58 @@ export default {
           console.log(err);
         }
       });
+    },
+    OrderClick(item) {
+      this.number = item.number * 1;
+      this.price = item.price * 1;
+    },
+    resetForm() {
+      this.number = "";
+      this.price = "";
+    },
+    toggleType(index) {
+      this.type = index;
+    },
+    onTabClick(coinid) {
+      if (coinid) this.getTradeCoin(coinid);
+    },
+    onRowClick(item) {
+      let { maincoinid, coinid } = item;
+      this.Store.commit("updateMainCoinid", maincoinid);
+      this.Store.commit("updateTradeCoinid", coinid);
+      this.showPop = false;
+    },
+    forBuy() {
+      if (this.validate()) {
+        tradeHandle(this.api.forbuy, {
+          prise: this.price,
+          number: this.number,
+          maincoin: this.Store.state.maincoinid,
+          tradcoin: this.Store.state.tradecoinid
+        }).then(res => {
+          console.log(res);
+        });
+      }
+    },
+    forSell() {
+      if (this.validate()) {
+        tradeHandle(this.api.forsell, {
+          prise: this.price,
+          number: this.number,
+          maincoin: this.Store.state.maincoinid,
+          tradcoin: this.Store.state.tradecoinid
+        }).then(res => {});
+      }
+    },
+    getNum(val) {
+      this.numLevel = val;
+      this.number = Math.round(this.number * val);
+    }
+  },
+  watch: {
+    coins(val) {
+      let [tradecoin, maincoin] = val.split("/");
+      this.loadData(maincoin, tradecoin);
     }
   }
 };
@@ -372,17 +518,17 @@ export default {
   .tbody {
     line-height: 25px;
     height: 125px;
+    overflow-y: scroll;
     .van-col {
       position: relative;
       z-index: 99;
     }
     .progress {
-      width: 100%;
       height: 100%;
       z-index: 9;
-      left: 0;
+      right: 0;
       top: 0;
-      background-color: #f6f6f6;
+      background-color: #eee;
       opacity: 0.4;
     }
   }

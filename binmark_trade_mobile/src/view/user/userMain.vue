@@ -1,6 +1,6 @@
 // 登录注册
 <template>
-  <div class="wh-full">
+  <div class="wh-full app-main">
     <my-header titleText=""></my-header>
     <div class="account-main wh-full">
       <router-view></router-view>

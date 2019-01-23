@@ -104,17 +104,17 @@ router.beforeEach((to, from, next) => {
   Store.commit("setHeaderTitle", to.meta.title);
   if (to.meta.auth) {
     if (myStorage.get("token")) {
-      Store.dispatch('updateLoginState', true);
+      Store.commit('loginState', true);
       next();
     } else {
       myStorage.set("isLogin", false);
-      Store.dispatch('updateLoginState', false);
+      Store.commit('loginState', false);
       next({ path: "/userentry/login" });
     }
   } else {
     if (to.name == "Login" || to.name == 'Register') {
       myStorage.remove("token");
-      Store.dispatch('updateLoginState', false);
+      Store.commit('loginState', false);
     }
     next();
   }

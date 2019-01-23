@@ -28,7 +28,7 @@
         class="btn-block btn-primary btn-large btn-default riple"
       >登录</button>
       <p class="login-links color-999 font-14 flex flex-between">
-        <router-link to>忘记密码</router-link>
+        <router-link to='/userentry/resetpassword'>忘记密码</router-link>
         <span>还没有账号？
           <router-link
             to="/userentry/register"

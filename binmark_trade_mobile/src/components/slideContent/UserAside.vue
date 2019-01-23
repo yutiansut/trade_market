@@ -4,8 +4,19 @@
       :style="{backgroundImage:'url('+assetConfig.imgs.sideslip_bg+')'}"
       class="user-info"
     >
-      <div class="user-id font-20">1523489494</div>
-      <span class="color-666 font-14">账号Id:</span>
+      <template v-if='Store.state.isLogin'>
+        <div
+          class="user-id font-20"
+          v-text="Store.state.userInfo.tel||Store.state.userInfo.email"
+        ></div>
+        <span class="color-666 font-14">账号Id:{{Store.state.userInfo.member}}</span>
+      </template>
+      <template v-else>
+        <div
+          @click="navigateTo('/userentry/login')"
+          class="user-id font-20"
+        >请登录</div>
+      </template>
     </div>
     <div class="nav-bar">
       <router-link
@@ -49,7 +60,7 @@ export default {
         },
         {
           label: "账户管理",
-          link: "",
+          link: "/account/center",
           icon: this.assetConfig.imgs.user_icon_2
         },
         {
@@ -90,9 +101,16 @@ export default {
       ]
     };
   },
-  mounted() {
-    if (this.Store.state.isLogin) {
-      getUserInfo();
+  computed: {
+    loginState() {
+      return this.Store.state.isLogin;
+    }
+  },
+  watch: {
+    loginState(val) {
+      if (val) {
+        getUserInfo();
+      }
     }
   }
 };

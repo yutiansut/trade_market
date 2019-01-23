@@ -133,7 +133,10 @@ const routes = [
       },
       {
         path: "/userentry/resetpassword",
-        component: Resetpassword
+        component: Resetpassword,
+        meta: {
+          title: "重置密码"
+        }
       }
     ]
   },

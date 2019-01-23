@@ -43,6 +43,7 @@ export default {
       this.showAside = false;
     },
     onLeave() {
+      this.show = false;
       this.$emit("onClose");
     }
   },

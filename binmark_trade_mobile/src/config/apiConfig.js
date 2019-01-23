@@ -343,6 +343,10 @@ let apiCfg = (function () {
         //绑定手机号
         addtel: {
             url: "addtel"
+        },
+        //获取币币交易价格信息
+        searchcoin: {
+            url: 'searchcoin'
         }
     }
 }());

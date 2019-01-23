@@ -24,9 +24,8 @@
     </app-header>
     <div class="account">
       <div class="title font-16">我的账户</div>
-      <div class="label font-14">总资产 (BTC)</div>
-      <div class="account-balance font-20 font-bold">0.00000000</div>
-      <div class="account-cny font-14">0.00&nbsp;CNY</div>
+      <div class="label font-14">总资产</div>
+      <div class="account-balance font-20 font-bold">￥{{totalAmount}}&nbsp;</div>
     </div>
     <div class="account-list">
       <div class="list-item van-hairline--bottom">
@@ -64,6 +63,11 @@ export default {
   mixins: [asideMixin],
   data() {
     return {};
+  },
+  computed: {
+    totalAmount() {
+      return this.Store.state.userInfo.amount || 0;
+    }
   },
   methods: {
     goRecord() {},

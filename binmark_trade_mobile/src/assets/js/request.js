@@ -101,7 +101,7 @@ const ajaxRequest = (function () {
     return (opts, data) => {
         let Public = {
             //公共参数
-            token: localStorage.getItem("token")
+            token: myStorage.get("token")
         };
         let httpDefaultOpts = {
             //http默认配置

@@ -6,19 +6,6 @@
     </div>
   </div>
 </template>
-<script>
-export default {
-  data() {
-    return {
-      type: 0,
-      getCodeMsg: "发送验证码"
-    };
-  },
-  methods: {
-    onSubmit() {}
-  }
-};
-</script>
 <style lang="scss">
 .register-form {
   margin-top: 6rem;

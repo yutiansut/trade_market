@@ -7,10 +7,10 @@
     <template v-for="(item,i) in tabItem">
       <span
         class="p-rel"
-        :class="tabIndex==i?'active':''"
-        @touchend='onTabTouch(i,item)'
+        :class="tabIndex==item.type?'active':''"
+        @touchend='onTabTouch(i,item.type)'
         :key="i"
-        v-text="item"
+        v-text="item.label"
       ></span>
     </template>
   </div>
@@ -47,17 +47,33 @@
 </style>
 <script>
 export default {
-  props: ["tabItem", "myClass"],
+  props: ["tabItem", "myClass", "tabIndex"],
   name: "tab-bar",
   data() {
-    return {
-      tabIndex: 0
-    };
+    return {};
   },
   methods: {
-    onTabTouch(i, item) {
-      this.tabIndex = i;
-      this.$emit("onTabChange", i);
+    onTabTouch(i, type) {
+      let { isemail, isgoogle, istel } = this.Store.state.checkLoginState;
+      if (type == 0 && !isgoogle) {
+        this.$toast({
+          message: "您未绑定谷歌"
+        });
+        return;
+      }
+      if (type == 1 && !istel) {
+        this.$toast({
+          message: "您未绑定手机"
+        });
+        return;
+      }
+      if (type == 2 && !isemail) {
+        this.$toast({
+          message: "您未绑定邮箱"
+        });
+        return;
+      }
+      this.$emit("onTabChange", type);
     }
   }
 };

@@ -1,5 +1,5 @@
 <template>
-  <div class="coin-slide w-full overflow-y">
+  <div class="coin-slide h-full overflow-y">
     <van-tabs
       color='#b72026'
       line-width='30'
@@ -13,33 +13,34 @@
       ></van-tab>
     </van-tabs>
     <div class="coin-list">
-      <van-row
+      <div
         v-for="(item,i) in Store.state.tradeCoin"
         :key='i'
-        @click="onRowClick"
-        class="h-50 flex flex-v-center"
+        @click.stop="onRowClick(item)"
       >
-        <van-col
-          span='8'
-          class="font-14 font-bold"
-          v-text="item.coinid"
-        >
-        </van-col>
-        <van-col
-          span='8'
-          class="font-14"
-          :class='item.rise>0?"color-danger":"color-success"'
-          v-text="item.number*1"
-        >
-        </van-col>
-        <van-col
-          span='8'
-          class="font-14 txt-rt"
-          :class='item.rise>0?"color-danger":"color-success"'
-          v-text="item.rise*1+'%'"
-        >
-        </van-col>
-      </van-row>
+        <van-row class="h-50 flex flex-v-center">
+          <van-col
+            span='8'
+            class="font-14 font-bold"
+            v-text="item.coinid"
+          >
+          </van-col>
+          <van-col
+            span='8'
+            class="font-14"
+            :class='item.rise>0?"color-danger":"color-success"'
+            v-text="item.number*1"
+          >
+          </van-col>
+          <van-col
+            span='8'
+            class="font-14 txt-rt"
+            :class='item.rise>0?"color-danger":"color-success"'
+            v-text="item.rise*1+'%'"
+          >
+          </van-col>
+        </van-row>
+      </div>
     </div>
   </div>
 </template>
@@ -52,8 +53,8 @@ export default {
     };
   },
   methods: {
-    onRowClick() {
-      this.$emit("onRowClick");
+    onRowClick(item) {
+      this.$emit("onRowClick", item);
     },
     onClick(index, title) {
       this.$emit("onTabClick", title);
@@ -67,6 +68,8 @@ export default {
   padding: 0 1rem;
 }
 .coin-list {
+  overflow: auto;
+  height: calc(100% - 44px);
   .van-row {
     position: relative;
     padding: 0 1rem;

@@ -2,14 +2,14 @@
   <div class="main h-full">
     <!-- 侧栏滑块 -->
     <slide-pop
-      @onClose="toggleSlideShow"
+      @onClose="slideClose"
       :showPop="showPop"
     >
       <user-aside slot="content"></user-aside>
     </slide-pop>
     <!-- header -->
     <app-header
-      @onHeadClick="toggleSlideShow"
+      @onHeadClick="slideShow"
       :iconLeft="assetConfig.imgs.user_head_portrait"
     >
       <div

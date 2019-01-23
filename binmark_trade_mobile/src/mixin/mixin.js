@@ -12,9 +12,12 @@ const asideMixin = {
         }
     },
     methods: {
-        toggleSlideShow() {
-            this.showPop = !this.showPop;
+        slideClose() {
+            this.showPop = false;
         },
+        slideShow() {
+            this.showPop = true;
+        }
     }
 };
 // 币币交易混入
@@ -28,8 +31,8 @@ const coinTradeMixin = {
         },
         async getTradeCoin(maincoinid, tradecoinid) {
             let result = await getTradeCoin(maincoinid);
-            this.Store.commit('updateMainCoinid', maincoinid);
-            this.Store.commit('updateTradeCoinid', tradecoinid || result[0].coinid);
+            this.Store.dispatch('updateMainCoinid', maincoinid);
+            this.Store.dispatch('updateTradeCoinid', tradecoinid || result[0].coinid);
         },
         async getAvailable(coinid) {
             if (coinid) {

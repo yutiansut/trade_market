@@ -84,6 +84,12 @@ export default new Vuex.Store({
     },
     getTradeCoin(ctx, data) {
       ctx.commit('updateTradeCoin', data);
+    },
+    updateTradeCoinid(ctx, val) {
+      ctx.commit('updateTradeCoinid', val)
+    },
+    updateMainCoinid(ctx, val) {
+      ctx.commit('updateMainCoinid', val)
     }
   }
 });

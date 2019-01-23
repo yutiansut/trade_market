@@ -6,16 +6,35 @@
           class="thumb-40 thumb-round"
           :src="assetConfig.imgs.user_head_portrait"
         >
-        <span class="font-15">15623454605</span>
+        <span
+          class="font-15"
+          v-text="Store.state.userInfo.tel||Store.state.userInfo.email"
+        ></span>
       </div>
     </div>
     <div class="btn-group">
-      <button class="btn-primary btn-large btn-block">退出登录</button>
+      <button
+        @click="logOut"
+        class="btn-primary btn-large btn-block"
+      >退出登录</button>
     </div>
   </div>
 </template>
 <script>
-export default {};
+import { getUserInfo, Logout } from "../../vuexStore/storeService";
+export default {
+  mounted() {
+    getUserInfo();
+  },
+  methods: {
+    logOut() {
+      Logout().then(res => {
+        this.storage.set("isLogin", false);
+        this.navigateTo("/userentry/login");
+      });
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 .content {
