@@ -70,7 +70,7 @@ export default {
         },
         {
           label: "我的公告",
-          link: "",
+          link: "/news",
           icon: this.assetConfig.imgs.user_icon_4
         },
         {
@@ -101,17 +101,8 @@ export default {
       ]
     };
   },
-  computed: {
-    loginState() {
-      return this.Store.state.isLogin;
-    }
-  },
-  watch: {
-    loginState(val) {
-      if (val) {
-        getUserInfo();
-      }
-    }
+  mounted() {
+    getUserInfo();
   }
 };
 </script>

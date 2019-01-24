@@ -4,8 +4,8 @@
       v-for="(item,i) in Store.state.newsList"
       :key='item.id||i'
       :news-title='item.title'
-      :content='item.content||""'
-      :date='item.date'
+      :content='item.con||""'
+      :date='item.writedate'
       :link-to='"/news/detail/"+item.id'
     ></news-list>
   </div>
@@ -14,10 +14,11 @@
 </style>
 <script>
 import newsList from "@/components/other/newsList";
+import { getNewsList } from "@/vuexStore/storeService.js";
 export default {
   components: { newsList },
-  data() {
-    return {};
+  mounted() {
+    getNewsList();
   }
 };
 </script>

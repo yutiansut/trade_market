@@ -6,11 +6,11 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/API': {
-        target: "http://192.168.16.51:80/",
+        target: "http://192.168.16.51:8080/",
         changeOrigin: true
       }
     },
-    host: '192.168.16.225',
+    host: '127.0.0.1',
     port: 8080,
     autoOpenBrowser: true,
     errorOverlay: true,

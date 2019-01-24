@@ -34,6 +34,7 @@ const BindEmail = r => require(["@/view/account/BindEmail"], r);
 const BindBank = r => require(["@/view/account/BindBank"], r);
 const GoogleAuth = r => require(["@/view/account/GoogleAuth"], r);
 const Identify = r => require(["@/view/account/Identify"], r);
+const AccountCenter = r => require(["@/view/account/AccountCenter"], r);
 // 日志记录
 const AccountLogs = r => require(["@/view/account/AccountLogs"], r);
 const LoginLogs = r => require(["@/view/account/LoginLogs"], r);
@@ -42,7 +43,7 @@ const ArticleMain = r => require(["@/view/articles/ArticleMain"], r);
 const AboutTrade = r => require(["@/view/articles/AboutTrade"], r);
 const Fee = r => require(["@/view/articles/Fee"], r);
 const CoinInfo = r => require(["@/view/articles/CoinInfo"], r);
-const AccountCenter = r => require(["@/view/account/AccountCenter"], r);
+const CoinInfoDetail = r => require(["@/view/articles/CoinInfoDetail"], r);
 const routes = [
   {
     path: "/",
@@ -342,9 +343,17 @@ const routes = [
         meta: { title: "费率" }
       },
       {
+        name: "CoinInfo",
         path: "/articles/coininfo",
         component: CoinInfo,
         meta: { title: "币种资料" }
+      },
+
+      {
+        path: "/articles/coin_detail/:id",
+        name: "CoinInfoDetail",
+        component: CoinInfoDetail,
+        meta: { title: "币种详情" }
       }
     ]
   }

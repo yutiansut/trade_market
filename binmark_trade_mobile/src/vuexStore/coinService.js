@@ -91,12 +91,11 @@ const getCoinInfo = async (maincoinid, tradecoinid) => {
     try {
         let result = await Request(apiConfig.searchcoin, {
             maincoin: maincoinid,
-            tradcoin: tradecoinid
+            tradcoin: tradecoinid,
+            showLoading: false
         });
         let data = handelResult(result);
-        if (data) {
-            return data.list[0];
-        }
+        if (data) return data.list[0];
     } catch (err) {
         console.log(err);
     }
@@ -109,9 +108,7 @@ const getAllTrade = async (maincoinid, tradecoinid) => {
             tradcoin: tradecoinid
         });
         let data = handelResult(result);
-        if (data) {
-            return data.list;
-        }
+        if (data) return data.list;
     } catch (err) {
         console.log(err);
     }
@@ -121,12 +118,11 @@ const getBuyOrder = async (maincoinid, tradecoinid) => {
     try {
         let result = await Request(apiConfig.buyorder, {
             maincoin: maincoinid,
-            tradcoin: tradecoinid
+            tradcoin: tradecoinid,
+            showLoading: false
         });
         let data = handelResult(result);
-        if (data) {
-            return data.list;
-        }
+        if (data) return data.list;
     } catch (err) {
         console.log(err);
     }
@@ -136,12 +132,11 @@ const getSellOrder = async (maincoinid, tradecoinid) => {
     try {
         let result = await Request(apiConfig.sellorder, {
             maincoin: maincoinid,
-            tradcoin: tradecoinid
+            tradcoin: tradecoinid,
+            showLoading: false
         });
         let data = handelResult(result);
-        if (data) {
-            return data.list;
-        }
+        if (data) return data.list;
     } catch (err) {
         console.log(err);
     }
@@ -163,11 +158,35 @@ const tradeHandle = async (api, params) => {
             number: params.number
         });
         let data = handelResult(result);
-        if (data) {
-            return data;
-        }
+        if (data) return data;
     } catch (err) {
         console.log(err);
+    }
+};
+//撤单
+const clearEntrust = async (id) => {
+    try {
+        let result = await Request(apiConfig.clearentrust, { id: id });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+// 币种费率
+const CoinFee = async () => {
+    try {
+        let result = await Request(apiConfig.gaslist);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
     }
 };
 export {
@@ -180,5 +199,7 @@ export {
     getAllTrade,
     getBuyOrder,
     getSellOrder,
-    tradeHandle
+    tradeHandle,
+    clearEntrust,
+    CoinFee
 }

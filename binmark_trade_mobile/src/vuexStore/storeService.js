@@ -7,7 +7,12 @@ import {
     resetPassword,
     sendCode
 } from './userService';
-import { getNewsList } from './articleService';
+import {
+    getNewsList,
+    getCoinProfile,
+    getHelpCenter,
+    getWorkOrder
+} from './articleService';
 import { getIndexBanner } from './assetService';
 import {
     getMainCoin,
@@ -19,11 +24,16 @@ import {
     getAllTrade,
     getBuyOrder,
     getSellOrder,
-    tradeHandle
+    tradeHandle,
+    clearEntrust,
+    CoinFee
 } from './coinService';
 export {
     getNewsList,
+    getCoinProfile,
     getUserInfo,
+    getHelpCenter,
+    getWorkOrder,
     getIndexBanner,
     getMainCoin,
     getTradeCoin,
@@ -40,5 +50,7 @@ export {
     getAllTrade,
     getBuyOrder,
     getSellOrder,
-    tradeHandle
+    tradeHandle,
+    clearEntrust,
+    CoinFee
 }

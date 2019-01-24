@@ -108,6 +108,7 @@ export default {
       this.account = email;
     } else if (isgoogle && !isemail && !istel) {
       this.loginType = 0;
+      this.account = this.$route.query.account;
     } else if (istel && !isgoogle && !isemail) {
       this.account = tel;
       this.codeType = 2;
@@ -131,11 +132,15 @@ export default {
     },
     onSubmit() {
       Login(this.account, this.loginType, this.code).then(data => {
-        this.Store.dispatch("updateLoginState", true);
-        this.Store.dispatch("updateUserinfo", data.userinfo[0]);
-        this.storage.set("token", data.token);
-        this.storage.set("isLogin", true);
-        this.navigateTo("/home");
+        try {
+          this.Store.dispatch("updateLoginState", true);
+          this.Store.dispatch("updateUserinfo", data.userinfo[0]);
+          this.storage.set("token", data.token);
+          this.storage.set("isLogin", true);
+          this.navigateTo("/home");
+        } catch (err) {
+          console.log(err);
+        }
       });
     },
     onTabChange(i) {
@@ -148,6 +153,8 @@ export default {
       } else if (i == 2) {
         this.codeType = 3;
         this.account = email;
+      } else {
+        this.account = this.$route.query.account;
       }
     }
   }

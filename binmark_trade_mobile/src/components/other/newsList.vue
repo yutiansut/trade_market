@@ -41,7 +41,13 @@ export default {
   background: #fff;
   p:not(:first-child) {
     margin-top: 1.25rem;
-    line-height: 1.8;
+    line-height: 1.5;
+  }
+  .body {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
   &:last-child {
     a {

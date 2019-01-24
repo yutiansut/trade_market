@@ -80,7 +80,7 @@ export default {
       if (this.validate()) {
         checkLogin(this.account, this.password).then(res => {
           this.Store.dispatch("updateCheckLoginState", res);
-          this.navigateTo("/userentry/check_login");
+          this.navigateTo("/userentry/check_login", { account: this.account });
         });
       }
     },

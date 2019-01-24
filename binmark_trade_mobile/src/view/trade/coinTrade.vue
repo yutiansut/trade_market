@@ -188,21 +188,40 @@
               <van-col span="4 font-14 txt-rt">操作</van-col>
             </van-row>
             <div class="tbody">
-              <van-row class="flex flex-v-center">
+              <van-row
+                v-for="item in entrustRecord"
+                :key='item.autoid'
+                class="flex flex-v-center"
+              >
                 <van-col span="6 font-14">
-                  <div class="font-14 font-bold">BTC/USDT</div>
-                  <small class="color-999">07-17</small>
+                  <div
+                    class="font-14 font-bold"
+                    v-text="item.coinid"
+                  ></div>
+                  <small
+                    class="color-999"
+                    v-text="item.writedate"
+                  ></small>
                 </van-col>
                 <van-col span="7 font-14 color-success">
                   <div class="font-14 font-bold">1519159</div>
-                  <small>卖出</small>
+                  <small v-text="item.type==0?'买入':'卖出'"></small>
                 </van-col>
                 <van-col span="7 font-14">
-                  <div class="font-14 font-bold">1</div>
-                  <small class="color-999">116516</small>
+                  <div
+                    class="font-14 font-bold"
+                    v-text="item.total"
+                  ></div>
+                  <small
+                    class="color-999"
+                    v-text="item.number*1"
+                  ></small>
                 </van-col>
                 <van-col span="4 font-14 txt-rt">
-                  <button class="btn-mini btn-success">撤单</button>
+                  <button
+                    @click="cancelOrder(item.autoid)"
+                    class="btn-mini btn-success riple"
+                  >撤单</button>
                 </van-col>
               </van-row>
             </div>
@@ -219,18 +238,37 @@
               <van-col span="7 font-14 txt-rt">成交量/数量</van-col>
             </van-row>
             <div class="tbody">
-              <van-row class="flex flex-v-center">
+              <van-row
+                v-for="item in entrustRecord"
+                :key='item.autoid'
+                class="flex flex-v-center"
+              >
                 <van-col span="9 font-14">
-                  <div class="font-14 font-bold">BTC/USDT</div>
-                  <small class="color-999">07-17</small>
+                  <div
+                    class="font-14 font-bold"
+                    v-text="item.coinid"
+                  ></div>
+                  <small
+                    class="color-999"
+                    v-text="item.writedate"
+                  ></small>
                 </van-col>
                 <van-col span="8 font-14 color-success">
-                  <div class="font-14 font-bold">1519159</div>
-                  <small>卖出</small>
+                  <div
+                    class="font-14 font-bold"
+                    v-bind="item.price*1"
+                  ></div>
+                  <small v-text="item.type==0?'买入':'卖出'"></small>
                 </van-col>
                 <van-col span="7 font-14 txt-rt">
-                  <div class="font-14 font-bold">1</div>
-                  <small class="color-999">116516</small>
+                  <div
+                    class="font-14 font-bold"
+                    v-text="item.total"
+                  ></div>
+                  <small
+                    class="color-999"
+                    v-text="item.number*1"
+                  ></small>
                 </van-col>
               </van-row>
             </div>
@@ -253,15 +291,24 @@ import appHeader from "@/components/header/AppHeader";
 import slidePop from "@/components/other/slidePop";
 import tradeAside from "@/components/slideContent/TradeAside";
 import { asideMixin, coinTradeMixin } from "@/mixin/mixin";
-import { sumCalc } from "@/assets/js/commonFunc.js";
+import { sumCalc, randomString } from "@/assets/js/commonFunc.js";
 import {
   currentEntrust,
   entrustRecord,
   getCoinInfo,
   getBuyOrder,
   getSellOrder,
-  tradeHandle
+  tradeHandle,
+  clearEntrust
 } from "../../vuexStore/storeService.js";
+let webSocket = null;
+let ajaxDone = true;
+let timer = null;
+window.onbeforeunload = () => {
+  if (webSocket) {
+    webSocket.close();
+  }
+};
 export default {
   components: { appHeader, slidePop, tradeAside },
   mixins: [asideMixin, coinTradeMixin],
@@ -292,29 +339,44 @@ export default {
         }
       ],
       tabActive: 0,
-      entrustList: [],
+      currentEntrust: [],
       entrustRecord: [],
       coinInfo: {},
       SellOrder: [],
       BuyOrder: [],
-      init: false
+      init: false //用于判断是否初始化，以免loadData方式加载后币种变化在watch重复调用
     };
   },
   mounted() {
     let { maincoinid, tradecoinid } = this.$route.query;
     if (maincoinid && tradecoinid) {
-      this.getCoinData().then(list => {
-        list && this.getTradeCoin(maincoinid, tradecoinid);
-      });
+      this.getCoinData()
+        .then(list => {
+          return this.getTradeCoin(maincoinid, tradecoinid);
+        })
+        .then(() => {
+          this.loadData(maincoinid, tradecoinid);
+          this.liveUpdate();
+        });
     } else {
-      this.getCoinData().then(list => {
-        try {
-          this.getTradeCoin(list[0].coinid);
-        } catch (error) {
-          console.log(err);
-        }
-      });
+      this.getCoinData()
+        .then(list => {
+          try {
+            return this.getTradeCoin(list[0].coinid);
+          } catch (error) {
+            console.log(err);
+          }
+        })
+        .then(() => {
+          this.loadData(
+            this.Store.state.maincoinid,
+            this.Store.state.tradecoinid
+          );
+          // 实时更新
+          this.liveUpdate();
+        });
     }
+    this.init = true;
   },
   computed: {
     total() {
@@ -359,9 +421,29 @@ export default {
       }
       return true;
     },
+    // 撤单
+    async cancelOrder(id) {
+      if (id) {
+        await clearEntrust();
+        let res = await currentEntrust(
+          this.Store.state.maincoinid,
+          this.Store.state.tradecoinid
+        );
+        this.currentEntrust = res;
+        this.liveUpdate();
+      }
+    },
     loadData(maincoinid, tradecoinid) {
-      currentEntrust(maincoinid, tradecoinid);
-      entrustRecord(maincoinid, tradecoinid);
+      currentEntrust(maincoinid, tradecoinid).then(res => {
+        if (res) {
+          this.currentEntrust = res;
+        }
+      });
+      entrustRecord(maincoinid, tradecoinid).then(res => {
+        if (res) {
+          this.entrustRecord = res;
+        }
+      });
       getCoinInfo(maincoinid, tradecoinid).then(res => {
         this.coinInfo = res;
       });
@@ -393,6 +475,63 @@ export default {
         }
       });
     },
+    liveUpdate() {
+      let { maincoinid, tradecoinid } = this.Store.state;
+      if ("WebSocket" in window) {
+        this.updateDataBySocket(maincoinid, tradecoinid);
+      } else {
+        this.updateDataByAjax(maincoinid, tradecoinid);
+      }
+    },
+    updateDataByAjax(maincoinid, tradecoinid) {
+      try {
+        if (timer) clearInterval(timer);
+        timer = setInterval(async () => {
+          if (ajaxDone) {
+            let sellOrder = await getSellOrder(maincoinid, tradecoinid);
+            let buyOrder = await getBuyOrder(maincoinid, tradecoinid);
+            this.coinInfo = await getCoinInfo(maincoinid, tradecoinid);
+            this.buyOrder = sumCalc(buyOrder, "price", "number");
+            this.SellOrder = sumCalc(sellOrder, "price", "number");
+            ajaxDone = true;
+          }
+        }, 1000);
+      } catch (err) {
+        console.log(err);
+      }
+    },
+    updateDataBySocket(maincoinid, tradecoinid) {
+      let token = this.storage.get("token") || randomString(32);
+      let params = `${token}_${maincoinid}_${tradecoinid}`;
+      if (webSocket) {
+        try {
+          webSocket.send(params);
+          return;
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      try {
+        webSocket = new WebSocket(this.api.socketUrl + params);
+        webSocket.onopen = () => {
+          console.log("socket 已经连接，可以发送数据");
+          webSocket.send(params);
+        };
+        webSocket.onmessage = event => {
+          let msg = JSON.parse(event.data);
+          this.BuyOrder = sumCalc(msg.buy, "price", "number");
+          this.SellOrder = sumCalc(msg.sell, "price", "number");
+        };
+        webSocket.onerror = err => {
+          console.log("socket 链接错误");
+        };
+        webSocket.onclose = () => {
+          console.log("socket 连接关闭");
+        };
+      } catch (err) {
+        console.log(err);
+      }
+    },
     OrderClick(item) {
       this.number = item.number * 1;
       this.price = item.price * 1;
@@ -413,26 +552,38 @@ export default {
       this.Store.commit("updateTradeCoinid", coinid);
       this.showPop = false;
     },
-    forBuy() {
+    async forBuy() {
       if (this.validate()) {
-        tradeHandle(this.api.forbuy, {
+        let { maincoinid, tradecoinid } = this.Store.state;
+        let res = await tradeHandle(this.api.forbuy, {
           prise: this.price,
           number: this.number,
-          maincoin: this.Store.state.maincoinid,
-          tradcoin: this.Store.state.tradecoinid
-        }).then(res => {
-          console.log(res);
+          maincoin: maincoinid,
+          tradcoin: tradecoinid
         });
+        let entrust = await currentEntrust(maincoinid, tradecoinid);
+        this.currentEntrust = entrust;
+        if (webSocket)
+          webSocket.send(
+            `${this.storage.get("token")}_${maincoinid}_${tradecoinid}`
+          );
       }
     },
-    forSell() {
+    async forSell() {
       if (this.validate()) {
-        tradeHandle(this.api.forsell, {
+        let { maincoinid, tradecoinid } = this.Store.state;
+        let res = await tradeHandle(this.api.forsell, {
           prise: this.price,
           number: this.number,
-          maincoin: this.Store.state.maincoinid,
-          tradcoin: this.Store.state.tradecoinid
-        }).then(res => {});
+          maincoin: maincoinid,
+          tradcoin: tradecoinid
+        });
+        let entrust = currentEntrust(maincoinid, tradecoinid);
+        this.currentEntrust = entrust;
+        if (webSocket)
+          webSocket.send(
+            `${this.storage.get("token")}_${maincoinid}_${tradecoinid}`
+          );
       }
     },
     getNum(val) {
@@ -442,8 +593,11 @@ export default {
   },
   watch: {
     coins(val) {
-      let [tradecoin, maincoin] = val.split("/");
-      this.loadData(maincoin, tradecoin);
+      if (!this.init) {
+        let [tradecoin, maincoin] = val.split("/");
+        this.loadData(maincoin, tradecoin);
+      }
+      this.init = false;
     }
   }
 };

@@ -29,6 +29,40 @@ const getNewsList = async () => {
         console.log(err);
     }
 };
+//币种资料
+const getCoinProfile = async () => {
+    try {
+        if (Store.state.coinInfo.length > 0) return;
+        let result = await Request(apiConfig.getcoininfo);
+        let data = handelResult(result);
+        Store.dispatch('getCoinIntro', data.list);
+    } catch (err) {
+        console.log(err)
+    }
+}
+// 获取帮助中心
+const getHelpCenter = async () => {
+    try {
+        let result = await Request(apiConfig.getquest);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+}
+//获取工单记录
+const getWorkOrder = async () => {
+    try {
+        let result = await Request(apiConfig.gethisorder);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+}
 export {
-    getNewsList
+    getNewsList,
+    getCoinProfile,
+    getHelpCenter,
+    getWorkOrder
 }
