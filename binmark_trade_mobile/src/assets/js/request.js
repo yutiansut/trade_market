@@ -84,7 +84,7 @@ const ajaxRequest = (function () {
 
     function successState(response) {
         Toast.clear();
-        let code = response.data.code || null;
+        let code = response.data.code * 1 || null;
         let msg = null;
         //统一判断后端返回的错误码
         switch (code) {

@@ -78,6 +78,11 @@ export default {
   },
   methods: {
     imgPreview(url) {
+      let img = new Image();
+      img.src = url;
+      img.onerror = () => {
+        ImagePreview([this.assetConfig.imgs.default]);
+      };
       ImagePreview([url]);
     }
   }

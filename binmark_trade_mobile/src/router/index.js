@@ -250,7 +250,8 @@ const routes = [
         path: "",
         component: SecurityCenter,
         meta: {
-          title: "安全中心"
+          title: "安全中心",
+          auth: true
         }
       },
       {
@@ -322,7 +323,8 @@ const routes = [
         name: "AccountCenter",
         component: AccountCenter,
         meta: {
-          title: "账户管理"
+          title: "账户管理",
+          auth: true
         }
       }
     ]
