@@ -80,7 +80,8 @@ const routes = [
         name: 'otcTrade',
         component: otcTrade,
         meta: {
-          title: "OTC交易"
+          title: "OTC交易",
+          auth: true
         }
       },
       {

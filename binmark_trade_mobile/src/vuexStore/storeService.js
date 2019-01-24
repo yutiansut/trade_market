@@ -5,7 +5,8 @@ import {
     Login,
     Logout,
     resetPassword,
-    sendCode
+    sendCode,
+    myProperty
 } from './userService';
 import {
     getNewsList,
@@ -32,6 +33,7 @@ export {
     getNewsList,
     getCoinProfile,
     getUserInfo,
+    myProperty,
     getHelpCenter,
     getWorkOrder,
     getIndexBanner,

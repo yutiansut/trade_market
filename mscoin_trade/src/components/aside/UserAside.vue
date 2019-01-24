@@ -12,7 +12,13 @@
         >
           <dl>
             <dt class="font-16 color-danger font-bold">ID：{{userData.member}}</dt>
-            <dd class="font-bold">{{$t("label178")}}：{{userData.viplevel}}</dd>
+            <dd>
+              <span class="font-bold">{{$t("label178")}}：{{userData.viplevel}}</span>&nbsp;&nbsp;
+              <router-link
+                class="vip-detail"
+                to='/my/vip_detail'
+              >{{$t('label186')}}</router-link>
+            </dd>
             <dd class="font-bold color-danger">{{$t('label177')}}：{{userData.balance}}</dd>
             <dd
               style="margin-top:5px;"
@@ -35,7 +41,7 @@
           active-text-color='#ab1e24'
         >
           <el-submenu>
-            <span slot="title">订单</span>
+            <span slot="title">{{$t('label187')}}</span>
             <el-menu-item index='/my/order_detail'>{{$t('billDetail')}}</el-menu-item>
             <el-menu-item index='/my/entrustment'>{{$t('myEntrustment')}}</el-menu-item>
             <el-menu-item index='/my/deal_history'>{{$t('transRecord')}}</el-menu-item>
@@ -102,5 +108,8 @@ export default {
       @include textVcenter(30px);
     }
   }
+}
+.vip-detail {
+  color: blue;
 }
 </style>

@@ -147,11 +147,11 @@ export default {
       agreementUrl: "http://47.95.213.181/binmark/static/services.pdf",
       showLoading: true,
       navBarCfg: [
-        // {
-        //   i18nKey: "ctcTrade",
-        //   label: "C2C交易",
-        //   link: "/c2c_trade"
-        // },
+        {
+          i18nKey: "ctcTrade",
+          label: "C2C交易",
+          link: "/c2c_trade"
+        },
         {
           i18nKey: "otcTrade",
           label: "OTC交易",
@@ -270,7 +270,7 @@ export default {
 </script>
 <style lang="scss">
 .hd-top {
-  background: $bg-dark;
+  background: $main-bg-color;
   margin: 0 auto;
 }
 </style>

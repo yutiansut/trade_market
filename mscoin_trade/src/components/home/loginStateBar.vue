@@ -126,7 +126,7 @@ export default {
     return {
       userData: this.userModel,
       dropDownTop: 0,
-      qrUrl: "http://www.binmark.io/static/download.html",
+      qrUrl: "http://www.upayw.com/static/download.html",
       myOrderDropdown: [
         {
           label: "账单明细",
@@ -313,6 +313,7 @@ $ml: 25px;
     min-width: 100%;
     background: $bg-dark;
     display: none;
+
     li {
       @include textVcenter;
       color: #fff;
@@ -320,8 +321,7 @@ $ml: 25px;
       text-align: left;
       padding: 0 40px 0 20px;
       &:hover {
-        background: $bg-white;
-        color: $bg-dark;
+        background: $main-bg-color;
       }
     }
   }

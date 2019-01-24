@@ -102,7 +102,9 @@ export default {
     };
   },
   mounted() {
-    getUserInfo();
+    if (this.Store.state.isLogin) {
+      getUserInfo();
+    }
   }
 };
 </script>

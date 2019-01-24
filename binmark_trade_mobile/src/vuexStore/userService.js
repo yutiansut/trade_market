@@ -132,7 +132,21 @@ const resetPassword = async formData => {
     } catch (err) {
         console.log(err);
     }
-}
+};
+// 资产列表
+const myProperty = async (coinid) => {
+    try {
+        let result = await Request(apiConfig.getaccount, {
+            search: coinid || ""
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data.list;
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};
 export {
     getUserInfo,
     Login,
@@ -140,5 +154,6 @@ export {
     Register,
     sendCode,
     resetPassword,
-    Logout
+    Logout,
+    myProperty
 }

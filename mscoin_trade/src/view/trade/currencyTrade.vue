@@ -698,7 +698,6 @@ export default {
         this.tradecoin
       );
     },
-
     //页面请求
     awaitResult(maincoin, tradecoin) {
       let params = {

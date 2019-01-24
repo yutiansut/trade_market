@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "https://www.binmark.io/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "wss://www.binmark.io/echo/" : "ws://192.168.5.51:8080/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "http://www.upayw.com/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.upayw.com/echo/" : "ws://192.168.5.51:8080/echo/",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner
@@ -345,6 +345,10 @@ let apiCfg = (function () {
         //绑定手机号
         addtel: {
             url: "addtel"
+        },
+        //vip
+        vipinfo: {
+            url: "vipinfo"
         }
     }
 }());

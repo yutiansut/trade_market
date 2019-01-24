@@ -311,7 +311,7 @@ export default {
   },
   data() {
     return {
-      dialogId: null,
+      dialogId: "",
       bindState: {
         emailstate: "0"
       },

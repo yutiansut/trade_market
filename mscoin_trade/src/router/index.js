@@ -1,11 +1,11 @@
 import Router from 'vue-router'
-Vue.use(Router)
+Vue.use(Router);
 const routes = [
   {
     path: '/',
     name: 'Main',
     component: r => require(['@/view/Main'], r),
-    meta: { auth: false, title: "Binmark首页" }
+    meta: { auth: false, title: "MSCOIN首页" }
   },
   {
     path: '/user',
@@ -116,6 +116,12 @@ const routes = [
         name: 'c2cHistory',
         component: r => require(['@/view/my/c2cHistory'], r),
         meta: { auth: true, title: "CTC记录" }
+      },
+      {
+        path: '/my/vip_detail',
+        name: 'VipDetail',
+        component: r => require(['@/view/my/VipDetail'], r),
+        meta: { auth: true, title: "vip说明" }
       }
     ]
   },

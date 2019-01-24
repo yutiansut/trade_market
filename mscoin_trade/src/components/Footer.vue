@@ -85,16 +85,16 @@ export default {
           i18nKey: "aboutUs",
           title: "关于XX网",
           items: [
-            // {
-            //   i18nKey: "aboutCompany",
-            //   label: "关于公司",
-            //   link: "/help_center/about"
-            // },
             {
-              i18nKey: "contact",
-              label: "联系我们",
-              link: "/help_center/contact"
+              i18nKey: "aboutCompany",
+              label: "关于公司",
+              link: "/help_center/about"
             },
+            // {
+            //   i18nKey: "contact",
+            //   label: "联系我们",
+            //   link: "/help_center/contact"
+            // },
             {
               i18nKey: "ruleOfTrans",
               label: "交易规则",
