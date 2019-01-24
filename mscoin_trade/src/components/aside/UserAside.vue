@@ -46,7 +46,7 @@
             <el-menu-item index='/my/entrustment'>{{$t('myEntrustment')}}</el-menu-item>
             <el-menu-item index='/my/deal_history'>{{$t('transRecord')}}</el-menu-item>
             <el-menu-item index='/my/otc_history'>{{$t('otcRecord')}}</el-menu-item>
-            <!-- <el-menu-item index='/my/c2c_history'>{{$t('ctcRecord')}}</el-menu-item> -->
+            <el-menu-item index='/my/c2c_history'>{{$t('ctcRecord')}}</el-menu-item>
           </el-submenu>
           <el-menu-item index='/account/security'>{{$t('securityCenter')}}</el-menu-item>
           <el-menu-item index='/account/identify'>{{$t('identify')}}</el-menu-item>

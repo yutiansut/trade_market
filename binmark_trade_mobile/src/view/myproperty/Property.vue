@@ -58,11 +58,17 @@ import appHeader from "@/components/header/AppHeader.vue";
 import slidePop from "@/components/other/slidePop";
 import userAside from "@/components/slideContent/UserAside";
 import { asideMixin } from "@/mixin/mixin";
+import { myProperty } from "@/vuexStore/storeService.js";
 export default {
   components: { appHeader, slidePop, userAside },
   mixins: [asideMixin],
   data() {
     return {};
+  },
+  mounted() {
+    myProperty().then(res => {
+      console.log(res);
+    });
   },
   computed: {
     totalAmount() {
@@ -70,7 +76,6 @@ export default {
     }
   },
   methods: {
-    goRecord() {},
     showSlide() {
       this.showPop = true;
     },

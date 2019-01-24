@@ -703,7 +703,7 @@ export default {
         showLoading: 0
       }).then(res => {
         console.log(`c2c币种：${JSON.stringify(res)}`);
-        if (res.data && res.data.list && res.data.length > 0) {
+        if (res.data && res.data.list && res.data.list.length > 0) {
           return Promise.resolve(res.data.list);
         }
       });
