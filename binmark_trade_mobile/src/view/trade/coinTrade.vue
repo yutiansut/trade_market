@@ -363,7 +363,7 @@ export default {
         .then(list => {
           try {
             return this.getTradeCoin(list[0].coinid);
-          } catch (error) {
+          } catch (err) {
             console.log(err);
           }
         })

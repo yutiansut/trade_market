@@ -4,31 +4,30 @@
     <my-header />
     <div class="app-body overflow-y h-full">
       <div class="property-info van-hairline--bottom">
-        <div class="font-20 font-bold">USDT</div>
+        <div
+          class="font-20 font-bold"
+          v-text="propertyInfo.name"
+        ></div>
         <van-row class="info-top">
           <van-col span='8'>
             <div>可用</div>
-            <div>1315646</div>
+            <div v-text="propertyInfo.usable*1"></div>
           </van-col>
           <van-col span='8'>
             <div>锁定</div>
-            <div>1315646</div>
+            <div v-text="propertyInfo.disable*1"></div>
           </van-col>
           <van-col
             class="txt-rt"
             span='8'
           >
             <div>折合（CNY）</div>
-            <div>1315646</div>
+            <div v-text="propertyInfo.total*1"></div>
           </van-col>
         </van-row>
         <div class="property-val flex font-14 flex-between van-hairline--top">
-          <span class="label">估值(BTC)</span>
-          <span>0.00000000</span>
-        </div>
-        <div class="property-val font-14 flex flex-between">
-          <span class="label">估值(BTC)</span>
-          <span>0.00000000</span>
+          <span class="label">估值(USDT)</span>
+          <span v-text="propertyInfo.usdt*1"></span>
         </div>
       </div>
       <div class="property-record">
@@ -81,12 +80,15 @@
 </template>
 <script>
 import recordList from "@/components/other/RecordList";
+import { myProperty } from "@/vuexStore/storeService.js";
 export default {
   components: {
     recordList
   },
   data() {
     return {
+      routeParamId: 0,
+      propertyInfo: {},
       recordList: [
         {
           coinid: "USDT",
@@ -97,6 +99,11 @@ export default {
         }
       ]
     };
+  },
+  async mounted() {
+    await myProperty();
+    this.routeParamId = this.$route.params.id;
+    this.propertyInfo = this.Store.state.myProperty[this.routeParamId];
   }
 };
 </script>

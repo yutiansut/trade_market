@@ -189,6 +189,244 @@ const CoinFee = async () => {
         console.log(err)
     }
 };
+//获取c2c交易币种
+const getc2cCoin = async () => {
+    try {
+        let result = await Request(apiConfig.getc2ccoin);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+// 根据币种和交易类型获取c2c市场挂单
+const getc2cOrderByType = async (coin, type) => {
+    try {
+        let result = await Request(apiConfig.getc2callorderbytype, {
+            coin: coin,
+            type: type
+        });
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//获取c2c历史交易订单
+const getc2cHistory = async () => {
+    try {
+        let result = await Request(apiConfig.getc2chistory);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//获取c2c已匹配订单
+const getMyc2cTrade = async () => {
+    try {
+        let result = await Request(apiConfig.getmyc2ctrad);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//发布买入
+const addBuy = async (coin, price, number) => {
+    try {
+        let result = await Request(apiConfig.addbuyc2c, {
+            coin: coin,
+            price: price,
+            number: number
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//发布卖出
+const addSell = async (coin, price, number) => {
+    try {
+        let result = await Request(apiConfig.addsellc2c, {
+            coin: coin,
+            price: price,
+            number: number
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//从市场买入c2c订单
+const buyC2cCoin = async (autoid) => {
+    try {
+        let result = await Request(apiConfig.c2cbuytrad, {
+            autoid: autoid,
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//我发布的订单
+const getPublishedOrder = async () => {
+    try {
+        let result = await Request(apiConfig.getc2corder);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//确认已打款
+const confirmPayment = async (autoid) => {
+    try {
+        let result = await Request(apiConfig.setsendok, {
+            autoid: autoid
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//确认收款
+const confirmReceivePayment = async (autoid) => {
+    try {
+        let result = await Request(apiConfig.setrealyok, {
+            autoid: autoid
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//撤销c2c订单
+const cancelc2cOrder = async (autoid) => {
+    try {
+        let result = await Request(apiConfig.clearc2c, {
+            autoid: autoid
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//otc卖出
+const otcSell = async (coin, number, total) => {
+    try {
+        let result = await Request(apiConfig.otcsell, {
+            coin: coin,
+            number: number,
+            total: total
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//otc买入
+const otcBuy = async (coin, number, total) => {
+    try {
+        let result = await Request(apiConfig.otcbuy, {
+            coin: coin,
+            number: number,
+            total: total
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//获取c2c委托记录
+const getOTCOrder = async () => {
+    try {
+        let result = await Request(apiConfig.getotcorder);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//根据交易类型获取c2c委托记录
+const getOtcOrderByType = async (coin, type) => {
+    try {
+        let result = await Request(apiConfig.getotcorderbycoin, {
+            coin: coin,
+            type: type
+        });
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//获取打款账号
+const getOtcBank = async () => {
+    try {
+        let result = await Request(apiConfig.getotcbank);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+};
 export {
     getMainCoin,
     getTradeCoin,
@@ -201,5 +439,20 @@ export {
     getSellOrder,
     tradeHandle,
     clearEntrust,
-    CoinFee
+    CoinFee,
+    getc2cCoin,
+    getc2cOrderByType,
+    getMyc2cTrade,
+    addBuy,
+    addSell,
+    buyC2cCoin,
+    getPublishedOrder,
+    confirmPayment,
+    confirmReceivePayment,
+    cancelc2cOrder,
+    otcSell,
+    otcBuy,
+    getOTCOrder,
+    getOtcOrderByType,
+    getOtcBank
 }

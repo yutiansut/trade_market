@@ -28,24 +28,37 @@
       <div class="account-balance font-20 font-bold">￥{{totalAmount}}&nbsp;</div>
     </div>
     <div class="account-list">
-      <div class="list-item van-hairline--bottom">
-        <router-link to="/property/property_detail">
+      <div
+        v-for="(item,i) in Store.state.myProperty"
+        :key='i'
+        class="list-item van-hairline--bottom"
+      >
+        <router-link :to="'/property/property_detail/'+i">
           <div class="item-title flex flex-v-center flex-between">
-            <span class="font-18 font-bold">USDT</span>
+            <div class="flex flex-v-center">
+              <img
+                :src="item.logo"
+                class="coin-logo thumb-30"
+              >
+              <span
+                class="font-18 font-bold"
+                v-text="item.name"
+              ></span>
+            </div>
             <van-icon name="arrow"></van-icon>
           </div>
           <van-row>
             <van-col span="8">
               <div>可用</div>
-              <div>1315646</div>
+              <div v-text="item.usable*1"></div>
             </van-col>
             <van-col span="8">
               <div>锁定</div>
-              <div>1315646</div>
+              <div v-text="item.disable*1"></div>
             </van-col>
             <van-col span="8">
               <div>折合（CNY）</div>
-              <div>1315646</div>
+              <div v-text="item.total*1"></div>
             </van-col>
           </van-row>
         </router-link>
@@ -67,7 +80,7 @@ export default {
   },
   mounted() {
     myProperty().then(res => {
-      console.log(res);
+      console.log(this.Store.state);
     });
   },
   computed: {
@@ -99,6 +112,9 @@ export default {
   line-height: 4.5rem;
   padding: 0 1.25rem;
   margin-right: -1.25rem;
+}
+.coin-logo {
+  margin-right: 1rem;
 }
 .account {
   border-radius: 3px;

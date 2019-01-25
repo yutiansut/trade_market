@@ -15,7 +15,8 @@ export default new Vuex.Store({
     maincoinid: "",
     tradecoinid: "",
     coinInfo: {},
-    userInfo: {}
+    userInfo: {},
+    myProperty: []
   },
   mutations: {
     loginState(state, val) {
@@ -60,6 +61,9 @@ export default new Vuex.Store({
     },
     checkLoginState(state, data) {
       Object.assign(state.checkLoginState, data);
+    },
+    getMyproperty(state, data) {
+      Object.assign(state.myProperty, data)
     }
   },
   actions: {
@@ -89,6 +93,9 @@ export default new Vuex.Store({
     },
     updateMainCoinid(ctx, val) {
       ctx.commit('updateMainCoinid', val)
+    },
+    getMyproperty(ctx, data) {
+      ctx.commit('getMyproperty', data)
     }
   }
 });

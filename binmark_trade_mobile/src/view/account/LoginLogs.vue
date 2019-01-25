@@ -1,19 +1,36 @@
 <template>
   <div class="log-list van-hairline--top overflow-y h-full">
-    <div class="log van-hairline--bottom">
+    <div
+      v-for='(item,i) in logs'
+      :key='i'
+      class="log van-hairline--bottom"
+    >
       <div class="flex flex-between">
-        <span class="title font-15 font-bold">成功</span>
-        <span class="color-666 font-14">192.168.1.12</span>
+        <span class="title font-15 font-bold color-success">成功</span>
+        <span
+          class="color-666 font-14"
+          v-text="'IP:'+item.ip"
+        ></span>
       </div>
       <div class="color-999 flex flex-between font-14">
-        <span>2018-10-11 17:23:50</span>
-        <span>cn</span>
+        <span v-text="item.wdate"></span>
+        <!-- <span>cn</span> -->
       </div>
     </div>
   </div>
 </template>
 <script>
-export default {};
+import { loginLogs } from "../../vuexStore/storeService.js";
+export default {
+  data() {
+    return {
+      logs: []
+    };
+  },
+  async mounted() {
+    this.logs = await loginLogs();
+  }
+};
 </script>
 <style lang="scss" scoped>
 .log-list {

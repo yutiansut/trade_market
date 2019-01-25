@@ -3,7 +3,7 @@ import {
     getMainCoin,
     getAvailable
 } from "@/vuexStore/storeService.js";
-import { timerCounter } from '../assets/js/commonFunc'
+import { timerCounter, randomNum } from '../assets/js/commonFunc'
 // 侧栏混入
 const asideMixin = {
     data() {
@@ -41,7 +41,6 @@ const coinTradeMixin = {
         }
     }
 };
-
 const verCodeMixin = {
     data() {
         return {
@@ -53,14 +52,16 @@ const verCodeMixin = {
     },
     methods: {
         timeCountDown() {
+
             if (this.canGetCode) {
                 this.timer = timerCounter({
                     onStart: t => {
+
                         this.canGetCode = false;
-                        this.codeText = `倒计时（${t}）s`;
+                        this.codeText = `倒计时(${t})s`;
                     },
                     onCounting: t => {
-                        this.codeText = `倒计时（${t}）s`;
+                        this.codeText = `倒计时(${t})s`;
                     },
                     onComplete: () => {
                         this.canGetCode = true;
@@ -71,8 +72,31 @@ const verCodeMixin = {
         }
     }
 }
+const imgCodeMixin = {
+    data() {
+        return {
+            verCodeNumArr: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+            verCodeStr: "",
+        }
+    },
+    methods: {
+        createCode(arr, len) {
+            if (Array.isArray(arr)) {
+                let str = "";
+                for (let i = 0; i < len; i++) {
+                    str += arr[
+                        randomNum(0, arr.length)
+                    ];
+                }
+                this.verCodeStr = str;
+            }
+
+        }
+    }
+}
 export {
     asideMixin,
     coinTradeMixin,
-    verCodeMixin
+    verCodeMixin,
+    imgCodeMixin
 }

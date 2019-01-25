@@ -135,7 +135,7 @@ export default {
         }
       ],
       tradecoinid: "",
-      active: 2,
+      active: 0,
       price: "",
       number: "",
       icon: false

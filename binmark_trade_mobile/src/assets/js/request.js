@@ -11,7 +11,9 @@ const ajaxRequest = (function () {
             if (config.showLoading) {
                 Toast.loading({
                     spinnerType: "fading-circle",
-                    message: '加载中...'
+                    message: '加载中...',
+                    mask: true,
+                    loadingType: "spinner"
                 });
             }
             return config;

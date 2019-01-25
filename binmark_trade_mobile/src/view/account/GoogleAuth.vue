@@ -19,10 +19,12 @@
         <van-col
           class="van-ellipsis"
           span='20'
-        >{{googlekey}}</van-col>
+        >{{keystr}}</van-col>
         <van-col
           class="txt-rt color-info"
           span='4'
+          v-clipboard:copy="keystr"
+          v-clipboard:success="onCopy"
         >复制</van-col>
       </van-row>
       <!-- 二维吗区域 -->
@@ -46,6 +48,7 @@
         <div class="label color-666 font-14">登录密码</div>
         <div class="form-input font-15 van-hairline--bottom">
           <input
+            v-model="password"
             type="password"
             autocomplete="off"
             class="h-35"
@@ -57,27 +60,63 @@
         <div class="label color-666 font-14">谷歌验证码</div>
         <div class="form-input font-15 van-hairline--bottom">
           <input
+            v-model="googlecode"
             autocomplete="off"
             class="h-35"
             placeholder="请输入谷歌验证码"
           >
         </div>
       </div>
-      <button class="btn-large btn-block riple btn-primary">确定</button>
+      <button
+        :disabled='disabled'
+        class="btn-large btn-block riple btn-primary"
+      >确定</button>
     </form>
   </div>
 </template>
 <script>
 import vueQr from "vue-qr";
+import { getGoogleKey, bindGoogle } from "@/vuexStore/storeService.js";
 export default {
   components: { vueQr },
   data() {
     return {
-      googlekey: "JSODQWQ4GLQYMR4VLAOKBTJ7H3ITOSM7"
+      googlekey: "",
+      password: "",
+      googlecode: ""
     };
   },
+  mounted() {
+    getGoogleKey().then(res => {
+      this.googlekey = res;
+    });
+  },
+  computed: {
+    keystr() {
+      return this.googlekey.substr(this.googlekey.indexOf("=") + 1);
+    },
+    disabled() {
+      if (!this.password || !this.googlecode) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
   methods: {
-    onSubmit() {}
+    async onSubmit() {
+      let res = await bindGoogle({
+        googlekey: this.keystr,
+        password: this.password,
+        googlecode: this.googlecode
+      });
+      if (res) {
+        this.navigateTo("/account");
+      }
+    },
+    onCopy() {
+      this.$toast("复制成功");
+    }
   }
 };
 </script>

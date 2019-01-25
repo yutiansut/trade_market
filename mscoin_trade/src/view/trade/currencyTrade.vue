@@ -600,6 +600,7 @@ export default {
       };
       webSocket.onerror = err => {
         console.log(err);
+        this.updateListByAjax(maincoin, tradecoin);
       };
       webSocket.onclose = () => {
         console.log("socket 连接关闭");

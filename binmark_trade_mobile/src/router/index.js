@@ -72,7 +72,8 @@ const routes = [
         name: 'c2cTrade',
         component: c2cTrade,
         meta: {
-          title: "c2c交易"
+          title: "c2c交易",
+          auth: true
         }
       },
       {
@@ -204,7 +205,7 @@ const routes = [
     }
   },
   {
-    path: "/property/property_detail",
+    path: "/property/property_detail/:id",
     name: "propertyDetail",
     component: propertyDetail,
     meta: {
@@ -260,7 +261,8 @@ const routes = [
         name: "ChangePassword",
         component: ChangePassword,
         meta: {
-          title: "修改登录密码"
+          title: "修改登录密码",
+          auth: true,
         }
       },
       {
@@ -268,7 +270,8 @@ const routes = [
         name: "ChangeTradePassword",
         component: ChangeTradePassword,
         meta: {
-          title: "修改交易密码"
+          title: "修改交易密码",
+          auth: true,
         }
       },
       {
@@ -276,7 +279,8 @@ const routes = [
         name: "BindEmail",
         component: BindEmail,
         meta: {
-          title: "修改交易密码"
+          title: "绑定邮箱",
+          auth: true,
         }
       },
       {
@@ -284,7 +288,8 @@ const routes = [
         name: "BindBank",
         component: BindBank,
         meta: {
-          title: "修改交易密码"
+          title: "绑定银行卡",
+          auth: true,
         }
       },
       {
@@ -292,7 +297,8 @@ const routes = [
         name: "GoogleAuth",
         component: GoogleAuth,
         meta: {
-          title: "谷歌验证"
+          title: "谷歌验证",
+          auth: true,
         }
       },
       {
@@ -300,7 +306,8 @@ const routes = [
         name: "Identify",
         component: Identify,
         meta: {
-          title: "身份认证"
+          title: "身份认证",
+          auth: true,
         }
       },
       {
@@ -308,7 +315,8 @@ const routes = [
         name: "AccountLogs",
         component: AccountLogs,
         meta: {
-          title: "安全日志"
+          title: "安全日志",
+          auth: true,
         }
       },
       {
@@ -316,7 +324,8 @@ const routes = [
         name: "LoginLogs",
         component: LoginLogs,
         meta: {
-          title: "登录日志"
+          title: "登录日志",
+          auth: true,
         }
       },
       {

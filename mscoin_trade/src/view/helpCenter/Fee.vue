@@ -27,12 +27,12 @@
         </el-table-column>
         <el-table-column :label='$t("commision")+"(24"+$t("hour")+")"||"交易手续费(24H)"'>
           <template slot-scope="scope">
-            {{scope.row.tradgas*1+'%'}}
+            {{scope.row.tradgas*100+'%'}}
           </template>
         </el-table-column>
         <el-table-column :label='$t("withdrawCommision")||"提币手续费"'>
           <template slot-scope="scope">
-            {{scope.row.outgas*1+'%'}}
+            {{scope.row.outgas*100+'%'}}
           </template>
         </el-table-column>
         <el-table-column :label='$t("withdrawMin") ||"提币单笔最低"'>

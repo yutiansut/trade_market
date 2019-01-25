@@ -96,14 +96,14 @@
                   ></i>
                 </router-link>
               </li>
-              <!-- <li class="sub-nav-item p-rel">
+              <li class="sub-nav-item p-rel">
                 <a
                   target="view_window"
                   :href="agreementUrl"
                 >
                   <span v-text="$t('agreement')"></span>
                 </a>
-              </li> -->
+              </li>
             </ol>
           </li>
         </ul>
@@ -144,7 +144,7 @@ export default {
         subItem: null
       },
       // 用户协议地址
-      agreementUrl: "http://47.95.213.181/binmark/static/services.pdf",
+      agreementUrl: "http://www.upayw.com/static/services.pdf",
       showLoading: true,
       navBarCfg: [
         {
@@ -186,20 +186,12 @@ export default {
               label: "问题中心",
               link: "/help_center/faq"
             }
-            // {
-            //   i18nKey: "agreement",
-            //   label: "用户协议",
-            //   link: `${window.location.host}/pdf/services.pdf`
-            // }
           ]
         }
       ],
       subNavIndex: ""
     };
   },
-  // destroyed() {
-  //   this.$bus.off("mainCoinLoad");
-  // },
   mounted() {
     this.showHead = this.showHeadTop;
     this.currentPath = this.$route.path;

@@ -57,7 +57,7 @@ const Utils = (function () {
             return (lastcode.charAt(sum % 11) == part[7].toUpperCase());
         },
         isBankNo(data) {
-            return /^\d{19}$/.test(data) || /^\d{16}$/.test(data);
+            return /^\d{16,19}$/.test(data);
         },
         isPositiveNum(data) {
             return /^[+]{0,1}(\d+)$|^[+]{0,1}(\d+\.\d{0,2})$/.test(data)

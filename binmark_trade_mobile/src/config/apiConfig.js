@@ -232,6 +232,9 @@ let apiCfg = (function () {
         getc2corder: {
             url: 'getc2corder'
         },
+        getc2callorderbytype: {
+            url: "getc2callorderbytype"
+        },
         //根据币种获取信息
         getc2callorder: {
             url: 'getc2callorder'
@@ -347,6 +350,14 @@ let apiCfg = (function () {
         //获取币币交易价格信息
         searchcoin: {
             url: 'searchcoin'
+        },
+        //获取币种充值记录\
+        getcoinbycoin: {
+            url: "getcoinbycoin"
+        },
+        //充值提现详情
+        getrecordinfo: {
+            url: "getrecordinfo"
         }
     }
 }());

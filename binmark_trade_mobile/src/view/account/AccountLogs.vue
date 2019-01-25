@@ -1,23 +1,39 @@
 <template>
   <div class="log-list van-hairline--top overflow-y h-full">
-    <div class="log van-hairline--bottom">
+    <div
+      v-for="(item,i) in logs"
+      :key='i'
+      class="log van-hairline--bottom"
+    >
       <div class="flex flex-between">
-        <span class="title font-15 font-bold">开启手机短信验证</span>
-        <span class="color-666 font-14">192.168.1.12</span>
+        <span
+          class="title font-15 font-bold"
+          v-text="item.updatelog"
+        ></span>
+        <span
+          class="color-666 font-14"
+          v-text="item.wdate"
+        ></span>
       </div>
-      <div class="color-999 font-14">2018-10-11 17:23:50 </div>
-    </div>
-    <div class="log van-hairline--bottom">
-      <div class="flex flex-between">
-        <span class="title font-15 font-bold">开启手机短信验证</span>
-        <span class="color-666 font-14">192.168.1.12</span>
-      </div>
-      <div class="color-999 font-14">2018-10-11 17:23:50 </div>
+      <!-- <div
+        class="color-999 font-14"
+        v-text="item.wdate"
+      ></div> -->
     </div>
   </div>
 </template>
 <script>
-export default {};
+import { safeLogs } from "@/vuexStore/storeService.js";
+export default {
+  data() {
+    return {
+      logs: []
+    };
+  },
+  async mounted() {
+    this.logs = await safeLogs();
+  }
+};
 </script>
 <style lang="scss" scoped>
 .log-list {
@@ -26,7 +42,7 @@ export default {};
 .log {
   padding: 1.25rem 1rem;
   .title {
-    margin-bottom: 1rem;
+    // margin-bottom: 1rem;
     line-height: 2rem;
   }
 }
