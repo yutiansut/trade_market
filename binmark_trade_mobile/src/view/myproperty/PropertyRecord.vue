@@ -2,24 +2,24 @@
   <div class="app-main wh-full">
     <my-header></my-header>
     <div class="app-body overflow-y h-full">
-      <van-tabs>
-        <van-tab title='充值'>
+      <van-tabs v-model="active">
+        <van-tab title="充值">
           <div class="record-list">
             <template v-for="(item,i) in rechargeList">
-              <record-list
-                :itemData='item'
-                :key='i'
-              />
+              <record-list :type="active" :itemData="item" :key="i"/>
+            </template>
+            <template v-if="rechargeList.length==0">
+              <div class="font-14 color-999 txt-center">暂无记录</div>
             </template>
           </div>
         </van-tab>
-        <van-tab title='提现'>
+        <van-tab title="提现">
           <div class="record-list">
             <template v-for="(item,i) in withDrawList">
-              <record-list
-                :itemData='item'
-                :key='i'
-              />
+              <record-list :type="active" :itemData="item" :key="i"/>
+            </template>
+            <template v-if="withDrawList.length==0">
+              <div class="font-14 color-999 txt-center">暂无记录</div>
             </template>
           </div>
         </van-tab>
@@ -29,31 +29,21 @@
 </template>
 <script>
 import recordList from "@/components/other/RecordList";
+import { getmyput, getmyrecharge } from "@/vuexStore/storeService.js";
 export default {
   components: {
     recordList
   },
   data() {
     return {
-      rechargeList: [
-        {
-          coinid: "USDT",
-          prise: "1.15651",
-          address: "1ANJ79WBF6Ceuk6ffpd2L2L5or",
-          status: "",
-          writedate: "07-20 14:20"
-        }
-      ],
-      withDrawList: [
-        {
-          coinid: "BTC",
-          prise: "fafa",
-          address: "jfieaiofieoauf",
-          status: "",
-          writedate: "07-20 14:20"
-        }
-      ]
+      active: 0,
+      rechargeList: [],
+      withDrawList: []
     };
+  },
+  async mounted() {
+    this.rechargeList = await getmyput();
+    this.withDrawList = await getmyrecharge();
   }
 };
 </script>

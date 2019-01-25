@@ -1,26 +1,20 @@
 <template>
   <div class="app-main wh-full">
     <!-- header -->
-    <my-header />
+    <my-header/>
     <div class="app-body overflow-y h-full">
       <div class="property-info van-hairline--bottom">
-        <div
-          class="font-20 font-bold"
-          v-text="propertyInfo.name"
-        ></div>
+        <div class="font-20 font-bold" v-text="propertyInfo.name"></div>
         <van-row class="info-top">
-          <van-col span='8'>
+          <van-col span="8">
             <div>可用</div>
             <div v-text="propertyInfo.usable*1"></div>
           </van-col>
-          <van-col span='8'>
+          <van-col span="8">
             <div>锁定</div>
             <div v-text="propertyInfo.disable*1"></div>
           </van-col>
-          <van-col
-            class="txt-rt"
-            span='8'
-          >
+          <van-col class="txt-rt" span="8">
             <div>折合（CNY）</div>
             <div v-text="propertyInfo.total*1"></div>
           </van-col>
@@ -33,46 +27,31 @@
       <div class="property-record">
         <div class="flex flex-between flex-v-center">
           <span class="font-16 font-bold">最近记录</span>
-          <router-link
-            class="more flex flex-v-center riple font-14"
-            to='/property/record'
-          >
-            <img
-              class="thumb-20"
-              :src="assetConfig.imgs.user_icon_1_whole"
-              alt=""
-            >&nbsp;<span class="color-666">全部</span>
+          <router-link class="more flex flex-v-center riple font-14" to="/property/record">
+            <img class="thumb-20" :src="assetConfig.imgs.user_icon_1_whole" alt>&nbsp;
+            <span class="color-666">全部</span>
           </router-link>
         </div>
         <div class="record-list">
           <template v-for="(item,i) in recordList">
-            <record-list
-              :itemData='item'
-              :key='i'
-            />
+            <record-list :itemData="item" :key="i"/>
           </template>
         </div>
       </div>
     </div>
     <div class="btn-box flex flex-between">
       <button
-        @click="navigateTo('/property/recharge')"
+        @click="navigateTo('/property/recharge',{coin:propertyInfo.name})"
         class="btn-large riple btn-default btn-block"
       >
-        <img
-          class="icon"
-          :src="assetConfig.imgs.user_assets_1"
-        >
+        <img class="icon" :src="assetConfig.imgs.user_assets_1">
         <span>充值</span>
       </button>
       <button
-        @click="navigateTo('/property/withdraw')"
+        @click="navigateTo('/property/withdraw',{coin:propertyInfo.name})"
         class="btn-large riple btn-primary btn-block"
       >
-        <img
-          class="icon"
-          :src="assetConfig.imgs.user_assets_2"
-        >
+        <img class="icon" :src="assetConfig.imgs.user_assets_2">
         <span>提现</span>
       </button>
     </div>
@@ -80,7 +59,7 @@
 </template>
 <script>
 import recordList from "@/components/other/RecordList";
-import { myProperty } from "@/vuexStore/storeService.js";
+import { myProperty, getMyInputRecord } from "@/vuexStore/storeService.js";
 export default {
   components: {
     recordList
@@ -104,6 +83,7 @@ export default {
     await myProperty();
     this.routeParamId = this.$route.params.id;
     this.propertyInfo = this.Store.state.myProperty[this.routeParamId];
+    this.recordList = await getMyInputRecord(this.propertyInfo.coinid);
   }
 };
 </script>

@@ -358,6 +358,12 @@ let apiCfg = (function () {
         //充值提现详情
         getrecordinfo: {
             url: "getrecordinfo"
+        },
+        getmyputbycoin: {
+            url: "getmyputbycoin"
+        },
+        chart: {
+            url: "chart"
         }
     }
 }());

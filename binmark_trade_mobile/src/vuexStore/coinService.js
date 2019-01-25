@@ -29,6 +29,16 @@ const getMainCoin = async () => {
         console.log(err);
     }
 };
+//折线图首页
+const getChart = async coin => {
+    try {
+        let result = await Request(apiConfig.chart, { coin });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err);
+    }
+};
 //获取交易币种
 const getTradeCoin = async coinid => {
     try {
@@ -429,6 +439,7 @@ const getOtcBank = async () => {
 };
 export {
     getMainCoin,
+    getChart,
     getTradeCoin,
     getAvailable,
     currentEntrust,

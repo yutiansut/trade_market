@@ -6,7 +6,7 @@ module.exports = {
     assetsPublicPath: "/",
     proxyTable: {
       '/API': {
-        target: "http://192.168.16.51:8080/",
+        target: "https://www.binmark.io",
         changeOrigin: true
       }
     },

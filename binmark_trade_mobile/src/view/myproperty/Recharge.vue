@@ -1,34 +1,36 @@
 <template>
   <div class="app-main wh-full">
     <my-header></my-header>
-    <div class="content van-hairline--top app-body h-full">
+    <div v-if="address" class="content van-hairline--top app-body h-full">
       <div class="qr-code flex flex-h-center">
-        <vue-qr
-          :callback='codeComplete'
-          :text='address'
-          margin='10'
-          dotScale='1'
-          size='180'
-        ></vue-qr>
+        <vue-qr :callback="codeComplete" :text="address" margin="10" dotScale="1" size="180"></vue-qr>
       </div>
-      <div class="text font-14 font-bold txt-center"><span class="riple">长按二维码可保存</span></div>
+      <div class="text font-14 font-bold txt-center">
+        <span class="riple">长按二维码可保存</span>
+      </div>
       <p class="charge-address font-15 txt-center">{{address}}</p>
-      <div class="text font-14 font-bold txt-center"><span
-          v-clipboard:copy="address"
-          v-clipboard:success='onCopy'
-          class="riple"
-        >复制地址</span></div>
+      <div class="text font-14 font-bold txt-center">
+        <span v-clipboard:copy="address" v-clipboard:success="onCopy" class="riple">复制地址</span>
+      </div>
     </div>
+    <div v-else class="h-full flex flex-v-center flex-h-center font-16 color-999">暂无数据</div>
   </div>
 </template>
 <script>
 import vueQr from "vue-qr";
+import { getRechargeAddr } from "@/vuexStore/storeService.js";
 export default {
   components: { vueQr },
   data() {
     return {
-      address: "1ANJ79WBF6Ceuk6ffpd2L5org7xjYvbw6"
+      address: ""
     };
+  },
+  mounted() {
+    let { coin } = this.$route.query;
+    getRechargeAddr(coin).then(res => {
+      if (res.address[0]) this.address = res.address;
+    });
   },
   methods: {
     codeComplete(data, id) {

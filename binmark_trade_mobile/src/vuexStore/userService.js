@@ -191,7 +191,7 @@ const getRecordInfo = async (id, type) => {
             type
         });
         let data = handelResult(result);
-        return data;
+        if (data.list) return data.list[0];
     } catch (err) {
         console.log(err);
     }
@@ -203,7 +203,7 @@ const getAddress = async (coin) => {
             search: coin
         });
         let data = handelResult(result);
-        return data.list;
+        if (data.list) return data.list;
     } catch (err) {
         console.log(err);
     }
@@ -232,6 +232,7 @@ const outCoin = async formData => {
         let result = await Request(apiConfig.outcoin, {
             coin: formData.coin,
             address: formData.address,
+            addressname: formData.addressname,
             number: formData.number,
             code: formData.code,
             password: formData.password,
@@ -257,13 +258,7 @@ const getDayNumber = async coin => {
             coin
         });
         let data = handelResult(result);
-        if (data) {
-            Toast({
-                message: result.msg,
-                position: "bottom"
-            });
-            return result;
-        };
+        return data.list[0];
     } catch (err) {
         console.log(err);
     }
@@ -291,9 +286,9 @@ const bindBank = async formData => {
     }
 };
 //获取充值记录
-const getMyInputRecord = async () => {
+const getMyInputRecord = async coin => {
     try {
-        let result = await Request(apiConfig.getmyputbycoin);
+        let result = await Request(apiConfig.getmyputbycoin, { coin });
         let data = handelResult(result);
         return data.list;
     } catch (err) {
@@ -301,11 +296,11 @@ const getMyInputRecord = async () => {
     }
 }
 //获取充值地址
-const getRechargeAddr = async () => {
+const getRechargeAddr = async coin => {
     try {
-        let result = await Request(apiConfig.getaddress);
+        let result = await Request(apiConfig.getaddress, { coin });
         let data = handelResult(result);
-        return data.list;
+        return data;
     } catch (err) {
         console.log(err);
     }

@@ -60,10 +60,10 @@ export default new Vuex.Store({
       state.userInfo = obj;
     },
     checkLoginState(state, data) {
-      Object.assign(state.checkLoginState, data);
+      state.checkLoginState = data;
     },
     getMyproperty(state, data) {
-      Object.assign(state.myProperty, data)
+      state.myProperty = data;
     }
   },
   actions: {

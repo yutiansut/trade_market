@@ -38,6 +38,7 @@ import {
 import { getIndexBanner } from './assetService';
 import {
     getMainCoin,
+    getChart,
     getTradeCoin,
     getAvailable,
     currentEntrust,
@@ -95,6 +96,7 @@ export {
     getWorkOrder,
     getIndexBanner,
     getMainCoin,
+    getChart,
     getTradeCoin,
     getAvailable,
     Login,

@@ -4,17 +4,19 @@ import { Toast } from "vant";
 import api from '@/config/apiConfig.js';
 import myStorage from './myStorage';
 import Store from '@/vuexStore/store';
+let showLoading = false;
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
     axios.interceptors.request.use(
         config => {
-            if (config.showLoading) {
+            if (config.showLoading &&!showLoading) {
                 Toast.loading({
                     spinnerType: "fading-circle",
                     message: '加载中...',
                     mask: true,
                     loadingType: "spinner"
                 });
+                showLoading = true;
             }
             return config;
         },
@@ -33,6 +35,7 @@ const ajaxRequest = (function () {
 
     function errorState(response) {
         Toast.clear();
+        showLoading = false;
         let errMsg = "";
         switch (response.status) {
             case 400:
