@@ -30,8 +30,10 @@ export default {
       logs: []
     };
   },
-  async mounted() {
-    this.logs = await safeLogs();
+  mounted() {
+    safeLogs().then(res => {
+      this.logs = res;
+    });
   }
 };
 </script>

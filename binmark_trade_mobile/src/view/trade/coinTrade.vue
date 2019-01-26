@@ -1,5 +1,5 @@
 <template>
-  <div class="wh-full app-body">
+  <div class="wh-full overflow-y app-body">
     <!-- 侧栏滑块 -->
     <slide-pop
       @onClose="slideClose"
@@ -175,6 +175,7 @@
         color="#fe0042"
         line-width="30"
         v-model="tabActive"
+        sticky
       >
         <van-tab title="当前委托">
           <div
@@ -187,16 +188,19 @@
               <van-col span="7 font-14">成交量/数量</van-col>
               <van-col span="4 font-14 txt-rt">操作</van-col>
             </van-row>
-            <div class="tbody">
+            <div
+              v-if="currentEntrust.length>0"
+              class="tbody"
+            >
               <van-row
-                v-for="item in entrustRecord"
+                v-for="item in currentEntrust"
                 :key='item.autoid'
                 class="flex flex-v-center"
               >
                 <van-col span="6 font-14">
                   <div
                     class="font-14 font-bold"
-                    v-text="item.coinid"
+                    v-text="item.tradcoin"
                   ></div>
                   <small
                     class="color-999"
@@ -210,7 +214,7 @@
                 <van-col span="7 font-14">
                   <div
                     class="font-14 font-bold"
-                    v-text="item.total"
+                    v-text="item.dealnumber*1"
                   ></div>
                   <small
                     class="color-999"
@@ -219,12 +223,16 @@
                 </van-col>
                 <van-col span="4 font-14 txt-rt">
                   <button
-                    @click="cancelOrder(item.autoid)"
+                    @click="cancelOrder(item)"
                     class="btn-mini btn-success riple"
                   >撤单</button>
                 </van-col>
               </van-row>
             </div>
+            <div
+              v-else
+              class="font-15 color-999 txt-center"
+            >暂无数据</div>
           </div>
         </van-tab>
         <van-tab title="历史委托">
@@ -237,7 +245,10 @@
               <van-col span="8 font-14">价格</van-col>
               <van-col span="7 font-14 txt-rt">成交量/数量</van-col>
             </van-row>
-            <div class="tbody">
+            <div
+              v-if="entrustRecord.length>0"
+              class="tbody"
+            >
               <van-row
                 v-for="item in entrustRecord"
                 :key='item.autoid'
@@ -246,7 +257,7 @@
                 <van-col span="9 font-14">
                   <div
                     class="font-14 font-bold"
-                    v-text="item.coinid"
+                    v-text="item.tradcoin"
                   ></div>
                   <small
                     class="color-999"
@@ -256,14 +267,14 @@
                 <van-col span="8 font-14 color-success">
                   <div
                     class="font-14 font-bold"
-                    v-bind="item.price*1"
+                    v-text="item.price*1"
                   ></div>
                   <small v-text="item.type==0?'买入':'卖出'"></small>
                 </van-col>
                 <van-col span="7 font-14 txt-rt">
                   <div
                     class="font-14 font-bold"
-                    v-text="item.total"
+                    v-text="item.dealnumber*1"
                   ></div>
                   <small
                     class="color-999"
@@ -388,12 +399,12 @@ export default {
       }
     },
     availableLabel() {
-      if (this.type == 0) {
-        return `可兑换：${this.available || 0}&nbsp;${this.Store.state
-          .maincoinid || ""}`;
-      } else {
-        return `可用：${this.balance || 0}&nbsp;${this.Store.state
+      if (this.type == 1) {
+        return `可兑换：${this.available * 1 || 0}&nbsp;${this.Store.state
           .tradecoinid || ""}`;
+      } else {
+        return `可用：${this.balance * 1 || 0}&nbsp;${this.Store.state
+          .maincoinid || ""}`;
       }
     },
     //最新买入总计
@@ -422,15 +433,24 @@ export default {
       return true;
     },
     // 撤单
-    async cancelOrder(id) {
+    cancelOrder(item) {
+      let { id, price, number } = item;
       if (id) {
-        await clearEntrust();
-        let res = await currentEntrust(
-          this.Store.state.maincoinid,
-          this.Store.state.tradecoinid
-        );
-        this.currentEntrust = res;
-        this.liveUpdate();
+        clearEntrust(id).then(res => {
+          currentEntrust(
+            this.Store.state.maincoinid,
+            this.Store.state.tradecoinid
+          ).then(res => {
+            this.currentEntrust = res;
+          });
+          if (item.type == 0) {
+            this.balance =
+              this.balance * 1 + Math.round(item.price * item.number);
+          } else {
+            this.available = this.available * 1 + item.number;
+          }
+          this.liveUpdate();
+        });
       }
     },
     loadData(maincoinid, tradecoinid) {
@@ -486,16 +506,21 @@ export default {
     updateDataByAjax(maincoinid, tradecoinid) {
       try {
         if (timer) clearInterval(timer);
-        timer = setInterval(async () => {
+        timer = setInterval(() => {
           if (ajaxDone) {
-            let sellOrder = await getSellOrder(maincoinid, tradecoinid);
-            let buyOrder = await getBuyOrder(maincoinid, tradecoinid);
-            this.coinInfo = await getCoinInfo(maincoinid, tradecoinid);
-            this.buyOrder = sumCalc(buyOrder, "price", "number");
-            this.SellOrder = sumCalc(sellOrder, "price", "number");
-            ajaxDone = true;
+            ajaxDone = false;
+            getSellOrder(maincoinid, tradecoinid).then(res => {
+              this.sellOrder = sumCalc(res, "price", "number");
+            });
+            getBuyOrder(maincoinid, tradecoinid).then(res => {
+              this.buyOrder = sumCalc(res, "price", "number");
+            });
+            getCoinInfo(maincoinid, tradecoinid).then(res => {
+              this.coinInfo = res;
+              ajaxDone = true;
+            });
           }
-        }, 1000);
+        }, 3000);
       } catch (err) {
         console.log(err);
       }
@@ -524,6 +549,9 @@ export default {
         };
         webSocket.onerror = err => {
           console.log("socket 链接错误");
+          webSocket = null;
+          if (timer) clearInterval(this.timer);
+          this.updateDataByAjax(maincoinid, tradecoinid);
         };
         webSocket.onclose = () => {
           console.log("socket 连接关闭");
@@ -561,8 +589,10 @@ export default {
           maincoin: maincoinid,
           tradcoin: tradecoinid
         });
-        let entrust = await currentEntrust(maincoinid, tradecoinid);
-        this.currentEntrust = entrust;
+        if (res) {
+          this.currentEntrust = await currentEntrust(maincoinid, tradecoinid);
+          this.balance = this.balance * 1 - this.total;
+        }
         if (webSocket)
           webSocket.send(
             `${this.storage.get("token")}_${maincoinid}_${tradecoinid}`
@@ -578,8 +608,10 @@ export default {
           maincoin: maincoinid,
           tradcoin: tradecoinid
         });
-        let entrust = currentEntrust(maincoinid, tradecoinid);
-        this.currentEntrust = entrust;
+        if (res) {
+          this.available = this.available - this.number;
+          this.currentEntrust = await currentEntrust(maincoinid, tradecoinid);
+        }
         if (webSocket)
           webSocket.send(
             `${this.storage.get("token")}_${maincoinid}_${tradecoinid}`

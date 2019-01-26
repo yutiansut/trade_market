@@ -1,10 +1,16 @@
 <template>
   <div class="content app-body overflow-y h-full">
     <!-- 侧栏滑块 -->
-    <slide-pop @onClose="closeSlide" :showPop="showPop">
+    <slide-pop
+      @onClose="closeSlide"
+      :showPop="showPop"
+    >
       <user-aside slot="content"></user-aside>
     </slide-pop>
-    <app-header @onHeadClick="showSlide" :iconLeft="assetConfig.imgs.user_head_portrait">
+    <app-header
+      @onHeadClick="showSlide"
+      :iconLeft="assetConfig.imgs.user_head_portrait"
+    >
       <div
         slot="title"
         class="header-title font-16 font-bold abs-vh-center"
@@ -27,11 +33,17 @@
         :key="i"
         class="list-item van-hairline--bottom"
       >
-        <router-link :to="'/property/property_detail/'+i">
+        <router-link :to="'/property/property_detail/'+item.name">
           <div class="item-title flex flex-v-center flex-between">
             <div class="flex flex-v-center">
-              <img :src="item.logo" class="coin-logo thumb-30">
-              <span class="font-18 font-bold" v-text="item.name"></span>
+              <img
+                :src="item.logo"
+                class="coin-logo thumb-30"
+              >
+              <span
+                class="font-18 font-bold"
+                v-text="item.name"
+              ></span>
             </div>
             <van-icon name="arrow"></van-icon>
           </div>

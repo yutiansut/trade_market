@@ -445,6 +445,14 @@
       @closeModal='onModelClose'
     >
     </order-paid>
+    <order-paid
+      :show='dialogId==6?true:false'
+      :title="$t('orderDetail')||'订单详情'"
+      :formData='orderDetail'
+      @onSubmit='dealOrder(orderDetail.type,orderId)'
+      @closeModal='onModelClose'
+    >
+    </order-paid>
   </div>
 </template>
 <script>
@@ -682,6 +690,7 @@ export default {
         if (res.code == "0") {
           this.onModelClose();
           this.successMsg(res.msg || "操作成功");
+          this.gettradorder(this.coinInfo.coinid);
         } else {
           this.errMsg(res.msg || "操作失败");
         }
@@ -798,7 +807,7 @@ export default {
     },
     //确认收付款弹窗
     confirmHandle(rowData) {
-      this.dialogId = rowData.type == "0" ? 6 : 5;
+      this.dialogId = rowData.type == "0" ? 5 : 6;
       this.orderId = rowData.autoid;
       this.orderDetail = {
         type: rowData.type,

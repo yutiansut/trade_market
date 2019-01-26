@@ -77,7 +77,7 @@ module.exports = {
     userAuth: "用户认证",
     apiDoc: 'API 文档',
     currencyIntro: "币种介绍",
-    USDT: "太达币（USDT）",
+    USDT: "泰达币（USDT）",
     ETH: "以太坊（ETH）",
     BTC: "比特币（BTC）",
     BTH: "比特现金（BTH）",

@@ -27,8 +27,10 @@ export default {
       logs: []
     };
   },
-  async mounted() {
-    this.logs = await loginLogs();
+  mounted() {
+    loginLogs().then(res => {
+      this.logs = res;
+    });
   }
 };
 </script>

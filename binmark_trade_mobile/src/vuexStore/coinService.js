@@ -69,13 +69,12 @@ const getAvailable = async coinid => {
 const currentEntrust = async (maincoinid, tradecoinid) => {
     try {
         if (Store.state.isLogin) {
-
             let result = await Request(apiConfig.getentrust, {
                 maincoin: maincoinid,
                 tradcoin: tradecoinid
             });
             let data = handelResult(result);
-            return data.list;
+            if (data) return data.list;
         }
     } catch (err) {
         console.log(err);
@@ -168,7 +167,7 @@ const tradeHandle = async (api, params) => {
             number: params.number
         });
         let data = handelResult(result);
-        if (data) return data;
+        if (data) return result;
     } catch (err) {
         console.log(err);
     }
@@ -202,7 +201,7 @@ const CoinFee = async () => {
 //获取c2c交易币种
 const getc2cCoin = async () => {
     try {
-        let result = await Request(apiConfig.getc2ccoin);
+        let result = await Request(apiConfig.getc2ccoin, { showLoading: false });
         let data = handelResult(result);
         if (data) return data.list;
     } catch (err) {
@@ -364,6 +363,16 @@ const cancelc2cOrder = async (autoid) => {
         console.log(err)
     }
 };
+// OTc币种
+const getOTCCoin = async () => {
+    try {
+        let result = await Request(apiConfig.getotccoin);
+        let data = handelResult(result);
+        if (data) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+}
 //otc卖出
 const otcSell = async (coin, number, total) => {
     try {
@@ -385,12 +394,14 @@ const otcSell = async (coin, number, total) => {
     }
 };
 //otc买入
-const otcBuy = async (coin, number, total) => {
+const otcBuy = async formData => {
     try {
         let result = await Request(apiConfig.otcbuy, {
-            coin: coin,
-            number: number,
-            total: total
+            coin: formData.coin,
+            number: formData.number,
+            jz: formData.jz,
+            id: formData.id,
+            bz: formData.bz
         });
         let data = handelResult(result);
         if (data) {
@@ -404,7 +415,7 @@ const otcBuy = async (coin, number, total) => {
         console.log(err)
     }
 };
-//获取c2c委托记录
+//获取otc委托记录
 const getOTCOrder = async () => {
     try {
         let result = await Request(apiConfig.getotcorder);
@@ -414,7 +425,7 @@ const getOTCOrder = async () => {
         console.log(err)
     }
 };
-//根据交易类型获取c2c委托记录
+//根据交易类型获取otc委托记录
 const getOtcOrderByType = async (coin, type) => {
     try {
         let result = await Request(apiConfig.getotcorderbycoin, {
@@ -432,7 +443,7 @@ const getOtcBank = async () => {
     try {
         let result = await Request(apiConfig.getotcbank);
         let data = handelResult(result);
-        if (data) return data.list;
+        if (data.list) return data.list[0];
     } catch (err) {
         console.log(err)
     }
@@ -454,6 +465,7 @@ export {
     getc2cCoin,
     getc2cOrderByType,
     getMyc2cTrade,
+    getc2cHistory,
     addBuy,
     addSell,
     buyC2cCoin,
@@ -461,6 +473,7 @@ export {
     confirmPayment,
     confirmReceivePayment,
     cancelc2cOrder,
+    getOTCCoin,
     otcSell,
     otcBuy,
     getOTCOrder,

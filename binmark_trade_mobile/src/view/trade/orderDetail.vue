@@ -5,59 +5,112 @@
       <!-- 确认收/付款 -->
       <dl class="confirm-payment content">
         <dt>
-          <span>陈XXX</span>
-          <span>100000</span>
+          <span v-text="orderDetail.type==0?'卖方':'买方'"></span>
         </dt>
         <dd>
+          <span class="color-999">真实姓名</span>
+          <span v-text="orderDetail.type==0?orderDetail.sellname:orderDetail.buyname"></span>
+        </dd>
+        <dd>
           <span class="color-999">银行卡号</span>
-          <span>1000 **** **** 1234</span>
+          <span v-text="orderDetail.type==0?orderDetail.sellbannkcard:orderDetail.buybannkcard"></span>
         </dd>
         <dd>
           <span class="color-999">开户银行</span>
-          <span>上帝银行</span>
+          <span v-text="orderDetail.type==0?orderDetail.sellkhyh:orderDetail.buykhyh"></span>
         </dd>
         <dd>
           <span class="color-999">开户支行</span>
-          <span>上帝银行支行</span>
-        </dd>
-        <dd>
-          <span class="color-999">备注</span>
-          <span>144</span>
+          <span v-text="orderDetail.type==0?orderDetail.sellkhzh:orderDetail.buykhzh"></span>
         </dd>
       </dl>
       <!-- 确认买入/卖出 -->
       <dl class="confirm-payment content">
         <dd>
-          <span class="color-999">价格数量</span>
-          <span>100</span>
+          <span class="color-999">单号</span>
+          <span v-text="orderDetail.autoid"></span>
+        </dd>
+        <dd>
+          <span class="color-999">价格</span>
+          <span v-text="orderDetail.price*1"></span>
         </dd>
         <dd>
           <span class="color-999">数量</span>
-          <span>50</span>
+          <span v-text="orderDetail.number*1"></span>
         </dd>
         <dd>
           <span class="color-999">金额</span>
-          <span>100</span>
-        </dd>
-        <dd>
-          <span class="color-999">状态</span>
-          <span>待确认</span>
+          <span v-text="orderDetail.zj*1"></span>
         </dd>
       </dl>
     </div>
     <button
+      @click="handleOrder"
+      :disabled="(orderDetail.type == 1 && orderDetail.state == 0)"
       class="confirm-btn btn-block riple btn-large btn-primary"
       v-text="btnText"
     ></button>
   </div>
 </template>
 <script>
+import {
+  getMyc2cTrade,
+  confirmPayment,
+  confirmReceivePayment
+} from "@/vuexStore/storeService.js";
 export default {
   data() {
     return {
-      btnText: "确定",
-      orderStatus: 0
+      orderStatus: 0,
+      orderDetail: {}
     };
+  },
+  mounted() {
+    let { id, type } = this.$route.query;
+    if (!id) return false;
+    getMyc2cTrade().then(res => {
+      if (res && res.length > 0) {
+        let item = null;
+        for (let i = 0; i < res.length; i++) {
+          if (res[i].autoid == id && res[i].type == type) {
+            item = res[i];
+            this.orderDetail = item;
+          }
+        }
+      }
+    });
+  },
+  computed: {
+    btnText() {
+      if (this.orderDetail.type == 0 && this.orderDetail.state == 0) {
+        return "我已付款";
+      } else if (this.orderDetail.type == 1 && this.orderDetail.state == 0) {
+        return "待对方打款";
+      } else if (this.orderDetail.type == 0 && this.orderDetail.state == 1) {
+        return "待对方收款";
+      } else if (this.orderDetail.type == 1 && this.orderDetail.state == 1) {
+        return "确认收款";
+      } else {
+        return "已完成";
+      }
+    }
+  },
+  methods: {
+    handleOrder() {
+      if (this.orderDetail.type == 0 && this.orderDetail.state == 0) {
+        confirmPayment(this.orderDetail.autoid).then(res => {
+          if (res) {
+            this.orderDetail.state = 1;
+          }
+        });
+      } else if (this.orderDetail.type == 1 && this.orderDetail.state == 1) {
+        confirmReceivePayment(this.orderDetail.autoid).then(res => {
+          if (res) {
+            this.navigateTo("/trade/c2c_trade");
+          }
+        });
+      }
+    }
   }
 };
 </script>
@@ -79,7 +132,7 @@ button.confirm-btn {
     justify-content: space-between;
   }
   dt {
-    @include textVcenter(45px);
+    @include textVcenter(40px);
     font-size: 16px;
     font-weight: bold;
   }

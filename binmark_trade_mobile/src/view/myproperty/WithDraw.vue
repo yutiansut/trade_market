@@ -6,7 +6,7 @@
         <div class="form-group font-bold">
           <div class="label color-666 font-14">可用余额</div>
           <div class="form-input font-15 van-hairline--bottom">
-            <span class="value">{{dayNumber.usable*1}} {{coin}}</span>
+            <span class="value">{{(dayNumber.usable||0)*1}} {{coin}}</span>
           </div>
         </div>
         <div class="form-group font-bold">
@@ -19,7 +19,10 @@
               type="text"
               placeholder="请选择提现地址"
             >
-            <van-button class="color-info" size="small">添加新地址</van-button>
+            <van-button
+              class="color-info"
+              size="small"
+            >添加新地址</van-button>
           </div>
         </div>
         <div class="form-group font-bold">
@@ -36,14 +39,24 @@
         <div class="form-group font-bold">
           <div class="label color-666 font-14">提现金额</div>
           <div class="form-input font-15 van-hairline--bottom">
-            <input v-model.number="number" class="h-35" type="text" placeholder="请输入提现金额">
+            <input
+              v-model.number="number"
+              class="h-35"
+              type="text"
+              placeholder="请输入提现金额"
+            >
             <span class="color-666">{{coin}}</span>
           </div>
         </div>
         <div class="form-group font-bold">
           <div class="label color-666 font-14">手续费（{{dayNumber.outgas*100+'%'}}）</div>
           <div class="form-input font-15 van-hairline--bottom">
-            <input disabled :value="commission" class="h-35" type="text">
+            <input
+              disabled
+              :value="commission"
+              class="h-35"
+              type="text"
+            >
             <span class="color-666">{{coin}}</span>
           </div>
         </div>
@@ -63,24 +76,36 @@
               type="text"
               :placeholder="type==0?'请输入手机验证码':'请输入邮箱验证码'"
             >
-            <span @click="sendCode" class="color-info riple font-14" v-text="codeText"></span>
+            <span
+              @click="sendCode"
+              class="color-info riple font-14"
+              v-text="codeText"
+            ></span>
           </div>
         </div>
         <div class="form-group font-bold">
           <div class="label color-666 font-14">谷歌验证码</div>
           <div class="form-input font-15 van-hairline--bottom">
-            <input v-model="google" class="h-35" type="text" placeholder="请输入google验证码">
+            <input
+              v-model="google"
+              class="h-35"
+              type="text"
+              placeholder="请输入google验证码"
+            >
           </div>
         </div>
         <div class="form-group font-bold">
           <div class="label color-666 font-14">交易密码</div>
           <div class="form-input font-15 van-hairline--bottom">
-            <input v-model="password" class="h-35" type="password" placeholder="请输入交易密码">
+            <input
+              v-model="password"
+              class="h-35"
+              type="password"
+              placeholder="请输入交易密码"
+            >
           </div>
         </div>
-        <div
-          class="font-13 tips color-danger"
-        >*单笔最少&nbsp;{{minAmount}}&nbsp;{{coin}}，单笔最多&nbsp;{{maxAmount}}&nbsp;{{coin}}</div>
+        <div class="font-13 tips color-danger">*单笔最少&nbsp;{{minAmount}}&nbsp;{{coin}}，单笔最多&nbsp;{{maxAmount}}&nbsp;{{coin}}</div>
       </div>
     </div>
     <div class="bottom">
@@ -88,9 +113,18 @@
         <span>实际到账</span>
         <span>{{realAmount}} {{coin}}</span>
       </div>
-      <button :disabled="disabled" @click="onSubmit" class="btn-large btn-block btn-primary">确定</button>
+      <button
+        :disabled="disabled"
+        @click="onSubmit"
+        class="btn-large btn-block btn-primary"
+      >确定</button>
     </div>
-    <van-actionsheet v-model="show" cancel-text="取消" :actions="addressList" @select="onSelect"/>
+    <van-actionsheet
+      v-model="show"
+      cancel-text="取消"
+      :actions="addressList"
+      @select="onSelect"
+    />
   </div>
 </template>
 <script>

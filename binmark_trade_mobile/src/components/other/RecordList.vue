@@ -4,16 +4,39 @@
     class="list-item van-hairline--bottom"
   >
     <div class="flex flex-between">
-      <span class="font-16 font-bold" v-text="listData.coin"></span>
-      <span class="font-16 font-bold" v-text="listData.number*1"></span>
+      <div class="flex flex-v-center">
+        <img
+          v-if="logo"
+          class="thumb-35 coin-logo"
+          :src="logo"
+          alt=""
+        >
+        <span
+          class="font-16 font-bold"
+          v-text="listData.coin"
+        ></span>
+      </div>
+      <span
+        class="font-16 font-bold"
+        v-text="listData.number*1"
+      ></span>
     </div>
     <div class="font-14 flex flex-v-center flex-between">
       <span class="label">提现地址</span>
-      <span class="address txt-rt" v-text="listData.hash"></span>
+      <span
+        class="address txt-rt"
+        v-text="listData.address"
+      ></span>
     </div>
     <div class="font-14 flex flex-v-center flex-between">
-      <span class="status color-success">提现已完成</span>
-      <span class="date" v-text="listData.writedate"></span>
+      <span
+        class="status color-success"
+        v-text="listData.statename"
+      ></span>
+      <span
+        class="date"
+        v-text="listData.wdate"
+      ></span>
     </div>
   </div>
 </template>
@@ -21,13 +44,14 @@
 export default {
   props: {
     itemData: {
-      type: Object,
+      type: Array,
       default: {}
     },
     type: {
       type: String,
       default: ""
-    }
+    },
+    logo: String
   },
   data() {
     return {
@@ -35,7 +59,7 @@ export default {
     };
   },
   mounted() {
-    this.listData = this.itemData;
+    this.itemData && (this.listData = this.itemData);
   },
   watch: {
     itemData(val) {
@@ -46,6 +70,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.coin-logo {
+  margin-right: 1rem;
+}
 .list-item {
   padding: 1.25rem 0 1rem 0;
   > div:not(:first-child) {

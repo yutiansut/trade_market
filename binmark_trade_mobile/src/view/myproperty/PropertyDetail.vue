@@ -1,22 +1,33 @@
 <template>
   <div class="app-main wh-full">
     <!-- header -->
-    <my-header/>
+    <my-header />
     <div class="app-body overflow-y h-full">
       <div class="property-info van-hairline--bottom">
-        <div class="font-20 font-bold" v-text="propertyInfo.name"></div>
+        <div class="font-20 font-bold flex flex-v-center">
+          <img
+            v-if="propertyInfo.logo"
+            class="thumb-35 coin-logo"
+            :src="propertyInfo.logo"
+            alt=""
+          >
+          <span v-text="routeParamId"></span>
+        </div>
         <van-row class="info-top">
           <van-col span="8">
             <div>可用</div>
-            <div v-text="propertyInfo.usable*1"></div>
+            <div v-text="(propertyInfo.usable||0)*1"></div>
           </van-col>
           <van-col span="8">
             <div>锁定</div>
-            <div v-text="propertyInfo.disable*1"></div>
+            <div v-text="(propertyInfo.disable||0)*1"></div>
           </van-col>
-          <van-col class="txt-rt" span="8">
+          <van-col
+            class="txt-rt"
+            span="8"
+          >
             <div>折合（CNY）</div>
-            <div v-text="propertyInfo.total*1"></div>
+            <div v-text="(propertyInfo.total||0)*1"></div>
           </van-col>
         </van-row>
         <div class="property-val flex font-14 flex-between van-hairline--top">
@@ -27,15 +38,31 @@
       <div class="property-record">
         <div class="flex flex-between flex-v-center">
           <span class="font-16 font-bold">最近记录</span>
-          <router-link class="more flex flex-v-center riple font-14" to="/property/record">
-            <img class="thumb-20" :src="assetConfig.imgs.user_icon_1_whole" alt>&nbsp;
+          <router-link
+            class="more flex flex-v-center riple font-14"
+            to="/property/record"
+          >
+            <img
+              class="thumb-20"
+              :src="assetConfig.imgs.user_icon_1_whole"
+              alt
+            >&nbsp;
             <span class="color-666">全部</span>
           </router-link>
         </div>
         <div class="record-list">
           <template v-for="(item,i) in recordList">
-            <record-list :itemData="item" :key="i"/>
+            <record-list
+              v-if="recordList.length>0"
+              :itemData="item"
+              :logo='propertyInfo.logo'
+              :key="i"
+            />
           </template>
+          <div
+            class="font-14 color-666 txt-center"
+            v-if="recordList.length==0"
+          >暂无数据</div>
         </div>
       </div>
     </div>
@@ -44,14 +71,20 @@
         @click="navigateTo('/property/recharge',{coin:propertyInfo.name})"
         class="btn-large riple btn-default btn-block"
       >
-        <img class="icon" :src="assetConfig.imgs.user_assets_1">
+        <img
+          class="icon"
+          :src="assetConfig.imgs.user_assets_1"
+        >
         <span>充值</span>
       </button>
       <button
         @click="navigateTo('/property/withdraw',{coin:propertyInfo.name})"
         class="btn-large riple btn-primary btn-block"
       >
-        <img class="icon" :src="assetConfig.imgs.user_assets_2">
+        <img
+          class="icon"
+          :src="assetConfig.imgs.user_assets_2"
+        >
         <span>提现</span>
       </button>
     </div>
@@ -59,31 +92,25 @@
 </template>
 <script>
 import recordList from "@/components/other/RecordList";
-import { myProperty, getMyInputRecord } from "@/vuexStore/storeService.js";
+import { myProperty, getCoinRecharge } from "@/vuexStore/storeService.js";
 export default {
   components: {
     recordList
   },
   data() {
     return {
-      routeParamId: 0,
+      routeParamId: "",
       propertyInfo: {},
-      recordList: [
-        {
-          coinid: "USDT",
-          prise: "1.15651",
-          address: "1ANJ79WBF6Ceuk6ffpd2L2L5or",
-          status: "",
-          writedate: "07-20 14:20"
-        }
-      ]
+      recordList: []
     };
   },
-  async mounted() {
-    await myProperty();
+  mounted() {
+    myProperty();
     this.routeParamId = this.$route.params.id;
-    this.propertyInfo = this.Store.state.myProperty[this.routeParamId];
-    this.recordList = await getMyInputRecord(this.propertyInfo.coinid);
+    getCoinRecharge(this.routeParamId).then(res => {
+      res.info[0] && (this.propertyInfo = res.info[0]);
+      this.recordList = res.record;
+    });
   }
 };
 </script>
@@ -93,6 +120,9 @@ $main-color: #ccc;
 .property-record {
   padding: 1rem 1rem 1.25rem 1rem;
   background: #fff;
+}
+.coin-logo {
+  margin-right: 1rem;
 }
 .property-info {
   overflow: hidden;

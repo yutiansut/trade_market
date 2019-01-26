@@ -338,7 +338,7 @@ const getsafe = async () => {
 //实名认证
 const realname = async formData => {
     try {
-        let result = await Request(apiConfig.realname, {
+        let result = await Request(apiConfig.realynanme, {
             cardzm: formData.cardzm,
             cardfm: formData.cardfm,
             cardsc: formData.cardsc,
