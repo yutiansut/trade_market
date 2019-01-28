@@ -86,7 +86,7 @@
     <div class="van-hairline--bottom"></div>
     <div class="coin-list">
       <div
-        @click="toTrade(item)"
+        @click="showKline(item.coinid)"
         v-for="(item,i) in Store.state.tradeCoin"
         :key="i"
         class="list-item van-hairline--bottom"
@@ -124,7 +124,52 @@
             ></span>
           </van-col>
         </van-row>
-        <!-- K线图 -->
+        <div
+          v-show="item.coinid==tradecoinid"
+          class="k-line"
+        >
+          <van-row class="k-head">
+            <van-col
+              class="flex flex-v-center flex-h-center"
+              span='6'
+            >
+              <div class="title color-999">24H最高价</div>
+              <span
+                class="color-danger"
+                v-text="item.height*1"
+              ></span>
+            </van-col>
+            <van-col
+              class="flex flex-v-center flex-h-center"
+              span='6'
+            >
+              <div class="title color-999">24H最低价</div>
+              <span
+                class="color-success"
+                v-text="item.low*1"
+              ></span>
+            </van-col>
+            <van-col
+              class="flex flex-v-center flex-h-center"
+              span='6'
+            >
+              <div class="title color-999">24H成交量</div>
+              <span v-text="item.number*1"></span>
+            </van-col>
+            <van-col
+              class="flex flex-v-center flex-h-center"
+              span='6'
+            >
+              <div
+                @click="toTrade(item)"
+                class="color-danger"
+              >去交易&nbsp;&nbsp;→</div>
+            </van-col>
+          </van-row>
+          <div class="k-map">
+
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -159,6 +204,7 @@ export default {
           modifier: 2
         }
       },
+      tradecoinid: null,
       noticeSwiper: {
         loop: true,
         height: 50,
@@ -166,6 +212,7 @@ export default {
         autoplay: true,
         speed: 300
       },
+      chartsLine: [],
       errorGoodsImg: `this.src="${this.assetConfig.imgs.default}"`,
       activeIndex: 0,
       mainCoinInfo: {}
@@ -184,6 +231,19 @@ export default {
       this.activeIndex = index;
       this.mainCoinInfo = item;
       this.getTradeCoin(item.coinid);
+    },
+    showKline(id) {
+      this.tradecoinid = id;
+      getChart(id).then(res => {
+        let list = res.data;
+        list.map(item => {
+          let Obj = {
+            日期: newDate(Number(item[0])).toLocaleDateString(),
+            走势: item[1] * 1
+          };
+          this.chartsLine.push(Obj);
+        });
+      });
     },
     getBanner() {
       if (
@@ -211,7 +271,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$gap: 1.25rem;
+$gap: 1rem;
 .head {
   background: #fff;
   .logo {
@@ -258,7 +318,7 @@ $gap: 1.25rem;
   }
 }
 .list-item {
-  .van-row {
+  > .van-row {
     padding: 0.8rem 0;
   }
   .van-col {
@@ -269,6 +329,15 @@ $gap: 1.25rem;
     &:nth-child(2) {
       padding-left: 0.5rem;
     }
+  }
+  .k-head {
+    height: 3.4rem;
+    .van-col {
+      height: 100%;
+    }
+  }
+  .k-map {
+    padding-top: 0.85rem;
   }
   .rise {
     display: inline-block;

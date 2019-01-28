@@ -209,7 +209,16 @@
               :label='($t("total")||"总计")+"(CNY)"'
             >
             </el-table-column>
-
+            <el-table-column
+              prop='member'
+              :label='($t("label188")||"商家")'
+            >
+            </el-table-column>
+            <el-table-column
+              prop='wdate'
+              :label='($t("createdTime")||"创建时间")'
+            >
+            </el-table-column>
             <el-table-column
               width='100'
               :label='$t("operation")||"操作"'
@@ -271,9 +280,6 @@
                 :label='amountLabel'
               >
               </el-table-column>
-              <!-- <el-table-column width='150' prop='name'
-                            :label='$t("theirName")||"对方姓名"'>
-                          </el-table-column> -->
               <el-table-column
                 width="200"
                 prop='wdate'
@@ -324,12 +330,12 @@
               </el-table-column>
               <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
                 <template slot-scope="scope">
-                  {{scope.row.price|toFix()}}
+                  {{scope.row.price*1}}
                 </template>
               </el-table-column>
               <el-table-column :label='numberLabel'>
                 <template slot-scope="scope">
-                  {{scope.row.number|toFix()}}
+                  {{scope.row.number*1}}
                 </template>
               </el-table-column>
               <el-table-column
@@ -337,9 +343,6 @@
                 :label='amountLabel'
               >
               </el-table-column>
-              <!-- <el-table-column width='150' prop='name'
-                            :label='$t("theirName")||"对方姓名"'>
-                          </el-table-column> -->
               <el-table-column
                 width="200"
                 prop='wdate'
@@ -368,16 +371,75 @@
                   >{{$t('label128')}}
                   </span>
                   <span
-                    class="color-999"
-                    v-if="scope.row.type<2&&scope.row.state==2"
-                  >{{$t('completed')}}</span>
-                  <span
                     class="color-danger"
                     v-if="scope.row.type==1&&scope.row.state==1"
                     @click="confirmHandle(scope.row)"
                   >{{$t('label131')}}
                   </span>
                 </template>
+              </el-table-column>
+            </el-table>
+          </template>
+          <unlogin-tip></unlogin-tip>
+        </div>
+        <!-- c2c交易历史 -->
+        <div class="panel-container">
+          <div
+            class="panel-header font-18 font-bit-bold"
+            v-text="'C2C'+$t('label189')"
+          ></div>
+          <template v-if="userData.isLogin">
+            <div class="break-line"></div>
+            <el-table
+              :max-height='500'
+              :data='C2CRecord'
+            >
+              <el-table-column
+                width="150"
+                prop='autoid'
+                :label='$t("orderId")||"单号"'
+              >
+              </el-table-column>
+              <el-table-column
+                width='120'
+                :label='$t("type")||"类型"'
+              >
+                <span
+                  slot-scope="scope"
+                  v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                  :class="scope.row.type=='0'?'color-danger':'color-success'"
+                >
+                </span>
+              </el-table-column>
+              <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+                <template slot-scope="scope">
+                  {{scope.row.price*1}}
+                </template>
+              </el-table-column>
+              <el-table-column :label='numberLabel'>
+                <template slot-scope="scope">
+                  {{scope.row.number*1}}
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop='member'
+                :label='($t("label188")||"商家")'
+              >
+              </el-table-column>
+              <el-table-column :label='amountLabel'>
+                <span slot-scope="scope">{{scope.row.zj*1}}</span>
+              </el-table-column>
+              <el-table-column
+                width="200"
+                prop='wdate'
+                :label='$t("createdTime")||"建立时间"'
+              >
+              </el-table-column>
+              <el-table-column
+                width="100"
+                :label='$t("status")||"状态"'
+              >
+                <span slot-scope='scope'>已完成</span>
               </el-table-column>
             </el-table>
           </template>
@@ -514,12 +576,15 @@ export default {
       //挂单详情
       marketOrderDetail: {},
       // 订单id
-      orderId: ""
+      orderId: "",
+      //c2c历史订单
+      C2CRecord: []
     };
   },
   mounted() {
     this.getc2corder();
     this.getState();
+    this.getC2CRecord();
     this.getC2Ccoin()
       .then(res => {
         if (res) {
@@ -691,6 +756,10 @@ export default {
           this.onModelClose();
           this.successMsg(res.msg || "操作成功");
           this.gettradorder(this.coinInfo.coinid);
+          this.getc2callorder(this.coinInfo.coinid).then(res => {
+            this.marketList = res;
+          });
+          this.getc2corder();
         } else {
           this.errMsg(res.msg || "操作失败");
         }
@@ -750,6 +819,16 @@ export default {
         console.log(`c2c交易订单：${JSON.stringify(res)}`);
         this.Util.sumCalc(res.data.list, "price", "number");
         this.myC2COrderList = res.data.list;
+      });
+    },
+    //获取c2c历史订单
+    getC2CRecord() {
+      this.request(this.api.getc2chistory).then(res => {
+        try {
+          this.C2CRecord = res.data.list;
+        } catch (err) {
+          console.log(err);
+        }
       });
     },
     //获取资产信息

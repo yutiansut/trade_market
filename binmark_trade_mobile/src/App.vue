@@ -1,7 +1,7 @@
 <template>
   <div
+    :style="{height:appHeight+'px'}"
     id="app"
-    class="wh-full"
   >
     <keep-alive>
       <transition name="van-fade">
@@ -16,7 +16,15 @@
 
 <script>
 export default {
-  name: "App"
+  name: "App",
+  data() {
+    return {
+      appHeight: ""
+    };
+  },
+  mounted() {
+    this.appHeight = window.screen.height;
+  }
 };
 </script>
 

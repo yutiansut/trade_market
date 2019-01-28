@@ -6,7 +6,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/API': {
-        target: "http://192.168.16.51:80/",
+        target: "http://www.upayw.com",
         changeOrigin: true
       }
     },

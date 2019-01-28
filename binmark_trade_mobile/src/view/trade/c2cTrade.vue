@@ -101,7 +101,7 @@
               <dt class="font-bold flex flex-between">
                 <span
                   class="font-16"
-                  v-text="item.userid||''"
+                  v-text="Store.state.userInfo.member"
                 ></span>
                 <span class="status color-danger">进行中</span>
               </dt>
@@ -134,10 +134,11 @@
               </dd>
               <dd class="total van-hairline--bottom">
                 <span class="color-666">总计&nbsp;&nbsp;</span>
-                <span v-text="item.total||0"></span>
+                <span v-text="item.total*1||0"></span>
               </dd>
             </dl>
           </div>
+          <no-record v-if="myPublishedOrder.length==0"></no-record>
         </van-tab>
         <!-- 交易中的订单 -->
         <van-tab title="交易中">
@@ -191,6 +192,7 @@
               </dd>
             </dl>
           </div>
+          <no-record v-if="myTradingOrderList.length==0"></no-record>
         </van-tab>
         <!-- 历史订单 -->
         <van-tab title="历史订单">
@@ -201,39 +203,46 @@
               class="order"
             >
               <dt class="font-bold flex flex-between">
-                <span class="font-16">你是YY</span>
+                <span
+                  class="font-16"
+                  v-text="item.member"
+                ></span>
                 <span class="status color-666">已完成</span>
               </dt>
               <dd class="flex flex-between">
                 <div>
                   <span class="color-999">单号&nbsp;&nbsp;</span>
-                  <span>116515651</span>
+                  <span v-text="item.autoid"></span>
                 </div>
                 <div>
-                  <span class="color-danger">买入&nbsp;&nbsp;</span>
-                  <span class="color-999">类型</span>
+                  <span
+                    class="color-danger"
+                    v-text="item.type==1?'卖出':'买入'"
+                  ></span>
+                  <span class="color-999">&nbsp;类型</span>
                 </div>
               </dd>
               <dd class="flex flex-between">
                 <div>
                   <span class="color-999">价格&nbsp;&nbsp;</span>
-                  <span>6385</span>
+                  <span v-text="item.price*1"></span>
                 </div>
                 <div>
-                  <span class="color-danger">2017/7/7&nbsp;&nbsp;</span>
-                  <span class="color-999">时间</span>
+                  <span v-text="item.wdate"></span>
+                  <span class="color-999">&nbsp;&nbsp;时间</span>
                 </div>
               </dd>
               <dd>
                 <span class="color-999">数量&nbsp;&nbsp;</span>
-                <span>6385</span>
+                <span v-text="item.number*1"></span>
               </dd>
               <dd class="total van-hairline--bottom">
                 <span class="color-666">总计&nbsp;&nbsp;</span>
-                <span>6385</span>
+                <span v-text="item.zj*1"></span>
               </dd>
             </dl>
           </div>
+          <no-record v-if="historyOrder.length==0"></no-record>
         </van-tab>
       </van-tabs>
       <!-- 市场挂单 -->
@@ -251,37 +260,49 @@
             :key='i'
             class="item flex flex-v-center"
           >
-            <van-col span="10">
-              <p class="dt font-16 font-bold">李先生</p>
+            <van-col span="14">
+              <p
+                class="dt font-16 font-bold"
+                v-text="item.member"
+              ></p>
               <p class="dd font-14">
                 <span class="color-999">数量&nbsp;</span>
-                <span>10&nbsp;&nbsp;KMT</span>
+                <span v-text="item.number*1"></span>
               </p>
               <p class="dd font-14">
                 <span class="color-999">日期&nbsp;</span>
-                <span>2017/8/8</span>
+                <span v-text="item.wdate"></span>
               </p>
             </van-col>
-            <van-col span="8">
-              <p class="dt font-18 font-bold">￥4498</p>
+            <van-col span="6">
+              <p class="dt font-18 font-bold"></p>
               <p class="dd font-14">
                 <span class="color-999">价格&nbsp;</span>
-                <span>10&nbsp;&nbsp;KMT</span>
+                <span v-text="item.price*1"></span>
               </p>
               <p class="dd font-14">
                 <span class="color-999">总计&nbsp;</span>
-                <span>2017/8/8</span>
+                <span v-text="item.number*item.price"></span>
               </p>
             </van-col>
             <van-col
               class="flex col-last"
-              span="6"
+              span="4"
             >
-              <button class="btn-rounded btn-danger riple thumb-40 font-14">买入</button>
+              <button
+                @click="buyC2cCoin(item.autoid)"
+                v-if="item.type==1"
+                class="btn-rounded btn-danger riple thumb-40 font-14"
+              >买入</button>
+              <button
+                @click="sellC2cCoin(item.autoid)"
+                v-else
+                class="btn-rounded btn-danger riple thumb-40 font-14"
+              >卖出</button>
             </van-col>
           </van-row>
         </div>
-        <div class="flex flex-v-center flex-h-center h-45 font-15 color-999"><span>暂无数据</span></div>
+        <no-record v-if="marketOrderList.length==0"></no-record>
       </div>
     </div>
     <!-- 币种上拉菜单 -->
@@ -312,7 +333,9 @@ import {
   addSell,
   getc2cOrderByType,
   getMyc2cTrade,
-  getc2cHistory
+  getc2cHistory,
+  buyC2cCoin,
+  sellC2cCoin
 } from "@/vuexStore/storeService.js";
 import { Picker } from "vant";
 import { getPublishedOrder } from "../../vuexStore/coinService";
@@ -324,7 +347,7 @@ export default {
       showPicker: false,
       tradeCoins: [],
       tradecoinid: "",
-      active: 3,
+      active: 0,
       buyprice: "",
       sellprice: "",
       sellnumber: "",
@@ -422,16 +445,60 @@ export default {
       return true;
     },
     addBuy() {
-      addBuy(this.coinInfo.coinid, this.buyprice, this.buynumber);
+      if (this.beforeBuy()) {
+        addBuy(this.coinInfo.coinid, this.buyprice, this.buynumber)
+          .then(res => {
+            return Promise.resolve();
+          })
+          .then(() => {
+            this.getc2cOrderByType(this.coinInfo.coinid, ths.active).then(
+              res => {
+                if (res) this.marketOrderList = res;
+              }
+            );
+          });
+      }
     },
     addSell() {
-      if (this.validate(this.sellnumber)) {
-        addSell(this.coinInfo.coinid, this.sellprice, this.sellnumber);
+      if (this.beforeSell()) {
+        addSell(this.coinInfo.coinid, this.sellprice, this.sellnumber)
+          .then(res => {
+            return Promise.resolve();
+          })
+          .then(() => {
+            this.getc2cOrderByType(this.coinInfo.coinid, ths.active).then(
+              res => {
+                if (res) this.marketOrderList = res;
+              }
+            );
+          });
+      }
+    },
+    buyC2cCoin(autoid) {
+      if (autoid) {
+        buyC2cCoin(autoid).then(res => {
+          getc2cOrderByType(this.coinInfo.coinid, this.active).then(res => {
+            if (res) this.marketOrderList = res;
+          });
+        });
+      }
+    },
+    sellC2cCoin(autoid) {
+      if (autoid) {
+        sellC2cCoin(autoid).then(res => {
+          getc2cOrderByType(this.coinInfo.coinid, this.active).then(res => {
+            if (res) this.marketOrderList = res;
+          });
+        });
       }
     }
   },
   watch: {
     active(val) {
+      getc2cOrderByType(this.coinInfo.coinid, this.active).then(res => {
+        if (res) this.marketOrderList = res;
+      });
+      this.showPicker = false;
       switch (val) {
         case 2:
           //获取我发布的订单
@@ -492,7 +559,7 @@ export default {
 .list-item {
   margin-top: 1.25rem;
   .item {
-    padding: 1.5rem 1rem;
+    padding: 1rem 1rem;
     background: #f6f6f6;
     border-radius: 3px;
     margin-top: 1.25rem;
@@ -502,6 +569,7 @@ export default {
   }
   .dt {
     line-height: 21px;
+    height: 21px;
     margin-bottom: 1rem;
   }
   .dd {

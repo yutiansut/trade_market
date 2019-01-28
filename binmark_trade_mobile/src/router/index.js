@@ -35,6 +35,9 @@ const BindBank = r => require(["@/view/account/BindBank"], r);
 const GoogleAuth = r => require(["@/view/account/GoogleAuth"], r);
 const Identify = r => require(["@/view/account/Identify"], r);
 const AccountCenter = r => require(["@/view/account/AccountCenter"], r);
+const AddressList = r => require(["@/view/account/AddressList"], r);
+const AddAddress = r => require(["@/view/account/AddAddress"], r);
+const WorkOrder = r => require(["@/view/account/WorkOrder"], r);
 // 日志记录
 const AccountLogs = r => require(["@/view/account/AccountLogs"], r);
 const LoginLogs = r => require(["@/view/account/LoginLogs"], r);
@@ -225,7 +228,8 @@ const routes = [
     name: "WithDraw",
     component: WithDraw,
     meta: {
-      title: "提现"
+      title: "提现",
+      auth: true
     }
   },
   {
@@ -334,6 +338,33 @@ const routes = [
         component: AccountCenter,
         meta: {
           title: "账户管理",
+          auth: true
+        }
+      },
+      {
+        path: "/account/address",
+        name: "Address",
+        component: AddressList,
+        meta: {
+          title: "我的地址",
+          auth: true
+        }
+      },
+      {
+        path: "/account/add_address",
+        name: "AddAddress",
+        component: AddAddress,
+        meta: {
+          title: "添加地址",
+          auth: true
+        }
+      },
+      {
+        path: "/account/workorder",
+        name: "WorkOrder",
+        component: WorkOrder,
+        meta: {
+          title: "提交工单",
           auth: true
         }
       }

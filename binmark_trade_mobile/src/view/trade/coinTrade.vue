@@ -182,57 +182,58 @@
             v-if="Store.state.isLogin"
             class="record-table"
           >
-            <van-row class="thead color-666 flex flex-v-center h-45">
-              <van-col span="6 font-14">市场</van-col>
-              <van-col span="7 font-14">价格</van-col>
-              <van-col span="7 font-14">成交量/数量</van-col>
-              <van-col span="4 font-14 txt-rt">操作</van-col>
-            </van-row>
-            <div
-              v-if="currentEntrust.length>0"
-              class="tbody"
-            >
-              <van-row
-                v-for="item in currentEntrust"
-                :key='item.autoid'
-                class="flex flex-v-center"
-              >
-                <van-col span="6 font-14">
-                  <div
-                    class="font-14 font-bold"
-                    v-text="item.tradcoin"
-                  ></div>
-                  <small
-                    class="color-999"
-                    v-text="item.writedate"
-                  ></small>
-                </van-col>
-                <van-col span="7 font-14 color-success">
-                  <div class="font-14 font-bold">1519159</div>
-                  <small v-text="item.type==0?'买入':'卖出'"></small>
-                </van-col>
-                <van-col span="7 font-14">
-                  <div
-                    class="font-14 font-bold"
-                    v-text="item.dealnumber*1"
-                  ></div>
-                  <small
-                    class="color-999"
-                    v-text="item.number*1"
-                  ></small>
-                </van-col>
-                <van-col span="4 font-14 txt-rt">
-                  <button
-                    @click="cancelOrder(item)"
-                    class="btn-mini btn-success riple"
-                  >撤单</button>
-                </van-col>
+            <template v-if='currentEntrust.length>0'>
+              <van-row class="thead color-666 flex flex-v-center h-45">
+                <van-col span="6 font-14">市场</van-col>
+                <van-col span="7 font-14">价格</van-col>
+                <van-col span="7 font-14">成交量/数量</van-col>
+                <van-col span="4 font-14 txt-rt">操作</van-col>
               </van-row>
-            </div>
-            <div
-              v-else
-              class="font-15 color-999 txt-center"
-            >暂无数据</div>
+              <div
+                v-if="currentEntrust.length>0"
+                class="tbody"
+              >
+                <van-row
+                  v-for="item in currentEntrust"
+                  :key='item.autoid'
+                  class="flex flex-v-center"
+                >
+                  <van-col span="6 font-14">
+                    <div
+                      class="font-14 font-bold"
+                      v-text="item.tradcoin"
+                    ></div>
+                    <small
+                      class="color-999"
+                      v-text="item.writedate"
+                    ></small>
+                  </van-col>
+                  <van-col span="7 font-14 color-success">
+                    <div class="font-14 font-bold">1519159</div>
+                    <small v-text="item.type==0?'买入':'卖出'"></small>
+                  </van-col>
+                  <van-col span="7 font-14">
+                    <div
+                      class="font-14 font-bold"
+                      v-text="item.dealnumber*1"
+                    ></div>
+                    <small
+                      class="color-999"
+                      v-text="item.number*1"
+                    ></small>
+                  </van-col>
+                  <van-col span="4 font-14 txt-rt">
+                    <button
+                      @click="cancelOrder(item)"
+                      class="btn-mini btn-success riple"
+                    >撤单</button>
+                  </van-col>
+                </van-row>
+              </div>
+            </template>
+            <template v-else>
+              <no-record></no-record>
+            </template>
           </div>
         </van-tab>
         <van-tab title="历史委托">
@@ -240,49 +241,51 @@
             v-if="Store.state.isLogin"
             class="record-table"
           >
-            <van-row class="thead color-666 flex flex-v-center h-45">
-              <van-col span="9 font-14">市场</van-col>
-              <van-col span="8 font-14">价格</van-col>
-              <van-col span="7 font-14 txt-rt">成交量/数量</van-col>
-            </van-row>
-            <div
-              v-if="entrustRecord.length>0"
-              class="tbody"
-            >
-              <van-row
-                v-for="item in entrustRecord"
-                :key='item.autoid'
-                class="flex flex-v-center"
-              >
-                <van-col span="9 font-14">
-                  <div
-                    class="font-14 font-bold"
-                    v-text="item.tradcoin"
-                  ></div>
-                  <small
-                    class="color-999"
-                    v-text="item.writedate"
-                  ></small>
-                </van-col>
-                <van-col span="8 font-14 color-success">
-                  <div
-                    class="font-14 font-bold"
-                    v-text="item.price*1"
-                  ></div>
-                  <small v-text="item.type==0?'买入':'卖出'"></small>
-                </van-col>
-                <van-col span="7 font-14 txt-rt">
-                  <div
-                    class="font-14 font-bold"
-                    v-text="item.dealnumber*1"
-                  ></div>
-                  <small
-                    class="color-999"
-                    v-text="item.number*1"
-                  ></small>
-                </van-col>
+            <template v-if="entrustRecord.length>0">
+              <van-row class="thead color-666 flex flex-v-center h-45">
+                <van-col span="9 font-14">市场</van-col>
+                <van-col span="8 font-14">价格</van-col>
+                <van-col span="7 font-14 txt-rt">成交量/数量</van-col>
               </van-row>
-            </div>
+              <div class="tbody">
+                <van-row
+                  v-for="item in entrustRecord"
+                  :key='item.autoid'
+                  class="flex flex-v-center"
+                >
+                  <van-col span="9 font-14">
+                    <div
+                      class="font-14 font-bold"
+                      v-text="item.tradcoin"
+                    ></div>
+                    <small
+                      class="color-999"
+                      v-text="item.writedate"
+                    ></small>
+                  </van-col>
+                  <van-col span="8 font-14 color-success">
+                    <div
+                      class="font-14 font-bold"
+                      v-text="item.price*1"
+                    ></div>
+                    <small v-text="item.type==0?'买入':'卖出'"></small>
+                  </van-col>
+                  <van-col span="7 font-14 txt-rt">
+                    <div
+                      class="font-14 font-bold"
+                      v-text="item.dealnumber*1"
+                    ></div>
+                    <small
+                      class="color-999"
+                      v-text="item.number*1"
+                    ></small>
+                  </van-col>
+                </van-row>
+              </div>
+            </template>
+            <template v-else>
+              <no-record></no-record>
+            </template>
           </div>
         </van-tab>
       </van-tabs>
@@ -388,6 +391,9 @@ export default {
         });
     }
     this.init = true;
+  },
+  destroyed() {
+    if (timer) clearInterval(timer);
   },
   computed: {
     total() {
@@ -527,7 +533,7 @@ export default {
     },
     updateDataBySocket(maincoinid, tradecoinid) {
       let token = this.storage.get("token") || randomString(32);
-      let params = `${token}_${maincoinid}_${tradecoinid}`;
+      let params = `${token}/${maincoinid}_${tradecoinid}`;
       if (webSocket) {
         try {
           webSocket.send(params);
@@ -540,7 +546,7 @@ export default {
         webSocket = new WebSocket(this.api.socketUrl + params);
         webSocket.onopen = () => {
           console.log("socket 已经连接，可以发送数据");
-          webSocket.send(params);
+          webSocket.send(`${maincoinid}_${tradecoinid}`);
         };
         webSocket.onmessage = event => {
           let msg = JSON.parse(event.data);

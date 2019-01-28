@@ -403,6 +403,8 @@ module.exports = {
     label185: "need",
     label186: "Detail",
     label187: "Order",
+    label188: "Member",
+    label189: "Trade record",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",

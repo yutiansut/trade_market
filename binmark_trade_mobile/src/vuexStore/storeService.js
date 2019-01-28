@@ -33,7 +33,8 @@ import {
     getNewsList,
     getCoinProfile,
     getHelpCenter,
-    getWorkOrder
+    getWorkOrder,
+    SubmitWorkOrder
 } from './articleService';
 import { getIndexBanner } from './assetService';
 import {
@@ -57,6 +58,7 @@ import {
     addBuy,
     addSell,
     buyC2cCoin,
+    sellC2cCoin,
     getPublishedOrder,
     confirmPayment,
     confirmReceivePayment,
@@ -66,7 +68,8 @@ import {
     otcBuy,
     getOTCOrder,
     getOtcOrderByType,
-    getOtcBank
+    getOtcBank,
+    getAllCoin
 } from './coinService';
 export {
     getNewsList,
@@ -123,6 +126,7 @@ export {
     addBuy,
     addSell,
     buyC2cCoin,
+    sellC2cCoin,
     getPublishedOrder,
     confirmPayment,
     confirmReceivePayment,
@@ -132,5 +136,7 @@ export {
     otcBuy,
     getOTCOrder,
     getOtcOrderByType,
-    getOtcBank
+    getOtcBank,
+    SubmitWorkOrder,
+    getAllCoin
 }

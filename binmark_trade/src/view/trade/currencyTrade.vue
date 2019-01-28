@@ -580,7 +580,7 @@ export default {
     updateListBySocket(token, maincoin, tradecoin) {
       console.log("浏览器支持websocket");
       if (webSocket) {
-        webSocket.send(`${token}_${maincoin}_${tradecoin}`);
+        webSocket.send(`${token || randomString(32)}_${maincoin}_${tradecoin}`);
         return false;
       }
       webSocket = new WebSocket(

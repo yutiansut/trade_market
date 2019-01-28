@@ -119,12 +119,19 @@
         class="btn-large btn-block btn-primary"
       >确定</button>
     </div>
-    <van-actionsheet
-      v-model="show"
-      cancel-text="取消"
-      :actions="addressList"
-      @select="onSelect"
-    />
+    <!-- 币种上拉菜单 -->
+    <transition name="van-slide-up">
+      <van-picker
+        title='地址列表'
+        show-toolbar
+        v-show="showPicker"
+        :columns="addressList"
+        value-key='address'
+        visible-item-count='3'
+        @confirm="onConfirm"
+        @cancel='cancelPicker'
+      />
+    </transition>
   </div>
 </template>
 <script>
@@ -135,13 +142,13 @@ import {
   outCoin
 } from "@/vuexStore/storeService.js";
 import { verCodeMixin } from "@/mixin/mixin";
-import { Switch } from "vant";
+import { Picker } from "vant";
 export default {
-  components: { Switch },
   mixins: [verCodeMixin],
+  components: { Picker },
   data() {
     return {
-      show: false,
+      showPicker: false,
       addressList: [],
       dayNumber: {},
       coin: "",
@@ -210,17 +217,24 @@ export default {
   methods: {
     validate() {},
     onSelect(item) {
-      this.show = false;
+      this.showPicker = false;
     },
     showAddress() {
-      this.show = true;
+      this.showPicker = true;
     },
     changeType() {
       this.type = this.type == 0 ? 1 : 0;
     },
     sendCode() {
       this.timeCountDown();
-      sendCode();
+      sendCode(null, this.type == 0 ? "4" : "5");
+    },
+    onConfirm(item) {
+      this.address = item.address;
+      this.showPicker = false;
+    },
+    cancelPicker() {
+      this.showPicker = false;
     },
     onSubmit() {
       outCoin({

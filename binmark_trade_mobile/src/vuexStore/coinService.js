@@ -282,10 +282,10 @@ const addSell = async (coin, price, number) => {
     }
 };
 //从市场买入c2c订单
-const buyC2cCoin = async (autoid) => {
+const buyC2cCoin = async autoid => {
     try {
         let result = await Request(apiConfig.c2cbuytrad, {
-            autoid: autoid,
+            autoid
         });
         let data = handelResult(result);
         if (data) {
@@ -299,6 +299,24 @@ const buyC2cCoin = async (autoid) => {
         console.log(err)
     }
 };
+//从市场卖出c2c订单
+const sellC2cCoin = async autoid => {
+    try {
+        let result = await Request(apiConfig.c2cselltrad, {
+            autoid
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+}
 //我发布的订单
 const getPublishedOrder = async () => {
     try {
@@ -448,6 +466,16 @@ const getOtcBank = async () => {
         console.log(err)
     }
 };
+//获取所有币种
+const getAllCoin = async () => {
+    try {
+        let result = await Request(apiConfig.allcoin);
+        let data = handelResult(result);
+        if (data.list) return data.list;
+    } catch (err) {
+        console.log(err)
+    }
+}
 export {
     getMainCoin,
     getChart,
@@ -469,6 +497,7 @@ export {
     addBuy,
     addSell,
     buyC2cCoin,
+    sellC2cCoin,
     getPublishedOrder,
     confirmPayment,
     confirmReceivePayment,
@@ -478,5 +507,6 @@ export {
     otcBuy,
     getOTCOrder,
     getOtcOrderByType,
-    getOtcBank
+    getOtcBank,
+    getAllCoin
 }

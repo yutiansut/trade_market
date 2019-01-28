@@ -42,7 +42,8 @@ Vue.use(Tabbar)
   .use(Tabs)
   .use(NoticeBar)
   .use(Actionsheet)
-  .use(Toast)
+  .use(Toast);
+
 /**
  * 引入全局组件
  */
@@ -50,9 +51,13 @@ import App from "@/App";
 import Footer from "@/components/footer/Footer";
 import Header from "@/components/header/Header";
 import tabBar from "@/components/other/tabBar";
+import NoRecord from './components/other/NoRecord.vue';
+import VeLine from 'v-charts/lib/line.common';
 Vue.component(Footer.name, Footer);
 Vue.component(Header.name, Header);
-Vue.component(tabBar.name, tabBar)
+Vue.component(tabBar.name, tabBar);
+Vue.component(NoRecord.name, NoRecord);
+Vue.component(VeLine.name, VeLine);
 /**
  * 引入自定义相关js
  */

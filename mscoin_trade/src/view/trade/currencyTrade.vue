@@ -580,7 +580,7 @@ export default {
     updateListBySocket(token, maincoin, tradecoin) {
       console.log("浏览器支持websocket");
       if (webSocket) {
-        webSocket.send(`${token}_${maincoin}_${tradecoin}`);
+        webSocket.send(`${maincoin}_${tradecoin}`);
         return false;
       }
       webSocket = new WebSocket(
@@ -589,17 +589,17 @@ export default {
       );
       webSocket.onopen = () => {
         console.log("socket 已经连接，可以发送数据");
-        webSocket.send(`${token}_${maincoin}_${tradecoin}`);
+        webSocket.send(`${maincoin}_${tradecoin}`);
       };
       // 接收数据
       webSocket.onmessage = event => {
         let msg = JSON.parse(event.data);
+        console.log(msg);
         this.latestBuyData = this.Util.sumCalc(msg.buy, "price", "number");
         this.latestSoldData = this.Util.sumCalc(msg.sell, "price", "number");
         this.historicalBuyData = this.Util.sumCalc(msg.top, "price", "number");
       };
       webSocket.onerror = err => {
-        console.log(err);
         this.updateListByAjax(maincoin, tradecoin);
       };
       webSocket.onclose = () => {

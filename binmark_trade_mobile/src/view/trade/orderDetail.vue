@@ -46,7 +46,7 @@
     </div>
     <button
       @click="handleOrder"
-      :disabled="(orderDetail.type == 1 && orderDetail.state == 0)"
+      :disabled="(orderDetail.type != orderDetail.state)"
       class="confirm-btn btn-block riple btn-large btn-primary"
       v-text="btnText"
     ></button>

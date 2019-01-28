@@ -13,7 +13,7 @@
         >
         <span
           class="font-16 font-bold"
-          v-text="listData.coin"
+          v-text="listData.coin||listData.coinid"
         ></span>
       </div>
       <span
@@ -21,18 +21,17 @@
         v-text="listData.number*1"
       ></span>
     </div>
-    <div class="font-14 flex flex-v-center flex-between">
-      <span class="label">提现地址</span>
-      <span
+    <div
+      v-if="listData.address"
+      class="font-14 flex flex-v-center flex-between"
+    >
+      <span class="label">地址</span><span
         class="address txt-rt"
         v-text="listData.address"
       ></span>
     </div>
     <div class="font-14 flex flex-v-center flex-between">
-      <span
-        class="status color-success"
-        v-text="listData.statename"
-      ></span>
+      <span class="status color-success">已完成</span>
       <span
         class="date"
         v-text="listData.wdate"

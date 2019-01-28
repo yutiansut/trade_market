@@ -60,9 +60,25 @@ const getWorkOrder = async () => {
         console.log(err)
     }
 }
+//提交工单
+const SubmitWorkOrder = async (type, title, url) => {
+    try {
+        let result = await Request(apiConfig.addorder, {
+            type, title, url
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast(`${result.msg}`);
+            return result;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+}
 export {
     getNewsList,
     getCoinProfile,
     getHelpCenter,
-    getWorkOrder
+    getWorkOrder,
+    SubmitWorkOrder
 }

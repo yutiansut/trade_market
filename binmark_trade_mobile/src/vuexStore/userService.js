@@ -90,11 +90,10 @@ const Register = async formData => {
 };
 //获取验证码
 const sendCode = async (account, type) => {
+    let params = { account, type };
+    if (!account) delete params[account];
     try {
-        let result = await Request(apiConfig.code, {
-            account: account,
-            type: type
-        });
+        let result = await Request(apiConfig.code, params);
         let data = handelResult(result);
         if (data) {
             return result
