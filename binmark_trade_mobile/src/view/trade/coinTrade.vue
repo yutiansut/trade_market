@@ -209,7 +209,10 @@
                     ></small>
                   </van-col>
                   <van-col span="7 font-14 color-success">
-                    <div class="font-14 font-bold">1519159</div>
+                    <div
+                      class="font-14 font-bold"
+                      v-text="item.price*1"
+                    ></div>
                     <small v-text="item.type==0?'买入':'卖出'"></small>
                   </van-col>
                   <van-col span="7 font-14">
@@ -536,7 +539,7 @@ export default {
       let params = `${token}/${maincoinid}_${tradecoinid}`;
       if (webSocket) {
         try {
-          webSocket.send(params);
+          webSocket.send(`${maincoinid}_${tradecoinid}`);
           return;
         } catch (err) {
           console.log(err);

@@ -30,9 +30,9 @@ const getMainCoin = async () => {
     }
 };
 //折线图首页
-const getChart = async coin => {
+const getChart = async (maincoin, tradcoin) => {
     try {
-        let result = await Request(apiConfig.chart, { coin });
+        let result = await Request(apiConfig.chart, { coin: `${tradcoin}_${maincoin}` });
         let data = handelResult(result);
         return data;
     } catch (err) {

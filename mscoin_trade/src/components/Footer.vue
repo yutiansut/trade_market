@@ -133,32 +133,32 @@ export default {
             }
           ]
         },
-        {
-          i18nKey: "faqCenter",
-          title: "问题中心",
-          items: [
-            {
-              i18nKey: "rate",
-              label: "费率标准",
-              link: "/help_center/fee"
-            },
-            {
-              i18nKey: "faqCenter",
-              label: "常见问题",
-              link: "/help_center/faq"
-            },
-            {
-              i18nKey: "agreement",
-              label: "用户协议",
-              link: "http://www.upayw.com/static/services.pdf"
-            },
-            {
-              i18nKey: "currencyProfile",
-              label: "币种资料",
-              link: "/help_center/currency_intro"
-            }
-          ]
-        },
+        // {
+        //   i18nKey: "faqCenter",
+        //   title: "问题中心",
+        //   items: [
+        //     {
+        //       i18nKey: "rate",
+        //       label: "费率标准",
+        //       link: "/help_center/fee"
+        //     },
+        //     {
+        //       i18nKey: "faqCenter",
+        //       label: "常见问题",
+        //       link: "/help_center/faq"
+        //     },
+        //     {
+        //       i18nKey: "agreement",
+        //       label: "用户协议",
+        //       link: "http://www.upayw.com/static/services.pdf"
+        //     },
+        //     {
+        //       i18nKey: "currencyProfile",
+        //       label: "币种资料",
+        //       link: "/help_center/currency_intro"
+        //     }
+        //   ]
+        // },
         {
           i18nKey: "helpCenter",
           title: "帮助中心",
@@ -208,15 +208,14 @@ $footer-font-color: #fff;
   background: $bg-dark;
   width: 100%;
   .ft-body {
-    @include minWidth;
+    min-width: 1200px;
     overflow: hidden;
-    width: 77%;
+    width: 70%;
     padding: 30px 0;
     @include hCenter;
   }
   .ft-lf {
     overflow: hidden;
-    width: 54%;
     @include float;
   }
   .ft-nav {
@@ -242,9 +241,9 @@ $footer-font-color: #fff;
   }
   .ft-rt {
     color: #666;
-    margin-left: 54%;
+    margin-left: 45%;
     ul {
-      width: 70%;
+      width: 68%;
       float: left;
     }
     li {

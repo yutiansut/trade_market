@@ -1,5 +1,6 @@
 <template>
   <div
+    class="h-full"
     :style="{height:appHeight+'px'}"
     id="app"
   >
@@ -13,7 +14,6 @@
 <style lang="scss">
 @import "@/assets/css/public.scss";
 </style>
-
 <script>
 export default {
   name: "App",
@@ -23,7 +23,7 @@ export default {
     };
   },
   mounted() {
-    this.appHeight = window.screen.height;
+    // this.appHeight = window.screen.availHeight;
   }
 };
 </script>

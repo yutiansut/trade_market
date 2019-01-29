@@ -5,6 +5,7 @@ $color-success: #01aa3c;
 $color-danger: #ef2d0c;
 $bg-dark: #323c46;
 $main-font-color: #333;
+$color-primary: #409eff;
 $input-height: 40px;
 $btn-height: 40px;
 $font: "PingFang SC";
@@ -26,7 +27,9 @@ $content-width: 66%;
 .color-success {
   color: $color-success;
 }
-
+.color-primary {
+  color: $color-primary;
+}
 @mixin textVcenter($height: 40px) {
   height: $height;
   line-height: $height;

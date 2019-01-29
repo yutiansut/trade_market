@@ -86,7 +86,7 @@
     <div class="van-hairline--bottom"></div>
     <div class="coin-list">
       <div
-        @click="showKline(item.coinid)"
+        @click="showKline(item.maincoinid,item.coinid)"
         v-for="(item,i) in Store.state.tradeCoin"
         :key="i"
         class="list-item van-hairline--bottom"
@@ -125,7 +125,7 @@
           </van-col>
         </van-row>
         <div
-          v-show="item.coinid==tradecoinid"
+          v-if="item.coinid==tradecoinid"
           class="k-line"
         >
           <van-row class="k-head">
@@ -166,9 +166,14 @@
               >去交易&nbsp;&nbsp;→</div>
             </van-col>
           </van-row>
-          <div class="k-map">
-
-          </div>
+          <transition name="van-slide-down">
+            <div
+              v-if="chartsData.length>0"
+              class="k-map"
+            >
+              <kline :chartData='chartsData'></kline>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -182,11 +187,13 @@ import {
 } from "@/vuexStore/storeService.js";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import slidePop from "@/components/other/slidePop";
+import Kline from "@/components/charts/Kline";
 import userAside from "@/components/slideContent/UserAside";
 import appHeader from "@/components/header/AppHeader";
 import { asideMixin, coinTradeMixin } from "@/mixin/mixin";
+import axios from "axios";
 export default {
-  components: { swiper, swiperSlide, slidePop, appHeader, userAside },
+  components: { swiper, swiperSlide, slidePop, appHeader, userAside, Kline },
   mixins: [asideMixin, coinTradeMixin],
   data() {
     return {
@@ -212,7 +219,7 @@ export default {
         autoplay: true,
         speed: 300
       },
-      chartsLine: [],
+      chartsData: [],
       errorGoodsImg: `this.src="${this.assetConfig.imgs.default}"`,
       activeIndex: 0,
       mainCoinInfo: {}
@@ -232,17 +239,12 @@ export default {
       this.mainCoinInfo = item;
       this.getTradeCoin(item.coinid);
     },
-    showKline(id) {
-      this.tradecoinid = id;
-      getChart(id).then(res => {
+    showKline(maincoinid, tradecoinid) {
+      if (this.tradecoinid && this.tradecoinid == tradecoinid) return;
+      this.tradecoinid = tradecoinid;
+      getChart(maincoinid, tradecoinid).then(res => {
         let list = res.data;
-        list.map(item => {
-          let Obj = {
-            日期: newDate(Number(item[0])).toLocaleDateString(),
-            走势: item[1] * 1
-          };
-          this.chartsLine.push(Obj);
-        });
+        this.chartsData = list;
       });
     },
     getBanner() {

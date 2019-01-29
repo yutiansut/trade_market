@@ -204,10 +204,11 @@
                 {{scope.row.number*1}}
               </template>
             </el-table-column>
-            <el-table-column
-              prop='total'
-              :label='($t("total")||"总计")+"(CNY)"'
-            >
+            <el-table-column :label='($t("total")||"总计")+"(CNY)"'>
+              <span
+                slot-scope="scope"
+                v-text="scope.row.total*1"
+              ></span>
             </el-table-column>
             <el-table-column
               prop='member'
@@ -267,18 +268,19 @@
               </el-table-column>
               <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
                 <template slot-scope="scope">
-                  {{scope.row.price|toFix()}}
+                  {{scope.row.price*1}}
                 </template>
               </el-table-column>
               <el-table-column :label='numberLabel'>
                 <template slot-scope="scope">
-                  {{scope.row.number|toFix()}}
+                  {{scope.row.number*1}}
                 </template>
               </el-table-column>
-              <el-table-column
-                prop='total'
-                :label='amountLabel'
-              >
+              <el-table-column :label='amountLabel'>
+                <span
+                  slot-scope="scope"
+                  v-text="scope.row.total*1"
+                ></span>
               </el-table-column>
               <el-table-column
                 width="200"
@@ -338,44 +340,43 @@
                   {{scope.row.number*1}}
                 </template>
               </el-table-column>
-              <el-table-column
-                prop='total'
-                :label='amountLabel'
-              >
+              <el-table-column :label='amountLabel'>
+                <span
+                  slot-scope="scope"
+                  v-text="scope.row.total*1"
+                ></span>
               </el-table-column>
               <el-table-column
-                width="200"
                 prop='wdate'
                 :label='$t("createdTime")||"建立时间"'
               >
               </el-table-column>
               <el-table-column
-                width="100"
+                align='center'
+                width='200'
                 :label='$t("operation")||"操作"'
               >
                 <template slot-scope="scope">
+                  <!-- 待付款 -->
                   <span
                     class="color-danger"
                     @click="confirmHandle(scope.row)"
-                    v-if="scope.row.type==0&&scope.row.state==0"
-                  >{{$t('label128')}}
+                    v-if="scope.row.status==0"
+                  >{{$t(scope.row.status_i18n)}}
                   </span>
-                  <span
-                    class="color-success"
-                    v-if="scope.row.type==1&&scope.row.state==0"
-                  >{{$t('label129')}}
-                  </span>
-                  <span
-                    class="color-success"
-                    v-if="scope.row.type==0&&scope.row.state==1"
-                  >{{$t('label128')}}
-                  </span>
-                  <span
-                    class="color-danger"
-                    v-if="scope.row.type==1&&scope.row.state==1"
-                    @click="confirmHandle(scope.row)"
-                  >{{$t('label131')}}
-                  </span>
+                  <!-- 确认收款 -->
+                  <div v-else-if="scope.row.status==3">
+                    <span
+                      @click="confirmHandle(scope.row)"
+                      class="color-danger"
+                    >{{$t(scope.row.status_i18n)}}</span>&nbsp;&nbsp;
+                    <em class="color-primary">查看凭证</em>
+                  </div>
+                  <!-- 待对方收款 -->
+                  <div v-else><span class="color-success">
+                      {{$t(scope.row.status_i18n)}}
+                    </span>&nbsp;&nbsp;<em class="color-primary">查看凭证</em>
+                  </div>
                 </template>
               </el-table-column>
             </el-table>
@@ -498,7 +499,7 @@
       :coin='marketOrderDetail.coinid'
     >
     </market-order>
-    <!-- 待收/付款 -->
+    <!-- 待收款-->
     <order-paid
       :show='dialogId==5?true:false'
       :title="$t('orderDetail')||'订单详情'"
@@ -506,7 +507,18 @@
       @onSubmit='dealOrder(orderDetail.type,orderId)'
       @closeModal='onModelClose'
     >
+      <div
+        slot='uploadfile'
+        class="upload-file"
+      >
+        <input
+          @change="onChange"
+          type="file"
+        >
+        <button class="btn-success btn-small">上传凭证</button>
+      </div>
     </order-paid>
+
     <order-paid
       :show='dialogId==6?true:false'
       :title="$t('orderDetail')||'订单详情'"
@@ -523,6 +535,7 @@ import orderMatch from "@/components/dialogContent/orderMatching";
 import orderConfirm from "@/components/dialogContent/OrderConfirm";
 import marketOrder from "@/components/dialogContent/MarketOrder";
 import orderPaid from "@/components/dialogContent/orderPaid";
+import axios from "axios";
 export default {
   components: {
     TradeConfirm,
@@ -548,6 +561,7 @@ export default {
         number: "",
         total: ""
       },
+      imgUrl: "",
       sellFormData: {
         price: "",
         number: "",
@@ -673,6 +687,39 @@ export default {
         }
       });
     },
+    //上传凭证
+    onChange(e) {
+      e.preventDefault();
+      let file = e.target.files[0];
+      let { name, size, type } = file;
+      let formData = new FormData();
+      let options = {
+        headers: {
+          "Content-Type": "MultipartFile/form-data"
+        },
+        method: "post"
+      };
+      if (!/\.(jpg|png)$/.test(name)) {
+        this.$message.error("图片格式需为jpg或者png");
+        return;
+      }
+      if (size > 4 * Math.pow(1024)) {
+        this.$message.error(
+          `图片大小不可超过4M,当前图片大小${size / Math.pow(1024, 2)}M`
+        );
+        return;
+      }
+      formData.append("imgurl", file);
+      options.url = `${this.api.baseURL}/${this.api.img.url}`;
+      options.data = formData;
+      axios(options).then(res => {
+        if (res.data.code == "0") {
+          this.successMsg(res.msg || "上传成功");
+          this.imgUrl = res.data.data.isFlag;
+        }
+      });
+    },
+    onFileChange(e) {},
     // 撤销我的c2c订单
     cancelMyc2cOrder(autoid) {
       this.request(this.api.clearc2c, {
@@ -700,7 +747,10 @@ export default {
     },
     // 发布买入
     buyHandle() {
-      if (this.buyTotal != "NaN" && this.buyTotal > 0 && this.validation()) {
+      if (!this.validation()) {
+        return;
+      }
+      if (!isNaN(this.buyTotal) && this.buyTotal > 0) {
         this.confirmData = {
           number: this.buyFormData.number,
           price: this.buyFormData.price
@@ -712,7 +762,10 @@ export default {
     },
     // 发布卖出
     sellHandle() {
-      if (this.sellTotal != "NaN" && this.sellTotal > 0 && this.validation()) {
+      if (!this.validation()) {
+        return;
+      }
+      if (!isNaN(this.sellTotal) && this.sellTotal > 0) {
         this.confirmData = {
           number: this.sellFormData.number,
           price: this.sellFormData.price
@@ -731,6 +784,7 @@ export default {
       }
       this.dialogId = 4;
       let type = rowData.type;
+
       this.marketOrderDetail = {
         type: rowData.type,
         autoid: rowData.autoid,
@@ -769,7 +823,9 @@ export default {
     onListClick(data) {
       this.coinInfo = data;
       this.getc2corder();
-      this.getc2callorder(data.coinid);
+      this.getc2callorder(this.coinInfo.coinid).then(res => {
+        this.marketList = res;
+      });
       this.gettradorder(data.coinid);
       this.getMyAccount(data.coinid).then(res => {
         res && (this.myAvailable = res.usable);
@@ -782,7 +838,6 @@ export default {
       }).then(res => {
         console.log(`c2c币种：${JSON.stringify(res)}`);
         if (res.data && res.data.list && res.data.list.length > 0) {
-          console.log(1);
           return Promise.resolve(res.data.list);
         }
       });
@@ -817,8 +872,31 @@ export default {
         coin: coin
       }).then(res => {
         console.log(`c2c交易订单：${JSON.stringify(res)}`);
-        this.Util.sumCalc(res.data.list, "price", "number");
-        this.myC2COrderList = res.data.list;
+        if (res.data && res.data.list) {
+          this.Util.sumCalc(res.data.list, "price", "number");
+          // 添加订单状态
+          for (let i = 0; i < res.data.list.length; i++) {
+            let item = res.data.list[i];
+            if (item.type == 0 && item.state == 0) {
+              //待付款
+              item.status = 0;
+              item.status_i18n = "label128";
+            } else if (item.type == 1 && item.state == 0) {
+              item.status = 1;
+              item.status_i18n = "label129";
+              //待对方打款
+            } else if (item.type == 0 && item.state == 1) {
+              item.status = 2;
+              item.status_i18n = "label130";
+              //待确认收款
+            } else if (item.type == 1 && item.state == 1) {
+              item.status = 3;
+              item.status_i18n = "label131";
+              //确认收款
+            }
+          }
+          this.myC2COrderList = res.data.list;
+        }
       });
     },
     //获取c2c历史订单
@@ -848,14 +926,6 @@ export default {
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
         return false;
-        // } else if (!this.canTrade) {
-        //   this.$alert("为确保资金安全,请先进行安全认证！", "提示", {
-        //     confirmButtonText: "去认证",
-        //     type: "warning"
-        //   }).then(() => {
-        //     this.navigateTo("/account/security");
-        //     return false;
-        //   });
       } else {
         return true;
       }
@@ -904,23 +974,27 @@ export default {
     },
     // 处理订单
     dealOrder(type, id) {
-      if (type && id) {
-        let api = type == "0" ? this.api.setsendok : this.api.setrealyok;
-        this.request(api, {
-          autoid: id,
-          showLoading: true
-        }).then(res => {
-          if (res.code == "0") {
-            this.successMsg(res.msg);
-            this.getc2corder();
-            this.getc2callorder(this.coinInfo.coinid);
-            this.gettradorder(this.coinInfo.coinid);
-          } else {
-            this.errMsg(res.msg);
-          }
-          this.onModelClose();
-        });
+      let api = type == "0" ? this.api.setsendok : this.api.setrealyok;
+      if (type == 0 && this.imgUrl == "") {
+        this.errMsg("请上传凭证");
+        return false;
       }
+      this.request(api, {
+        autoid: id,
+        showLoading: true
+      }).then(res => {
+        if (res.code == "0") {
+          this.successMsg(res.msg);
+          this.getc2corder();
+          this.getc2callorder(this.coinInfo.coinid).then(list => {
+            this.marketList = list;
+          });
+          this.gettradorder(this.coinInfo.coinid);
+        } else {
+          this.errMsg(res.msg);
+        }
+        this.onModelClose();
+      });
     }
   }
 };
@@ -936,6 +1010,14 @@ span {
   }
   &.color-success {
     color: $color-success;
+  }
+}
+.upload-file {
+  margin-top: 10px;
+  input {
+    opacity: 0;
+    position: absolute;
+    height: 100%;
   }
 }
 .vertical-line {

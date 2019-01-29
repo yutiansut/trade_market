@@ -349,6 +349,10 @@ let apiCfg = (function () {
         //vip
         vipinfo: {
             url: "vipinfo"
+        },
+        //交易交易密码
+        checkTradpwd: {
+            url: 'checktradpwd'
         }
     }
 }());

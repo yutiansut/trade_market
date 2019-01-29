@@ -100,7 +100,7 @@
               <span v-text="(item.price||0)*1"></span>
             </dd>
             <dd class="font-14 h-45 flex flex-between flex-v-center">
-              <span class="color-999">收款账号</span>
+              <span class="color-999">打款账号</span>
               <span v-text="item.bankcard"></span>
             </dd>
             <dd class="font-14 h-45 flex flex-between flex-v-center">

@@ -269,7 +269,7 @@
                     ></span>
                     <span
                       class="column txt-rt"
-                      v-text="item.total"
+                      v-text="item.total*1"
                     ></span>
                   </div>
                 </template>
@@ -470,6 +470,7 @@
 import mainCoinModel from "@/model/allCoinModel.js";
 import { Loading } from "element-ui";
 import { randomString } from "@/assets/js/common.js";
+import{checkTradePassword} from '../../service/TradeService.js'
 import CeAsideComp from "@/components/aside/CEasideComp.vue";
 let webSocket = null;
 let ajaxDone = true;
@@ -774,6 +775,7 @@ export default {
     },
     // 交易操作
     tradeHandle(api, params) {
+
       return this.request(api, {
         maincoin: params.maincoin || "",
         tradcoin: params.tradecoin || "",
@@ -851,6 +853,25 @@ export default {
       let num = this.buyFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
+      }else if(!this.storage.get('tradePasswordChecked')){
+        this.$prompt('请输入交易密码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /\S/,
+          inputErrorMessage: '交易密码不能为空'
+        }).then(({ value }) => {
+          checkTradePassword(value).then(res=>{
+            if(res.code!=0){
+              this.storage.set("tradePasswordChecked",false);
+            this.errMsg('交易密码不正确');
+            }else{
+              this.storage.set("tradePasswordChecked",true);
+              this.successMsg(res.msg);
+            };
+          });
+        }).catch(() => {
+          
+        });
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forbuy, {
           maincoin: this.maincoin,

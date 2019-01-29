@@ -32,6 +32,7 @@ let initLang = () => {
   myStorage.get('PCDefaultLanguage') && (lang = myStorage.get('PCDefaultLanguage'));
   return lang;
 }
+
 /**设置语言包 */
 const i18n = new VueI18n({
   locale: initLang(),
@@ -76,7 +77,7 @@ Vue.config.productionTip = false;
 const getDataFaild = function (errMsg) {
   this.$message.error(i18n.t(errMsg) || '获取数据失败');
   return false;
-}
+};
 /**
  * 拓展Vue实例
  */

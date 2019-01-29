@@ -285,13 +285,14 @@ export default {
         this.userModel.isLogin = true;
         this.storage.set("isLogin", true);
         this.storage.set("token", res.data.token);
-        this.navigateTo("/");
         if (res.data.userinfo && res.data.userinfo[0]) {
           this.userModel.cellphone = res.data.userinfo[0].tel;
           this.userModel.email = res.data.userinfo[0].email;
           this.storage.set("cellphone", res.data.userinfo[0].tel || "");
           this.storage.set("email", res.data.userinfo[0].email || "");
         }
+        this.storage.set("tradePasswordChecked", false);
+        this.navigateTo("/");
       });
     },
     // 登录第一步
