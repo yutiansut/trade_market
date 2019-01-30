@@ -370,12 +370,14 @@
                       @click="confirmHandle(scope.row)"
                       class="color-danger"
                     >{{$t(scope.row.status_i18n)}}</span>&nbsp;&nbsp;
-                    <em class="color-primary">查看凭证</em>
+                    <em @click="checkPhoto(scope.row.photo)" v-if='scope.row.photo' class="color-primary">查看凭证</em>
+                    <em @click="cancelRequest(scope.row.autoid)" v-else class="color-primary">申请撤单</em>
                   </div>
                   <!-- 待对方收款 -->
                   <div v-else><span class="color-success">
                       {{$t(scope.row.status_i18n)}}
-                    </span>&nbsp;&nbsp;<em class="color-primary">查看凭证</em>
+                    </span>&nbsp;&nbsp;
+                    <em v-if='scope.row.photo' class="color-primary">查看凭证</em>
                   </div>
                 </template>
               </el-table-column>
@@ -536,6 +538,7 @@ import orderConfirm from "@/components/dialogContent/OrderConfirm";
 import marketOrder from "@/components/dialogContent/MarketOrder";
 import orderPaid from "@/components/dialogContent/orderPaid";
 import axios from "axios";
+import { checkTradePassword } from "../../service/TradeService.js";
 export default {
   components: {
     TradeConfirm,
@@ -666,6 +669,31 @@ export default {
     }
   },
   methods: {
+    //检测交易密码有效性
+    checkTradePassword(){
+if (!this.storage.get("tradePasswordChecked")) {
+        this.$prompt("请输入交易密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputPattern: /\S/,
+          inputErrorMessage: "交易密码不能为空"
+        })
+          .then(({ value }) => {
+            checkTradePassword(value).then(res => {
+              if (res.code != 0) {
+                this.storage.set("tradePasswordChecked", false);
+                this.errMsg("交易密码不正确");
+              } else {
+                this.storage.set("tradePasswordChecked", true);
+                this.successMsg(res.msg);
+              }
+            });
+          })
+          .catch(() => {});
+        return false;
+      }
+      return true;
+    },
     // 发布订单
     publicOrder(apiKey, param) {
       this.request(apiKey, {
@@ -719,9 +747,18 @@ export default {
         }
       });
     },
+    //查看凭证
+    checkPhoto(photo){
+      if(photo){
+        window.open(photo);
+      }
+    },
     onFileChange(e) {},
     // 撤销我的c2c订单
     cancelMyc2cOrder(autoid) {
+      if(!this.checkTradePassword()){
+        return false;
+      }
       this.request(this.api.clearc2c, {
         autoid: autoid,
         showLoading: true
@@ -782,6 +819,9 @@ export default {
         this.errMsg("label120" || "请登录后操作");
         return false;
       }
+      if(!this.checkTradePassword()){
+        return false;
+      }
       this.dialogId = 4;
       let type = rowData.type;
 
@@ -801,6 +841,9 @@ export default {
     },
     // 从市场买入/卖出c2c
     tradeFromMarket(type, autoid) {
+      if(!this.checkTradePassword()){
+        return false;
+      }
       if (!type || !autoid) return false;
       this.request(type == 0 ? this.api.c2cselltrad : this.api.c2cbuytrad, {
         autoid: autoid,
@@ -926,9 +969,11 @@ export default {
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
         return false;
-      } else {
-        return true;
+      };
+      if(!this.checkTradePassword()){
+        return false;
       }
+      return true;
     },
     //检测是否能够交易
     canTradeCheck(statesObj) {

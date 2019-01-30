@@ -810,6 +810,26 @@ export default {
     },
     // 取消订单
     cancelOrder(id, type, num, price) {
+      if(!this.storage.get('tradePasswordChecked')){
+        this.$prompt('请输入交易密码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /\S/,
+          inputErrorMessage: '交易密码不能为空'
+        }).then(({ value }) => {
+          checkTradePassword(value).then(res=>{
+            if(res.code!=0){
+              this.storage.set("tradePasswordChecked",false);
+            this.errMsg('交易密码不正确');
+            }else{
+              this.storage.set("tradePasswordChecked",true);
+              this.successMsg(res.msg);
+            };
+          });
+        }).catch(() => {
+          
+        });
+      }
       this.showLoading = true;
       this.request(this.api.clearentrust, { id: id }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
@@ -886,6 +906,25 @@ export default {
       let num = this.sellFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
+      }else if(!this.storage.get('tradePasswordChecked')){
+        this.$prompt('请输入交易密码', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /\S/,
+          inputErrorMessage: '交易密码不能为空'
+        }).then(({ value }) => {
+          checkTradePassword(value).then(res=>{
+            if(res.code!=0){
+              this.storage.set("tradePasswordChecked",false);
+            this.errMsg('交易密码不正确');
+            }else{
+              this.storage.set("tradePasswordChecked",true);
+              this.successMsg(res.msg);
+            };
+          });
+        }).catch(() => {
+          
+        });
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forsell, {
           maincoin: this.maincoin,

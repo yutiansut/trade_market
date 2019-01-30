@@ -305,7 +305,7 @@ export default {
   .nav-item {
     @include float;
     font-size: $font-normal;
-    @media screen and (max-width: 1440px) {
+    @media screen and (max-width: 1280px) {
       font-size: $font-default;
     }
 
@@ -321,7 +321,7 @@ export default {
   li {
     transition: all 0.4s;
     padding: 0 20px;
-    @media screen and (max-width: 1440px) {
+    @media screen and (max-width: 1280px) {
       font-size: $font-default;
       padding: 0 10px;
     }
@@ -353,7 +353,7 @@ export default {
     a {
       margin-left: -10px;
       width: 100%;
-      @media screen and (max-width: 1440px) {
+      @media screen and (max-width: 1280px) {
         margin-left: -5px;
       }
     }

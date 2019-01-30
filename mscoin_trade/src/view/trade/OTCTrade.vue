@@ -316,7 +316,10 @@
     <my-footer></my-footer>
   </div>
 </template>
+
 <script>
+
+import { checkTradePassword } from "../../service/TradeService.js";
 export default {
   data() {
     return {
@@ -379,6 +382,31 @@ export default {
     this.getotcbank();
   },
   methods: {
+    //检测交易密码有效期
+    checkTradePassword(){
+      if (!this.storage.get("tradePasswordChecked")) {
+        this.$prompt("请输入交易密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputPattern: /\S/,
+          inputErrorMessage: "交易密码不能为空"
+        })
+          .then(({ value }) => {
+            checkTradePassword(value).then(res => {
+              if (res.code != 0) {
+                this.storage.set("tradePasswordChecked", false);
+                this.errMsg("交易密码不正确");
+              } else {
+                this.storage.set("tradePasswordChecked", true);
+                this.successMsg(res.msg);
+              }
+            });
+          })
+          .catch(() => {});
+        return false;
+      }
+      return true;
+    },
     // 生成随机备注信息
     getNote() {
       let str = "";
@@ -484,6 +512,9 @@ export default {
         this.errMsg("label120" || "请登录后操作");
         return false;
       }
+      if(!this.checkTradePassword()){
+        return false;
+      }
       return true;
     },
     // 获取订单备注
@@ -496,6 +527,9 @@ export default {
       }
     },
     handleConfirm(api, param) {
+      if(!checkTradePassword()){
+        return false;
+      }
       return this.request(api, {
         coin: param.coin,
         id: this.bankInfo.autoid,

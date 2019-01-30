@@ -38,7 +38,7 @@
           </el-table-column>
           <el-table-column
             :label='$t("increase")||"涨幅"'
-            width='100'>
+            >
             <template slot-scope="scope">
               <span :class="scope.row.rise*1>0?'color-danger':'color-success'" v-text="scope.row.rise*1+'%'"></span>
             </template>
@@ -46,7 +46,7 @@
           <el-table-column
             align='center'
             :label='$t("optional")||"自选"'
-            width='80'>
+            >
               <template slot-scope="scope">
               <div
                 @click.stop="addMylist(scope.row,scope.$index)"

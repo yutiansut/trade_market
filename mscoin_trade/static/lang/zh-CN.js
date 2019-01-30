@@ -351,7 +351,7 @@ module.exports = {
     label130: "待对方收款",
     label131: "确认收款",
     label132: "普通交易",
-    label133: "K线交易",
+    label133: "大宗交易",
     label134: "请将款项汇至如下账户",
     label135: "银行卡号格式不正确",
     label136: "复制成功",

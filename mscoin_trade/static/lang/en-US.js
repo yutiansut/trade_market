@@ -351,7 +351,7 @@ module.exports = {
     label130: "Receivable",
     label131: "Receive payment",
     label132: "Trade",
-    label133: "Kline trade",
+    label133: "Block trade",
     label134: "Plase pay the bill to the following account",
     label135: "Invalid card number",
     label136: "Copy failed",

@@ -15,7 +15,6 @@
             <li
               v-show="newIndex==index"
               v-for="(item,index) in newsList"
-              :key='index'
             >
               <router-link
                 :to='"/notice/detail/"+item.id'
@@ -66,7 +65,7 @@
           v-loading='loading'
         >
           <el-table-column
-            width='180'
+            width='150'
             class-name='el-tab-col-1'
             :label="$t('currencyPair')||'货币对'"
           >
@@ -97,7 +96,7 @@
             </span>
           </el-table-column>
           <el-table-column
-            width='150'
+            width='100'
             :label="$t('price')||'价格'"
           >
             <template slot-scope="scope">{{scope.row.prise*1}}&nbsp;{{currentMainCoin.icon}}</template>
@@ -126,7 +125,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column width='100'>
+          <el-table-column width='180'>
             <div
               class="btn-container flex flex-between"
               slot-scope="scope"
@@ -137,12 +136,12 @@
                 class="trade-btn btn-small btn-danger btn-hover"
               >
               </button>
-              <!-- <button
+              <button
                 v-text="$t('label133')"
                 @click="goTrade('/kline_trade',scope.row)"
                 class="trade-btn btn-small btn-success btn-hover"
               >
-              </button> -->
+              </button>
             </div>
           </el-table-column>
           <el-table-column
@@ -356,7 +355,7 @@ export default {
 }
 .btn-container {
   margin: 0 -10px;
-  @media screen and (max-width: 1440px) {
+  @media screen and (max-width: 1280px) {
     flex-direction: column;
     .trade-btn {
       margin-left: 0;
@@ -375,6 +374,7 @@ span.status_1 {
 }
 .content {
   width: 70%;
+  min-width: 1200px;
   @include hCenter;
   .option {
     text-align: center;
