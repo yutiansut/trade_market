@@ -241,4 +241,5 @@ const routes = [
     meta: { auth: false, title: 'K线交易' }
   }
 ]
+
 export default new Router({ routes });

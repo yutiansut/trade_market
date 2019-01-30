@@ -98,7 +98,7 @@ export default {
       padding-left: 10px;
       &:hover,
       &.active {
-        background: $hover-bg-color;
+        background: $color-danger;
         color: #fff;
       }
     }

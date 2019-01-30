@@ -16,9 +16,9 @@
         <div class="intro-detail">
           <div class="heading flex flex-v-center flex-h-center">
             <img
-              class="thumb-50"
-              src=""
-              alt=""
+              class="logo"
+              :src="coinInfo.logo"
+              
             >
             <span
               class="font-bold"
@@ -207,5 +207,10 @@ export default {
       font-size: $font-ex-large;
     }
   }
+}
+.logo{
+  width: 35px;
+  height: 35px;
+  margin-right: 10px;
 }
 </style>

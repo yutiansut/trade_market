@@ -353,6 +353,10 @@ let apiCfg = (function () {
         //交易交易密码
         checkTradpwd: {
             url: 'checktradpwd'
+        },
+        //申诉
+        appeal:{
+            url:'appeal'
         }
     }
 }());

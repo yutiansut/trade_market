@@ -604,7 +604,7 @@ export default {
         }
         if (webSocket)
           webSocket.send(
-            `${this.storage.get("token")}_${maincoinid}_${tradecoinid}`
+            `${maincoinid}_${tradecoinid}`
           );
       }
     },
@@ -623,7 +623,7 @@ export default {
         }
         if (webSocket)
           webSocket.send(
-            `${this.storage.get("token")}_${maincoinid}_${tradecoinid}`
+            `${maincoinid}_${tradecoinid}`
           );
       }
     },

@@ -125,7 +125,7 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column width='180'>
+          <el-table-column align='center' :label='$t("label192")' width='180'>
             <div
               class="btn-container flex flex-between"
               slot-scope="scope"

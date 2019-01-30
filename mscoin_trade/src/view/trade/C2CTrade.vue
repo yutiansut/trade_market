@@ -370,14 +370,15 @@
                       @click="confirmHandle(scope.row)"
                       class="color-danger"
                     >{{$t(scope.row.status_i18n)}}</span>&nbsp;&nbsp;
-                    <em @click="checkPhoto(scope.row.photo)" v-if='scope.row.photo' class="color-primary">查看凭证</em>
-                    <em @click="cancelRequest(scope.row.autoid)" v-else class="color-primary">申请撤单</em>
+                    <em @click="checkPhoto(scope.row.photo)" v-if='scope.row.photo' class="color-primary" v-text="$t('label193')"></em>
+                    <em @click="cancelRequest(scope.row.autoid)" v-else class="color-primary">申诉</em>
                   </div>
                   <!-- 待对方收款 -->
                   <div v-else><span class="color-success">
                       {{$t(scope.row.status_i18n)}}
                     </span>&nbsp;&nbsp;
-                    <em v-if='scope.row.photo' class="color-primary">查看凭证</em>
+                    <em v-if='scope.row.photo' class="color-primary" v-text="$t('label193')"></em>
+                    <em @click="cancelRequest(scope.row.autoid)" v-else class="color-primary">申诉</em>
                   </div>
                 </template>
               </el-table-column>
@@ -753,6 +754,18 @@ if (!this.storage.get("tradePasswordChecked")) {
         window.open(photo);
       }
     },
+    //申诉
+    cancelRequest(id){
+      if(id){
+        this.request(this.api.appeal,{
+          id:id
+        }).then(res=>{
+          if(res.data.code=='0'){
+            this.successMsg(res.msg || "上传成功");
+          }
+        })
+      }
+    },
     onFileChange(e) {},
     // 撤销我的c2c订单
     cancelMyc2cOrder(autoid) {
@@ -1026,6 +1039,7 @@ if (!this.storage.get("tradePasswordChecked")) {
       }
       this.request(api, {
         autoid: id,
+        photo:this.imgUrl,
         showLoading: true
       }).then(res => {
         if (res.code == "0") {

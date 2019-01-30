@@ -333,9 +333,9 @@ export default {
 </script>
 <style lang="scss" scoped>
 .content {
-  padding: 1px;
+  padding: 1px 1px 40px;
   min-height: calc(100% - 294px);
-  background-size: 105% auto;
+  background-size: cover;
   background-repeat: no-repeat;
   background-position: center 0;
   .resize {

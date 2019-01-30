@@ -118,7 +118,7 @@
               </div>
               <div class="total flex flex-between">
                 <span v-text="totalLabel"></span>
-                <i v-text="buyTotal"></i>
+                <i v-text="buyTotal*1"></i>
               </div>
               <button
                 @click="buyHandle"
@@ -167,7 +167,7 @@
               </div>
               <div class="total flex flex-between">
                 <span v-text="totalLabel"></span>
-                <i v-text="sellTotal"></i>
+                <i v-text="sellTotal*1"></i>
               </div>
               <button
                 @click="sellHandle"
@@ -595,7 +595,6 @@ export default {
       // 接收数据
       webSocket.onmessage = event => {
         let msg = JSON.parse(event.data);
-        console.log(msg);
         this.latestBuyData = this.Util.sumCalc(msg.buy, "price", "number");
         this.latestSoldData = this.Util.sumCalc(msg.sell, "price", "number");
         this.historicalBuyData = this.Util.sumCalc(msg.top, "price", "number");
@@ -1012,7 +1011,7 @@ export default {
     },
     //总数
     sellTotal() {
-      this.Util.accMul(this.sellFormData.price, this.sellFormData.orderVol);
+      return this.Util.accMul(this.sellFormData.price, this.sellFormData.orderVol);
     },
     //最新买入总计
     buyListTotal() {

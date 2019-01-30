@@ -407,6 +407,8 @@ module.exports = {
     label189: "Trade record",
     label190: "Pay",
     label191: "Receive",
+    label192: "Trade",
+    label193:"Transfer bill",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",
