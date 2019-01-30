@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "https://www.binmark.io/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "wss://www.binmark.io/echo/" : "ws://192.168.16.51:8080/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "http://www.upayw.com/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.upayw.com/echo/" : "ws://192.168.16.51:80/echo/",
         // 首页banner
         banner: {
             url: "banner",
