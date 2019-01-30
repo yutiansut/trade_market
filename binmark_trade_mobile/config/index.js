@@ -23,8 +23,8 @@ module.exports = {
     cssSourceMap: true
   },
   build: {
-    index: path.resolve(__dirname, "../dist/index.html"),
-    assetsRoot: path.resolve(__dirname, "../dist"),
+    index: path.resolve(__dirname, "../mscoinmobile/index.html"),
+    assetsRoot: path.resolve(__dirname, "../mscoinmobile"),
     assetsSubDirectory: "static",
     assetsPublicPath: "/",
     productionSourceMap: true,
