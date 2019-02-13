@@ -28,7 +28,7 @@
             <img
               :onerror="errorGoodsImg"
               class="banner-img"
-              :src="item.bannerUrl?item.bannerUrl:errorGoodsImg"
+              :src="item.bannerurl?item.bannerurl:errorGoodsImg"
             >
           </swiper-slide>
         </swiper>

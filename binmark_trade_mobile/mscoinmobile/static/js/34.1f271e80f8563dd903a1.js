@@ -1,2 +1,0 @@
-webpackJsonp([34],{"/waa":function(e,t){},"sWj/":function(e,t,a){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var n={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"wh-full app-main"},[t("router-view"),this._v(" "),t("my-footer")],1)},staticRenderFns:[]};var r=a("C7Lr")({data:function(){return{}}},n,!1,function(e){a("/waa")},"data-v-1d11f8eb",null);t.default=r.exports}});
-//# sourceMappingURL=34.1f271e80f8563dd903a1.js.map

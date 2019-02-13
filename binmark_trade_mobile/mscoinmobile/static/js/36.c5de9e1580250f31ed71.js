@@ -1,2 +1,0 @@
-webpackJsonp([36],{cTfe:function(e,t){},zywX:function(e,t,s){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var r={render:function(){var e=this.$createElement,t=this._self._c||e;return t("div",{staticClass:"register"},[t("div",{staticClass:"page-head font-26"},[this._v("注册账户")]),this._v(" "),t("div",{staticClass:"register-form"},[t("router-view")],1)])},staticRenderFns:[]};var i=s("C7Lr")(null,r,!1,function(e){s("cTfe")},null,null);t.default=i.exports}});
-//# sourceMappingURL=36.c5de9e1580250f31ed71.js.map

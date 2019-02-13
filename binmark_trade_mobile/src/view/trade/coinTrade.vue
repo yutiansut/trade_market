@@ -612,7 +612,7 @@ export default {
       if (this.validate()) {
         let { maincoinid, tradecoinid } = this.Store.state;
         let res = await tradeHandle(this.api.forsell, {
-          prise: this.price,
+          prise: this.price,   
           number: this.number,
           maincoin: maincoinid,
           tradcoin: tradecoinid
