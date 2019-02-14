@@ -25,7 +25,7 @@ module.exports = {
   build: {
     index: path.resolve(__dirname, '../mscoin/index.html'),
     assetsRoot: path.resolve(__dirname, '../mscoin'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'pcstatic',
     assetsPublicPath: './',
     productionSourceMap: false,
     devtool: '#source-map',

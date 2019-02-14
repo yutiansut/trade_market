@@ -25,9 +25,9 @@ module.exports = {
   build: {
     index: path.resolve(__dirname, "../mscoinmobile/index.html"),
     assetsRoot: path.resolve(__dirname, "../mscoinmobile"),
-    assetsSubDirectory: "static",
-    assetsPublicPath: "/",
-    productionSourceMap: true,
+    assetsSubDirectory: "mbstatic",
+    assetsPublicPath: "./",
+    productionSourceMap: false,
     devtool: "#source-map",
     productionGzip: false,
     productionGzipExtensions: ["js", "css"],
