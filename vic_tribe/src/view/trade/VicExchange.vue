@@ -1,6 +1,9 @@
 <template>
   <div class="wh-full app-main">
-    <my-header right-text="转换记录"></my-header>
+    <my-header
+      right-text="转换记录"
+      @onHeaderRtClick="navigateTo('/record')"
+    ></my-header>
     <div class="app-body overflow-y">
       <form
         action=""

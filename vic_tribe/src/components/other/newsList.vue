@@ -1,5 +1,4 @@
 <template>
-
   <van-row class="list-item">
     <router-link :to='linkTo||""'>
       <van-col

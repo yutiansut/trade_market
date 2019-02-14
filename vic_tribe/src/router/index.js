@@ -5,6 +5,8 @@ const Home = r => require(["@/view/home/Home"], r);
 const c2cHome = r => require(["@/view/trade/c2cHome"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
+const UserInfo = r => require(["@/view/user/UserInfo"], r);
+const AccountSetting = r => require(['@/view/user/AccountSetting'], r);
 const Login = r => require(["@/view/user/Login"], r);
 const userMain = r => require(["@/view/user/userMain"], r);
 const Register = r => require(["@/view/user/Register"], r);
@@ -58,10 +60,20 @@ const routes = [
         component: User,
         meta: {
           title: "我的",
-          auth: true
+          auth: false,
+          removeHeader: true
         }
       }
     ]
+  },
+  {
+    path: "/user/info",
+    name: "UserInfo",
+    component: UserInfo,
+    meta: {
+      title: "个人信息",
+      auth: false
+    }
   },
   {
     path: "/userentry",
@@ -133,11 +145,9 @@ const routes = [
   },
   {
     path: '/record',
-    name: 'Record',
     component: Record,
-    redirect: "/record/exchange_record",
     children: [{
-      path: "/record/exchange_record",
+      path: "",
       component: exchangeRecord,
       name: "exchangeRecord",
       meta: {
@@ -150,7 +160,8 @@ const routes = [
       meta: {
         title: "收益记录"
       }
-    }, {
+    },
+    {
       path: "/record/bill_record",
       component: billRecord,
       name: "billRecord",
@@ -158,6 +169,14 @@ const routes = [
         title: "我的账单"
       }
     }]
+  },
+  {
+    path: "/user/setting",
+    name: "AccountSetting",
+    component: AccountSetting,
+    meta: {
+      title: "账户设置"
+    }
   }
 ];
 export default new Router({ routes });
