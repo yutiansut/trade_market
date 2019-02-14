@@ -9,7 +9,8 @@
           class="user-id font-20"
           v-text="Store.state.userInfo.tel||Store.state.userInfo.email"
         ></div>
-        <span class="color-666 font-14">账号Id:{{Store.state.userInfo.member}}</span>
+        <span class="color-666 font-14">账号ID:{{Store.state.userInfo.member}}</span>
+        <em class="vip-lv">VIP{{Store.state.userInfo.viplevel}}</em>
       </template>
       <template v-else>
         <div
@@ -120,6 +121,16 @@ $gap: 1.25rem;
   .user-id {
     color: #fff;
     margin-bottom: 0.25rem;
+  }
+  .vip-lv {
+    display: inline-block;
+    padding: 0 0.5rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    margin-left: 0.25rem;
+    background: linear-gradient(#d0a771, #dcb480);
+    border-radius: 1rem;
+    color:#fff;
   }
 }
 .nav-bar {

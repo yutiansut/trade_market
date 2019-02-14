@@ -47,6 +47,7 @@ const AboutTrade = r => require(["@/view/articles/AboutTrade"], r);
 const Fee = r => require(["@/view/articles/Fee"], r);
 const CoinInfo = r => require(["@/view/articles/CoinInfo"], r);
 const CoinInfoDetail = r => require(["@/view/articles/CoinInfoDetail"], r);
+const VipLevel = r => require(["@/view/account/VipLevel"], r);
 const routes = [
   {
     path: "/",
@@ -369,6 +370,15 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: "/vip",
+    name: "VipLevel",
+    component: VipLevel,
+    meta: {
+      title: "vip等级",
+      auth: true
+    }
   },
   {
     path: '/articles',

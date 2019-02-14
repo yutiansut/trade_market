@@ -26,6 +26,7 @@ import {
     bindEmail,
     getGoogleKey,
     bindGoogle,
+    VipInfo,
     safeLogs,
     loginLogs
 } from './userService';
@@ -96,6 +97,7 @@ export {
     bindEmail,
     getGoogleKey,
     bindGoogle,
+    VipInfo,
     safeLogs,
     loginLogs,
     getHelpCenter,

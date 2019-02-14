@@ -446,6 +446,16 @@ const bindGoogle = async formData => {
         console.log(err);
     }
 };
+//vip等级
+const VipInfo = async () => {
+    try {
+        let result = await Request(apiConfig.vipinfo);
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err)
+    }
+}
 //安全日志
 const safeLogs = async () => {
     try {
@@ -494,6 +504,7 @@ export {
     bindEmail,
     getGoogleKey,
     bindGoogle,
+    VipInfo,
     safeLogs,
     loginLogs
 }

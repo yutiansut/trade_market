@@ -364,6 +364,9 @@ let apiCfg = (function () {
         },
         chart: {
             url: "chart"
+        },
+        vipinfo: {
+            url: "vipinfo"
         }
     }
 }());

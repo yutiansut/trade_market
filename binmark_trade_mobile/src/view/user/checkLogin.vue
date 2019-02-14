@@ -116,6 +116,8 @@ export default {
     } else if (!isemail && !isgoogle && !istel) {
       this.account = "";
       this.loginType = "";
+    } else {
+      this.account = tel;
     }
   },
   methods: {
