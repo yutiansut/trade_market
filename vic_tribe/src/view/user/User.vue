@@ -68,12 +68,12 @@ export default {
         {
           label: "邀请好友",
           icon: require("../../assets/images/user/grzx-icon1.png"),
-          link: ""
+          link: "/user/invite"
         },
         {
           label: "我的圈友",
           icon: require("../../assets/images/user/grzx-icon2.png"),
-          link: ""
+          link: "/user/myteam"
         },
         {
           label: "商家服务",
@@ -105,7 +105,7 @@ export default {
         {
           title: "账户设置",
           icon: require("../../assets/images/user/zhsz.png"),
-          link: ""
+          link: "/user/setting"
         },
         {
           title: "我的小蜜",

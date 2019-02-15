@@ -10,7 +10,7 @@ import Store from "@/vuexStore/store";
 import router from "@/router/index";
 import VueClipboard from 'vue-clipboard2';
 VueClipboard.config.autoSetContainer = true; // add this line
-Vue.use(VueClipboard)
+Vue.use(VueClipboard);
 import {
   Tabbar,
   TabbarItem,

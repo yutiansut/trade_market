@@ -28,7 +28,7 @@
               />
             </van-cell-group>
           </form>
-          <p class="color-666 tips">*新用户默认支付密码为：123456，请在账户设置中更改</p>
+          <p class="color-666 tips font-12">*新用户默认支付密码为：123456，请在账户设置中更改</p>
           <button class="btn-block btn-large btn-dark btn-active btn-radius">确认转账</button>
         </van-tab>
         <van-tab title="交易中"></van-tab>
@@ -66,7 +66,7 @@ export default {
 form {
   margin-top: 1rem;
 }
-button {
+button.btn-block {
   margin-top: 3rem;
   margin-left: auto;
   margin-right: auto;

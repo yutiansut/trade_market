@@ -16,7 +16,7 @@ $mask-bg-rgba: rgba(0, 0, 0, 0.6);
     font-size: 1px * $i;
   }
 }
-@for $i from 1 to 11 {
+@for $i from 1 to 21 {
   /*高度值*/
   .h-#{$i*5} {
     height: 5px * $i;
@@ -36,7 +36,7 @@ $mask-bg-rgba: rgba(0, 0, 0, 0.6);
 
 button {
   appearance: none;
-  border: 1px solid transparent;
+  border: none;
   background: none;
   border-radius: 0;
   outline: none;
@@ -46,9 +46,9 @@ button {
     border-color: #e5e5e5;
   }
   &.btn-large {
-    height: 4rem;
-    line-height: 4rem;
-    font-size: 1.6rem;
+    height: 46px;
+    line-height: 46px;
+    font-size: 16px;
   }
   &.btn-block {
     display: block;
@@ -58,19 +58,19 @@ button {
     display: inline-block;
   }
   &.btn-small {
-    height: 3rem;
-    line-height: 3rem;
-    font-size: 1.4rem;
-    width: 8rem;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    width: 80px;
   }
   &.btn-mini {
-    height: 2rem;
-    width: 5rem;
-    line-height: 2rem;
-    font-size: 1.4rem;
+    height: 20px;
+    width: 50px;
+    line-height: 20px;
+    font-size: 14px;
   }
   &.btn-radius {
-    border-radius: 0.2rem;
+    border-radius: 2px;
   }
   &.btn-active:active {
     opacity: 0.9;

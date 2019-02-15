@@ -2,11 +2,18 @@ import Router from "vue-router";
 Vue.use(Router);
 const Main = r => require(["@/view/Main"], r);
 const Home = r => require(["@/view/home/Home"], r);
+const Mine = r => require(["@/view/home/Mine"], r);
 const c2cHome = r => require(["@/view/trade/c2cHome"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
 const UserInfo = r => require(["@/view/user/UserInfo"], r);
 const AccountSetting = r => require(['@/view/user/AccountSetting'], r);
+const ResetPassword = r => require(['@/view/user/ResetPassword'], r);
+const ResetTradePassword = r => require(['@/view/user/ResetTradePassword'], r);
+const MyTeam = r => require(['@/view/user/MyTeam'], r);
+const FeedBack = r => require(['@/view/user/FeedBack'], r);
+const Invite = r => require(['@/view/user/Invite'], r);
+const QrCode = r => require(['@/view/user/QrCode'], r);
 const Login = r => require(["@/view/user/Login"], r);
 const userMain = r => require(["@/view/user/userMain"], r);
 const Register = r => require(["@/view/user/Register"], r);
@@ -60,11 +67,20 @@ const routes = [
         component: User,
         meta: {
           title: "我的",
-          auth: false,
+          auth: true,
           removeHeader: true
         }
       }
     ]
+  },
+  {
+    path: "/home/mine",
+    name: "Mine",
+    component: Mine,
+    meta: {
+      title: "矿多多",
+      auth: false
+    }
   },
   {
     path: "/user/info",
@@ -72,6 +88,60 @@ const routes = [
     component: UserInfo,
     meta: {
       title: "个人信息",
+      auth: true
+    }
+  },
+  {
+    path: "/user/setting",
+    name: "AccountSetting",
+    component: AccountSetting,
+    meta: {
+      title: "账户设置",
+      auth: true
+    }
+  },
+  {
+    path: "/user/repassword_1",
+    name: "ResetPassword",
+    component: ResetPassword,
+    meta: {
+      title: "修改登录密码",
+      auth: true
+    }
+  },
+  {
+    path: "/user/repassword_2",
+    name: "ResetTradePassword",
+    component: ResetTradePassword,
+    meta: {
+      title: "修改支付密码",
+      auth: true
+    }
+  },
+  {
+    path: "/user/myteam",
+    name: "MyTeam",
+    component: MyTeam,
+    meta: {
+      title: "我的圈友",
+      auth: true
+    }
+  },
+  {
+    path: "/user/feedback",
+    name: "FeedBack",
+    component: FeedBack,
+    meta: {
+      title: "我的小蜜",
+      auth: true
+    }
+  },
+  {
+    path: "/user/invite",
+    name: "Invite",
+    component: Invite,
+    meta: {
+      title: "邀请好友",
       auth: false
     }
   },
@@ -110,7 +180,8 @@ const routes = [
       meta: {
         title: "资讯列表"
       }
-    }, {
+    },
+    {
       path: "/news/detail/:id",
       name: "newsDetail",
       component: newsDetail,
@@ -171,11 +242,11 @@ const routes = [
     }]
   },
   {
-    path: "/user/setting",
-    name: "AccountSetting",
-    component: AccountSetting,
+    path: "/qrcode",
+    name: "QrCode",
+    component: QrCode,
     meta: {
-      title: "账户设置"
+      title: "二维码"
     }
   }
 ];
