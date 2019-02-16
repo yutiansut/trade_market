@@ -23,6 +23,7 @@ const News = r => require(["@/view/news/newsMain"], r);
 const newsList = r => require(["@/view/news/newsList"], r);
 const newsDetail = r => require(["@/view/news/newsDetail"], r);
 const Vicexchange = r => require(["@/view/trade/VicExchange"], r);
+const MarketTrend = r => require(["@/view/trade/MarketTrend"], r);
 const currencyExchange = r => require(["@/view/trade/currencyExchange"], r);
 const directionalTrade = r => require(["@/view/trade/directionalTrade"], r);
 const Record = r => require(["@/view/record/Record"], r);
@@ -216,6 +217,14 @@ const routes = [
     component: Vicexchange,
     meta: {
       title: "VIC兑换"
+    }
+  },
+  {
+    path: "/market",
+    name: "MarketTrend",
+    component: MarketTrend,
+    meta: {
+      title: "VIC行情"
     }
   },
   {
