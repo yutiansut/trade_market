@@ -320,6 +320,14 @@
               >
               </el-table-column>
               <el-table-column
+                width="150"
+                :label='$t("theirName")'
+              >
+                <template slot-scope="scope">
+                  {{scope.row.type==0?scope.row.sellmember:scope.row.sellmember}}
+                </template>
+              </el-table-column>
+              <el-table-column
                 width='120'
                 :label='$t("type")||"类型"'
               >
@@ -370,15 +378,32 @@
                       @click="confirmHandle(scope.row)"
                       class="color-danger"
                     >{{$t(scope.row.status_i18n)}}</span>&nbsp;&nbsp;
-                    <em @click="checkPhoto(scope.row.photo)" v-if='scope.row.photo' class="color-primary" v-text="$t('label193')"></em>
-                    <em @click="cancelRequest(scope.row.autoid)" v-else class="color-primary">申诉</em>
+                    <em
+                      @click="checkPhoto(scope.row.photo)"
+                      v-if='scope.row.photo'
+                      class="color-primary"
+                      v-text="$t('label193')"
+                    ></em>
+                    <em
+                      @click="cancelRequest(scope.row.autoid)"
+                      v-else
+                      class="color-primary"
+                    >申诉</em>
                   </div>
                   <!-- 待对方收款 -->
                   <div v-else><span class="color-success">
                       {{$t(scope.row.status_i18n)}}
                     </span>&nbsp;&nbsp;
-                    <em v-if='scope.row.photo' class="color-primary" v-text="$t('label193')"></em>
-                    <em @click="cancelRequest(scope.row.autoid)" v-else class="color-primary">申诉</em>
+                    <em
+                      v-if='scope.row.photo'
+                      class="color-primary"
+                      v-text="$t('label193')"
+                    ></em>
+                    <em
+                      @click="cancelRequest(scope.row.autoid)"
+                      v-else
+                      class="color-primary"
+                    >申诉</em>
                   </div>
                 </template>
               </el-table-column>
@@ -426,9 +451,11 @@
                 </template>
               </el-table-column>
               <el-table-column
-                prop='member'
                 :label='($t("label188")||"商家")'
               >
+                <template slot-scope="scope">
+                  {{scope.row.type==0?scope.row.sellmember:scope.row.sellmember}}
+                </template>
               </el-table-column>
               <el-table-column :label='amountLabel'>
                 <span slot-scope="scope">{{scope.row.zj*1}}</span>
@@ -671,8 +698,8 @@ export default {
   },
   methods: {
     //检测交易密码有效性
-    checkTradePassword(){
-if (!this.storage.get("tradePasswordChecked")) {
+    checkTradePassword() {
+      if (!this.storage.get("tradePasswordChecked")) {
         this.$prompt("请输入交易密码", "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
@@ -749,27 +776,27 @@ if (!this.storage.get("tradePasswordChecked")) {
       });
     },
     //查看凭证
-    checkPhoto(photo){
-      if(photo){
+    checkPhoto(photo) {
+      if (photo) {
         window.open(photo);
       }
     },
     //申诉
-    cancelRequest(id){
-      if(id){
-        this.request(this.api.appeal,{
-          id:id
-        }).then(res=>{
-          if(res.data.code=='0'){
+    cancelRequest(id) {
+      if (id) {
+        this.request(this.api.appeal, {
+          id: id
+        }).then(res => {
+          if (res.data.code == "0") {
             this.successMsg(res.msg || "上传成功");
           }
-        })
+        });
       }
     },
     onFileChange(e) {},
     // 撤销我的c2c订单
     cancelMyc2cOrder(autoid) {
-      if(!this.checkTradePassword()){
+      if (!this.checkTradePassword()) {
         return false;
       }
       this.request(this.api.clearc2c, {
@@ -832,7 +859,7 @@ if (!this.storage.get("tradePasswordChecked")) {
         this.errMsg("label120" || "请登录后操作");
         return false;
       }
-      if(!this.checkTradePassword()){
+      if (!this.checkTradePassword()) {
         return false;
       }
       this.dialogId = 4;
@@ -854,7 +881,7 @@ if (!this.storage.get("tradePasswordChecked")) {
     },
     // 从市场买入/卖出c2c
     tradeFromMarket(type, autoid) {
-      if(!this.checkTradePassword()){
+      if (!this.checkTradePassword()) {
         return false;
       }
       if (!type || !autoid) return false;
@@ -982,8 +1009,8 @@ if (!this.storage.get("tradePasswordChecked")) {
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
         return false;
-      };
-      if(!this.checkTradePassword()){
+      }
+      if (!this.checkTradePassword()) {
         return false;
       }
       return true;
@@ -1039,7 +1066,7 @@ if (!this.storage.get("tradePasswordChecked")) {
       }
       this.request(api, {
         autoid: id,
-        photo:this.imgUrl,
+        photo: this.imgUrl,
         showLoading: true
       }).then(res => {
         if (res.code == "0") {

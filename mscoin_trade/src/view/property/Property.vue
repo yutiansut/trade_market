@@ -373,7 +373,6 @@ export default {
           if (
             this.bindState.bankstate == "0" ||
             this.bindState.idcardstate < "2" ||
-            this.bindState.googlestate == "0" ||
             this.bindState.tradstate == "0"
           ) {
             this.$confirm(this.$t("label166"), this.$t("label140"), {

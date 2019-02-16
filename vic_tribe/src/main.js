@@ -2,6 +2,7 @@
  * 引入全局样式
  */
 import "@/assets/css/common.css";
+import 'swiper/dist/css/swiper.css';
 /**
  * 引入第三方库
  */

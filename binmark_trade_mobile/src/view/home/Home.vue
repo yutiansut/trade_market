@@ -53,16 +53,17 @@
             <template v-for="(item,i) in Store.state.newsList">
               <swiper-slide :key="i">
                 <van-row class="notice-detail">
-                  <van-col span="20">
+                  <van-col span="24">
                     <router-link
                       :to="'/news/detail/'+item.id"
                       v-text="item.title"
                     ></router-link>
                   </van-col>
-                  <van-col
+                  <!-- <van-col
                     class="color-666 txt-rt"
                     span="4"
-                  >10-08</van-col>
+                    v-text="item.writedate"
+                  ></van-col> -->
                 </van-row>
               </swiper-slide>
             </template>

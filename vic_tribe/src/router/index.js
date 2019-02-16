@@ -4,6 +4,8 @@ const Main = r => require(["@/view/Main"], r);
 const Home = r => require(["@/view/home/Home"], r);
 const Mine = r => require(["@/view/home/Mine"], r);
 const c2cHome = r => require(["@/view/trade/c2cHome"], r);
+const TradeConfirm = r => require(["@/view/trade/c2cTradeConfirm"], r);
+const OrderDetail = r => require(["@/view/trade/OrderDetail"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
 const UserInfo = r => require(["@/view/user/UserInfo"], r);
@@ -48,7 +50,7 @@ const routes = [
         name: "c2cHome",
         component: c2cHome,
         meta: {
-          title: "c2c交易",
+          title: "C2C交易",
           auth: true
         }
       },
@@ -80,6 +82,24 @@ const routes = [
     meta: {
       title: "矿多多",
       auth: false
+    }
+  },
+  {
+    path: "/c2c/confirm",
+    name: "TradeConfirm",
+    component: TradeConfirm,
+    meta: {
+      title: "交易确认",
+      auth: true,
+    }
+  },
+  {
+    path: "/c2c/order_detail",
+    name: "OrderDetail",
+    component: OrderDetail,
+    meta: {
+      title: "订单详情",
+      auth: true,
     }
   },
   {
