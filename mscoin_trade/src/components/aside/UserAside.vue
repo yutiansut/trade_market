@@ -19,7 +19,13 @@
                 to='/my/vip_detail'
               >{{$t('label186')}}</router-link>
             </dd>
-            <dd class="font-bold color-danger">{{$t('label177')}}：{{userData.balance}}</dd>
+            <dd class="font-bold color-danger">{{$t('label177')}}：￥{{userData.balance}}</dd>
+            <dd>我的推荐码：{{userData.sharecode}}&nbsp;&nbsp;&nbsp;<em
+                class="color-primary copy-btn"
+                v-text="$t('copy')"
+                v-clipboard:copy="userData.sharecode"
+                v-clipboard:success='onSuccess'
+              ></em></dd>
             <dd
               style="margin-top:5px;"
               class="flex"
@@ -51,6 +57,7 @@
           <el-menu-item index='/account/security'>{{$t('securityCenter')}}</el-menu-item>
           <el-menu-item index='/account/identify'>{{$t('identify')}}</el-menu-item>
           <el-menu-item index='/account/work_order'>{{$t('label111')}}</el-menu-item>
+          <el-menu-item index='/my/commission'>{{$t('label194')}}</el-menu-item>
         </el-menu>
       </div>
     </el-aside>
@@ -77,6 +84,9 @@ export default {
   methods: {
     handleSelect(key) {
       this.navigateTo(key);
+    },
+    onSuccess() {
+      this.successMsg("复制成功");
     }
   }
 };
@@ -108,6 +118,9 @@ export default {
       @include textVcenter(30px);
     }
   }
+}
+.copy-btn {
+  cursor: pointer;
 }
 .vip-detail {
   color: blue;

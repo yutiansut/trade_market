@@ -68,7 +68,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-$gap: 15px;
+$gap: 1rem;
 .btn-wrap {
   padding: 0 $gap;
   margin-top: 30px;

@@ -50,13 +50,13 @@ export default {
       return true;
     },
     onSubmit() {
+      this.formData.type == undefined && (this.formData.type = 0);
       if (this.validate()) {
         updatepaypassword(this.formData);
       }
     },
     childData(data) {
       Object.assign(this.formData, data);
-      this.formData.type == undefined && (this.formData.type = 0);
     }
   }
 };

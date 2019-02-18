@@ -380,6 +380,7 @@ const updateloginpwd = async formData => {
 const updatepaypassword = async formData => {
     try {
         let result = await Request(apiConfig.updatepaypassword, {
+            type: formData.type,
             code: formData.code,
             password: formData.password,
         });

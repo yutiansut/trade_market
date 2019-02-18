@@ -130,7 +130,7 @@ $gap: 1.25rem;
     margin-left: 0.25rem;
     background: linear-gradient(#d0a771, #dcb480);
     border-radius: 1rem;
-    color:#fff;
+    color: #fff;
   }
 }
 .nav-bar {

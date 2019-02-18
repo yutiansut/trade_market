@@ -2,10 +2,15 @@ import Router from "vue-router";
 Vue.use(Router);
 const Main = r => require(["@/view/Main"], r);
 const Home = r => require(["@/view/home/Home"], r);
+// 挖矿
 const Mine = r => require(["@/view/home/Mine"], r);
 const c2cHome = r => require(["@/view/trade/c2cHome"], r);
-const TradeConfirm = r => require(["@/view/trade/c2cTradeConfirm"], r);
-const OrderDetail = r => require(["@/view/trade/OrderDetail"], r);
+const c2cTradeConfirm = r => require(["@/view/trade/c2cTradeConfirm"], r);
+const c2cOrderDetail = r => require(["@/view/trade/c2cOrderDetail"], r);
+const EntrustTrade = r => require(["@/view/trade/EntrustTrade"], r);
+const EntrustBuyConfirm = r => require(["@/view/trade/EntrustBuyConfirm"], r);
+const EntrustSellConfirm = r => require(["@/view/trade/EntrustSellConfirm"], r);
+const PendingOrder = r => require(["@/view/trade/PendingOrder"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
 const UserInfo = r => require(["@/view/user/UserInfo"], r);
@@ -25,7 +30,7 @@ const newsDetail = r => require(["@/view/news/newsDetail"], r);
 const Vicexchange = r => require(["@/view/trade/VicExchange"], r);
 const MarketTrend = r => require(["@/view/trade/MarketTrend"], r);
 const currencyExchange = r => require(["@/view/trade/currencyExchange"], r);
-const directionalTrade = r => require(["@/view/trade/directionalTrade"], r);
+const DirectionalTrade = r => require(["@/view/trade/DirectionalTrade"], r);
 const Record = r => require(["@/view/record/Record"], r);
 const exchangeRecord = r => require(["@/view/record/exchangeRecord"], r);
 const incomeRecord = r => require(['@/view/record/incomeRecord'], r);
@@ -87,8 +92,8 @@ const routes = [
   },
   {
     path: "/c2c/confirm",
-    name: "TradeConfirm",
-    component: TradeConfirm,
+    name: "c2cTradeConfirm",
+    component: c2cTradeConfirm,
     meta: {
       title: "交易确认",
       auth: true,
@@ -96,11 +101,46 @@ const routes = [
   },
   {
     path: "/c2c/order_detail",
-    name: "OrderDetail",
-    component: OrderDetail,
+    name: "c2cOrderDetail",
+    component: c2cOrderDetail,
     meta: {
       title: "订单详情",
       auth: true,
+    }
+  },
+  {
+    path: "/trade/entrust_trade",
+    name: "EntrustTrade",
+    component: EntrustTrade,
+    meta: {
+      title: "委托交易",
+    }
+  },
+  {
+    path: "/trade/entrust_buy",
+    name: "EntrustBuyConfirm",
+    component: EntrustBuyConfirm,
+    meta: {
+      title: "买入确认",
+      auth: true,
+    }
+  },
+  {
+    path: "/trade/entrust_sell",
+    name: "EntrustSellConfirm",
+    component: EntrustSellConfirm,
+    meta: {
+      title: "卖出确认",
+      auth: true,
+    }
+  },
+  {
+    path: "/trade/pending_order",
+    name: "PendingOrder",
+    component: PendingOrder,
+    meta: {
+      title: "订单详情",
+      auth: false,
     }
   },
   {
@@ -237,8 +277,8 @@ const routes = [
   },
   {
     path: "/dir_trade",
-    name: "directionalTrade",
-    component: directionalTrade,
+    name: "DirectionalTrade",
+    component: DirectionalTrade,
     meta: {
       title: "定向交易"
     }

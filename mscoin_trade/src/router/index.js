@@ -94,6 +94,12 @@ const routes = [
         meta: { auth: true, title: "订单详情" }
       },
       {
+        path: '/my/commission',
+        name: 'orderDetail',
+        component: r => require(['@/view/my/Commission'], r),
+        meta: { auth: true, title: "我的佣金" }
+      },
+      {
         path: '/my/entrustment',
         name: 'Entrustment',
         component: r => require(['@/view/my/Entrustment'], r),

@@ -324,7 +324,7 @@
                 :label='$t("theirName")'
               >
                 <template slot-scope="scope">
-                  {{scope.row.type==0?scope.row.sellmember:scope.row.sellmember}}
+                  {{scope.row.type==0?scope.row.sellmember:scope.row.buymember}}
                 </template>
               </el-table-column>
               <el-table-column
@@ -450,9 +450,7 @@
                   {{scope.row.number*1}}
                 </template>
               </el-table-column>
-              <el-table-column
-                :label='($t("label188")||"商家")'
-              >
+              <el-table-column :label='($t("label188")||"用户账号")'>
                 <template slot-scope="scope">
                   {{scope.row.type==0?scope.row.sellmember:scope.row.sellmember}}
                 </template>
@@ -1103,6 +1101,7 @@ span {
   input {
     opacity: 0;
     position: absolute;
+    z-index: 99;
     height: 100%;
   }
 }

@@ -203,7 +203,8 @@ export default {
             tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
             email: res.data.userinfo[0] && res.data.userinfo[0].email,
             member: res.data.userinfo[0] && res.data.userinfo[0].member,
-            viplevel: res.data.userinfo[0] && res.data.userinfo[0].viplevel
+            viplevel: res.data.userinfo[0] && res.data.userinfo[0].viplevel,
+            sharecode: res.data.userinfo[0] && res.data.userinfo[0].sharecode
           });
           this.$bus.emit("userLoaded", this.userData);
         } else {

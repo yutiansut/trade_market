@@ -153,7 +153,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$gap: 15px;
+$gap: 1rem;
 .mt {
   margin-top: 1rem;
 }
