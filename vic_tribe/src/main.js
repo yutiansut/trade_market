@@ -1,7 +1,6 @@
 /**
  * 引入全局样式
  */
-import "@/assets/css/common.css";
 import 'swiper/dist/css/swiper.css';
 /**
  * 引入第三方库
@@ -46,11 +45,11 @@ import Header from "@/components/header/Header";
 import tabBar from "@/components/other/tabBar";
 Vue.component(Footer.name, Footer);
 Vue.component(Header.name, Header);
-Vue.component(tabBar.name, tabBar)
+Vue.component(tabBar.name, tabBar);
 /**
  * 引入自定义相关js
  */
-import Util from "@/assets/js/utils";
+import Validate from "@/assets/js/validate";
 import Request from "@/assets/js/request";
 import myStorage from "@/assets/js/myStorage";
 import apiCfg from "@/config/apiConfig";
@@ -61,7 +60,7 @@ Vue.config.productionTip = false;
  */
 Object.assign(Vue.prototype, {
   request: Request,
-  Util: Util,
+  Validate: Validate,
   storage: myStorage,
   $store: Store,
   api: apiCfg,

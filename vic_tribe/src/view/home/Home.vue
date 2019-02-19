@@ -167,7 +167,7 @@ export default {
         },
         {
           label: "VIC行情",
-          link: "",
+          link: "/market",
           icon: require("@/assets/images/home/VICHQ.png")
         },
         {

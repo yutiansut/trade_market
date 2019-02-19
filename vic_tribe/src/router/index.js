@@ -17,6 +17,7 @@ const UserInfo = r => require(["@/view/user/UserInfo"], r);
 const AccountSetting = r => require(['@/view/user/AccountSetting'], r);
 const ResetPassword = r => require(['@/view/user/ResetPassword'], r);
 const ResetTradePassword = r => require(['@/view/user/ResetTradePassword'], r);
+const EntrustOrderDetail = r => require(['@/view/trade/EntrustOrderDetail'], r);
 const MyTeam = r => require(['@/view/user/MyTeam'], r);
 const FeedBack = r => require(['@/view/user/FeedBack'], r);
 const Invite = r => require(['@/view/user/Invite'], r);
@@ -140,7 +141,16 @@ const routes = [
     component: PendingOrder,
     meta: {
       title: "订单详情",
-      auth: false,
+      auth: true,
+    }
+  },
+  {
+    path: "/trade/entrust_order_detail",
+    name: "EntrustOrderDetail",
+    component: EntrustOrderDetail,
+    meta: {
+      title: "订单详情",
+      auth: true,
     }
   },
   {
