@@ -3,6 +3,8 @@ import axios from 'axios';
 import router from "../../router/index";
 import { Toast } from "vant";
 import api from '@/config/apiConfig.js';
+import myStorage from '@/assets/js/myStorage';
+import Store from '@/vuexStore/store';
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
     axios.interceptors.request.use(
@@ -62,9 +64,11 @@ const ajaxRequest = (function () {
                 break;
             case '2':
                 msg = "登录信息已失效！";
+                myStorage.set("isLogin", false);
+                Store.commit('loginState', false);
                 if (router.history.current.path != '/login') {
                     router.push({ path: "/login" });
-                }
+                };
                 Toast({
                     message: msg,
                     position: 'bottom'

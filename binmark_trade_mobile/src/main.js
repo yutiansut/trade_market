@@ -120,7 +120,7 @@ router.beforeEach((to, from, next) => {
   } else {
     if (to.name == "Login" || to.name == 'Register') {
       myStorage.remove("token");
-      Store.commit('loginState', true);
+      Store.commit('loginState', false);
     }
     next();
   }

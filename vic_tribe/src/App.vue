@@ -10,6 +10,10 @@
     </keep-alive>
   </div>
 </template>
+<style lang="scss">
+@import "@/assets/scss/public.scss";
+</style>
+
 <script>
 export default {
   name: "App"

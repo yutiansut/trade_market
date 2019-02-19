@@ -93,16 +93,21 @@ router.beforeEach((to, from, next) => {
   // 设置是否加载通用的header
   Store.commit('setMainHeaderShow', !to.meta.removeHeader)
   Store.commit("setHeaderTitle", to.meta.title);
+  if (myStorage.get('isLogin')) {
+    Store.commit('loginState', true);
+  }
   if (to.meta.auth) {
     if (myStorage.get("token")) {
+      Store.commit('loginState', true);
       next();
     } else {
       myStorage.set("isLogin", false);
       next({ path: "/userentry/login" });
     }
   } else {
-    if (to.name == "Login") {
+    if (to.name == "Login" || to.name == 'Register') {
       myStorage.remove("token");
+      Store.commit('loginState', false);
     }
     next();
   }

@@ -8,9 +8,22 @@
       <el-table
         v-loading='showLoading'
         max-height='500'
-        :data='orderDetailData'
+        :data='commissionList'
       >
-        <el-table-column></el-table-column>
+        <el-table-column
+          :label='$t("currencyType")'
+          prop='coin'
+        ></el-table-column>
+        <el-table-column :label="$t('amount')">
+          <template slot-scope="scope">{{scope.row.number*1}}</template>
+        </el-table-column>
+        <el-table-column
+          :label='$t("label195")'
+          prop='offer'
+        ></el-table-column>
+        <el-table-column :label="$t('label197')">
+          <template slot-scope="scope">{{scope.row.relation+$t('label196')}}</template>
+        </el-table-column>
       </el-table>
     </div>
   </div>
@@ -28,10 +41,20 @@
 export default {
   data() {
     return {
-      showLoading: false
+      showLoading: true,
+      commissionList: []
     };
   },
-  mounted() {},
+  mounted() {
+    this.request(this.api.proceeds).then(res => {
+      this.showLoading = false;
+      try {
+        this.commissionList = res.data.list;
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  },
   methods: {}
 };
 </script>

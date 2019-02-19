@@ -355,8 +355,12 @@ let apiCfg = (function () {
             url: 'checktradpwd'
         },
         //申诉
-        appeal:{
-            url:'appeal'
+        appeal: {
+            url: 'appeal'
+        },
+        //获取收益列表
+        proceeds: {
+            url: 'proceeds'
         }
     }
 }());

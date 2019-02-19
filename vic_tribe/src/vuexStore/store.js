@@ -11,8 +11,8 @@ export default new Vuex.Store({
     newsList: []
   },
   mutations: {
-    loginState(state) {
-      state.isLogin = !state.isLogin;
+    loginState(state, val) {
+      state.isLogin = val;
     },
     footerShow(state, newVal) {
       state.showFooter = newVal;
@@ -35,8 +35,8 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    changeLoginState(ctx) {
-      ctx.commit("loginState");
+    changeLoginState(ctx, val) {
+      ctx.commit("loginState", val);
     },
     getNewsList(ctx, data) {
       ctx.commit('updateNewsList', data)

@@ -32,6 +32,7 @@ body {
 }
 .overflow-y {
   overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 table th {
   font-weight: normal;

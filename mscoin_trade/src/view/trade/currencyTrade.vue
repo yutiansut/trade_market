@@ -104,7 +104,7 @@
                     v-text="maincoin"
                   ></span>
                 </el-input>
-                <em class="hint font-12">≈0.05</em>
+                <!-- <em class="hint font-12">≈0.05</em> -->
               </div>
               <div class="input-group">
                 <label v-text="$t('buyVol')||'买入量'"></label>
@@ -153,7 +153,7 @@
                     v-text="maincoin"
                   ></span>
                 </el-input>
-                <em class="hint font-12">≈0.05</em>
+                <!-- <em class="hint font-12">≈0.05</em> -->
               </div>
               <div class="input-group">
                 <label v-text="$t('sellVol')||'卖出量'"></label>
@@ -470,7 +470,7 @@
 import mainCoinModel from "@/model/allCoinModel.js";
 import { Loading } from "element-ui";
 import { randomString } from "@/assets/js/common.js";
-import{checkTradePassword} from '../../service/TradeService.js'
+import { checkTradePassword } from "../../service/TradeService.js";
 import CeAsideComp from "@/components/aside/CEasideComp.vue";
 let webSocket = null;
 let ajaxDone = true;
@@ -774,7 +774,6 @@ export default {
     },
     // 交易操作
     tradeHandle(api, params) {
-
       return this.request(api, {
         maincoin: params.maincoin || "",
         tradcoin: params.tradecoin || "",
@@ -809,25 +808,25 @@ export default {
     },
     // 取消订单
     cancelOrder(id, type, num, price) {
-      if(!this.storage.get('tradePasswordChecked')){
-        this.$prompt('请输入交易密码', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+      if (!this.storage.get("tradePasswordChecked")) {
+        this.$prompt("请输入交易密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
           inputPattern: /\S/,
-          inputErrorMessage: '交易密码不能为空'
-        }).then(({ value }) => {
-          checkTradePassword(value).then(res=>{
-            if(res.code!=0){
-              this.storage.set("tradePasswordChecked",false);
-            this.errMsg('交易密码不正确');
-            }else{
-              this.storage.set("tradePasswordChecked",true);
-              this.successMsg(res.msg);
-            };
-          });
-        }).catch(() => {
-          
-        });
+          inputErrorMessage: "交易密码不能为空"
+        })
+          .then(({ value }) => {
+            checkTradePassword(value).then(res => {
+              if (res.code != 0) {
+                this.storage.set("tradePasswordChecked", false);
+                this.errMsg("交易密码不正确");
+              } else {
+                this.storage.set("tradePasswordChecked", true);
+                this.successMsg(res.msg);
+              }
+            });
+          })
+          .catch(() => {});
       }
       this.showLoading = true;
       this.request(this.api.clearentrust, { id: id }).then(res => {
@@ -872,25 +871,25 @@ export default {
       let num = this.buyFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
-      }else if(!this.storage.get('tradePasswordChecked')){
-        this.$prompt('请输入交易密码', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+      } else if (!this.storage.get("tradePasswordChecked")) {
+        this.$prompt("请输入交易密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
           inputPattern: /\S/,
-          inputErrorMessage: '交易密码不能为空'
-        }).then(({ value }) => {
-          checkTradePassword(value).then(res=>{
-            if(res.code!=0){
-              this.storage.set("tradePasswordChecked",false);
-            this.errMsg('交易密码不正确');
-            }else{
-              this.storage.set("tradePasswordChecked",true);
-              this.successMsg(res.msg);
-            };
-          });
-        }).catch(() => {
-          
-        });
+          inputErrorMessage: "交易密码不能为空"
+        })
+          .then(({ value }) => {
+            checkTradePassword(value).then(res => {
+              if (res.code != 0) {
+                this.storage.set("tradePasswordChecked", false);
+                this.errMsg("交易密码不正确");
+              } else {
+                this.storage.set("tradePasswordChecked", true);
+                this.successMsg(res.msg);
+              }
+            });
+          })
+          .catch(() => {});
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forbuy, {
           maincoin: this.maincoin,
@@ -905,25 +904,25 @@ export default {
       let num = this.sellFormData.orderVol * 1;
       if (!this.userData.isLogin) {
         this.errMsg("label120" || "请登录后操作");
-      }else if(!this.storage.get('tradePasswordChecked')){
-        this.$prompt('请输入交易密码', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+      } else if (!this.storage.get("tradePasswordChecked")) {
+        this.$prompt("请输入交易密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
           inputPattern: /\S/,
-          inputErrorMessage: '交易密码不能为空'
-        }).then(({ value }) => {
-          checkTradePassword(value).then(res=>{
-            if(res.code!=0){
-              this.storage.set("tradePasswordChecked",false);
-            this.errMsg('交易密码不正确');
-            }else{
-              this.storage.set("tradePasswordChecked",true);
-              this.successMsg(res.msg);
-            };
-          });
-        }).catch(() => {
-          
-        });
+          inputErrorMessage: "交易密码不能为空"
+        })
+          .then(({ value }) => {
+            checkTradePassword(value).then(res => {
+              if (res.code != 0) {
+                this.storage.set("tradePasswordChecked", false);
+                this.errMsg("交易密码不正确");
+              } else {
+                this.storage.set("tradePasswordChecked", true);
+                this.successMsg(res.msg);
+              }
+            });
+          })
+          .catch(() => {});
       } else if (this.valideForm(num, price)) {
         this.tradeHandle(this.api.forsell, {
           maincoin: this.maincoin,
@@ -1011,7 +1010,10 @@ export default {
     },
     //总数
     sellTotal() {
-      return this.Util.accMul(this.sellFormData.price, this.sellFormData.orderVol);
+      return this.Util.accMul(
+        this.sellFormData.price,
+        this.sellFormData.orderVol
+      );
     },
     //最新买入总计
     buyListTotal() {

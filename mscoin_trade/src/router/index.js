@@ -95,7 +95,7 @@ const routes = [
       },
       {
         path: '/my/commission',
-        name: 'orderDetail',
+        name: 'Commission',
         component: r => require(['@/view/my/Commission'], r),
         meta: { auth: true, title: "我的佣金" }
       },
