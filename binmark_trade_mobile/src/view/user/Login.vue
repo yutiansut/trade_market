@@ -37,6 +37,9 @@
         </span>
       </p>
     </form>
+    <div class="go-download p-abs abs-h-center">
+      <a href="http://www.upayw.com/static/download.html">下载APP</a>
+    </div>
   </div>
 </template>
 <script>
@@ -97,6 +100,11 @@ export default {
 }
 .van-cell {
   margin-top: 1.5rem;
+}
+.go-download {
+  bottom: 10%;
+  font-size: 16px;
+  color: darkslateblue;
 }
 button {
   margin-top: 3rem;

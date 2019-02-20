@@ -15,7 +15,7 @@ function dataType(o) {
 };
 function randomNum(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
-}
+};
 function timerCounter(config) {
     if (!config) return false;
     if (dataType(config) !== "object") {
@@ -47,9 +47,29 @@ function timerCounter(config) {
         (config.onCounting && dataType(config.onCounting) === "function") && config.onCounting(n);
     }, config.duration);
     return timer;
+};
+function getQueryParams() {
+    let url = decodeURIComponent(location.search),
+        qs = url.length > 0 ? url.substring(1) : "",
+        args = {},
+        paramsArr = qs.length > 0 ? qs.split('&') : [],
+        item = null,
+        name = null,
+        value = null,
+        len = paramsArr.length,
+        i = 0;
+    while (i < len) {
+        item = paramsArr[i].split('=');
+        name = item[0];
+        value = item[1];
+        if (name) args[name] = value;
+        i++;
+    };
+    return args;
 }
 export {
     dataType,
     randomNum,
-    timerCounter
+    timerCounter,
+    getQueryParams
 }

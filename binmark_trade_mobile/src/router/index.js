@@ -8,6 +8,7 @@ const checkLogin = r => require(["@/view/user/checkLogin"], r);
 const Register = r => require(["@/view/user/Register"], r);
 const Register_1 = r => require(["@/view/user/Register_1"], r);
 const Register_2 = r => require(["@/view/user/Register_2"], r);
+const Invitation = r => require(["@/view/user/Invitation"], r);
 const Resetpassword = r => require(["@/view/user/Resetpassword"], r);
 const News = r => require(["@/view/news/newsMain"], r);
 const newsList = r => require(["@/view/news/newsList"], r);
@@ -146,6 +147,14 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: "/invitation",
+    name: "Invitation",
+    component: Invitation,
+    meta: {
+      title: "邀请好友"
+    }
   },
   {
     path: "/news",

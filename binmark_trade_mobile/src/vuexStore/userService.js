@@ -477,6 +477,22 @@ const loginLogs = async () => {
         console.log(err);
     }
 };
+//获取推广码
+const getShareCode = async () => {
+    try {
+        let result = await Request(apiConfig.getsharecode);
+        let data = handelResult(result);
+        if (data) {
+            Toast({
+                message: result.msg,
+                position: "bottom"
+            });
+            return result;
+        };
+    } catch (err) {
+        console.log(err);
+    }
+}
 export {
     getUserInfo,
     Login,
@@ -507,5 +523,6 @@ export {
     bindGoogle,
     VipInfo,
     safeLogs,
-    loginLogs
+    loginLogs,
+    getShareCode
 }

@@ -5,8 +5,7 @@
   <meta charset="utf-8">
   <meta content="yes" name="apple-mobile-web-app-capable">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <script src="./js/jquery-1.11.1.min.js"></script>
-  <title>MScoin App下载页</title>
+  <title>AMCoin App下载页</title>
   <style>
     * {
       margin: 0;
@@ -101,7 +100,6 @@
         min-width: 500px;
         margin: 0;
       }
-
       .download_box {
         width: 500px;
         height: 100%;
@@ -121,10 +119,10 @@
       <img src="./img/logo.png" alt="">
     </div>
     <div class="download_box_div">
-      <a href="MScoin.ios" class="download_ios">
+      <a href="AMCoin.ios" class="download_ios">
         <img src="./img/ios_btn.png" alt="" srcset="">
       </a>
-      <a href="MScoin.apk" class="download_android">
+      <a href="AMCoin.apk" class="download_android">
         <img src="./img/android_btn.png" alt="" srcset="">
       </a>
     </div>
@@ -135,22 +133,22 @@
     </p>
   </div>
   <script>
-    $(window).on("load", function () {
-      var winHeight = $(window).height();
-      function is_weixin() {
-        var ua = navigator.userAgent.toLowerCase();
-        if (ua.match(/MicroMessenger/i) == "micromessenger") {
-          return true;
-        } else {
-          return false;
-        }
+    function is_weixin() {
+      var ua = navigator.userAgent.toLowerCase();
+      if (ua.match(/MicroMessenger/i) == "micromessenger") {
+        return true;
+      } else {
+        return false;
       }
-      var isWeixin = is_weixin();
-      if (isWeixin) {
-        $(".weixin-tip").css("height", winHeight);
-        $(".weixin-tip").show();
+    }
+    document.onload = function () {
+      var winHeight = window.innerHeight;
+      if (isWeixin()) {
+        let weixinTip = document.getElementsByName('weixin-tip');
+        weixinTip.style.width = winHeight + 'px';
+        weixinTip.style.display = 'block';
       }
-    })
+    }
   </script>
 </body>
 

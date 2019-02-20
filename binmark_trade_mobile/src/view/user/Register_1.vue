@@ -57,7 +57,7 @@
     <div class="van-hairline--bottom"></div>
     <van-field
       v-model="parent"
-      placeholder="推荐人ID（选填）"
+      placeholder="推荐码（选填）"
     />
     <button
       @click="onSubmit"
@@ -69,6 +69,7 @@
 <script>
 import { verCodeMixin } from "../../mixin/mixin.js";
 import { sendCode } from "../../vuexStore/storeService.js";
+import { getQueryParams } from "../../assets/js/commonFunc.js";
 export default {
   mixins: [verCodeMixin],
   data() {
@@ -78,6 +79,10 @@ export default {
       parent: "",
       type: 0
     };
+  },
+  mounted() {
+    let paramsObj = getQueryParams();
+    paramsObj.sharecode && (this.parent = paramsObj.sharecode);
   },
   computed: {
     disabled() {

@@ -5,8 +5,10 @@ import { Toast } from "vant";
 import api from '@/config/apiConfig.js';
 import myStorage from '@/assets/js/myStorage';
 import Store from '@/vuexStore/store';
+let ajaxCount = 0;
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
+    ajaxCount++;
     axios.interceptors.request.use(
         config => {
             if (config.showLoading) {
@@ -21,7 +23,6 @@ const ajaxRequest = (function () {
             return Promise.reject(error);
         }
     );
-
     axios.interceptors.response.use(
         response => {
             return response;
@@ -32,7 +33,6 @@ const ajaxRequest = (function () {
     );
 
     function errorState(response) {
-        Toast.clear();
         if (
             response &&
             (response.status === 200 ||
@@ -46,9 +46,8 @@ const ajaxRequest = (function () {
             position: "bottom"
         });
     };
-
     function successState(response) {
-        Toast.clear();
+
         let code = response.data.code || null;
         let msg = null;
         //统一判断后端返回的错误码
@@ -113,6 +112,8 @@ const ajaxRequest = (function () {
         let promise = new Promise(function (resolve, reject) {
             axios(httpDefaultOpts)
                 .then(res => {
+                    ajaxCount--;
+                    if (ajaxCount <= 0) Toast.clear();
                     successState(res);
                     resolve(res.data);
                 })

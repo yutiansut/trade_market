@@ -182,7 +182,7 @@ export default {
         }
       ],
       logo: require("@/assets/images/footer/bottom_logo.png"),
-      qrcode: "http://www.binmark.io/static/download.html"
+      qrcode: "http://www.upayw.com/static/download.html"
     };
   },
   computed: {

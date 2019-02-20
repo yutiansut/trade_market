@@ -5,7 +5,7 @@ const routes = [
     path: '/',
     name: 'Main',
     component: r => require(['@/view/Main'], r),
-    meta: { auth: false, title: "MScoin" }
+    meta: { auth: false, title: "AMCoin" }
   },
   {
     path: '/user',

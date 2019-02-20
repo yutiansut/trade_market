@@ -120,6 +120,8 @@
 </template>
 <script>
 import newsList from "@/components/other/newsList";
+import { Toast } from "vant";
+let count = 0;
 export default {
   components: { newsList },
   data() {
@@ -195,7 +197,8 @@ export default {
       }
     ];
     this.$store.dispatch("getNewsList", arrObj);
-  }
+  },
+  methods: {}
 };
 </script>
 <style lang="scss" scoped>

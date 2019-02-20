@@ -28,7 +28,8 @@ import {
     bindGoogle,
     VipInfo,
     safeLogs,
-    loginLogs
+    loginLogs,
+    getShareCode
 } from './userService';
 import {
     getNewsList,
@@ -140,5 +141,6 @@ export {
     getOtcOrderByType,
     getOtcBank,
     SubmitWorkOrder,
-    getAllCoin
+    getAllCoin,
+    getShareCode
 }

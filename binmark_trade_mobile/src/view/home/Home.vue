@@ -121,7 +121,7 @@
             <span
               class="rise font-16"
               v-text="item.rise*1"
-              :class="item.rise>0?'up':'down'"
+              :class="item.rise*1>0?'up':'down'"
             ></span>
           </van-col>
         </van-row>
