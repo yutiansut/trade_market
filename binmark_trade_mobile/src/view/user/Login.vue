@@ -3,7 +3,7 @@
     <div class="page-head font-bold">
       <img
         class="login-logo"
-        :src="assetConfig.imgs.logo_1"
+        :src="assetConfig.imgs.sign_in_logo"
         alt
       >
     </div>
@@ -93,7 +93,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .login-logo {
-  height: 3rem;
+  height: 22px;
 }
 .login-links {
   margin-top: 1.5rem;

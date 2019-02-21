@@ -24,7 +24,7 @@
           <vueQr
             :size='size'
             :text='link'
-            margin='5'
+            margin='10'
           />
         </div>
         <div class="font-14">邀请好友扫一扫</div>
@@ -89,6 +89,7 @@ export default {
     text-align: center;
     margin-top: 24px;
     margin-bottom: 10px;
+    width: 100%;
   }
 }
 </style>

@@ -278,7 +278,7 @@ $gap: 1rem;
 .head {
   background: #fff;
   .logo {
-    height: 2.6rem;
+    height: 22px;
   }
   .banner {
     overflow: hidden;

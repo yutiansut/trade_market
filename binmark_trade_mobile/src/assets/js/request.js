@@ -4,11 +4,13 @@ import { Toast } from "vant";
 import api from '@/config/apiConfig.js';
 import myStorage from './myStorage';
 import Store from '@/vuexStore/store';
+let ajaxCount = 0;
 const ajaxRequest = (function () {
     const baseURL = api.baseURL;
     axios.interceptors.request.use(
         config => {
             if (config.showLoading) {
+                ajaxCount++;
                 Toast.loading({
                     spinnerType: "fading-circle",
                     message: '加载中...',
@@ -31,7 +33,6 @@ const ajaxRequest = (function () {
     );
 
     function errorState(response) {
-        Toast.clear();
         let errMsg = "";
         switch (response.status) {
             case 400:
@@ -84,7 +85,6 @@ const ajaxRequest = (function () {
     };
 
     function successState(response) {
-        Toast.clear();
         let code = response.data.code * 1 || null;
         let msg = null;
         //统一判断后端返回的错误码
@@ -134,6 +134,8 @@ const ajaxRequest = (function () {
         let promise = new Promise(function (resolve, reject) {
             axios(httpDefaultOpts)
                 .then(res => {
+                    ajaxCount--;
+                    if (ajaxCount <= 0) Toast.clear();
                     successState(res);
                     resolve(res.data);
                 })
