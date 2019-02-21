@@ -63,7 +63,6 @@ let apiCfg = (function () {
         // 登录验证
         checklogin: {
             url: "checklogin",
-
         },
         //用户不存在是发送短信
         sendcode: {

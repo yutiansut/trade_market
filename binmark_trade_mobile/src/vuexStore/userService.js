@@ -45,7 +45,7 @@ const getUserInfo = async () => {
 //登录
 const Login = async (account, type, code) => {
     try {
-        let result = await Request(apiConfig.login, {
+        let result = await Request(apiConfig.signin, {
             account: account,
             type: type,
             code: code
