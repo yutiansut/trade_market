@@ -20,7 +20,7 @@
             ></div>
             <div class="break-line"></div>
             <div class="account flex flex-between">
-              <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
+              <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid||""}}</span>
               <router-link
                 to='./property'
                 v-text="$t('recharge')||'充值'"
@@ -47,7 +47,7 @@
                 <span
                   class="unit"
                   slot="suffix"
-                  v-text="coinInfo.coinid"
+                  v-text="coinInfo.coinid||''"
                 ></span>
               </el-input>
             </div>
@@ -78,7 +78,7 @@
             ></div>
             <div class="break-line"></div>
             <div class="account flex flex-between">
-              <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid}}</span>
+              <span class="balance">{{$t('avilable')||'可用'}}&nbsp;{{myBalance}}&nbsp;{{coinInfo.coinid||''}}</span>
               <router-link
                 to='./property'
                 v-text="$t('recharge')||'充值'"
@@ -105,7 +105,7 @@
                 <span
                   class="unit"
                   slot="suffix"
-                  v-text="coinInfo.coinid"
+                  v-text="coinInfo.coinid||''"
                 ></span>
               </el-input>
             </div>
@@ -318,7 +318,6 @@
 </template>
 
 <script>
-
 import { checkTradePassword } from "../../service/TradeService.js";
 export default {
   data() {
@@ -349,10 +348,10 @@ export default {
   },
   computed: {
     buyingLabel() {
-      return `${this.$t("buy") || "买入"}&nbsp;${this.coinInfo.coinid}`;
+      return `${this.$t("buy") || "买入"}&nbsp;${this.coinInfo.coinid || ""}`;
     },
     sellingLabel() {
-      return `${this.$t("sell") || "卖出"}&nbsp;${this.coinInfo.coinid}`;
+      return `${this.$t("sell") || "卖出"}&nbsp;${this.coinInfo.coinid || ""}`;
     },
     buyState() {
       return `${this.$t("buy") || "买入"}`;
@@ -383,7 +382,7 @@ export default {
   },
   methods: {
     //检测交易密码有效期
-    checkTradePassword(){
+    checkTradePassword() {
       if (!this.storage.get("tradePasswordChecked")) {
         this.$prompt("请输入交易密码", "提示", {
           confirmButtonText: "确定",
@@ -512,7 +511,7 @@ export default {
         this.errMsg("label120" || "请登录后操作");
         return false;
       }
-      if(!this.checkTradePassword()){
+      if (!this.checkTradePassword()) {
         return false;
       }
       return true;
@@ -527,7 +526,7 @@ export default {
       }
     },
     handleConfirm(api, param) {
-      if(!checkTradePassword()){
+      if (!checkTradePassword()) {
         return false;
       }
       return this.request(api, {

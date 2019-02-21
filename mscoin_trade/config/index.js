@@ -23,8 +23,8 @@ module.exports = {
     cssSourceMap: true
   },
   build: {
-    index: path.resolve(__dirname, '../AMCoin/index.html'),
-    assetsRoot: path.resolve(__dirname, '../AMCoin'),
+    index: path.resolve(__dirname, '../mscoin/index.html'),
+    assetsRoot: path.resolve(__dirname, '../mscoin'),
     assetsSubDirectory: 'pcstatic',
     assetsPublicPath: './',
     productionSourceMap: false,

@@ -86,18 +86,23 @@ export default {
         },
         {
           label: "关于我们",
-          link: "",
+          link: "/articles/about",
           icon: this.assetConfig.imgs.user_icon_7
         },
+        // {
+        //   label: "版本更新",
+        //   link: "",
+        //   icon: this.assetConfig.imgs.user_icon_8
+        // },
+        // {
+        //   label: "隐私协议",
+        //   link: "",
+        //   icon: this.assetConfig.imgs.user_icon_9
+        // },
         {
-          label: "版本更新",
-          link: "",
-          icon: this.assetConfig.imgs.user_icon_8
-        },
-        {
-          label: "隐私协议",
-          link: "",
-          icon: this.assetConfig.imgs.user_icon_9
+          label: "邀请好友",
+          icon: this.assetConfig.imgs.user_icon_12,
+          link: "/invitation"
         }
       ]
     };

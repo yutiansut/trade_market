@@ -8,6 +8,7 @@ const checkLogin = r => require(["@/view/user/checkLogin"], r);
 const Register = r => require(["@/view/user/Register"], r);
 const Register_1 = r => require(["@/view/user/Register_1"], r);
 const Register_2 = r => require(["@/view/user/Register_2"], r);
+const VipLevel = r => require(["@/view/account/VipLevel"], r);
 const Invitation = r => require(["@/view/user/Invitation"], r);
 const Resetpassword = r => require(["@/view/user/Resetpassword"], r);
 const News = r => require(["@/view/news/newsMain"], r);
@@ -48,7 +49,7 @@ const AboutTrade = r => require(["@/view/articles/AboutTrade"], r);
 const Fee = r => require(["@/view/articles/Fee"], r);
 const CoinInfo = r => require(["@/view/articles/CoinInfo"], r);
 const CoinInfoDetail = r => require(["@/view/articles/CoinInfoDetail"], r);
-const VipLevel = r => require(["@/view/account/VipLevel"], r);
+const About = r => require(["@/view/articles/About"], r);
 const routes = [
   {
     path: "/",
@@ -406,18 +407,23 @@ const routes = [
         meta: { title: "费率" }
       },
       {
-        name: "CoinInfo",
         path: "/articles/coininfo",
+        name: "CoinInfo",
         component: CoinInfo,
         meta: { title: "币种资料" }
       },
-
       {
         path: "/articles/coin_detail/:id",
         name: "CoinInfoDetail",
         component: CoinInfoDetail,
         meta: { title: "币种详情" }
-      }
+      },
+      {
+        path: "/articles/about",
+        name: "About",
+        component: About,
+        meta: { title: "关于我们" }
+      },
     ]
   }
 ];
