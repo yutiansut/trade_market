@@ -153,7 +153,8 @@ const routes = [
     name: "Invitation",
     component: Invitation,
     meta: {
-      title: "邀请好友"
+      title: "邀请好友",
+      auth: true
     }
   },
   {

@@ -369,7 +369,7 @@ let apiCfg = (function () {
             url: "vipinfo"
         },
         getsharecode: {
-            url: "gesharecode"
+            url: "sharecode"
         }
     }
 }());

@@ -61,6 +61,8 @@ export default {
         user_icon_11: require('../assets/images/user_icon_11.png'),
         user_problem_add: require('../assets/images/user_problem_add.png'),
         no_record: require("../assets/images/no_record.png"),
+        share_bg: require("../assets/images/share_bg.png"),
+        share_content_bg: require("../assets/images/share_content_bg.png"),
         default: require("../assets/images/default.png")
     }
 }

@@ -77,7 +77,7 @@ function randomString(len) {
     return pwd;
 }
 function getQueryParams() {
-    let url = decodeURIComponent(location.search),
+    let url = decodeURIComponent(location.href),
         qs = url.length > 0 ? url.substring(1) : "",
         args = {},
         paramsArr = qs.length > 0 ? qs.split('&') : [],

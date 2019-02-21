@@ -62,14 +62,13 @@
     <button
       @click="onSubmit"
       :disabled='disabled'
-      class="btn-submit btn-block btn-primary btn-large btn-default riple"
+      class="btn-submit btn-block btn-primary btn-large riple"
     >下一步</button>
   </form>
 </template>
 <script>
 import { verCodeMixin } from "../../mixin/mixin.js";
 import { sendCode } from "../../vuexStore/storeService.js";
-import { getQueryParams } from "../../assets/js/commonFunc.js";
 export default {
   mixins: [verCodeMixin],
   data() {
@@ -81,8 +80,8 @@ export default {
     };
   },
   mounted() {
-    let paramsObj = getQueryParams();
-    paramsObj.sharecode && (this.parent = paramsObj.sharecode);
+    let { sharecode } = this.$route.query;
+    sharecode && (this.parent = sharecode);
   },
   computed: {
     disabled() {

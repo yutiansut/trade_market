@@ -482,13 +482,7 @@ const getShareCode = async () => {
     try {
         let result = await Request(apiConfig.getsharecode);
         let data = handelResult(result);
-        if (data) {
-            Toast({
-                message: result.msg,
-                position: "bottom"
-            });
-            return result;
-        };
+        if (data) return data;
     } catch (err) {
         console.log(err);
     }
