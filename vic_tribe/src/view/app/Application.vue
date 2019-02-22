@@ -9,9 +9,9 @@
       >
         <div class="content">
           <img
-            v-if="item.icon"
+            v-if="assetConfig['appIcon_'+(i+1)]"
             class="icon"
-            :src="item.icon"
+            :src="assetConfig['appIcon_'+(i+1)]"
             :alt="item.label"
           >
           <div
@@ -30,56 +30,59 @@
 <script>
 export default {
   data() {
+    const assetConfig = {
+      appIcon_1: require("../../assets/images/appicon/sc.png"),
+      appIcon_2: require("../../assets/images/appicon/sq.png"),
+      appIcon_3: require("../../assets/images/appicon/hfcz.png"),
+      appIcon_4: require("../../assets/images/appicon/sdcz.png"),
+      appIcon_5: require("../../assets/images/appicon/fjp.png"),
+      appIcon_6: require("../../assets/images/appicon/hcp.png"),
+      appIcon_7: require("../../assets/images/appicon/ykcz.png"),
+      appIcon_8: require("../../assets/images/appicon/wyc.png"),
+      appIcon_9: require("../../assets/images/appicon/sj.png"),
+      appIcon_10: require("../../assets/images/appicon/yx.png")
+    };
     return {
+      assetConfig: assetConfig,
       apps: [
         {
           label: "购物商城",
-          icon: require("../../assets/images/appicon/sc.png"),
           link: ""
         },
         {
           label: "热门商圈",
-          icon: require("../../assets/images/appicon/sq.png"),
           link: ""
         },
         {
           label: "话费充值",
-          icon: require("../../assets/images/appicon/hfcz.png"),
           link: ""
         },
         {
           label: "水电充值",
-          icon: require("../../assets/images/appicon/sdcz.png"),
           link: ""
         },
         {
           label: "飞机票",
-          icon: require("../../assets/images/appicon/fjp.png"),
           link: ""
         },
         {
           label: "火车票",
-          icon: require("../../assets/images/appicon/hcp.png"),
           link: ""
         },
         {
           label: "油卡充值",
-          icon: require("../../assets/images/appicon/ykcz.png"),
           link: ""
         },
         {
           label: "网约车",
-          icon: require("../../assets/images/appicon/wyc.png"),
           link: ""
         },
         {
           label: "社交",
-          icon: require("../../assets/images/appicon/sj.png"),
           link: ""
         },
         {
           label: "热门游戏",
-          icon: require("../../assets/images/appicon/yx.png"),
           link: ""
         },
         {
@@ -124,10 +127,10 @@ export default {
     margin: 2rem;
   }
   .icon-more {
-    margin: 2rem;
+    margin: 2rem 0;
     height: 3rem;
     line-height: 3rem;
-    font-size: 1.5rem;
+    font-size: 15px;
   }
 }
 </style>

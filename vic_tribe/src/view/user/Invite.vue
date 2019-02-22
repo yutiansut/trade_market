@@ -1,12 +1,12 @@
 <template>
   <div
-    :style="{backgroundImage:'url('+bg+')'}"
+    :style="{backgroundImage:'url('+assetConfig.bg+')'}"
     class="app-main wh-full"
   >
     <my-header></my-header>
     <div class="app-body p-rel h-full">
       <div
-        :style="{backgroundImage:'url('+qrcodeBg+')'}"
+        :style="{backgroundImage:'url('+assetConfig.qrcodeBg+')'}"
         class="content abs-h-center"
       >
         <div class="tip font-16 color-999 txt-center">扫描二维码下载APP</div>
@@ -30,7 +30,7 @@
             v-clipboard:success="onCopy"
             class="btn-copy p-abs abs-v-center"
           >
-            <img :src="btnCopy">
+            <img :src="assetConfig.btnCopy">
           </div>
         </div>
       </div>
@@ -42,10 +42,13 @@ import vueQr from "vue-qr";
 export default {
   components: { vueQr },
   data() {
+    const assetConfig = {
+      bg: require("@/assets/images/invite/bj.png"),
+      qrcodeBg: require("@/assets/images/invite/k.png"),
+      btnCopy: require("@/assets/images/invite/fz.png")
+    };
     return {
-      bg: require("../../assets/images/invite/bj.png"),
-      qrcodeBg: require("../../assets/images/invite/k.png"),
-      btnCopy: require("../../assets/images/invite/fz.png"),
+      assetConfig: assetConfig,
       inviteCode: "CIAOTE4231"
     };
   },

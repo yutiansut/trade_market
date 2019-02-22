@@ -94,11 +94,11 @@ router.beforeEach((to, from, next) => {
   Store.commit('setMainHeaderShow', !to.meta.removeHeader)
   Store.commit("setHeaderTitle", to.meta.title);
   if (myStorage.get('isLogin')) {
-    Store.commit('loginState', true);
+    Store.dispatch('changeLoginState', true);
   }
   if (to.meta.auth) {
     if (myStorage.get("token")) {
-      Store.commit('loginState', true);
+      Store.dispatch('changeLoginState', true);
       next();
     } else {
       myStorage.set("isLogin", false);
@@ -107,7 +107,7 @@ router.beforeEach((to, from, next) => {
   } else {
     if (to.name == "Login" || to.name == 'Register') {
       myStorage.remove("token");
-      Store.commit('loginState', false);
+      Store.dispatch('changeLoginState', false);
     }
     next();
   }

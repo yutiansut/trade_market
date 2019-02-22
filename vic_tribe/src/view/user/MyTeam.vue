@@ -1,7 +1,7 @@
 <template>
   <div class="wh-full container">
     <div
-      :style="{backgroundImage:'url('+topBg+')'}"
+      :style="{backgroundImage:'url('+assetConfig.topBg+')'}"
       class="user"
     >
       <div class="header-title p-rel txt-center h-45 font-16">
@@ -15,7 +15,7 @@
       <div class="user-info flex">
         <div class="avatar thumb-60 thumb-rounded">
           <img
-            :src="portrait"
+            :src="assetConfig.portrait"
             alt=""
           >
         </div>
@@ -62,9 +62,12 @@
 <script>
 export default {
   data() {
+    const assetConfig = {
+      topBg: require("@/assets/images/user/bj_wdqy.png"),
+      portrait: require("@/assets/images/user/portrait.png")
+    };
     return {
-      topBg: require("../../assets/images/user/bj_wdqy.png"),
-      portrait: require("../../assets/images/user/portrait.png")
+      assetConfig: assetConfig
     };
   }
 };

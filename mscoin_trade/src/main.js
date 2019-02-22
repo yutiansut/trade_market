@@ -4,6 +4,8 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import "../static/css/aliFont.css";
+import "../static/css/common.css";
 
 /**
  * 注册并使用第三方类/库

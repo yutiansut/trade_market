@@ -1,14 +1,14 @@
 <template>
   <div class="overflow-y app-body">
     <div
-      :style="{backgroundImage:'url('+topBg+')'}"
+      :style="{backgroundImage:'url('+assetConfig.topBg+')'}"
       class="user"
     >
       <div class="header-title txt-center h-45 font-16">{{$store.state.headerTitle}}</div>
       <div class="user-info">
         <div class="portrait thumb-50">
           <img
-            :src="portrait"
+            :src="assetConfig.portrait"
             alt=""
           >
         </div>
@@ -25,8 +25,9 @@
         span='6'
       >
         <img
+          v-if="assetConfig['menuIcon_'+(i+1)]"
           class="icon"
-          :src="item.icon"
+          :src="assetConfig['menuIcon_'+(i+1)]"
           :alt="item.label"
         >
         <span
@@ -40,7 +41,7 @@
         <van-cell
           v-for="(item,i) in navConfig"
           :key='i'
-          :icon='item.icon'
+          :icon="assetConfig['navIcon_'+(i+1)]?assetConfig['navIcon_'+(i+1)]:''"
           is-link
           :to='item.link'
         >
@@ -61,60 +62,63 @@
 <script>
 export default {
   data() {
-    return {
+    const assetConfig = {
       topBg: require("../../assets/images/user/bj.png"),
       portrait: require("../../assets/images/user/portrait.png"),
+      menuIcon_1: require("../../assets/images/user/grzx-icon1.png"),
+      menuIcon_2: require("../../assets/images/user/grzx-icon2.png"),
+      menuIcon_3: require("../../assets/images/user/grzx-icon3.png"),
+      menuIcon_4: require("../../assets/images/user/grzx-icon4.png"),
+      navIcon_1: require("../../assets/images/user/grqb.png"),
+      navIcon_2: require("../../assets/images/user/wfzd.png"),
+      navIcon_3: require("../../assets/images/user/grzx-icon9.png"),
+      navIcon_4: require("../../assets/images/user/zhsz.png"),
+      navIcon_5: require("../../assets/images/user/grzx-icon14.png"),
+      navIcon_6: require("../../assets/images/user/grzx-icon15.png")
+    };
+    return {
+      assetConfig: assetConfig,
       menuConfig: [
         {
           label: "邀请好友",
-          icon: require("../../assets/images/user/grzx-icon1.png"),
           link: "/user/invite"
         },
         {
           label: "我的圈友",
-          icon: require("../../assets/images/user/grzx-icon2.png"),
           link: "/user/myteam"
         },
         {
           label: "商家服务",
-          icon: require("../../assets/images/user/grzx-icon3.png"),
           link: ""
         },
         {
           label: "我的任务",
-          icon: require("../../assets/images/user/grzx-icon4.png"),
           link: ""
         }
       ],
       navConfig: [
         {
           title: "个人钱包",
-          icon: require("../../assets/images/user/grqb.png"),
           link: ""
         },
         {
           title: "我的账单",
-          icon: require("../../assets/images/user/wfzd.png"),
           link: "/record/bill_record"
         },
         {
           title: "个人信息",
-          icon: require("../../assets/images/user/grzx-icon9.png"),
           link: "/user/info"
         },
         {
           title: "账户设置",
-          icon: require("../../assets/images/user/zhsz.png"),
           link: "/user/setting"
         },
         {
           title: "我的小蜜",
-          icon: require("../../assets/images/user/grzx-icon14.png"),
           link: ""
         },
         {
           title: "关于我们",
-          icon: require("../../assets/images/user/grzx-icon15.png"),
           link: ""
         }
       ]

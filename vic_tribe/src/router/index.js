@@ -76,7 +76,7 @@ const routes = [
         component: User,
         meta: {
           title: "我的",
-          auth: true,
+          auth: false,
           removeHeader: true
         }
       }

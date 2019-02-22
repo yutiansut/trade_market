@@ -4,36 +4,34 @@
       <div class="head-lf flex flex-v-center">
         <img
           class="logo"
-          :src="logo"
+          :src="assetConfig.logo"
         >
         <span class="font-bit-bold font-18">VIC</span>
       </div>
       <div class="head-rt">
         <span
-          :style="{backgroundImage:'url('+iconBg_1+')'}"
+          :style="{backgroundImage:'url('+assetConfig.iconBg_1+')'}"
           class="icon"
         ></span>
         <span
-          :style="{backgroundImage:'url('+iconBg_2+')'}"
+          :style="{backgroundImage:'url('+assetConfig.iconBg_2+')'}"
           class="icon"
         ></span>
       </div>
     </div>
     <!-- 资产信息 -->
     <div class="account-info">
-      <div
-        :style="{backgroundImage:'url('+item.bg+')'}"
-        v-for="(item,i) in accountInfo"
-        :key="i"
-      >
-        <p
-          class="label font-bold font-16"
-          v-text="item.label"
-        ></p>
-        <p
-          class="val font-bold font-22"
-          v-text="item.number"
-        ></p>
+      <div :style="{backgroundImage:'url('+assetConfig.totalAsset+')'}">
+        <p class="label font-bold font-16">总资产</p>
+        <p class="val font-bold font-22">0.001</p>
+      </div>
+      <div :style="{backgroundImage:'url('+assetConfig.balance+')'}">
+        <p class="label font-bold font-16">余额</p>
+        <p class="val font-bold font-22">0.001</p>
+      </div>
+      <div :style="{backgroundImage:'url('+assetConfig.VIC+')'}">
+        <p class="label font-bold font-16">VIC</p>
+        <p class="val font-bold font-22">0.001</p>
       </div>
     </div>
     <!-- 新消息提示 -->
@@ -41,7 +39,7 @@
       <van-col span='4'>
         <img
           class="tag"
-          src="../../assets/images/home/TZ.png"
+          :src="assetConfig.ioncNotice"
           alt=""
         >
       </van-col>
@@ -62,7 +60,7 @@
       <router-link to=''>
         <img
           class="add-banner"
-          src="../../assets/images/home/banner.png"
+          :src="assetConfig.noticeBarBg"
         >
       </router-link>
       <div class="market-val flex flex-between">
@@ -83,9 +81,9 @@
         >
           <router-link :to='item.link'>
             <img
-              v-if="item.icon"
+              v-if="assetConfig['menuIcon_'+(i+1)]"
               class="icon"
-              :src="item.icon"
+              :src="assetConfig['menuIcon_'+(i+1)]"
             >
             <span
               v-text="item.label"
@@ -125,57 +123,49 @@ let count = 0;
 export default {
   components: { newsList },
   data() {
-    return {
+    const assetConfig = {
       logo: require("@/assets/images/home/home_logo.png"),
       iconBg_1: require("@/assets/images/home/ewm.png"),
       iconBg_2: require("@/assets/images/home/sys.png"),
-      accountInfo: [
-        {
-          label: "总资产",
-          number: "0.0000",
-          bg: require("@/assets/images/home/total_asset.png")
-        },
-        {
-          label: "余额",
-          number: "0.0000",
-          bg: require("@/assets/images/home/balance.png")
-        },
-        {
-          label: "VIC",
-          number: "0.0000",
-          bg: require("@/assets/images/home/VIC.png")
-        }
-      ],
+      menuIcon_1: require("@/assets/images/home/dxzz.png"),
+      menuIcon_2: require("@/assets/images/home/zvpt.png"),
+      menuIcon_3: require("@/assets/images/home/Goldzz.png"),
+      menuIcon_4: require("@/assets/images/home/wytg.png"),
+      menuIcon_5: require("@/assets/images/home/dxzz.png"),
+      menuIcon_6: require("@/assets/images/home/VICHQ.png"),
+      menuIcon_7: require("@/assets/images/home/txjl.png"),
+      totalAsset: require("@/assets/images/home/total_asset.png"),
+      balance: require("@/assets/images/home/balance.png"),
+      VIC: require("@/assets/images/home/VIC.png"),
+      noticeBarBg: require("@/assets/images/home/banner.png"),
+      ioncNotice: require("@/assets/images/home/TZ.png")
+    };
+    return {
+      assetConfig: assetConfig,
       menuItem: [
         {
           label: "货币转换",
-          link: "/currency_exchange",
-          icon: require("@/assets/images/home/dxzz.png")
+          link: "/currency_exchange"
         },
         {
           label: "VIC交易",
-          link: "/victrade",
-          icon: require("@/assets/images/home/zvpt.png")
+          link: "/victrade"
         },
         {
           label: "定向交易",
-          link: "/dir_trade",
-          icon: require("@/assets/images/home/Goldzz.png")
+          link: "/dir_trade"
         },
         {
           label: "VIC兑换",
-          link: "/vicexchange",
-          icon: require("@/assets/images/home/wytg.png")
+          link: "/vicexchange"
         },
         {
           label: "VIC行情",
-          link: "/market",
-          icon: require("@/assets/images/home/VICHQ.png")
+          link: "/market"
         },
         {
           label: "我的账单",
-          link: "/record/bill_record",
-          icon: require("@/assets/images/home/txjl.png")
+          link: "/record/bill_record"
         }
       ],
       newsList: []

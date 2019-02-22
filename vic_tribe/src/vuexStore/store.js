@@ -8,6 +8,7 @@ export default new Vuex.Store({
     footerItemIndex: 0,
     showHeaderBack: false,
     showMainHeader: true,
+    userInfo: {},
     newsList: []
   },
   mutations: {
@@ -32,6 +33,9 @@ export default new Vuex.Store({
     },
     updateNewsList(state, arr) {
       state.newsList = arr;
+    },
+    updateUserInfo(obj) {
+      state.updateUserInfo = obj
     }
   },
   actions: {
@@ -40,6 +44,9 @@ export default new Vuex.Store({
     },
     getNewsList(ctx, data) {
       ctx.commit('updateNewsList', data)
+    },
+    updateUserInfo(ctx, data) {
+      ctx.commit('updateUserInfo', data)
     }
   }
 });
