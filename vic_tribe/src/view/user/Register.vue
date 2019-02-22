@@ -88,10 +88,12 @@
             placeholder="请输入验证码"
           >
         </van-col>
-        <van-col
-          @touchend='getCode'
-          span='8'
-        >获取验证码</van-col>
+        <van-col span='8'>
+          <span
+            @click='getCode'
+            v-text="codeText"
+          ></span>
+        </van-col>
       </van-row>
     </form>
     <button class="btn-block btn-large btn-default btn-active btn-round">注册</button>
@@ -103,21 +105,25 @@
 </template>
 <script>
 import accountHead from "@/components/account/accountHead";
+import { verCodeMixin } from "@/mixins/mixins.js";
 export default {
   components: { accountHead },
+  mixins: [verCodeMixin],
   data() {
     return {
       tabItem: ["手机号", "邮箱"],
       type: 0,
       account: "",
       password: "",
-      repassword: "",
-      code: ""
+      repassword: ""
     };
   },
   methods: {
     onTabChange(i) {
       this.type = i;
+    },
+    getCode() {
+      this.timeCountDown();
     }
   }
 };

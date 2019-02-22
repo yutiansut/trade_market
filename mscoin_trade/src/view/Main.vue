@@ -15,6 +15,7 @@
             <li
               v-show="newIndex==index"
               v-for="(item,index) in newsList"
+              :key='index'
             >
               <router-link
                 :to='"/notice/detail/"+item.id'
@@ -90,7 +91,7 @@
           >
             <span
               slot-scope="scope"
-              v-text="statusMap['s_'+scope.row.state]"
+              v-text="$t(statusMap['s_'+scope.row.state])"
               :class="'status_'+scope.row.state"
             >
             </span>
@@ -125,7 +126,11 @@
               </span>
             </template>
           </el-table-column>
-          <el-table-column align='center' :label='$t("label192")' width='180'>
+          <el-table-column
+            align='center'
+            :label='$t("label192")'
+            width='180'
+          >
             <div
               class="btn-container flex flex-between"
               slot-scope="scope"
@@ -189,8 +194,8 @@ export default {
       loading: true,
       mainCoinModel: mainCoinModel,
       statusMap: {
-        s_0: "禁用",
-        s_1: "可用"
+        s_0: "inavailable",
+        s_1: "avilable"
       },
       currentMainCoin: "",
       searchVal: "",
@@ -366,10 +371,10 @@ export default {
     }
   }
 }
-span.status_0 {
+span.status_1 {
   color: $color-success;
 }
-span.status_1 {
+span.status_0 {
   color: #999;
 }
 .content {

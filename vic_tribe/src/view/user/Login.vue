@@ -57,7 +57,11 @@
           >
         </van-col>
         <van-col span='4'>
-          <i class="iconfont font-24 icon-icon_eye-close"></i>
+          <i
+            @click="toggleVisiable"
+            class="iconfont font-24"
+            :class="passwordVisable?'icon-icon_eye-open':'icon-icon_eye-close'"
+          ></i>
         </van-col>
       </van-row>
       <van-row>
@@ -70,10 +74,12 @@
             placeholder="请输入验证码"
           >
         </van-col>
-        <van-col
-          @touchend='getCode'
-          span='8'
-        >获取验证码</van-col>
+        <van-col span='8'>
+          <span
+            @touchend='getCode'
+            v-text="codeText"
+          ></span>
+        </van-col>
       </van-row>
     </form>
     <router-link
@@ -90,19 +96,34 @@
 </template>
 <script>
 import accountHead from "@/components/account/accountHead";
+import { verCodeMixin, passwordVisable } from "@/mixins/mixins.js";
 export default {
-  components: { accountHead },
+  components: { accountHead, passwordVisable },
+  mixins: [verCodeMixin, passwordVisable],
   data() {
     return {
       tabItem: ["手机号", "邮箱"],
       type: 0,
       account: "",
-      password: "",
-      code: ""
+      password: ""
     };
   },
   methods: {
-    getCode() {},
+    validate() {
+      let code = 1;
+      let msg = "";
+      if (this.account == "") {
+        msg = "用户名不能为空";
+        code = 0;
+      } else if (!this.Validate(this.account)) {
+        msg = "用户名必须6-12位字母或者数字";
+        code = 0;
+      }
+      return { code, msg };
+    },
+    getCode() {
+      this.timeCountDown();
+    },
     onTabChange(i) {
       this.type = i;
     }

@@ -1,4 +1,5 @@
-import { timerCounter } from '../assets/js/Utils'
+import { timerCounter } from '../assets/js/Utils';
+// 验证码倒计时
 const verCodeMixin = {
     data() {
         return {
@@ -13,7 +14,6 @@ const verCodeMixin = {
             if (this.canGetCode) {
                 this.timer = timerCounter({
                     onStart: t => {
-
                         this.canGetCode = false;
                         this.codeText = `倒计时(${t})s`;
                     },
@@ -29,6 +29,21 @@ const verCodeMixin = {
         }
     }
 }
+// 密码是否可见
+const passwordVisable = {
+    data() {
+        return {
+            passwordVisable: false
+        }
+    },
+    methods: {
+        toggleVisiable() {
+            console.log(1)
+            this.passwordVisable = !this.passwordVisable;
+        }
+    }
+}
 export {
-    verCodeMixin
+    verCodeMixin,
+    passwordVisable
 }

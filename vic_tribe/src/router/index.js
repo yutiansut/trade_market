@@ -76,7 +76,7 @@ const routes = [
         component: User,
         meta: {
           title: "我的",
-          auth: false,
+          auth: true,
           removeHeader: true
         }
       }
@@ -213,7 +213,7 @@ const routes = [
     component: Invite,
     meta: {
       title: "邀请好友",
-      auth: false
+      auth: true
     }
   },
   {

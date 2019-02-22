@@ -108,7 +108,6 @@ const ajaxRequest = (function () {
             delete httpDefaultOpts.params;
         }
         httpDefaultOpts.showLoading = !(data && data.showLoading == '0')
-
         let promise = new Promise(function (resolve, reject) {
             axios(httpDefaultOpts)
                 .then(res => {
@@ -125,4 +124,4 @@ const ajaxRequest = (function () {
         return promise;
     }
 }());
-export default ajaxRequest
+export default ajaxRequest;

@@ -17,16 +17,20 @@
     display: block;
   }
   .form {
-    margin-top: 4rem;
+    margin-top: 3.6rem;
     .van-row {
       color: #e0e0e0;
-      height: 3rem;
-      margin-top: 5vh;
+      height: 40px;
+      line-height: 40px;
+      margin-top: 3.5vh;
       border-bottom: 1px solid #94969b;
     }
     .van-col {
       height: 100%;
       font-size: 1.6rem;
+      &:last-child {
+        text-align: right;
+      }
     }
     .iconfont {
       position: relative;
