@@ -360,6 +360,14 @@ let apiCfg = (function () {
         //获取收益列表
         proceeds: {
             url: 'proceeds'
+        },
+        // 获取机器人
+        getapido: {
+            url: "getapido",
+            method: "get"
+        },
+        searchcoin: {
+            url: "searchcoin"
         }
     }
 }());

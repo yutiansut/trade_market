@@ -384,11 +384,12 @@ export default {
     //检测交易密码有效期
     checkTradePassword() {
       if (!this.storage.get("tradePasswordChecked")) {
-        this.$prompt("请输入交易密码", "提示", {
+        this.$prompt(this.$t("label199"), "提示", {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           inputPattern: /\S/,
-          inputErrorMessage: "交易密码不能为空"
+          inputType: "password",
+          inputErrorMessage: this.$t("label200")
         })
           .then(({ value }) => {
             checkTradePassword(value).then(res => {

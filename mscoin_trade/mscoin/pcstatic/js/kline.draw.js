@@ -8957,6 +8957,7 @@ var RequestData = function (showLoading) {
     if (showLoading == true) {
         $("#chart_loading").addClass("activated");
     }
+    
     $(document).ready(GLOBAL_VAR.G_HTTP_REQUEST = $.ajax({
         type: "get",
         url: GLOBAL_VAR.url,
@@ -8970,6 +8971,7 @@ var RequestData = function (showLoading) {
         },
         success: function (json) {
             if (GLOBAL_VAR.G_HTTP_REQUEST) {
+                
                 if (this.time != GLOBAL_VAR.time_type || this.market != GLOBAL_VAR.market_from) {
                     GLOBAL_VAR.TimeOutId = setTimeout(RequestData, 1000);
                     return
@@ -8977,20 +8979,21 @@ var RequestData = function (showLoading) {
                 if (!json) {
                     return
                 }
-                if (!json.data.list.isSuc) {
+                if (!json.data.list.success) {
                     // kline.refreshPage(json.data.list.datas.ecode == 101 ? null: GLOBAL_VAR.market_from);
                     return
                 }
-                GLOBAL_VAR.market_from_name = json.data.list.datas.marketName;
+                // GLOBAL_VAR.market_from_name = json.data.list.datas.marketName;
                 var chart = ChartManager.getInstance().getChart();
-                chart._contract_unit = json.data.list.datas.contractUnit;
-                chart._money_type = json.data.list.datas.moneyType;
-                chart._usd_cny_rate = json.data.list.datas.USDCNY;
-                chart.setTitle();
+                // chart._contract_unit = json.data.list.datas.contractUnit;
+                // chart._money_type = json.data.list.datas.moneyType;
+                // chart._usd_cny_rate = json.data.list.datas.USDCNY;
+                // chart.setTitle();
                 // kline.setMarketShow(GLOBAL_VAR.market_from_name, chart._contract_unit, chart._money_type, json.data.list.datas.url);
                 //kline.setTopTickers(json.data.list.datas.topTickers);
                 // GLOBAL_VAR.KLineData = eval(json.data.list.datas.data);
-                GLOBAL_VAR.KLineData = json.data.list.datas.data;
+                GLOBAL_VAR.KLineData = json.data.list.data.lines;
+                
                 try {
                     if (!GLOBAL_VAR.chartMgr.updateData("frame0.k0", GLOBAL_VAR.KLineData)) {
                         //GLOBAL_VAR.requestParam = setHttpRequestParam(GLOBAL_VAR.market_from, GLOBAL_VAR.time_type, GLOBAL_VAR.limit, null);

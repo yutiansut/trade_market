@@ -537,7 +537,7 @@
     >
       <div
         slot='uploadfile'
-        class="upload-file"
+        class="upload-file p-rel"
       >
         <input
           @change="onChange"
@@ -698,17 +698,17 @@ export default {
     //检测交易密码有效性
     checkTradePassword() {
       if (!this.storage.get("tradePasswordChecked")) {
-        this.$prompt("请输入交易密码", "提示", {
+        this.$prompt(this.$t("label199"), this.$t("label140"), {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           inputPattern: /\S/,
-          inputErrorMessage: "交易密码不能为空"
+          inputErrorMessage: this.$t("label199")
         })
           .then(({ value }) => {
             checkTradePassword(value).then(res => {
               if (res.code != 0) {
                 this.storage.set("tradePasswordChecked", false);
-                this.errMsg("交易密码不正确");
+                this.errMsg(this.$t("label200"));
               } else {
                 this.storage.set("tradePasswordChecked", true);
                 this.successMsg(res.msg);
@@ -1059,7 +1059,7 @@ export default {
     dealOrder(type, id) {
       let api = type == "0" ? this.api.setsendok : this.api.setrealyok;
       if (type == 0 && this.imgUrl == "") {
-        this.errMsg("请上传凭证");
+        this.errMsg(this.$t("label198"));
         return false;
       }
       this.request(api, {

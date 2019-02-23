@@ -653,7 +653,7 @@ export default {
             .catch(err => {
               console.log(err);
             });
-            this.getCurrentInfo(maincoin,tradecoin);
+          this.getCurrentInfo(maincoin, tradecoin);
         }
         ajaxDone = false;
       }, 1000);
@@ -673,6 +673,8 @@ export default {
       this.Util.setCookie("maincoinname", data.maincoinid);
       this.Util.setCookie("tradcoinname", data.coinid);
       this.iframUrl = `${this.iframUrl}t=${new Date().getTime()}`;
+      // 刷单配置
+      this.getapido(this.maincoin, this.tradecoin);
       //获取最新的价格信息
       this.getCurrentInfo(this.maincoin, this.tradecoin);
       //获取可用;
@@ -710,7 +712,6 @@ export default {
         this.tradecoin
       );
     },
-
     //获取委托数据
     awaitResult(maincoin, tradecoin) {
       let params = {
@@ -754,6 +755,85 @@ export default {
       this.request(this.api.searchcoin, { maincoin, tradcoin }).then(res => {
         this.currentCoinInfo = res.data.list[0];
       });
+    },
+    //刷单配置
+    getapido(maincoin, tradcoin) {
+      this.request(this.api.getapido, { maincoin, tradcoin }).then(res => {
+        let data = res.data.list[0];
+        if (!data) return;
+        let price = 0;
+        let nowPrice = this.currentCoinInfo.prise * 1;
+        let highPrice = data.heightprice;
+        let lowPrice = data.lastprice;
+        let ajaxDone = true;
+        let timer = this.randomInterval(data.tradtime, () => {
+          let number = this.Util.randomNum(
+            data.number * 1 - data.numbergas * 1,
+            data.number * 1 + data.numbergas * 1
+          );
+          if (ajaxDone == false) return;
+          if (nowPrice > data.heightprice) {
+            price = nowPrice - data.pricegas * 1;
+            this.tradeHandle(this.api.forsell, {
+              maincoin: maincoin,
+              tradecoin: tradcoin,
+              number: number,
+              price: price
+            }).then(res => {
+              ajaxDone = true;
+              
+            });
+          } else if (nowPrice < highPrice && nowPrice > lowPrice) {
+            let flag = 0;
+            price = this.Util.randomNum(
+              nowPrice - data.pricegas,
+              nowPrice + data.pricegas
+            );
+            if (fag == 0) {
+              this.tradeHandle(this.api.forbuy, {
+                maincoin: maincoin,
+                tradecoin: tradcoin,
+                number: number,
+                price: price
+              }).then(res => {
+                ajaxDone = true;
+                
+              });
+            } else {
+              this.tradeHandle(this.api.forsell, {
+                maincoin: maincoin,
+                tradecoin: tradcoin,
+                number: number,
+                price: price
+              }).then(res => {
+                ajaxDone = true;
+              });
+            }
+            flag = !flag;
+          } else {
+            price = nowPrice + data.pricegas * 1;
+            this.tradeHandle(this.api.forbuy, {
+              maincoin: maincoin,
+              tradecoin: tradcoin,
+              number: number,
+              price: price
+            }).then(() => {
+              ajaxDone = true;
+            });
+          }
+          ajaxDone = false;
+        });
+      });
+    },
+    randomInterval(time, cb) {
+      let timeOut = Math.floor(Math.random() * (2 * time + 5));
+      let timerFunc = null;
+      timerFunc = setTimeout(function timeFun() {
+        cb && cb();
+        if (timerFunc) clearTimeout(timerFunc);
+        timeOut = Math.floor(Math.random() * (2 * time + 5));
+        timerFunc = setTimeout(timeFun, timeOut * 1000);
+      }, timeOut * 1000);
     },
     // 获取账户状态
     getState() {

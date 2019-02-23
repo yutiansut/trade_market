@@ -245,6 +245,14 @@ const routes = [
     name: "klineTrade",
     component: r => require(['@/view/trade/klineTrade'], r),
     meta: { auth: false, title: 'K线交易' }
+  }, {
+    path: "/trade/auto",
+    name: "Auto",
+    component: r => require(['@/view/other/currencyTradeAuto'], r),
+    meta: {
+      auth: true,
+      title: "自动下单"
+    }
   }
 ]
 
