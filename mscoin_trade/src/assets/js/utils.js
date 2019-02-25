@@ -141,7 +141,7 @@ const Utils = (function () {
             return typeObj[typeof o] || typeObj[toString.call(o)] || (o ? "object" : "null");
         },
         randomNum(min, max) {
-            return Math.random() * (max - min) + min;
+            return Math.floor(Math.random() * (max - min) + min);
         },
         timerCounter(config) {
             if (!config) return false;

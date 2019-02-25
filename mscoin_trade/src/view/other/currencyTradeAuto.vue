@@ -57,11 +57,6 @@
               <i>{{currentCoinInfo.number*1}}&nbsp;{{tradecoin}}</i>
             </span>
           </div>
-          <button
-            @click="navigateTo('/kline_trade',{maincoinid: maincoin,coinid: tradecoin})"
-            style="margin-left:20%;"
-            class="btn-inline btn-hover btn-success btn-small"
-          >K线交易</button>
         </div>
         <!-- K线图占位 -->
         <div
@@ -522,7 +517,9 @@ export default {
       canTrade: false,
       isGetSocketMsg: false,
       iframUrl: "./static/kline.html?",
-      timer: null
+      timer: null,
+      autoStart: false,
+      timerOut: null
     };
   },
   mounted() {
@@ -756,84 +753,101 @@ export default {
         this.currentCoinInfo = res.data.list[0];
       });
     },
+    randomNum(min, max) {
+      return Math.random() * (max - min) + min;
+    },
     //刷单配置
     getapido(maincoin, tradcoin) {
-      this.request(this.api.getapido, { maincoin, tradcoin }).then(res => {
+      let that = this;
+      if (that.timerOut) clearTimeout(that.timerOut);
+      that.request(that.api.getapido, { maincoin, tradcoin }).then(res => {
         let data = res.data.list[0];
         if (!data) return;
         let price = 0;
-        let nowPrice = this.currentCoinInfo.prise * 1;
+        let nowPrice = that.currentCoinInfo.prise * 1;
         let highPrice = data.heightprice;
         let lowPrice = data.lastprice;
-        let ajaxDone = true;
-        let timer = this.randomInterval(data.tradtime, () => {
-          let number = this.Util.randomNum(
-            data.number * 1 - data.numbergas * 1,
-            data.number * 1 + data.numbergas * 1
-          );
-          if (ajaxDone == false) return;
-          if (nowPrice > data.heightprice) {
-            price = nowPrice - data.pricegas * 1;
-            this.tradeHandle(this.api.forsell, {
-              maincoin: maincoin,
-              tradecoin: tradcoin,
-              number: number,
-              price: price
-            }).then(res => {
-              ajaxDone = true;
-              
-            });
-          } else if (nowPrice < highPrice && nowPrice > lowPrice) {
-            let flag = 0;
-            price = this.Util.randomNum(
-              nowPrice - data.pricegas,
-              nowPrice + data.pricegas
+        let time = data.tradtime;
+        let timeOut = Math.floor(Math.random() * (2 * time + 5));
+        that.timerOut = setTimeout(
+          function func() {
+            let number = that.randomNum(
+              data.number * 1 - data.numbergas * 1,
+              data.number * 1 + data.numbergas * 1
             );
-            if (fag == 0) {
-              this.tradeHandle(this.api.forbuy, {
+            if (nowPrice > data.heightprice) {
+              price = nowPrice - data.pricegas * 1;
+              that.tradeHandle(that.api.forsell, {
                 maincoin: maincoin,
                 tradecoin: tradcoin,
                 number: number,
                 price: price
               }).then(res => {
-                ajaxDone = true;
-                
+                if (res.code != 0) {
+                  clearTimeout(that.timerOut);
+                  return;
+                }
+                timeOut = Math.floor(Math.random() * (2 * time + 5));
+                that.timerOut = setTimeout(func, timeOut * 1000);
               });
+            } else if (nowPrice < highPrice && nowPrice > lowPrice) {
+              let flag = 0;
+              price = that.randomNum(
+                nowPrice - data.pricegas,
+                nowPrice + data.pricegas
+              );
+              if (fag == 0) {
+                that.tradeHandle(that.api.forbuy, {
+                  maincoin: maincoin,
+                  tradecoin: tradcoin,
+                  number: number,
+                  price: price
+                }).then(res => {
+                  console.log(res);
+                  if (res.code != 0) {
+                    clearTimeout(that.timerOut);
+                    return;
+                  }
+                  timeOut = Math.floor(Math.random() * (2 * time + 5));
+                  that.timerOut = setTimeout(func, timeOut * 1000);
+                });
+              } else {
+                that.tradeHandle(that.api.forsell, {
+                  maincoin: maincoin,
+                  tradecoin: tradcoin,
+                  number: number,
+                  price: price
+                }).then(res => {
+                  console.log(res);
+                  if (res.code != 0) {
+                    clearTimeout(that.timerOut);
+                    return;
+                  }
+                  timeOut = Math.floor(Math.random() * (2 * time + 5));
+                  that.timerOut = setTimeout(func, timeOut * 1000);
+                });
+              }
+              flag = !flag;
             } else {
-              this.tradeHandle(this.api.forsell, {
+              price = nowPrice + data.pricegas * 1;
+              that.tradeHandle(that.api.forbuy, {
                 maincoin: maincoin,
                 tradecoin: tradcoin,
                 number: number,
                 price: price
               }).then(res => {
-                ajaxDone = true;
+                if (res.code != 0) {
+                  clearTimeout(that.timerOut);
+                  return;
+                }
+                timeOut = Math.floor(Math.random() * (2 * time + 5));
+                that.timerOut = setTimeout(func, timeOut * 1000);
               });
             }
-            flag = !flag;
-          } else {
-            price = nowPrice + data.pricegas * 1;
-            this.tradeHandle(this.api.forbuy, {
-              maincoin: maincoin,
-              tradecoin: tradcoin,
-              number: number,
-              price: price
-            }).then(() => {
-              ajaxDone = true;
-            });
-          }
-          ajaxDone = false;
-        });
+          },
+          timeOut * 1000
+        );
       });
-    },
-    randomInterval(time, cb) {
-      let timeOut = Math.floor(Math.random() * (2 * time + 5));
-      let timerFunc = null;
-      timerFunc = setTimeout(function timeFun() {
-        cb && cb();
-        if (timerFunc) clearTimeout(timerFunc);
-        timeOut = Math.floor(Math.random() * (2 * time + 5));
-        timerFunc = setTimeout(timeFun, timeOut * 1000);
-      }, timeOut * 1000);
     },
     // 获取账户状态
     getState() {
@@ -893,6 +907,7 @@ export default {
         } else {
           this.errMsg(res.msg);
         }
+        return Promise.resolve(res);
       });
     },
     // 删除列表某一项

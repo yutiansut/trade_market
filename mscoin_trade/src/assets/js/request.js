@@ -33,7 +33,7 @@ const ajaxRequest = (function () {
     );
 
     function errorState(response) {
-        loadingMask.close();
+        loadingMask && loadingMask.close();
         if (
             response &&
             (response.status === 200 ||
@@ -48,7 +48,6 @@ const ajaxRequest = (function () {
     function successState(response) {
         loadingMask && loadingMask.close();
         let code = response.data.code * 1 || null;
-        let msg = null;
         // 统一判断后端返回的错误码
         if (code == -1) {
             myStorage.remove('token');
