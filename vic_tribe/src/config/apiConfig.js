@@ -148,11 +148,6 @@ let apiCfg = (function () {
             url: "api/tradeCoin/selectMyTrading",
             method: "post"
         },
-        //待交易列表
-        selectMyCoinTrade: {
-            url: "api/tradeCoin/selectMyTrade",
-            method: "post"
-        },
         //交易大厅查询
         selectCoinTradeList: {
             url: "api/tradeCoin/selectTradeList",

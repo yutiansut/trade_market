@@ -81,11 +81,49 @@ const selectMyCoinTrade = Type => {
         console.log(err)
     }
 };
+//交易完成列表
+const selectMyCoinTradeList = (pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectMyCoinTradeList, { pageNo, pageSize });
+        let data = handelResult(result);
+        if (data) { return data };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易中的列表selectMyCoinTrading
+const selectMyCoinTrading = () => {
+    try {
+        let result = await Request(apiConfig.selectMyCoinTrading);
+        let data = handelResult(result);
+        if (data) { return data };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易大厅查询selectCoinTradeList
+const selectCoinTradeList = (tradeType, searchName, pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectCoinTradeList, {
+            tradeType,
+            searchName,
+            pageNo,
+            pageSize
+        });
+        let data = handelResult(result);
+        if (data) { return data };
+    } catch (err) {
+        console.log(err)
+    }
+};
 export {
     cancleMyCoinTradeById,
     confirmMyCoinTrade,
     matchingCoinTrade,
     payMyCoinTrade,
     pushCoinTradeInfo,
-    selectMyCoinTrade
+    selectMyCoinTrade,
+    selectMyCoinTradeList,
+    selectMyCoinTrading,
+    selectCoinTradeList
 }
