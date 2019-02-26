@@ -2,6 +2,7 @@
  * 引入全局样式
  */
 import 'swiper/dist/css/swiper.css';
+import '../static/css/common.css';
 /**
  * 引入第三方库
  */
@@ -67,7 +68,7 @@ Object.assign(Vue.prototype, {
   redirectTo(pathName, params) {
     let data = {
       path: pathName,
-      params: params
+      query: params
     };
     if (!params) delete data.params;
     router.replace(data);
@@ -75,10 +76,13 @@ Object.assign(Vue.prototype, {
   navigateTo(pathName, params) {
     let data = {
       path: pathName,
-      params: params
+      query: params
     };
     if (!params) delete data.params;
     router.push(data);
+  },
+  goBack() {
+    router.go(-1);
   }
 });
 /**全局路由守卫 */

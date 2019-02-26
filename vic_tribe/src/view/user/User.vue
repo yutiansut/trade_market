@@ -7,14 +7,11 @@
       <div class="header-title txt-center h-45 font-16">{{$store.state.headerTitle}}</div>
       <div class="user-info">
         <div class="portrait thumb-50">
-          <img
-            :src="assetConfig.portrait"
-            alt=""
-          >
+          <img :src="$store.state.userInfo.customerHead?$store.state.userInfo.customerHead:assetConfig.portrait">
         </div>
         <div class="info-detail txt-center font-16">
-          <div class="name">张先生</div>
-          <div class="user-id">ID:15156</div>
+          <div class="name">{{$store.state.userInfo.customerName}}</div>
+          <div class="user-id">ID:{{$store.state.userInfo.customerNumber}}</div>
         </div>
       </div>
     </div>
@@ -24,16 +21,18 @@
         :key='i'
         span='6'
       >
-        <img
-          v-if="assetConfig['menuIcon_'+(i+1)]"
-          class="icon"
-          :src="assetConfig['menuIcon_'+(i+1)]"
-          :alt="item.label"
-        >
-        <span
-          class="font-16 color-666"
-          v-text="item.label"
-        ></span>
+        <router-link :to='item.link?item.link:""'>
+          <img
+            v-if="assetConfig['menuIcon_'+(i+1)]"
+            class="icon"
+            :src="assetConfig['menuIcon_'+(i+1)]"
+            :alt="item.label"
+          >
+          <span
+            class="font-16 color-666"
+            v-text="item.label"
+          ></span>
+        </router-link>
       </van-col>
     </van-row>
     <div class="nav">
@@ -60,6 +59,7 @@
   </div>
 </template>
 <script>
+import { selectCustomer } from "../../vuexStore/customerController.js";
 export default {
   data() {
     const assetConfig = {
@@ -123,6 +123,9 @@ export default {
         }
       ]
     };
+  },
+  mounted() {
+    selectCustomer();
   }
 };
 </script>
@@ -152,7 +155,7 @@ export default {
 }
 .menu {
   background: #fff;
-  .van-col {
+  .van-col > a {
     display: flex;
     flex-direction: column;
     justify-content: center;

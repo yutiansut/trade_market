@@ -7,7 +7,7 @@
         <div class="avatar flex flex-v-center">
           <img
             class="thumb-40"
-            :src="portrait"
+            :src="$store.state.userInfo.customerHead||portrait"
           >
           <van-icon
             size='18px'
@@ -20,14 +20,14 @@
           is-link
           size='large'
           title="电话号码"
-          value='13246789'
+          :value='$store.state.userInfo.customerPhone'
           value-class='color-666 font-14'
         ></van-cell>
         <van-cell
           is-link
           size='large'
           title="真实姓名"
-          value='测试员'
+          :value='$store.state.userInfo.trueName||"未填写"'
           value-class='color-666 font-14'
         ></van-cell>
         <van-cell
@@ -41,7 +41,7 @@
           is-link
           size='large'
           value-class='color-666 font-14'
-          value='晟昌科技'
+          :value='$store.state.userInfo.customerName||"未设置"'
           title="用户昵称"
         ></van-cell>
         <van-cell
@@ -68,11 +68,15 @@
   </div>
 </template>
 <script>
+import { selectCustomer } from "../../vuexStore/customerController.js";
 export default {
   data() {
     return {
       portrait: require("../../assets/images/user/portrait.png")
     };
+  },
+  mounted() {
+    selectCustomer();
   }
 };
 </script>

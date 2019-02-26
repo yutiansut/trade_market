@@ -11,91 +11,14 @@ function handelResult(result) {
             });
             return false;
         } else {
-            return result.data;
+            return result;
         }
     } catch (err) {
         console.log(err)
     }
 };
-
-//忘记密码
-const forgetPassword = (phone, password, code) => {
-    try {
-        let result = await Request(apiConfig.forgetPassword, {
-            phone, password, code
-        });
-        let data = handelResult(result);
-        return data;
-    } catch (err) {
-        console.log(err)
-    }
-};
-//获取验证码
-const getSmsCode = (phone, smsType) => {
-    try {
-        let result = await Request(apiConfig.getSmsCode, {
-            phone, smsType
-        });
-        let data = handelResult(result);
-        return data;
-    } catch (err) {
-        console.log(err)
-    }
-};
-//版本号
-const getVersion = () => {
-    try {
-        let result = await Request(apiConfig.getVersion);
-        let data = handelResult(result);
-        return data;
-    } catch (err) {
-        console.log(err)
-    }
-};
-//用户头像修改
-const modifyCustomerHead = (headImg) => {
-    try {
-        let result = await Request(apiConfig.modifyCustomerHead, { headImg });
-        let data = handelResult(result);
-        return data;
-    } catch (err) {
-        console.log(err)
-    }
-};
-//修改登录密码
-const modifyLoginPass = (oldPassword, phone, newPassword, code) => {
-    try {
-        let result = await Request(apiConfig.modifyLoginPass,
-            {
-                oldPassword,
-                phone,
-                newPassword,
-                code
-            });
-        let data = handelResult(result);
-        return data;
-    } catch (err) {
-        console.log(err)
-    }
-};
-//修改交易密码
-const modifyPayPass = (oldPassword, phone, newPassword, code) => {
-    try {
-        let result = await Request(apiConfig.modifyPayPass,
-            {
-                oldPassword,
-                phone,
-                newPassword,
-                code
-            });
-        let data = handelResult(result);
-        return data;
-    } catch (err) {
-        console.log(err)
-    }
-};
 //登录
-const Login = (phone, password) => {
+const Login = async (phone, password) => {
     try {
         let result = await Request(apiConfig.login, {
             phone, password
@@ -107,7 +30,7 @@ const Login = (phone, password) => {
     }
 };
 //注册
-const Register = (userName, phone, password, code, parentPhone, payPass) => {
+const Register = async (phone, password, code, parentPhone, payPass, userName) => {
     try {
         let result = await Request(apiConfig.register, {
             userName,
@@ -123,8 +46,88 @@ const Register = (userName, phone, password, code, parentPhone, payPass) => {
         console.log(err)
     }
 };
+//忘记密码
+const forgetPassword = async (phone, password, code) => {
+    try {
+        let result = await Request(apiConfig.forgetPassword, {
+            phone, password, code
+        });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//获取验证码
+const getSmsCode = async (phone, smsType) => {
+    try {
+        let result = await Request(apiConfig.getSmsCode, {
+            phone, smsType
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast(data.msg);
+            return data;
+        }
+    } catch (err) {
+        console.log(err)
+    }
+};
+//版本号
+const getVersion = async () => {
+    try {
+        let result = await Request(apiConfig.getVersion);
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//用户头像修改
+const modifyCustomerHead = async (headImg) => {
+    try {
+        let result = await Request(apiConfig.modifyCustomerHead, { headImg });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//修改登录密码
+const modifyLoginPass = async (oldPassword, phone, newPassword, code) => {
+    try {
+        let result = await Request(apiConfig.modifyLoginPass,
+            {
+                oldPassword,
+                phone,
+                newPassword,
+                code
+            });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err)
+    }
+};
+//修改交易密码
+const modifyPayPass = async (oldPassword, phone, newPassword, code) => {
+    try {
+        let result = await Request(apiConfig.modifyPayPass,
+            {
+                oldPassword,
+                phone,
+                newPassword,
+                code
+            });
+        let data = handelResult(result);
+        return data;
+    } catch (err) {
+        console.log(err)
+    }
+};
+
 //上传图片
-const uploadImage = (file) => {
+const uploadImage = async file => {
     try {
         let result = await Request(apiConfig.uploadImage, {
             file
@@ -136,7 +139,7 @@ const uploadImage = (file) => {
     }
 };
 //上传多图
-const uploadImages = (files) => {
+const uploadImages = async files => {
     try {
         let result = await Request(apiConfig.uploadImages, {
             files
@@ -148,7 +151,7 @@ const uploadImages = (files) => {
     }
 };
 //上传多图
-const uploadImagesByBase64 = (baseString) => {
+const uploadImagesByBase64 = async baseString => {
     try {
         let result = await Request(apiConfig.uploadImagesByBase64, {
             baseString

@@ -11,7 +11,7 @@ const ajaxRequest = (function () {
     ajaxCount++;
     axios.interceptors.request.use(
         config => {
-            if (config.showLoading) {
+            if (config.showLoading && ajaxCount == 0) {
                 Toast.loading({
                     spinnerType: "fading-circle",
                     message: '加载中...'
@@ -52,21 +52,21 @@ const ajaxRequest = (function () {
         let msg = null;
         //统一判断后端返回的错误码
         switch (code) {
-            case '0':
+            case 0:
                 break;
-            case '1':
+            case 1:
                 msg = response.data.msg || "网络不给力";
                 Toast({
                     message: msg,
                     position: 'bottom'
                 });
                 break;
-            case '2':
+            case 2:
                 msg = "登录信息已失效！";
                 myStorage.set("isLogin", false);
                 Store.commit('loginState', false);
                 if (router.history.current.path != '/login') {
-                    router.push({ path: "/login" });
+                    router.push({ path: "/userentry/login" });
                 };
                 Toast({
                     message: msg,
@@ -79,7 +79,7 @@ const ajaxRequest = (function () {
     return (opts, data) => {
         let Public = {
             //公共参数
-            token: localStorage.getItem("token")
+            token: myStorage.get("token")
         };
 
         let httpDefaultOpts = {

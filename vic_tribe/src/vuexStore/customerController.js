@@ -1,6 +1,7 @@
 import Request from '../assets/js/request';
 import apiConfig from '../config/apiConfig';
 import { Toast } from "vant";
+import Store from './store';
 // 处理后台返回结果集
 function handelResult(result) {
     try {
@@ -17,9 +18,16 @@ function handelResult(result) {
         console.log(err)
     }
 };
-
+// 检测空对象
+function isEmptyObject(obj) {
+    let name;
+    for (name in obj) {
+        return false;
+    }
+    return true;
+};
 //忘记密码POST /api/customer/UnclaimedAward
-const UnclaimedAward = () => {
+const UnclaimedAward = async () => {
     try {
         let result = await Request(apiConfig.UnclaimedAward);
         let data = handelResult(result);
@@ -29,7 +37,7 @@ const UnclaimedAward = () => {
     }
 };
 //实名认证
-const checkAuth = () => {
+const checkAuth = async () => {
     try {
         let result = await Request(apiConfig.checkAuth);
         let data = handelResult(result);
@@ -39,7 +47,7 @@ const checkAuth = () => {
     }
 };
 //领取奖励
-const getAward = id => {
+const getAward = async id => {
     try {
         let result = await Request(apiConfig.getAward, { id });
         let data = handelResult(result);
@@ -49,7 +57,7 @@ const getAward = id => {
     }
 };
 //反馈列表getFeedbackList
-const getFeedbackList = () => {
+const getFeedbackList = async () => {
     try {
         let result = await Request(apiConfig.getFeedbackList);
         let data = handelResult(result);
@@ -61,7 +69,7 @@ const getFeedbackList = () => {
     }
 };
 //反馈类型
-const getFeedbackType = () => {
+const getFeedbackType = async () => {
     try {
         let result = await Request(apiConfig.getFeedbackType);
         let data = handelResult(result);
@@ -71,7 +79,7 @@ const getFeedbackType = () => {
     }
 };
 //修改个人信息
-const modifyCustomerInfo = (bankAddress, bankInfo, trueName, customerCard, bankName, bankCard) => {
+const modifyCustomerInfo = async (bankAddress, bankInfo, trueName, customerCard, bankName, bankCard) => {
     try {
         let result = await Request(apiConfig.modifyCustomerInfo, {
             bankAddress,
@@ -88,7 +96,7 @@ const modifyCustomerInfo = (bankAddress, bankInfo, trueName, customerCard, bankN
     }
 };
 //实名认证pushAuth
-const pushAuth = (bankAddress, customerAlipay, trueName, customerCard, bankName, bankCard) => {
+const pushAuth = async (bankAddress, customerAlipay, trueName, customerCard, bankName, bankCard) => {
     try {
         let result = await Request(apiConfig.pushAuth, {
             bankAddress,
@@ -106,7 +114,7 @@ const pushAuth = (bankAddress, customerAlipay, trueName, customerCard, bankName,
     }
 };
 //发布反馈
-const pushFeedback = (type, context) => {
+const pushFeedback = async (type, context) => {
     try {
         let result = await Request(apiConfig.pushFeedback, {
             type,
@@ -119,17 +127,22 @@ const pushFeedback = (type, context) => {
     }
 };
 //个人账户查询
-const selectAccount = () => {
-    try {
-        let result = await Request(apiConfig.selectAccount);
-        let data = handelResult(result);
-        if (data) { return data };
-    } catch (err) {
-        console.log(err)
+const selectAccount = async () => {
+    if (isEmptyObject(Store.state.accountInfo)) {
+        try {
+            let result = await Request(apiConfig.selectAccount);
+            let data = handelResult(result);
+            if (data) {
+                Store.dispatch("getAccountInfo", data)
+                return data;
+            };
+        } catch (err) {
+            console.log(err)
+        }
     }
 };
 //查询banner @type 0 首页 1 商城
-const selectBanner = type => {
+const selectBanner = async type => {
     try {
         let result = await Request(apiConfig.selectBanner, { type });
         let data = handelResult(result);
@@ -139,17 +152,23 @@ const selectBanner = type => {
     }
 };
 //查询个人信息selectCustomer
-const selectCustomer = () => {
-    try {
-        let result = await Request(apiConfig.selectCustomer);
-        let data = handelResult(result);
-        if (data) { return data };
-    } catch (err) {
-        console.log(err)
+const selectCustomer = async () => {
+    if (isEmptyObject(Store.state.accountInfo)) {
+        try {
+            let result = await Request(apiConfig.selectCustomer);
+            let data = handelResult(result);
+            if (data) {
+                Store.dispatch('updateUserInfo', data);
+                return data;
+            };
+        } catch (err) {
+            console.log(err)
+        }
     }
+
 };
 //根据手机号查找用户
-const selectCustomerByPhone = id => {
+const selectCustomerByPhone = async id => {
     try {
         let result = await Request(apiConfig.selectCustomerByPhone, { id });
         let data = handelResult(result);
@@ -159,7 +178,7 @@ const selectCustomerByPhone = id => {
     }
 };
 //我的圈友
-const selectFriends = (pageNo, pageSize) => {
+const selectFriends = async (pageNo, pageSize) => {
     try {
         let result = await Request(apiConfig.selectFriends, {
             pageNo,
@@ -172,7 +191,7 @@ const selectFriends = (pageNo, pageSize) => {
     }
 };
 //首页信息
-const selectIndexView = () => {
+const selectIndexView = async () => {
     try {
         let result = await Request(apiConfig.selectIndexView);
         let data = handelResult(result);
@@ -182,16 +201,15 @@ const selectIndexView = () => {
     }
 };
 //公告列表
-const selectNotice = type => {
+const selectNotice = async (type, pageNo, pageSize) => {
     try {
-        let result = await Request(apiConfig.selectNotice, { type });
+        let result = await Request(apiConfig.selectNotice, { type, pageNo, pageSize });
         let data = handelResult(result);
         if (data) { return data };
     } catch (err) {
         console.log(err)
     }
 };
-
 export {
     UnclaimedAward,
     checkAuth,

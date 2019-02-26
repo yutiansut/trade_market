@@ -9,13 +9,13 @@
       <span class="font-18">VIC&nbsp;&nbsp;tribe</span>
     </div>
     <p class="label font-14 color-666">
-      您可以使用VIC tribe账号/邮箱账号进行注册
+      您可以使用手机号进行注册
     </p>
     <form class="form">
-      <tab-bar
+      <!-- <tab-bar
         @onTabChange='onTabChange'
         :tabItem='tabItem'
-      ></tab-bar>
+      ></tab-bar> -->
       <van-row v-show="type=='0'">
         <van-col
           class="font-16"
@@ -56,12 +56,16 @@
           <input
             v-model="password"
             autocomplete='off'
-            type="password"
+            :type="passwordVisable?'text':'password'"
             placeholder="请输入密码"
           >
         </van-col>
         <van-col span='4'>
-          <i class="iconfont font-24 icon-icon_eye-close"></i>
+          <i
+            class="iconfont font-24"
+            @touchend="toggleVisiable"
+            :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
+          ></i>
         </van-col>
       </van-row>
       <van-row>
@@ -70,12 +74,16 @@
           <input
             v-model="repassword"
             autocomplete='off'
-            type="password"
+            :type="passwordVisable?'text':'password'"
             placeholder="请再次输入密码"
           >
         </van-col>
         <van-col span='4'>
-          <i class="iconfont font-24 icon-icon_eye-close"></i>
+          <i
+            @touchend="toggleVisiable"
+            class="iconfont font-24"
+            :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
+          ></i>
         </van-col>
       </van-row>
       <van-row>
@@ -90,13 +98,33 @@
         </van-col>
         <van-col span='8'>
           <span
-            @click='getCode'
+            @touchend='getCode'
             v-text="codeText"
           ></span>
         </van-col>
       </van-row>
+      <van-row v-show="type=='0'">
+        <van-col
+          class="font-16"
+          span='6'
+        >推荐人</van-col>
+        <van-col
+          class="font-16"
+          span='18'
+        >
+          <input
+            v-model="parentPhone"
+            autocomplete='off'
+            type="text"
+            placeholder="请输入推荐人手机号"
+          >
+        </van-col>
+      </van-row>
     </form>
-    <button class="btn-block btn-large btn-default btn-active btn-round">注册</button>
+    <button
+      @touchend='onSubmit'
+      class="btn-block btn-large btn-default btn-active btn-round"
+    >注册</button>
     <div class="terms font-16">
       <p class="color-999 font-14">点击“注册”按钮即表示您同意</p>
       <a href="">服务条款</a><a href="">风险与合规披露</a><a href="">隐私政策声明</a>
@@ -105,25 +133,80 @@
 </template>
 <script>
 import accountHead from "@/components/account/accountHead";
-import { verCodeMixin } from "@/mixins/mixins.js";
+import { verCodeMixin, passwordVisable } from "@/mixins/mixins.js";
+import { Register, getSmsCode } from "@/vuexStore/commonController.js";
 export default {
   components: { accountHead },
-  mixins: [verCodeMixin],
+  mixins: [verCodeMixin, passwordVisable],
   data() {
     return {
-      tabItem: ["手机号", "邮箱"],
+      // tabItem: ["手机号", "邮箱"],
       type: 0,
-      account: "",
-      password: "",
-      repassword: ""
+      account: "15623454605",
+      password: "123456",
+      repassword: "123456",
+      parentPhone: "15623454605"
     };
   },
   methods: {
-    onTabChange(i) {
-      this.type = i;
+    validate() {
+      let code = 0;
+      let msg = "";
+      if (this.account == "") {
+        msg = "手机号不能为空";
+        code = 1;
+        return { code, msg };
+      }
+      if (!this.Validate.isPhone(this.account)) {
+        msg = "手机号码格式不正确";
+        code = 1;
+        return { code, msg };
+      }
+      if (!this.Validate.isPassword(this.password)) {
+        msg = "密码必须为6-12个字符";
+        code = 1;
+        return { code, msg };
+      }
+      if (this.password !== this.repassword) {
+        msg = "两次密码不一致";
+        code = 1;
+        return { code, msg };
+      }
+
+      if (!this.code) {
+        msg = "短信验证码不能为空";
+        code = 1;
+        return { code, msg };
+      }
+      if (!this.Validate.isPhone(this.parentPhone)) {
+        msg = "请输入正确的推荐人账号";
+        code = 1;
+        return { code, msg };
+      }
+      return { code, msg };
+    },
+    onSubmit() {
+      let { code, msg } = this.validate();
+      if (code != 0) {
+        this.$toast(msg);
+        return;
+      }
+      Register(this.account, this.password, this.code, this.parentPhone).then(
+        res => {
+          if (res) this.navigateTo("/userentry/login");
+        }
+      );
     },
     getCode() {
-      this.timeCountDown();
+      if (!this.Validate.isPhone(this.account)) {
+        this.$toast("手机号码格式不正确");
+        return;
+      }
+      if (this.canGetCode) {
+        getSmsCode(this.account, 1).then(res => {
+          this.timeCountDown();
+        });
+      }
     }
   }
 };

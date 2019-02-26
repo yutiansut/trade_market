@@ -23,15 +23,24 @@
     <div class="account-info">
       <div :style="{backgroundImage:'url('+assetConfig.totalAsset+')'}">
         <p class="label font-bold font-16">总资产</p>
-        <p class="val font-bold font-22">0.001</p>
+        <p
+          class="val font-bold font-22"
+          v-text="$store.state.accountInfo.customerIntegral"
+        ></p>
       </div>
       <div :style="{backgroundImage:'url('+assetConfig.balance+')'}">
         <p class="label font-bold font-16">余额</p>
-        <p class="val font-bold font-22">0.001</p>
+        <p
+          class="val font-bold font-22"
+          v-text="$store.state.accountInfo.useMoney"
+        ></p>
       </div>
       <div :style="{backgroundImage:'url('+assetConfig.VIC+')'}">
         <p class="label font-bold font-16">VIC</p>
-        <p class="val font-bold font-22">0.001</p>
+        <p
+          class="val font-bold font-22"
+          v-text="$store.state.accountInfo.useCoin"
+        ></p>
       </div>
     </div>
     <!-- 新消息提示 -->
@@ -46,7 +55,19 @@
       <van-col
         span='16'
         class="font-16 news-title"
-      >您有一新的收入，点击查看详情</van-col>
+      >
+        <swiper :options="noticeSwiper">
+          <template v-for="item in scrollNotices">
+            <swiper-slide :key='item.id'>
+              <router-link
+                class="font-14 van-ellipsis"
+                :to='"/news/detail/"+item.id'
+                v-text="item.noticeTitle"
+              ></router-link>
+            </swiper-slide>
+          </template>
+        </swiper>
+      </van-col>
       <van-col
         span='4'
         class="flex flex-end"
@@ -107,7 +128,7 @@
         <news-list
           v-for="(item,i) in $store.state.newsList"
           :key='item.id||i'
-          :news-title='item.title'
+          :news-title='item.noticeTitle'
           :img-src='item.thumb'
           :news-tag='item.tag'
           :link-to='"/news/detail/"+item.id'
@@ -118,10 +139,12 @@
 </template>
 <script>
 import newsList from "@/components/other/newsList";
+import { selectNotice, selectAccount } from "@/vuexStore/customerController.js";
+import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { Toast } from "vant";
 let count = 0;
 export default {
-  components: { newsList },
+  components: { newsList, swiper, swiperSlide },
   data() {
     const assetConfig = {
       logo: require("@/assets/images/home/home_logo.png"),
@@ -131,9 +154,8 @@ export default {
       menuIcon_2: require("@/assets/images/home/zvpt.png"),
       menuIcon_3: require("@/assets/images/home/Goldzz.png"),
       menuIcon_4: require("@/assets/images/home/wytg.png"),
-      menuIcon_5: require("@/assets/images/home/dxzz.png"),
-      menuIcon_6: require("@/assets/images/home/VICHQ.png"),
-      menuIcon_7: require("@/assets/images/home/txjl.png"),
+      menuIcon_5: require("@/assets/images/home/VICHQ.png"),
+      menuIcon_6: require("@/assets/images/home/txjl.png"),
       totalAsset: require("@/assets/images/home/total_asset.png"),
       balance: require("@/assets/images/home/balance.png"),
       VIC: require("@/assets/images/home/VIC.png"),
@@ -142,14 +164,21 @@ export default {
     };
     return {
       assetConfig: assetConfig,
+      noticeSwiper: {
+        loop: true,
+        height: 45,
+        direction: "vertical",
+        autoplay: true,
+        speed: 300
+      },
       menuItem: [
         {
-          label: "货币转换",
+          label: "货币兑换",
           link: "/currency_exchange"
         },
         {
           label: "VIC交易",
-          link: "/victrade"
+          link: "/trade/entrust_trade"
         },
         {
           label: "定向交易",
@@ -168,27 +197,29 @@ export default {
           link: "/record/bill_record"
         }
       ],
-      newsList: []
+      scrollNotices: [],
+      pageNo: 1,
+      pageSize: 5,
+      pageCount: 0 //总页数
     };
   },
   mounted() {
-    let arrObj = [
-      {
-        id: "1",
-        thumb: "",
-        title: "这里是新闻标题，测试的标题",
-        tag: "交易"
-      },
-      {
-        id: "2",
-        thumb: "",
-        title: "这里是新闻标题，测试的标题",
-        tag: "交易"
-      }
-    ];
-    this.$store.dispatch("getNewsList", arrObj);
+    this.loadData();
   },
-  methods: {}
+  methods: {
+    async loadData() {
+      selectAccount();
+      // 咨询公告
+      let noticeResult = await selectNotice(1, this.pageNo, this.pageSize);
+      let scrollNoticeRes = await selectNotice(2);
+      if (noticeResult) {
+        this.pageCount = noticeResult.pageCount;
+        this.$store.dispatch("getNewsList", noticeResult.list);
+      }
+      noticeResult && (this.pageNo = noticeResult.currentPageNo);
+      scrollNoticeRes && (this.scrollNotices = scrollNoticeRes.list);
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -250,6 +281,7 @@ $padding: 3.3vw;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    line-height: 45px;
   }
   .tag {
     width: 6.6vh;

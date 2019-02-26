@@ -49,6 +49,7 @@ const routes = [
         name: "Home",
         meta: {
           title: "VIC首页",
+          auth: true,
           removeHeader: true
         }
       },

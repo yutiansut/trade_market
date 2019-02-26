@@ -21,28 +21,34 @@ function handelResult(result) {
  * Coin trade 交易
  */
 // 撤销订单
-const cancleMyCoinTradeById = id => {
+const cancleMyCoinTradeById = async id => {
     try {
         let result = await Request(apiConfig.cancleMyCoinTradeById, { id });
         let data = handelResult(result);
-        if (data) { return data };
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
     } catch (err) {
         console.log(err)
     }
 };
 
 //确认订单confirmMyCoinTrade
-const confirmMyCoinTrade = id => {
+const confirmMyCoinTrade = async id => {
     try {
         let result = await Request(apiConfig.confirmMyCoinTrade, { id });
         let data = handelResult(result);
-        if (data) { return data };
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
     } catch (err) {
         console.log(err)
     }
 };
 //匹配交易matchingCoinTrade
-const matchingCoinTrade = (id, payPass) => {
+const matchingCoinTrade = async (id, payPass) => {
     try {
         let result = await Request(apiConfig.matchingCoinTrade, { id, payPass });
         let data = handelResult(result);
@@ -52,7 +58,7 @@ const matchingCoinTrade = (id, payPass) => {
     }
 };
 // 上传凭证payMyCoinTrade
-const payMyCoinTrade = (id, files) => {
+const payMyCoinTrade = async (id, files) => {
     try {
         let result = await Request(apiConfig.payMyCoinTrade, { id, files });
         let data = handelResult(result);
@@ -62,7 +68,7 @@ const payMyCoinTrade = (id, files) => {
     }
 };
 //发布交易信息pushCoinTradeInfo
-const pushCoinTradeInfo = (tradeType, tradePrice, moneyNum, payPass) => {
+const pushCoinTradeInfo = async (tradeType, tradePrice, moneyNum, payPass) => {
     try {
         let result = await Request(apiConfig.pushCoinTradeInfo, { tradeType, tradePrice, moneyNum, payPass });
         let data = handelResult(result);
@@ -72,7 +78,7 @@ const pushCoinTradeInfo = (tradeType, tradePrice, moneyNum, payPass) => {
     }
 };
 //待交易列表selectMyCoinTrade
-const selectMyCoinTrade = Type => {
+const selectMyCoinTrade = async Type => {
     try {
         let result = await Request(apiConfig.selectMyCoinTrade, { Type });
         let data = handelResult(result);
@@ -82,7 +88,7 @@ const selectMyCoinTrade = Type => {
     }
 };
 //交易完成列表
-const selectMyCoinTradeList = (pageNo, pageSize) => {
+const selectMyCoinTradeList = async (pageNo, pageSize) => {
     try {
         let result = await Request(apiConfig.selectMyCoinTradeList, { pageNo, pageSize });
         let data = handelResult(result);
@@ -92,7 +98,7 @@ const selectMyCoinTradeList = (pageNo, pageSize) => {
     }
 };
 //交易中的列表selectMyCoinTrading
-const selectMyCoinTrading = () => {
+const selectMyCoinTrading = async () => {
     try {
         let result = await Request(apiConfig.selectMyCoinTrading);
         let data = handelResult(result);
@@ -102,7 +108,7 @@ const selectMyCoinTrading = () => {
     }
 };
 //交易大厅查询selectCoinTradeList
-const selectCoinTradeList = (tradeType, searchName, pageNo, pageSize) => {
+const selectCoinTradeList = async (tradeType, searchName, pageNo, pageSize) => {
     try {
         let result = await Request(apiConfig.selectCoinTradeList, {
             tradeType,
@@ -116,6 +122,341 @@ const selectCoinTradeList = (tradeType, searchName, pageNo, pageSize) => {
         console.log(err)
     }
 };
+//撤单cancleMyConvertTradeById
+const cancleMyConvertTradeById = async id => {
+    try {
+        let result = await Request(apiConfig.cancleMyConvertTradeById, {
+            id
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//确认交易confirmMyConvertTrade
+const confirmMyConvertTrade = async id => {
+    try {
+        let result = await Request(apiConfig.confirmMyConvertTrade, {
+            id
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//链转余额doCoinToMoney
+const doCoinToMoney = async (moneyNum, payPass) => {
+    try {
+        let result = await Request(apiConfig.doCoinToMoney, {
+            moneyNum,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//余额转积分
+const doMoneryToIntegral = async (moneyNum, payPass) => {
+    try {
+        let result = await Request(apiConfig.doMoneryToIntegral, {
+            moneyNum,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//余额转链doMoneyToCoin
+const doMoneyToCoin = async (moneyNum, payPass) => {
+    try {
+        let result = await Request(apiConfig.doMoneyToCoin, {
+            moneyNum,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//匹配转账matchTransferAccount
+const matchTransferAccount = async (moneyNum, targetPhone, payPass) => {
+    try {
+        let result = await Request(apiConfig.matchTransferAccount, {
+            moneyNum,
+            targetPhone,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//上传交易凭证payMyConvertTrade
+const payMyConvertTrade = async (id, files) => {
+    try {
+        let result = await Request(apiConfig.matchTransferAccount, {
+            id,
+            files
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//转化记录selectConvert
+const selectConvert = async (pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectConvert, {
+            pageNo,
+            pageSize
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//转账中 selectConvertTrading
+const selectConvertTrading = async () => {
+    try {
+        let result = await Request(apiConfig.selectConvertTrading);
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//收支流水 selectCustomerProfit
+const selectCustomerProfit = async (status, pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectCustomerProfit, {
+            status,
+            pageNo,
+            pageSize
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易顶部数据selectIndexData
+const selectIndexData = async () => {
+    try {
+        let result = await Request(apiConfig.selectIndexData);
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易完成列表selectMyConvertTradeList
+const selectMyConvertTradeList = async (pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectMyConvertTradeList, {
+            pageNo, pageSize
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+const tradeByQRCode = async (moneyNum, targetPhone, payPass) => {
+    try {
+        let result = await Request(apiConfig.tradeByQRCode, {
+            moneyNum,
+            targetPhone,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+/**
+ * 货币交易
+ */
+//撤单 cancleMyMoneyTradeById
+const cancleMyMoneyTradeById = async id => {
+    try {
+        let result = await Request(apiConfig.cancleMyMoneyTradeById, {
+            id
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//确认订单 confirmMyMoneyTrade
+const confirmMyMoneyTrade = async id => {
+    try {
+        let result = await Request(apiConfig.confirmMyMoneyTrade, {
+            id
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//匹配交易matchingMoneyTrade
+const matchingMoneyTrade = async (id, payPass) => {
+    try {
+        let result = await Request(apiConfig.matchingMoneyTrade, {
+            id,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//上传交易凭证payMyMoneyTrade
+const payMyMoneyTrade = async (id, files) => {
+    try {
+        let result = await Request(apiConfig.payMyMoneyTrade, {
+            id,
+            files
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//发布交易信息pushMoneyTradeInfo
+const pushMoneyTradeInfo = async (tradeType, tradePrice, moneyNum, payPass) => {
+    try {
+        let result = await Request(apiConfig.pushMoneyTradeInfo, {
+            tradeType,
+            tradePrice,
+            moneyNum,
+            payPass
+        });
+        let data = handelResult(result);
+        if (data) {
+            Toast.success(result.msg);
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//待交易列表selectMyMoneyTrade
+const selectMyMoneyTrade = async Type => {
+    try {
+        let result = await Request(apiConfig.selectMyMoneyTrade, {
+            Type
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易完成列表
+const selectMyMoneyTradeList = async (pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectMyMoneyTradeList, {
+            pageNo,
+            pageSize
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易中列表selectMyMoneyTrading
+const selectMyMoneyTrading = async () => {
+    try {
+        let result = await Request(apiConfig.selectMyMoneyTrading);
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//交易大厅selectMoneyTradeList
+const selectMoneyTradeList = async (tradeType, searchName, pageNo, pageSize) => {
+    try {
+        let result = await Request(apiConfig.selectMoneyTradeList, {
+            tradeType,
+            searchName,
+            pageNo,
+            pageSize
+        });
+        let data = handelResult(result);
+        if (data) {
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
 export {
     cancleMyCoinTradeById,
     confirmMyCoinTrade,
@@ -125,5 +466,27 @@ export {
     selectMyCoinTrade,
     selectMyCoinTradeList,
     selectMyCoinTrading,
-    selectCoinTradeList
+    selectCoinTradeList,
+    cancleMyConvertTradeById,
+    confirmMyConvertTrade,
+    doCoinToMoney,
+    doMoneryToIntegral,
+    doMoneyToCoin,
+    matchTransferAccount,
+    payMyConvertTrade,
+    selectConvert,
+    selectConvertTrading,
+    selectCustomerProfit,
+    selectIndexData,
+    selectMyConvertTradeList,
+    tradeByQRCode,
+    cancleMyMoneyTradeById,
+    confirmMyMoneyTrade,
+    matchingMoneyTrade,
+    payMyMoneyTrade,
+    pushMoneyTradeInfo,
+    selectMyMoneyTrade,
+    selectMyMoneyTradeList,
+    selectMyMoneyTrading,
+    selectMoneyTradeList
 }

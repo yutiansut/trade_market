@@ -9,6 +9,7 @@
           class="p-abs abs-v-center"
           size='1.8rem'
           name="arrow-left"
+          @touchend='goBack'
         />
         <span>{{$store.state.headerTitle}}</span>
       </div>
@@ -20,9 +21,9 @@
           >
         </div>
         <div class="info">
-          <span class="font-14">昵称：我的昵称</span>
-          <span class="font-12">ID：456456</span>
-          <span class="font-12">团队：5</span>
+          <span class="font-14">昵称：{{$store.state.userInfo.customerName}}</span>
+          <span class="font-12">ID：{{$store.state.userInfo.customerNumber}}</span>
+          <span class="font-12">团队：{{$store.state.userInfo.teamNum}}</span>
         </div>
       </div>
     </div>
@@ -36,30 +37,45 @@
           span='5'
         >注册时间</van-col>
       </van-row>
-      <div class="tbody font-14">
-        <van-row>
+      <div
+        v-if="friendList.length>0"
+        class="tbody font-14"
+      >
+        <van-row
+          v-for="(item,i) in friendList"
+          :key='i'
+        >
           <van-col
             class="color-666"
             span='5'
-          >科技</van-col>
+          >{{item.customerName}}</van-col>
           <van-col
             class="color-666"
             span='9'
-          >13245678997</van-col>
+          >{{item.customerPhone}}</van-col>
           <van-col
             class="color-666"
             span='5'
-          >团队5</van-col>
+          >团队{{item.teamNum}}</van-col>
           <van-col
             class="color-666 txt-rt"
             span='5'
-          >2018/8/8</van-col>
+          >{{item.registerTime}}</van-col>
         </van-row>
       </div>
+      <div
+        v-else
+        class="no-data"
+      >暂无数据</div>
     </div>
   </div>
 </template>
 <script>
+import {
+  selectCustomer,
+  selectFriends
+} from "../../vuexStore/customerController.js";
+
 export default {
   data() {
     const assetConfig = {
@@ -67,8 +83,26 @@ export default {
       portrait: require("@/assets/images/user/portrait.png")
     };
     return {
-      assetConfig: assetConfig
+      assetConfig: assetConfig,
+      friendList: [],
+      pageNo: 0,
+      pageSize: 10,
+      pageCount: 0
     };
+  },
+  mounted() {
+    this.loadData();
+  },
+  methods: {
+    async loadData() {
+      selectCustomer();
+      let friendsResult = await selectFriends(this.pageNo, this.pageSize);
+      if (friendsResult) {
+        this.pageNo = friendsResult.pageNo;
+        this.pageCount = friendsResult.pageCount;
+        this.friendList = friendsResult.list;
+      }
+    }
   }
 };
 </script>

@@ -6,13 +6,13 @@
       <span class="font-18">VIC&nbsp;&nbsp;tribe</span>
     </div>
     <p class="label font-14 color-666">
-      您可以使用VIC tribe账号/邮箱账号进行登录
+      您可以使用VIC tribe账号/手机号进行登录
     </p>
     <form class="form">
-      <tab-bar
+      <!-- <tab-bar
         @onTabChange='onTabChange'
         :tabItem='tabItem'
-      ></tab-bar>
+      ></tab-bar> -->
       <van-row v-show="type=='0'">
         <van-col
           class="font-16"
@@ -23,6 +23,7 @@
           span='18'
         >
           <input
+            v-model="account"
             autocomplete='off'
             type="text"
             placeholder="请输入手机号"
@@ -52,19 +53,19 @@
           <input
             v-model="password"
             autocomplete='off'
-            type="password"
+            :type="passwordVisable?'text':'password'"
             placeholder="请输入密码"
           >
         </van-col>
         <van-col span='4'>
           <i
-            @click="toggleVisiable"
+            @touchend="toggleVisiable"
             class="iconfont font-24"
-            :class="passwordVisable?'icon-icon_eye-open':'icon-icon_eye-close'"
+            :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
           ></i>
         </van-col>
       </van-row>
-      <van-row>
+      <!-- <van-row>
         <van-col span='6'>验证码</van-col>
         <van-col span='10'>
           <input
@@ -80,13 +81,16 @@
             v-text="codeText"
           ></span>
         </van-col>
-      </van-row>
+      </van-row> -->
     </form>
     <router-link
       class="font-14 fr link-to"
-      to=''
+      to='/user/repassword_1'
     >忘记密码？</router-link>
-    <button class="btn-block btn-large btn-default btn-active btn-round">登录</button>
+    <button
+      @touchend='onSubmit'
+      class="btn-block btn-large btn-default btn-active btn-round"
+    >登录</button>
     <a
       href=""
       class="down-load font-16"
@@ -96,13 +100,13 @@
 </template>
 <script>
 import accountHead from "@/components/account/accountHead";
-import { verCodeMixin, passwordVisable } from "@/mixins/mixins.js";
+import { passwordVisable } from "@/mixins/mixins.js";
+import { Login, getSmsCode } from "@/vuexStore/commonController.js";
 export default {
   components: { accountHead, passwordVisable },
-  mixins: [verCodeMixin, passwordVisable],
+  mixins: [passwordVisable],
   data() {
     return {
-      tabItem: ["手机号", "邮箱"],
       type: 0,
       account: "",
       password: ""
@@ -110,19 +114,39 @@ export default {
   },
   methods: {
     validate() {
-      let code = 1;
+      let code = 0;
       let msg = "";
       if (this.account == "") {
-        msg = "用户名不能为空";
-        code = 0;
-      } else if (!this.Validate(this.account)) {
-        msg = "用户名必须6-12位字母或者数字";
-        code = 0;
+        msg = "手机号不能为空";
+        code = 1;
+        return { code, msg };
+      }
+      if (!this.Validate.isPhone(this.account)) {
+        msg = "手机号码格式不正确";
+        code = 1;
+        return { code, msg };
+      }
+      if (!this.Validate.isPassword(this.password)) {
+        msg = "密码必须为6-12个字符";
+        code = 1;
+        return { code, msg };
       }
       return { code, msg };
     },
-    getCode() {
-      this.timeCountDown();
+    onSubmit() {
+      let { code, msg } = this.validate();
+      if (code != 0) {
+        this.$toast(msg);
+        return;
+      }
+      Login(this.account, this.password).then(res => {
+        if (res) {
+          this.$store.dispatch("changeLoginState", true);
+          this.storage.set("isLogin", true);
+          this.storage.set("token", res.data.token);
+          this.navigateTo("/");
+        }
+      });
     },
     onTabChange(i) {
       this.type = i;
@@ -136,7 +160,7 @@ export default {
     display: block;
     text-align: center;
     color: #fff;
-    margin-top: 2.7vh;
+    margin-top: 3.7vh;
   }
   .version {
     bottom: 2rem;

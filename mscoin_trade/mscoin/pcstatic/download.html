@@ -42,21 +42,15 @@
     }
 
     .logo_box {
-      width: 90px;
-      position: absolute;
+      width: 160px;
       box-sizing: border-box;
-      bottom: 5%;
-      left: 50%;
-      transform: translateX(-50%);
-
+      margin: 8% auto auto;
     }
 
     .download_box_div {
       width: 60%;
       left: 20%;
-      position: absolute;
-      top: 46vh;
-      z-index: 10;
+      margin: 62vh auto auto;
     }
 
     .download_android {
@@ -68,6 +62,26 @@
       width: 100%;
       display: block;
       margin-bottom: 20px;
+    }
+
+    .instructions {
+      color: red;
+      margin: 20px auto;
+    }
+
+    .instructions>h5 {
+      text-align: center;
+    }
+
+    .instructions>ol {
+      width: 80%;
+      margin: 0 auto;
+    }
+
+    .instructions>ol>li {
+      text-align: left;
+      margin-top: 10px;
+      font-size: 14px;
     }
 
     @media screen and (max-width: 500px) {
@@ -84,6 +98,8 @@
         height: 100%;
         min-height: 560px;
         margin: auto;
+        padding-top: 1px;
+        box-sizing: border-box;
         background: url("./img/bg.jpg") no-repeat;
         background-size: 100% auto;
         position: relative;
@@ -126,6 +142,15 @@
       <a href="AMCoin.apk" class="download_android">
         <img src="./img/android_btn.png" alt="" srcset="">
       </a>
+    </div>
+    <div class="instructions">
+      <h5>IOS用户安装说明</h5>
+      <ol>
+        <li>由于IOS安全机制，首次安装的用户需要进入系统“设置”</li>
+        <li>选择“通用”——“描述文件”或者“设备管理”</li>
+        <li>选择“一个英文的公司名称”，设置为信任</li>
+        <li>点击“信任”完成验证</li>
+      </ol>
     </div>
   </div>
   <div class="weixin-tip">

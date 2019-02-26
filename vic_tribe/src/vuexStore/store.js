@@ -9,6 +9,7 @@ export default new Vuex.Store({
     showHeaderBack: false,
     showMainHeader: true,
     userInfo: {},
+    accountInfo: {},
     newsList: []
   },
   mutations: {
@@ -34,8 +35,11 @@ export default new Vuex.Store({
     updateNewsList(state, arr) {
       state.newsList = arr;
     },
-    updateUserInfo(obj) {
-      state.updateUserInfo = obj
+    updateUserInfo(state, obj) {
+      state.userInfo = obj
+    },
+    getAccountInfo(state, obj) {
+      state.accountInfo = obj
     }
   },
   actions: {
@@ -47,6 +51,9 @@ export default new Vuex.Store({
     },
     updateUserInfo(ctx, data) {
       ctx.commit('updateUserInfo', data)
+    },
+    getAccountInfo(ctx, data) {
+      ctx.commit('getAccountInfo', data)
     }
   }
 });

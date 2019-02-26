@@ -3,7 +3,7 @@
     <news-list
       v-for="(item,i) in $store.state.newsList"
       :key='item.id||i'
-      :news-title='item.title'
+      :news-title='item.noticeTitle'
       :img-src='item.thumb'
       :news-tag='item.tag'
       :link-to='"/news/detail/"+item.id'

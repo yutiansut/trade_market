@@ -20,7 +20,7 @@
           class="title font-14 font-bold"
           v-text="newsTitle"
         ></div>
-        <div class="footer p-abs">
+        <div v-if="news-tag" class="footer p-abs">
           <van-tag v-text="newsTag"></van-tag>
         </div>
       </van-col>
