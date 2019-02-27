@@ -19,7 +19,7 @@
         <van-cell
           is-link
           size='large'
-          title="电话号码"
+          title="手机号码"
           :value='$store.state.userInfo.customerPhone'
           value-class='color-666 font-14'
         ></van-cell>
@@ -33,7 +33,7 @@
         <van-cell
           is-link
           size='large'
-          value='未设置'
+          :value='$store.state.userInfo.customerCard||"未设置"'
           value-class='color-666 font-14'
           title="身份证号"
         ></van-cell>
@@ -48,18 +48,27 @@
           is-link
           size='large'
           value-class='color-666 font-14'
-          value='1345498'
+          :value='$store.state.userInfo.customerAlipay||"未绑定"'
           title="支付宝号"
         ></van-cell>
         <van-cell
           is-link
           size='large'
           value-class='color-666 font-14'
+          :value='$store.state.userInfo.customerWeixin||"未绑定"'
+          title="微信号"
+        ></van-cell>
+        <van-cell
+          is-link
+          size='large'
+          :value='$store.state.userInfo.bankName||"未设置"'
+          value-class='color-666 font-14'
           title="开户银行"
         ></van-cell>
         <van-cell
           is-link
           size='large'
+          :value='$store.state.userInfo.bankCard||"未绑定"'
           value-class='color-666 font-14'
           title="银行卡号"
         ></van-cell>

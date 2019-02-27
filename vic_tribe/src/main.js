@@ -23,7 +23,8 @@ import {
   Icon,
   Tag,
   Tab,
-  Tabs
+  Tabs,
+  Dialog
 } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
@@ -37,6 +38,7 @@ Vue.use(Tabbar)
   .use(Tag)
   .use(Tab)
   .use(Tabs)
+  .use(Dialog)
 /**
  * 引入全局组件
  */
@@ -55,10 +57,17 @@ import Request from "@/assets/js/request";
 import myStorage from "@/assets/js/myStorage";
 import apiCfg from "@/config/apiConfig";
 Vue.config.productionTip = false;
-
+/**
+ * 过滤器
+ */
+import filter from './filters/Filter';
+Object.keys(filter).forEach(key => {
+  Vue.filter(key, filter[key])
+});
 /**
  * 拓展Vue实例
  */
+
 Object.assign(Vue.prototype, {
   request: Request,
   Validate: Validate,

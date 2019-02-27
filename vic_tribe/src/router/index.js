@@ -14,7 +14,9 @@ const PendingOrder = r => require(["@/view/trade/PendingOrder"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
 const UserInfo = r => require(["@/view/user/UserInfo"], r);
+const UserWallet = r => require(["@/view/user/UserWallet"], r);
 const AccountSetting = r => require(['@/view/user/AccountSetting'], r);
+const UserAuth = r => require(['@/view/user/UserAuth'], r);
 const ResetPassword = r => require(['@/view/user/ResetPassword'], r);
 const ResetTradePassword = r => require(['@/view/user/ResetTradePassword'], r);
 const EntrustOrderDetail = r => require(['@/view/trade/EntrustOrderDetail'], r);
@@ -101,6 +103,7 @@ const routes = [
       auth: true,
     }
   },
+
   {
     path: "/c2c/order_detail",
     name: "c2cOrderDetail",
@@ -164,11 +167,29 @@ const routes = [
     }
   },
   {
+    path: "/user/wallet",
+    name: "UserWallet",
+    component: UserWallet,
+    meta: {
+      title: "个人钱包",
+      auth: true
+    }
+  },
+  {
     path: "/user/setting",
     name: "AccountSetting",
     component: AccountSetting,
     meta: {
       title: "账户设置",
+      auth: true
+    }
+  },
+  {
+    path: "/user/auth",
+    name: "UserAuth",
+    component: UserAuth,
+    meta: {
+      title: "实名认证",
       auth: true
     }
   },

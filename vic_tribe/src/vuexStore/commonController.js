@@ -66,7 +66,7 @@ const getSmsCode = async (phone, smsType) => {
         });
         let data = handelResult(result);
         if (data) {
-            Toast(data.msg);
+            Toast(result.msg);
             return data;
         }
     } catch (err) {
@@ -88,7 +88,10 @@ const modifyCustomerHead = async (headImg) => {
     try {
         let result = await Request(apiConfig.modifyCustomerHead, { headImg });
         let data = handelResult(result);
-        return data;
+        if (data) {
+            Toast(result.msg);
+            return data;
+        }
     } catch (err) {
         console.log(err)
     }
@@ -104,7 +107,10 @@ const modifyLoginPass = async (oldPassword, phone, newPassword, code) => {
                 code
             });
         let data = handelResult(result);
-        return data;
+        if (data) {
+            return data;
+            Toast(result.msg)
+        }
     } catch (err) {
         console.log(err)
     }

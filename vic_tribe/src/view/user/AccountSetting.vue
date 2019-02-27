@@ -8,20 +8,37 @@
           is-link
           to='/user/repassword_1'
           title="修改登录密码"
-        ></van-cell>
+        />
         <van-cell
           size='large'
           is-link
           to='/user/repassword_2'
           title="修改支付密码"
-        ></van-cell>
+        />
+        <van-cell
+          size='large'
+          is-link
+          to='/user/auth'
+          title="实名认证"
+        />
       </van-cell-group>
-      <button class="btn-block btn-large btn-danger btn-round">退出登录</button>
+      <button
+        @touchend='logOut'
+        class="btn-block btn-large btn-danger btn-round"
+      >退出登录</button>
     </div>
   </div>
 </template>
 <script>
-export default {};
+export default {
+  methods: {
+    logOut() {
+      this.storage.set("token", "");
+      this.storage.set("isLogin", false);
+      this.$store.dispatch("updateLoginState", false);
+    }
+  }
+};
 </script>
 <style lang="scss" scoped>
 .van-cell-group {

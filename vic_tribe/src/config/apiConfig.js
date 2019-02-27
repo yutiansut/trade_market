@@ -28,6 +28,16 @@ let apiCfg = (function () {
             url: 'api/common/forgetPass.do',
             method: 'post'
         },
+        //修改密码
+        modifyLoginPass: {
+            url: 'api/common/modifyLoginPass.do',
+            method: 'post'
+        },
+        //修改支付密码
+        modifyPayPass: {
+            url: 'api/common/modifyPayPass.do',
+            method: 'post'
+        },
         //修改头像
         modifyCustomerHead: {
             url: 'api/common/modifyCustomerHead.do',
@@ -200,7 +210,7 @@ let apiCfg = (function () {
         },
         //收支流水
         selectCustomerProfit: {
-            url: "api/convert/selectCustomerProfit.do",
+            url: "api/customer/selectCustomerProfit.do",
             method: "post"
         },
         //交易顶部数据

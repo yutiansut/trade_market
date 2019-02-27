@@ -99,7 +99,7 @@ export default {
       navConfig: [
         {
           title: "个人钱包",
-          link: ""
+          link: "/user/wallet"
         },
         {
           title: "我的账单",
@@ -115,7 +115,7 @@ export default {
         },
         {
           title: "我的小蜜",
-          link: ""
+          link: "/user/feedback"
         },
         {
           title: "关于我们",

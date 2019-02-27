@@ -178,8 +178,8 @@ export default {
         code = 1;
         return { code, msg };
       }
-      if (!this.Validate.isPhone(this.parentPhone)) {
-        msg = "请输入正确的推荐人账号";
+      if (this.parentPhone == "") {
+        msg = "请输入推荐码";
         code = 1;
         return { code, msg };
       }

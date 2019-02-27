@@ -115,7 +115,7 @@
       </van-row>
     </div>
     <!-- 资讯 -->
-    <div class="news">
+    <!-- <div class="news">
       <van-cell
         title="热门资讯"
         value='查看更多'
@@ -124,17 +124,7 @@
         is-link
         to='/news'
       />
-      <div class="news-list-container">
-        <news-list
-          v-for="(item,i) in $store.state.newsList"
-          :key='item.id||i'
-          :news-title='item.noticeTitle'
-          :img-src='item.thumb'
-          :news-tag='item.tag'
-          :link-to='"/news/detail/"+item.id'
-        ></news-list>
-      </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -210,13 +200,7 @@ export default {
     async loadData() {
       selectAccount();
       // 咨询公告
-      let noticeResult = await selectNotice(1, this.pageNo, this.pageSize);
       let scrollNoticeRes = await selectNotice(2);
-      if (noticeResult) {
-        this.pageCount = noticeResult.pageCount;
-        this.$store.dispatch("getNewsList", noticeResult.list);
-      }
-      noticeResult && (this.pageNo = noticeResult.currentPageNo);
       scrollNoticeRes && (this.scrollNotices = scrollNoticeRes.list);
     }
   }
@@ -319,8 +303,7 @@ $padding: 3.3vw;
 .menu-item {
   .van-col {
     text-align: center;
-    margin-top: 1.5rem;
-    margin-bottom: 1.8rem;
+    margin: 16px 0;
   }
   .icon {
     width: 10vw;

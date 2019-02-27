@@ -27,12 +27,13 @@ const Validate = (function () {
         },
         isIdCard(data) {
             let str = data;
+            let reg = '';
             if (str == "") return false;
             let len = str.length;
             if (len == 15) {
-                let reg = /^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/;
+                reg = /^(\d{6})()?(\d{2})(\d{2})(\d{2})(\d{3})$/;
             } else if (len == 18) {
-                let reg = /^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d|X|x)$/;
+                reg = /^(\d{6})()?(\d{4})(\d{2})(\d{2})(\d{3})(\d|X|x)$/;
             } else {
                 return false;
             }

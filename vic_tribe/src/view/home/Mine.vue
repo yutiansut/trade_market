@@ -51,7 +51,10 @@
             >
             <span class="label font-14">兑换中心</span>
           </div>
-          <div class="item">
+          <div
+            @touchend='navigateTo("/user/invite")'
+            class="item"
+          >
             <img
               class="icon thumb-45"
               :src="assetConfig.icon_2"
@@ -60,7 +63,10 @@
           </div>
         </div>
         <div class="flex">
-          <div class="item">
+          <div
+            @touchend='navigateTo("/record/income_record")'
+            class="item"
+          >
             <img
               class="icon thumb-45"
               :src="assetConfig.icon_3"
@@ -84,11 +90,11 @@
       </div>
       <swiper :options="noticeSwiper">
         <template v-for="item in newsList">
-          <swiper-slide :key='item.autoid'>
+          <swiper-slide :key='item.id'>
             <router-link
               class="font-14 van-ellipsis"
-              :to='"/news/detail/"+item.autoid'
-              v-text="item.title"
+              :to='"/news/detail/"+item.id'
+              v-text="item.noticeTitle"
             ></router-link>
           </swiper-slide>
         </template>
@@ -137,6 +143,7 @@
 </template>
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
+import { selectNotice, selectBanner } from "@/vuexStore/customerController.js";
 export default {
   components: {
     swiper,
@@ -154,8 +161,7 @@ export default {
       iconDiamond: require("@/assets/images/mine/wkz.png"),
       iconNotice: require("@/assets/images/mine/icon_notice.png"),
       banner1: require("@/assets/images/mine/banner1.png"),
-      signBg: require("@/assets/images/mine/tc.png"),
-      signBtn: require("@/assets/images/mine/sign_btn.png")
+      signBg: require("@/assets/images/mine/tc.png")
     };
     return {
       assetConfig: assetConfig,
@@ -171,12 +177,7 @@ export default {
         autoplay: true,
         speed: 800
       },
-      newsList: [
-        {
-          autoid: 1,
-          title: "新闻测试"
-        }
-      ],
+      newsList: [],
       randomSize: [30, 35, 40, 45],
       randomX: "15%",
       randomY: "20%",
@@ -184,7 +185,20 @@ export default {
       banners: new Array(3)
     };
   },
+  mounted() {
+    this.loadData();
+  },
   methods: {
+    async loadData() {
+      try {
+        let noticeResult = await selectNotice(2);
+        noticeResult && (this.newsList = noticeResult.list);
+        let bannerList = await selectBanner(1);
+        console.log(bannerList);
+      } catch (err) {
+        console.log(err);
+      }
+    },
     getSize() {},
     getPos() {},
     goBack() {

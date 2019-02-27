@@ -90,18 +90,15 @@ const modifyCustomerInfo = async (bankAddress, bankInfo, trueName, customerCard,
             bankCard
         });
         let data = handelResult(result);
-        if (data) { return data };
+        if (data) { Toast(data.msg); return data };
     } catch (err) {
         console.log(err)
     }
 };
 //实名认证pushAuth
-const pushAuth = async (bankAddress, customerAlipay, trueName, customerCard, bankName, bankCard) => {
+const pushAuth = async (trueName, customerCard, bankName, bankCard) => {
     try {
         let result = await Request(apiConfig.pushAuth, {
-            bankAddress,
-            customerAlipay,
-            bankInfo,
             trueName,
             customerCard,
             bankName,
@@ -120,8 +117,9 @@ const pushFeedback = async (type, context) => {
             type,
             context
         });
-        let data = handelResult(result);
-        if (data) { return data };
+        handelResult(result);
+        if (result.code == 0) Toast(result.msg);
+        return result;
     } catch (err) {
         console.log(err)
     }
@@ -141,7 +139,7 @@ const selectAccount = async () => {
         }
     }
 };
-//查询banner @type 0 首页 1 商城
+//查询banner @type 1 首页 2 商城
 const selectBanner = async type => {
     try {
         let result = await Request(apiConfig.selectBanner, { type });
@@ -153,7 +151,7 @@ const selectBanner = async type => {
 };
 //查询个人信息selectCustomer
 const selectCustomer = async () => {
-    if (isEmptyObject(Store.state.accountInfo)) {
+    if (isEmptyObject(Store.state.userInfo)) {
         try {
             let result = await Request(apiConfig.selectCustomer);
             let data = handelResult(result);

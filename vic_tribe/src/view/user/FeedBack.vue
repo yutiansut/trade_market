@@ -3,8 +3,10 @@
     <my-header></my-header>
     <div class="app-body h-full">
       <van-tabs
+        sticky
         line-width='40'
         color='#333'
+        v-model="tabIndex"
       >
         <van-tab title="意见反馈">
           <div class="van-hairline--top"></div>
@@ -16,9 +18,10 @@
               :key='i'
             >
               <button
+                @touchend='changeFeedType(item.code,i)'
                 :class="i==typeIndex ?'btn-dark':'btn-normal'"
                 class="btn-small btn-round"
-                v-text="item"
+                v-text="item.name"
               ></button>
             </van-col>
           </van-row>
@@ -26,24 +29,31 @@
             <div class="panel">
               <div class="title font-15">反馈内容</div>
               <van-field
-                v-model="message"
+                v-model="context"
                 type="textarea"
                 placeholder="请具体描述您的问题"
                 rows="3"
                 autosize
               />
             </div>
-            <div class="panel">
+            <!-- <div class="panel">
               <div class="title font-15">联系方式</div>
               <van-field placeholder="邮箱/电话/qq/或微信"></van-field>
-            </div>
+            </div> -->
           </div>
           <div class="btn-group">
-            <button class="btn-block btn-large btn-dark btn-radius">提交</button>
+            <button
+              @touchend='pubFeedBack'
+              :disabled='context==""?true:false'
+              class="btn-block btn-large btn-dark btn-radius"
+            >提交</button>
           </div>
         </van-tab>
         <van-tab title="历史反馈">
-          <div class="list-container">
+          <div
+            v-if="feedbackList.length>0"
+            class="list-container"
+          >
             <div
               v-for="(item,i) in feedbackList"
               :key='i'
@@ -53,17 +63,17 @@
                 <van-col
                   class="font-15"
                   span='20'
-                >{{item.title}}</van-col>
+                >{{item.feedbackContext}}</van-col>
                 <van-col
                   class="type color-999 font-14 flex flex-v-center"
                   span='4'
-                >{{item.type}}</van-col>
+                >{{item.feedbackTypeName}}</van-col>
               </van-row>
               <div class="reply font-14">
                 <div
-                  v-if="item.reply"
+                  v-if="item.feekdackRemark"
                   class="reply-content"
-                >回复：{{item.reply}}</div>
+                >回复：{{item.feekdackRemark}}</div>
                 <div
                   v-else
                   class="color-success"
@@ -76,30 +86,56 @@
               </div>
             </div>
           </div>
+          <div
+            v-else
+            class="no-data"
+          >暂无数据</div>
         </van-tab>
       </van-tabs>
     </div>
   </div>
 </template>
 <script>
+import {
+  getFeedbackType,
+  getFeedbackList,
+  pushFeedback
+} from "@/vuexStore/customerController.js";
 export default {
   data() {
     return {
-      feedBackTypes: ["功能建议", "体验建议", "内容建议", "其他"],
+      feedBackTypes: [],
       typeIndex: 0,
-      message: "",
-      feedbackList: [
-        {
-          title: "这里是测试",
-          type: "功能建议",
-          url: "",
-          reply: "回复测试"
-        }
-      ]
+      tabIndex: 0,
+      context: "",
+      type: "",
+      feedbackList: []
     };
   },
   methods: {
-    imgPreview() {}
+    imgPreview() {},
+    changeFeedType(code, i) {
+      this.type = code;
+      this.typeIndex = i;
+    },
+    pubFeedBack() {
+      pushFeedback(this.type, this.context).then(res => {
+        this.context = "";
+      });
+    }
+  },
+  mounted() {
+    getFeedbackType().then(res => {
+      this.feedBackTypes = res;
+      try {
+        this.type = res[0].code;
+      } catch (err) {
+        console.log(err);
+      }
+    });
+    getFeedbackList().then(res => {
+      this.feedbackList = res;
+    });
   }
 };
 </script>

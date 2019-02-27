@@ -65,7 +65,7 @@ const ajaxRequest = (function () {
                 msg = "登录信息已失效！";
                 myStorage.set("isLogin", false);
                 Store.commit('loginState', false);
-                if (router.history.current.path != '/login') {
+                if (router.history.current.path != '/userentry/login') {
                     router.push({ path: "/userentry/login" });
                 };
                 Toast({

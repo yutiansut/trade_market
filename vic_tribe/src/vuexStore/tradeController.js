@@ -260,10 +260,10 @@ const selectConvertTrading = async () => {
     }
 };
 //收支流水 selectCustomerProfit
-const selectCustomerProfit = async (status, pageNo, pageSize) => {
+const selectCustomerProfit = async (type, pageNo, pageSize) => {
     try {
         let result = await Request(apiConfig.selectCustomerProfit, {
-            status,
+            type,
             pageNo,
             pageSize
         });

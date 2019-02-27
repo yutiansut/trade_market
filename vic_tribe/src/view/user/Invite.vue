@@ -12,7 +12,7 @@
         <div class="tip font-16 color-999 txt-center">扫描二维码下载APP</div>
         <div class="qr-code">
           <vue-qr
-            :text="inviteCode"
+            :text="this.$store.state.userInfo.customerName"
             margin="10"
             dotScale="1"
             size="120"
@@ -23,10 +23,10 @@
           <div class="line"></div>
           <div
             class="code"
-            v-text="inviteCode"
+            v-text="this.$store.state.userInfo.customerName"
           ></div>
           <div
-            v-clipboard:copy="inviteCode"
+            v-clipboard:copy="this.$store.state.userInfo.customerName"
             v-clipboard:success="onCopy"
             class="btn-copy p-abs abs-v-center"
           >
@@ -39,6 +39,7 @@
 </template>
 <script>
 import vueQr from "vue-qr";
+import { selectCustomer } from "../../vuexStore/customerController.js";
 export default {
   components: { vueQr },
   data() {
@@ -48,11 +49,17 @@ export default {
       btnCopy: require("@/assets/images/invite/fz.png")
     };
     return {
-      assetConfig: assetConfig,
-      inviteCode: "CIAOTE4231"
+      assetConfig: assetConfig
     };
   },
-  methods: {}
+  mounted() {
+    selectCustomer();
+  },
+  methods: {
+    onCopy() {
+      this.$toast("复制成功");
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -72,7 +79,7 @@ export default {
   .qr-code {
     width: 120px;
     height: 120px;
-    margin: 10px auto auto;
+    margin: 20px auto auto;
     border-radius: 0.5rem;
     overflow: hidden;
     border: 1px solid #e5e5e5;
