@@ -10,7 +10,7 @@ export default new Vuex.Store({
     showMainHeader: true,
     userInfo: {},
     accountInfo: {},
-    newsList: []
+    newsList: [],
   },
   mutations: {
     loginState(state, val) {

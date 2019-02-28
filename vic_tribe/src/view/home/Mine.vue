@@ -19,7 +19,8 @@
         <div
           :style="{backgroundImage:'url('+assetConfig.mineBg+')'}"
           class="mine-number p-abs font-14 txt-rt"
-        >0.00</div>
+          v-text="$store.state.accountInfo.customerIntegral"
+        ></div>
       </div>
       <!-- 矿石仓库 -->
       <div class="mine-zone p-rel">
@@ -70,7 +71,7 @@
         </div>
         <div class="flex">
           <div
-            @touchend='navigateTo("/record/income_record")'
+            @touchend='navigateTo("/record/bill_record")'
             class="item"
           >
             <img
@@ -157,7 +158,8 @@ import {
   selectNotice,
   selectBanner,
   UnclaimedAward,
-  getAward
+  getAward,
+  selectAccount
 } from "@/vuexStore/customerController.js";
 import { randomNum } from "@/assets/js/Utils.js";
 export default {
@@ -208,6 +210,7 @@ export default {
         let noticeResult = await selectNotice(2);
         let bannerList = await selectBanner(1);
         let awards = await UnclaimedAward();
+        selectAccount();
         noticeResult && (this.newsList = noticeResult.list);
         this.banners = bannerList;
         this.awards = this.randomDiamond(awards);

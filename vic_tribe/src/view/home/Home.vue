@@ -86,11 +86,17 @@
       </router-link>
       <div class="market-val flex flex-between">
         <div class="m-item">
-          <span class="font-16">0.011</span>
+          <span
+            class="font-16"
+            v-text="marketVal.dollarRate"
+          ></span>
           <span class="font-14 color-666">市值($)</span>
         </div>
         <div class="m-item">
-          <span class="font-16">0.011</span>
+          <span
+            class="font-16"
+            v-text="marketVal.moneyRate"
+          ></span>
           <span class="font-14 color-666">市值(￥)</span>
         </div>
       </div>
@@ -130,6 +136,7 @@
 <script>
 import newsList from "@/components/other/newsList";
 import { selectNotice, selectAccount } from "@/vuexStore/customerController.js";
+import { selectIndexData } from "@/vuexStore/tradeController.js";
 import { swiper, swiperSlide } from "vue-awesome-swiper";
 import { Toast } from "vant";
 let count = 0;
@@ -190,6 +197,7 @@ export default {
       scrollNotices: [],
       pageNo: 1,
       pageSize: 5,
+      marketVal: {},
       pageCount: 0 //总页数
     };
   },
@@ -198,10 +206,14 @@ export default {
   },
   methods: {
     async loadData() {
+      // 查询账户信息
       selectAccount();
       // 咨询公告
       let scrollNoticeRes = await selectNotice(2);
+      // 市场行情
+      let marketVal = await selectIndexData();
       scrollNoticeRes && (this.scrollNotices = scrollNoticeRes.list);
+      marketVal && (this.marketVal = marketVal);
     }
   }
 };

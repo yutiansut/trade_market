@@ -9,37 +9,87 @@
         color='#333'
       >
         <van-tab title="买入">
+          <div class="k-map-header flex flex-between">
+            <span class="font-15 font-bold">行情（H）</span>
+            <div class="market-val font-12 color-666">
+              市值（$）<span
+                class="color-danger"
+                v-text="marketVal.dollarRate"
+              ></span>
+              市值（￥）<span
+                class="color-danger"
+                v-text="marketVal.moneyRate"
+              ></span>
+            </div>
+          </div>
+          <!-- 折线图 -->
+          <div class="k-map-container">
+            <chart />
+          </div>
           <div class="form-panel">
-            <div class="text-bar font-14 color-666">CNYD折合&nbsp;1&nbsp;CNY</div>
+            <div class="text-bar font-14 color-danger">1 VIC 折合&nbsp;{{marketVal.ratioRate}}&nbsp;余额</div>
             <form @submit.prevent>
               <van-cell-group>
-                <van-field placeholder='请输入数量'>
-                  <span slot="button">USDT</span>
+                <van-field
+                  v-model="moneyNum"
+                  placeholder='数量'
+                >
                 </van-field>
-                <van-field placeholder='请输入金额'>
-                  <span slot="button">CNY</span>
+                <van-field
+                  v-model="tradePrice"
+                  placeholder='金额'
+                >
                 </van-field>
               </van-cell-group>
               <div class="btn-wrap">
-                <button class="btn-block btn-active btn-large btn-danger btn-radius">买入</button>
+                <button
+                  @touchen='pubBuyOrder'
+                  :disabled='disabled'
+                  class="btn-block btn-active btn-large btn-danger btn-radius"
+                >买入</button>
               </div>
             </form>
           </div>
         </van-tab>
         <van-tab title="卖出">
+          <div class="k-map-header flex flex-between">
+            <span class="font-15 font-bold">行情(H)</span>
+            <div class="market-val font-12 color-666">
+              市值（$）<span
+                class="color-danger"
+                v-text="marketVal.dollarRate"
+              ></span>
+              市值（￥）<span
+                class="color-danger"
+                v-text="marketVal.moneyRate"
+              ></span>
+            </div>
+          </div>
+          <!-- 折线图 -->
+          <div class="k-map-container">
+            <chart />
+          </div>
           <div class="form-panel">
-            <div class="text-bar font-14 color-666">CNYD折合&nbsp;1&nbsp;CNY</div>
+            <div class="text-bar font-14 color-danger">CNYD折合&nbsp;1&nbsp;CNY</div>
             <form @submit.prevent>
               <van-cell-group>
-                <van-field placeholder='数量'>
-                  <span slot="button">USDT</span>
+                <van-field
+                  v-model="moneyNum"
+                  placeholder='数量'
+                >
                 </van-field>
-                <van-field placeholder='金额'>
-                  <span slot="button">CNY</span>
+                <van-field
+                  v-model="tradePrice"
+                  placeholder='金额'
+                >
                 </van-field>
               </van-cell-group>
               <div class="btn-wrap">
-                <button class="btn-block btn-active btn-large btn-success btn-radius">卖出</button>
+                <button
+                  @touchen='pubSellOrder'
+                  :disabled='disabled'
+                  class="btn-block btn-active btn-large btn-success btn-radius"
+                >卖出</button>
               </div>
             </form>
           </div>
@@ -66,7 +116,6 @@
             <button class="btn-dark btn-active font-15 btn-radius">搜索</button>
           </div>
         </div>
-        <!-- 交易大厅 -->
         <div
           v-show="active<1"
           class="panel-body"
@@ -96,11 +145,48 @@
   </div>
 </template>
 <script>
+import Chart from "../../components/charts/EctLine";
+import {
+  selectIndexData,
+  pushCoinTradeInfo
+} from "@/vuexStore/tradeController.js";
 export default {
+  components: { Chart },
   data() {
     return {
-      active: 0
+      active: 0,
+      marketVal: {},
+      tradePrice: "",
+      moneyNum: ""
     };
+  },
+  mounted() {
+    this.loadData();
+  },
+  computed: {
+    disabled() {
+      if (!this.tradePrice || !this.moneyNum) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  },
+  methods: {
+    async loadData() {
+      let marketVal = await selectIndexData();
+      marketVal && (this.marketVal = marketVal);
+    },
+    pubBuyOrder() {
+      pushCoinTradeInfo();
+    },
+    pubSellOrder() {}
+  },
+  watch: {
+    active() {
+      this.tradePrice = "";
+      this.moneyNum = "";
+    }
   }
 };
 </script>
@@ -108,6 +194,20 @@ export default {
 $gap: 1rem;
 .mt {
   margin-top: $gap;
+}
+.k-map {
+  padding-bottom: $gap;
+  background: #fff;
+}
+.k-map-header {
+  @include textVcenter(45px);
+  padding: 0 $gap;
+  background: #fff;
+}
+.market-val {
+  span:first-child {
+    margin-right: $gap;
+  }
 }
 .form-panel {
   background: #fff;

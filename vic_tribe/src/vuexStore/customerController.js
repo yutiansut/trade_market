@@ -129,17 +129,15 @@ const pushFeedback = async (type, context) => {
 };
 //个人账户查询
 const selectAccount = async () => {
-    if (isEmptyObject(Store.state.accountInfo)) {
-        try {
-            let result = await Request(apiConfig.selectAccount);
-            let data = handelResult(result);
-            if (data) {
-                Store.dispatch("getAccountInfo", data)
-                return data;
-            };
-        } catch (err) {
-            console.log(err)
-        }
+    try {
+        let result = await Request(apiConfig.selectAccount);
+        let data = handelResult(result);
+        if (data) {
+            Store.dispatch("getAccountInfo", data)
+            return data;
+        };
+    } catch (err) {
+        console.log(err)
     }
 };
 //查询banner @type 1 首页 2 商城

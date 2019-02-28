@@ -160,9 +160,9 @@ const doCoinToMoney = async (moneyNum, payPass) => {
             payPass
         });
         let data = handelResult(result);
-        if (data) {
+        if (data || result.code == 0) {
             Toast.success(result.msg);
-            return data;
+            return result;
         };
     } catch (err) {
         console.log(err)
@@ -195,6 +195,23 @@ const doMoneyToCoin = async (moneyNum, payPass) => {
         if (data) {
             Toast.success(result.msg);
             return data;
+        };
+    } catch (err) {
+        console.log(err)
+    }
+};
+//余额转其他货币
+const doMoneyConvert = async (moneyNum, payPass, type) => {
+    try {
+        let result = await Request(apiConfig.doMoneyToCoin, {
+            moneyNum,
+            payPass,
+            type
+        });
+        let data = handelResult(result);
+        if (data || result.code == 0) {
+            Toast.success(result.msg);
+            return result;
         };
     } catch (err) {
         console.log(err)
@@ -471,6 +488,7 @@ export {
     confirmMyConvertTrade,
     doCoinToMoney,
     doMoneryToIntegral,
+    doMoneyConvert,
     doMoneyToCoin,
     matchTransferAccount,
     payMyConvertTrade,

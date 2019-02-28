@@ -25,7 +25,7 @@
         </div>
         <!-- 折线图 -->
         <div class="k-map-container">
-
+          <chart />
         </div>
       </div>
     </div>

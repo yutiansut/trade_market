@@ -188,6 +188,10 @@ let apiCfg = (function () {
             url: "api/convert/doMoneyToCoin.do",
             method: "post"
         },
+        //余额转其他币种
+        doMoneyConvert: {
+            url: "api/convert/doMoneyConvert.do"
+        },
         //匹配转账
         matchTransferAccount: {
             url: "api/convert/matchTransferAccount.do",

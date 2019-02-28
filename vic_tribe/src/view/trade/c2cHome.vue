@@ -146,7 +146,7 @@
 export default {
   data() {
     return {
-      active: 2
+      active: 0
     };
   }
 };

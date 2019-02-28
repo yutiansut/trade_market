@@ -118,7 +118,7 @@ const routes = [
     name: "EntrustTrade",
     component: EntrustTrade,
     meta: {
-      title: "委托交易",
+      title: "VIC交易",
     }
   },
   {
