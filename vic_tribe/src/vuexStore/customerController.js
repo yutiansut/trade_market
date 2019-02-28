@@ -51,7 +51,10 @@ const getAward = async id => {
     try {
         let result = await Request(apiConfig.getAward, { id });
         let data = handelResult(result);
-        if (data) { return data };
+        if (data) {
+            Toast.success(data.msg);
+            return data
+        };
     } catch (err) {
         console.log(err)
     }

@@ -32,25 +32,31 @@
         </div>
         <!-- 随机出现矿石 -->
         <div
-          :style="{left:randomX,top:randomY}"
-          class="item-random p-abs"
+          v-for="(item,i) in awards"
+          :key='item.id'
+          :style="item.cssStyle"
+          @touchend='getAward(item.id,i)'
+          class="item-random p-abs scaleAni"
         >
           <img
-            class="thumb-45"
+            :class="'thumb-'+item.size"
             :src="assetConfig.icon_5"
           >
-          <span class="font-12">1.005</span>
+          <span
+            class="font-12"
+            v-text="item.releaseNum"
+          ></span>
         </div>
       </div>
       <div class="menu flex flex-between">
         <div class="flex">
-          <div class="item">
+          <!-- <div class="item">
             <img
               class="icon thumb-45"
               :src="assetConfig.icon_1"
             >
             <span class="label font-14">兑换中心</span>
-          </div>
+          </div> -->
           <div
             @touchend='navigateTo("/user/invite")'
             class="item"
@@ -73,13 +79,16 @@
             >
             <span class="label font-14">收益记录</span>
           </div>
-          <div class="item">
+          <!-- <div
+            @touchend='toggleSignShow'
+            class="item"
+          >
             <img
               class="icon thumb-45"
               :src="assetConfig.icon_4"
             >
             <span class="label font-14">每日签到</span>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -108,7 +117,7 @@
             <router-link to=''>
               <img
                 class="banner-img"
-                :src="assetConfig.banner1"
+                :src="item.bannerImage"
               >
             </router-link>
           </swiper-slide>
@@ -116,7 +125,7 @@
       </swiper>
     </div>
     <!-- 签到 -->
-    <div
+    <!-- <div
       v-show="showSign"
       class="pop-up wh-full"
     >
@@ -125,6 +134,7 @@
         class="sign-box p-rel"
       >
         <van-icon
+          @touchend='toggleSignShow'
           size='30px'
           name='close'
         />
@@ -138,12 +148,18 @@
           :src="assetConfig.signBtn"
         >
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
 import { swiper, swiperSlide } from "vue-awesome-swiper";
-import { selectNotice, selectBanner } from "@/vuexStore/customerController.js";
+import {
+  selectNotice,
+  selectBanner,
+  UnclaimedAward,
+  getAward
+} from "@/vuexStore/customerController.js";
+import { randomNum } from "@/assets/js/Utils.js";
 export default {
   components: {
     swiper,
@@ -160,7 +176,6 @@ export default {
       icon_5: require("@/assets/images/mine/sy.png"),
       iconDiamond: require("@/assets/images/mine/wkz.png"),
       iconNotice: require("@/assets/images/mine/icon_notice.png"),
-      banner1: require("@/assets/images/mine/banner1.png"),
       signBg: require("@/assets/images/mine/tc.png")
     };
     return {
@@ -179,10 +194,9 @@ export default {
       },
       newsList: [],
       randomSize: [30, 35, 40, 45],
-      randomX: "15%",
-      randomY: "20%",
       showSign: false,
-      banners: new Array(3)
+      awards: [],
+      banners: []
     };
   },
   mounted() {
@@ -192,15 +206,43 @@ export default {
     async loadData() {
       try {
         let noticeResult = await selectNotice(2);
-        noticeResult && (this.newsList = noticeResult.list);
         let bannerList = await selectBanner(1);
-        console.log(bannerList);
+        let awards = await UnclaimedAward();
+        noticeResult && (this.newsList = noticeResult.list);
+        this.banners = bannerList;
+        this.awards = this.randomDiamond(awards);
       } catch (err) {
         console.log(err);
       }
     },
-    getSize() {},
-    getPos() {},
+    toggleSignShow() {
+      this.showSign = !this.showSign;
+    },
+    //设置矿石随机位置及大小
+    randomDiamond(arr) {
+      if (!Array.isArray(arr)) return false;
+      let len = arr.length,
+        randomSizeIndex = 0,
+        x = 0,
+        y = 0;
+      for (let i = len; i > 0; i--) {
+        x = randomNum(0, 95);
+        y = randomNum(0, 95);
+        arr[len - 1].cssStyle = `left:${x}%;top:${y}%`;
+        randomSizeIndex = randomNum(0, this.randomSize.length);
+        arr[len - i].size = this.randomSize[randomSizeIndex];
+      }
+      return arr;
+    },
+    getAward(id, index) {
+      if (id) {
+        getAward(id).then(res => {
+          if (res && index) {
+            this.awards.splice(index, 1);
+          }
+        });
+      }
+    },
     goBack() {
       this.$router.push(-1);
     }
@@ -252,9 +294,6 @@ export default {
     }
     &:last-child {
       justify-content: flex-end;
-    }
-    .item:first-child {
-      margin-right: 2rem;
     }
   }
   .icon {
@@ -345,5 +384,16 @@ export default {
     bottom: 8.5%;
     z-index: 99;
   }
+}
+@keyframes scaleZoom {
+  from {
+    transform: scale(0.9);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+.scaleAni {
+  animation: scaleZoom 0.8s alternate infinite;
 }
 </style>
