@@ -8977,20 +8977,21 @@ var RequestData = function (showLoading) {
                 if (!json) {
                     return
                 }
-                if (!json.data.list.isSuc) {
-                    // kline.refreshPage(json.data.list.datas.ecode == 101 ? null: GLOBAL_VAR.market_from);
+                if (!json.isSuc) {
+                    // kline.refreshPage(json.datas.ecode == 101 ? null: GLOBAL_VAR.market_from);
                     return
                 }
-                GLOBAL_VAR.market_from_name = json.data.list.datas.marketName;
+                GLOBAL_VAR.market_from_name = json.datas.marketName;
                 var chart = ChartManager.getInstance().getChart();
-                chart._contract_unit = json.data.list.datas.contractUnit;
-                chart._money_type = json.data.list.datas.moneyType;
-                chart._usd_cny_rate = json.data.list.datas.USDCNY;
+                chart._contract_unit = json.datas.contractUnit;
+                chart._money_type = json.datas.moneyType;
+                chart._usd_cny_rate = json.datas.USDCNY;
                 chart.setTitle();
-                // kline.setMarketShow(GLOBAL_VAR.market_from_name, chart._contract_unit, chart._money_type, json.data.list.datas.url);
-                //kline.setTopTickers(json.data.list.datas.topTickers);
-                // GLOBAL_VAR.KLineData = eval(json.data.list.datas.data);
-                GLOBAL_VAR.KLineData = json.data.list.datas.data;
+                // kline.setMarketShow(GLOBAL_VAR.market_from_name, chart._contract_unit, chart._money_type, json.datas.url);
+                //kline.setTopTickers(json.datas.topTickers);
+                // GLOBAL_VAR.KLineData = eval(json.datas.data);
+                GLOBAL_VAR.KLineData = json.datas.data;
+                console.log(GLOBAL_VAR.KLineData);
                 try {
                     if (!GLOBAL_VAR.chartMgr.updateData("frame0.k0", GLOBAL_VAR.KLineData)) {
                         //GLOBAL_VAR.requestParam = setHttpRequestParam(GLOBAL_VAR.market_from, GLOBAL_VAR.time_type, GLOBAL_VAR.limit, null);
@@ -9010,7 +9011,8 @@ var RequestData = function (showLoading) {
                     }
                 }
                 //自循环请求点，测试用，页面启动后会每隔8秒请求一次后台点数据（一个点）
-                //GLOBAL_VAR.TimeOutId = setTimeout(TwoSecondThread, 60* 1000);
+                GLOBAL_VAR.TimeOutId = setTimeout(TwoSecondThread, 60* 1000);
+                console.log(1)
                 $("#chart_loading").removeClass("activated");
                 ChartManager.getInstance().redraw("All", false)
             }

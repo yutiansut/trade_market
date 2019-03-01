@@ -11,7 +11,7 @@ function handelResult(result) {
             });
             return false;
         } else {
-            return result.data;
+            return result.data || result;
         }
     } catch (err) {
         console.log(err)
@@ -44,7 +44,7 @@ const confirmMyCoinTrade = async id => {
             return data;
         };
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 };
 //匹配交易matchingCoinTrade
@@ -52,7 +52,7 @@ const matchingCoinTrade = async (id, payPass) => {
     try {
         let result = await Request(apiConfig.matchingCoinTrade, { id, payPass });
         let data = handelResult(result);
-        if (data) { return data };
+        if (data) { return result };
     } catch (err) {
         console.log(err)
     }
@@ -71,10 +71,12 @@ const payMyCoinTrade = async (id, files) => {
 const pushCoinTradeInfo = async (tradeType, tradePrice, moneyNum, payPass) => {
     try {
         let result = await Request(apiConfig.pushCoinTradeInfo, { tradeType, tradePrice, moneyNum, payPass });
-        let data = handelResult(result);
-        if (data) { return data };
+        handelResult(result);
+        if (result) {
+            Toast(result.msg);
+        };
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 };
 //待交易列表selectMyCoinTrade
@@ -84,7 +86,7 @@ const selectMyCoinTrade = async Type => {
         let data = handelResult(result);
         if (data) { return data };
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 };
 //交易完成列表
@@ -379,7 +381,7 @@ const matchingMoneyTrade = async (id, payPass) => {
             return data;
         };
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 };
 //上传交易凭证payMyMoneyTrade

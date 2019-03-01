@@ -512,7 +512,7 @@ export default {
       //当日可用
       myAvailable: "",
       // 当前币种
-      currentCoinInfo: "",
+      currentCoinInfo: {},
       // 充币地址
       chargeAddress: "",
       // 充币二维码
@@ -603,7 +603,7 @@ export default {
       // 接收数据
       webSocket.onmessage = event => {
         let msg = JSON.parse(event.data);
-        this.currentCoinInfo = msg.info[0];
+        msg.info[0] && (this.currentCoinInfo = msg.info[0]);
         this.latestBuyData = this.Util.sumCalc(msg.buy, "price", "number");
         this.latestSoldData = this.Util.sumCalc(msg.sell, "price", "number");
         this.historicalBuyData = this.Util.sumCalc(msg.top, "price", "number");
@@ -653,7 +653,7 @@ export default {
             .catch(err => {
               console.log(err);
             });
-            this.getCurrentInfo(maincoin,tradecoin);
+          this.getCurrentInfo(maincoin, tradecoin);
         }
         ajaxDone = false;
       }, 1000);
@@ -752,7 +752,7 @@ export default {
     // 最新交易信息
     getCurrentInfo(maincoin, tradcoin) {
       this.request(this.api.searchcoin, { maincoin, tradcoin }).then(res => {
-        this.currentCoinInfo = res.data.list[0];
+        this.currentCoinInfo = res.data.list;
       });
     },
     // 获取账户状态
@@ -1168,7 +1168,7 @@ $border: 1px solid #e5e5e5;
   }
 }
 .k-map {
-  height: 414px;
+  height: 500px;
   margin-bottom: 25px;
 }
 .form-wrap {

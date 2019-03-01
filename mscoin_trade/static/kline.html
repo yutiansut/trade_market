@@ -721,10 +721,7 @@
             //var klineUrl = "http://192.168.5.112/trade/kline?needTickers=1&symbol=BTC_USDT&type=15min&size=1000";
             var klineUrl = window.location.protocol + "//" + window.location.host + "/API/kline";
             setInterval(function () {
-                biType = "btc_usdt";
-                var d = new Date();
-                if (d.getSeconds() == 0 && GLOBAL_VAR.time_type == "1min") {
-                    alert(555);
+                if (GLOBAL_VAR.time_type == "1min") {
                     //K线图每分钟更新1分钟线
                     GLOBAL_VAR.requestParam = setHttpRequestParam(biType, "1min", null, 100000000000);
                     RequestData();
@@ -754,7 +751,7 @@
                     GLOBAL_VAR.requestParam = setHttpRequestParam(biType, "1hour", null, 600000000000);
                     RequestData();
                 }
-            }, 30000);
+            }, 30 * 1000);
         </script>
         <script src="./js/kline.draw.js"></script>
     </div>
