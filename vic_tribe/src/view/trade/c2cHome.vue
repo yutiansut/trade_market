@@ -3,50 +3,57 @@
     <van-tabs
       sticky
       v-model="active"
+      @change='onTabChange'
       line-width='40'
       color='#333'
     >
       <van-tab title="买入">
-        <div class="text-bar font-14 color-666">CNYD折合&nbsp;1&nbsp;CNY</div>
         <form @submit.prevent>
           <van-cell-group>
             <van-field
-              placeholder='请输入数量'
-              label='数量'
+              v-model="moneyNum"
+              placeholder='数量'
             >
-              <span slot="button">USDT</span>
             </van-field>
             <van-field
-              placeholder='请输入金额'
-              label='金额'
-            >
-              <span slot="button">CNY</span>
-            </van-field>
+              v-model="tradePrice"
+              placeholder='金额'
+            ></van-field>
           </van-cell-group>
           <div class="btn-wrap">
-            <button class="btn-block btn-active btn-large btn-danger btn-radius">买入</button>
+            <button
+              @touchend='pubCoinTrade'
+              :disabled='disabled'
+              class="btn-block btn-active btn-large btn-danger btn-radius"
+            >买入</button>
           </div>
         </form>
       </van-tab>
       <van-tab title="卖出">
-        <div class="text-bar font-14 color-666">CNYD折合&nbsp;1&nbsp;CNY</div>
         <form @submit.prevent>
           <van-cell-group>
             <van-field
-              placeholder='请输入数量'
-              label='数量'
+              v-model="moneyNum"
+              placeholder='数量'
             >
-              <span slot="button">USDT</span>
             </van-field>
             <van-field
-              placeholder='请输入金额'
-              label='金额'
+              v-model="tradePrice"
+              placeholder='金额'
+            ></van-field>
+            <van-field
+              type="password"
+              v-model="payPass"
+              placeholder='输入支付密码'
             >
-              <span slot="button">CNY</span>
             </van-field>
           </van-cell-group>
           <div class="btn-wrap">
-            <button class="btn-block btn-active btn-large btn-success btn-radius">卖出</button>
+            <button
+              @touchend='pubCoinTrade'
+              :disabled='disabled||payPass==""'
+              class="btn-block btn-active btn-large btn-success btn-radius"
+            >卖出</button>
           </div>
         </form>
       </van-tab>
@@ -181,7 +188,10 @@
             </div>
             <div class="van-hairline--top"></div>
             <div class="list-footer h-45">
-              <button class="btn-small color-danger btn-radius">买入</button>
+              <button
+                @touchend='toConfirmPage(item)'
+                class="btn btn-danger btn-active font-14"
+              >{{item.tradeType==1?"买入":"卖出"}}</button>
             </div>
           </div>
         </template>
@@ -207,7 +217,6 @@ import { removeItemById } from "../../assets/js/Utils.js";
 export default {
   data() {
     return {
-      show: false,
       active: 0,
       marketVal: {},
       tradePrice: "",
@@ -258,7 +267,7 @@ export default {
     },
     toPage(status, page, pageSize, id) {
       let params = { page, pageSize, id };
-      this.navigateTo("/trade/pending_order", params);
+      this.navigateTo("/trade/c2c_pending_order", params);
     },
     cancelOrder(id) {
       this.$dialog
@@ -298,7 +307,7 @@ export default {
     //大厅数据
     getTradeHallList() {
       selectMoneyTradeList(
-        this.active,
+        this.tradeType,
         this.searchVal,
         this.pageNo,
         this.pageSize
@@ -328,18 +337,21 @@ export default {
         if (res) this.doneList = res.list;
       });
     },
-    showDialog(id) {
-      this.tradeType == 1 && (this.show = true);
-      this.orderId = id;
-    },
-    onConfirm() {
-      if (this.payPass == "" && this.tradeType == 1) {
-        this.$toast("请输入交易密码");
-        return;
-      }
-      if (this.orderId) {
-        matchingMoneyTrade(this.orderId, this.payPass).then(res => {
-          if (res) this.getTradeHallList();
+    toConfirmPage(item) {
+      if (item.tradeType == 1) {
+        //买入
+        this.navigateTo("/c2c/confirm", {
+          id: item.id,
+          tradePrice: item.tradePrice,
+          moneyNum: item.moneyNum,
+          tradeType: item.tradeType
+        });
+      } else {
+        this.navigateTo("/c2c/confirm", {
+          id: item.id,
+          tradePrice: item.tradePrice,
+          moneyNum: item.moneyNum,
+          tradeType: item.tradeType
         });
       }
     },

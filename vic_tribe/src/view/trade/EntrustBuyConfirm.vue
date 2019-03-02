@@ -2,41 +2,47 @@
   <div class="app-main wh-full">
     <my-header></my-header>
     <div class="app-body h-full">
-      <div class="order-info">
+      <van-cell-group>
         <van-cell
           title="数量"
           title-class='color-666'
-          value='100 余额'
+          :value='moneyNum'
         ></van-cell>
         <van-cell
           title="金额"
           title-class='color-666'
-          value='100 CNY'
+          :value='tradePrice'
         ></van-cell>
-        <van-cell
-          title="估价"
-          title-class='color-666'
-          value='4849 CNY'
-        ></van-cell>
-      </div>
-      <div class="container">
-        <div class="input-group">
-          <span class="label font-14">交易密码</span>
-          <van-field
-            :border='false'
-            placeholder='请输入交易密码'
-          ></van-field>
-          <div class="van-hairline--top"></div>
-        </div>
-        <button class="btn-block btn-large btn-dark btn-radius">确定下单</button>
+      </van-cell-group>
+      <div class="btn-wrap">
+        <button
+          @touchend='onSubmit'
+          class="btn btn-block btn-large btn-active btn-dark btn-radius"
+        >确定买入</button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import { matchingCoinTrade } from "@/vuexStore/tradeController.js";
 export default {
   data() {
-    return {};
+    return {
+      id: "",
+      tradePrice: "",
+      moneyNum: ""
+    };
+  },
+  mounted() {
+    let { id, tradePrice, moneyNum } = this.$route.query;
+    this.tradePrice = tradePrice;
+    this.moneyNum = moneyNum;
+    this.id = id;
+  },
+  methods: {
+    onSubmit() {
+      this.id && matchingCoinTrade(this.id);
+    }
   }
 };
 </script>
@@ -47,25 +53,7 @@ $gap: 1rem;
   flex-direction: column;
   justify-content: space-between;
 }
-.order-info {
-  background: #fff;
-  margin-top: $gap;
-}
-.container {
-  background: #fff;
-  margin-top: $gap;
-  padding: $gap;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  flex: 1;
-  .label {
-    color: #444;
-  }
-  .van-field {
-    padding-left: 0;
-    padding-right: 0;
-    margin-top: 8px;
-  }
+.btn-wrap {
+  padding: 0 $gap $gap;
 }
 </style>

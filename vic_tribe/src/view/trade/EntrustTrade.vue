@@ -153,7 +153,7 @@
               class="order-list-item"
             >
               <div class="list-header h-45 van-hairline--bottom font-16">
-                <van-col span='14'>{{item.mallCustomerName}}</van-col>
+                <van-col span='14'>{{item.customerName}}</van-col>
                 <span class="amount">总计：{{item.moneyNum*item.tradePrice}}</span>
               </div>
               <div class="list-body font-14">
@@ -267,7 +267,7 @@
               </div>
               <div class="item-right flex flex-h-center flex-v-center">
                 <button
-                  @touchend='showDialog(item.id)'
+                  @touchend='toConfirmPage(item)'
                   class="btn btn-danger btn-active font-14"
                 >{{item.tradeType==1?"买入":"卖出"}}</button>
               </div>
@@ -279,19 +279,7 @@
         </div>
       </div>
     </div>
-    <!-- 密码弹窗 -->
-    <van-dialog
-      v-model="show"
-      @confirm="onConfirm"
-      show-cancel-button
-    >
-      <van-field
-        v-model="payPass"
-        type="password"
-        label="密码"
-        placeholder="请输入交易密码"
-      />
-    </van-dialog>
+
   </div>
 </template>
 <script>
@@ -404,7 +392,7 @@ export default {
     //大厅数据
     getTradeHallList() {
       selectCoinTradeList(
-        this.active,
+        this.tradeType,
         this.searchVal,
         this.pageNo,
         this.pageSize
@@ -434,22 +422,23 @@ export default {
         if (res) this.doneList = res.list;
       });
     },
-    showDialog(id) {
-      this.tradeType == 1 && (this.show = true);
-      this.orderId = id;
-    },
-    onConfirm() {
-      if (this.payPass == "" && this.tradeType == 1) {
-        this.$toast("请输入交易密码");
-        return;
-      }
-      if (this.orderId) {
-        matchingCoinTrade(this.orderId, this.payPass).then(res => {
-          if (res) this.getTradeHallList();
+    toConfirmPage(item) {
+      if (item.tradeType == 1) {
+        //买入
+        this.navigateTo("/trade/entrust_buy", {
+          id: item.id,
+          tradePrice: item.tradePrice,
+          moneyNum: item.moneyNum
+        });
+      } else {
+        this.navigateTo("/trade/entrust_sell", {
+          id: item.id,
+          tradePrice: item.tradePrice,
+          moneyNum: item.moneyNum
         });
       }
     },
-    //买入/卖出操作
+    //发布买入/卖出操作
     pubCoinTrade() {
       pushCoinTradeInfo(
         this.tradeType,

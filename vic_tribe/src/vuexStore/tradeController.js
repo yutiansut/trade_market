@@ -229,6 +229,7 @@ const matchTransferAccount = async (moneyNum, targetPhone, payPass) => {
         });
         let data = handelResult(result);
         if (data) {
+            Toast(result.msg);
             return data;
         };
     } catch (err) {
