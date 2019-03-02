@@ -50,58 +50,103 @@
           </div>
         </form>
       </van-tab>
-      <van-tab title="我的订单">
+      <van-tab title="待交易">
         <div class="list-container mt">
-          <div class="list-item">
-            <div class="list-header h-45 van-hairline--bottom font-16">
-              <span>李XX</span>
-              <span class="amount">1689489&nbsp;CNY</span>
-            </div>
-            <div class="list-body font-14">
-              <div class="row flex flex-between">
-                <div class="col">单号：164849</div>
-                <div class="col color-666">类型：<span class="color-danger">买入</span></div>
+          <template v-if='pendingTradeList.length>0'>
+            <div
+              v-for='item in pendingTradeList'
+              :key='item.id'
+              class="list-item"
+            >
+              <div class="list-header h-45 van-hairline--bottom font-16">
+                <span>{{item.customerName}}</span>
+                <span class="amount">{{item.customerPhone|encryptPhone}}</span>
               </div>
-              <div class="row flex flex-between">
-                <div class="col">价格：64.64&nbsp;CNY</div>
-                <div class="col color-666">时间：2018-7-7</div>
+              <div class="list-body font-14">
+                <div class="row flex flex-between">
+                  <div class="col">价格：{{item.tradePrice}}</div>
+                  <div class="col color-666">数量：{{item.moneyNum}}</div>
+                </div>
+                <div class="row flex flex-between">
+                  <div class="col">总计：{{item.moneyNum*item.tradePrice}}</div>
+                  <div class="col color-666">时间：{{item.createTime|formatDate('yyyy-MM-dd hh:mm:ss')}}</div>
+                </div>
               </div>
-              <div class="row flex flex-between">
-                <div class="col">限额：64.64-2000</div>
+              <div class="van-hairline--top"></div>
+              <div class="list-footer h-45">
+                <button class="btn-small color-danger btn-radius">撤单</button>
               </div>
             </div>
-            <div class="van-hairline--top"></div>
-            <div class="list-footer van-hairline--top h-45">
-              <span class="status status-1">进行中</span>
-            </div>
-          </div>
+          </template>
+          <template v-else>
+            <div class="no-data">暂无数据</div>
+          </template>
         </div>
       </van-tab>
-      <van-tab title="历史订单">
+      <van-tab title="交易中">
         <div class="list-container mt">
-          <div class="list-item">
-            <div class="list-header h-45 van-hairline--bottom font-16">
-              <span>李XX</span>
-              <span class="amount">1689489&nbsp;CNY</span>
-            </div>
-            <div class="list-body font-14">
-              <div class="row flex flex-between">
-                <div class="col">单号：164849</div>
-                <div class="col color-666">类型：<span class="color-danger">买入</span></div>
+          <template v-if='tradingList.length>0'>
+            <div
+              v-for='item in tradingList'
+              :key='item.id'
+              class="list-item"
+            >
+              <div class="list-header h-45 van-hairline--bottom font-16">
+                <span>{{item.customerName}}</span>
+                <span class="amount">{{item.customerPhone|encryptPhone}}</span>
               </div>
-              <div class="row flex flex-between">
-                <div class="col">价格：64.64&nbsp;CNY</div>
-                <div class="col color-666">时间：2018-7-7</div>
+              <div class="list-body font-14">
+                <div class="row flex flex-between">
+                  <div class="col">价格：{{item.tradePrice}}</div>
+                  <div class="col color-666">数量：{{item.moneyNum}}</div>
+                </div>
+                <div class="row flex flex-between">
+                  <div class="col">总计：{{item.moneyNum*item.tradePrice}}</div>
+                  <div class="col color-666">时间：{{item.createTime|formatDate('yyyy-MM-dd hh:mm:ss')}}</div>
+                </div>
               </div>
-              <div class="row flex flex-between">
-                <div class="col">限额：64.64-2000</div>
+              <div class="van-hairline--top"></div>
+              <div class="list-footer h-45">
+                <span class="status status-1">{{statusMap['status_'+item.tradeStatus]}}</span>
               </div>
             </div>
-            <div class="van-hairline--top"></div>
-            <div class="list-footer van-hairline--top h-45">
-              <span class="status status-0">已完成</span>
+          </template>
+          <template v-else>
+            <div class="no-data">暂无数据</div>
+          </template>
+        </div>
+      </van-tab>
+      <van-tab title="已完成">
+        <div class="list-container mt">
+          <template v-if='doneList.length>0'>
+            <div
+              v-for='item in doneList'
+              :key='item.id'
+              class="list-item"
+            >
+              <div class="list-header h-45 van-hairline--bottom font-16">
+                <span>{{item.customerName}}</span>
+                <span class="amount">{{item.customerPhone|encryptPhone}}</span>
+              </div>
+              <div class="list-body font-14">
+                <div class="row flex flex-between">
+                  <div class="col">价格：{{item.tradePrice}}</div>
+                  <div class="col color-666">数量：{{item.moneyNum}}</div>
+                </div>
+                <div class="row flex flex-between">
+                  <div class="col">总计：{{item.moneyNum*item.tradePrice}}</div>
+                  <div class="col color-666">时间：{{item.createTime|formatDate('yyyy-MM-dd hh:mm:ss')}}</div>
+                </div>
+              </div>
+              <div class="van-hairline--top"></div>
+              <div class="list-footer h-45">
+                <span class="status status-1">{{statusMap['status_'+item.tradeStatus]}}</span>
+              </div>
             </div>
-          </div>
+          </template>
+          <template v-else>
+            <div class="no-data">暂无数据</div>
+          </template>
         </div>
       </van-tab>
     </van-tabs>
@@ -114,40 +159,203 @@
         <span class="font-bold">市场挂单</span>（只显示在线商家）
       </div>
       <div class="list-container">
-        <div class="list-item">
-          <div class="list-header h-45 van-hairline--bottom font-16">
-            <span>李XX</span>
-            <span class="amount">1689489&nbsp;CNY</span>
-          </div>
-          <div class="list-body font-14">
-            <div class="row flex flex-between">
-              <div class="col">价格：64.64&nbsp;CNY</div>
-              <div class="col color-666">在线：1分钟</div>
+        <template v-if='tradeHallData.length>0'>
+          <div
+            v-for='item in tradeHallData'
+            :key='item.id'
+            class="list-item"
+          >
+            <div class="list-header h-45 van-hairline--bottom font-16">
+              <span>{{item.customerName}}</span>
+              <span class="amount">{{item.customerPhone|encryptPhone}}</span>
             </div>
-            <div class="row flex flex-between">
-              <div class="col">数量：64.64</div>
-              <div class="col color-666">成交：1145</div>
+            <div class="list-body font-14">
+              <div class="row flex flex-between">
+                <div class="col">价格：{{item.tradePrice}}</div>
+                <div class="col color-666">数量：{{item.moneyNum}}</div>
+              </div>
+              <div class="row flex flex-between">
+                <div class="col">总计：{{item.moneyNum*item.tradePrice}}</div>
+                <div class="col color-666">时间：{{item.createTime|formatDate('yyyy-MM-dd hh:mm:ss')}}</div>
+              </div>
             </div>
-            <div class="row flex flex-between">
-              <div class="col">限额：64.64-2000</div>
-              <div class="col color-666">用时：1分钟</div>
+            <div class="van-hairline--top"></div>
+            <div class="list-footer h-45">
+              <button class="btn-small color-danger btn-radius">买入</button>
             </div>
           </div>
-          <div class="van-hairline--top"></div>
-          <div class="list-footer h-45">
-            <button class="btn-small color-danger btn-radius">买入</button>
-          </div>
-        </div>
+        </template>
+        <template v-else>
+          <div class="no-data">暂无数据</div>
+        </template>
       </div>
     </div>
   </div>
 </template>
 <script>
+import {
+  selectIndexData,
+  pushCoinTradeInfo,
+  selectMoneyTradeList,
+  matchingMoneyTrade,
+  selectMyMoneyTrade,
+  selectMyMoneyTrading,
+  selectMyMoneyTradeList,
+  cancleMyMoneyTradeById
+} from "@/vuexStore/tradeController.js";
+import { removeItemById } from "../../assets/js/Utils.js";
 export default {
   data() {
     return {
-      active: 0
+      show: false,
+      active: 0,
+      marketVal: {},
+      tradePrice: "",
+      tradeHallData: [],
+      pendingTradeList: [],
+      tradingList: [],
+      doneList: [],
+      moneyNum: "",
+      searchVal: "",
+      pageNo: 0,
+      pageSize: 10,
+      pageCount: 1,
+      payPass: "",
+      orderId: "",
+      statusMap: {
+        status_1: "待交易",
+        status_2: "待支付",
+        status_3: "待确认",
+        status_4: "交易投诉",
+        status_5: "交易取消",
+        status_6: "交易完成"
+      }
     };
+  },
+  mounted() {
+    this.loadData();
+  },
+  computed: {
+    disabled() {
+      if (
+        !this.tradePrice ||
+        !this.moneyNum ||
+        isNaN(this.moneyNum) ||
+        isNaN(this.tradePrice)
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+    tradeType() {
+      return this.active == 0 ? 2 : 1;
+    }
+  },
+  methods: {
+    async loadData() {
+      this.getTradeHallList();
+    },
+    toPage(status, page, pageSize, id) {
+      let params = { page, pageSize, id };
+      this.navigateTo("/trade/pending_order", params);
+    },
+    cancelOrder(id) {
+      this.$dialog
+        .confirm({
+          title: "提示",
+          message: "确认撤单？"
+        })
+        .then(res => {
+          cancleMyMoneyTradeById(id).then(res => {
+            if (res)
+              this.pendingTradeList = removeItemById(id, this.pendingTradeList);
+          });
+        });
+    },
+    toSearch() {
+      if (this.searchVal == "") return;
+      this.pageNo = "";
+      this.pageCount = 1;
+      this.getTradeHallList();
+    },
+    onTabChange(index) {
+      let that = this;
+      this.tradePrice = "";
+      this.moneyNum = "";
+      this.pageNo = 0;
+      this.pageCount = 1;
+      if (index <= 1) {
+        this.getTradeHallList();
+      } else if (index == 2) {
+        this.getToMatchList();
+      } else if (index == 3) {
+        this.getTradingList();
+      } else if (index == 4) {
+        this.getDoneList();
+      }
+    },
+    //大厅数据
+    getTradeHallList() {
+      selectMoneyTradeList(
+        this.active,
+        this.searchVal,
+        this.pageNo,
+        this.pageSize
+      ).then(res => {
+        if (res) {
+          this.tradeHallData = res.list;
+          this.pageNo = res.currentPageNo;
+          this.pageCount = res.pageCount;
+        }
+      });
+    },
+    //待匹配数据
+    getToMatchList() {
+      selectMyMoneyTrade(0).then(res => {
+        if (res) this.pendingTradeList = res;
+      });
+    },
+    //交易中数据
+    getTradingList() {
+      selectMyMoneyTrading().then(res => {
+        if (res) this.tradingList = res;
+      });
+    },
+    //交易完成列表
+    getDoneList() {
+      selectMyMoneyTradeList(this.pageNo, this.pageSize).then(res => {
+        if (res) this.doneList = res.list;
+      });
+    },
+    showDialog(id) {
+      this.tradeType == 1 && (this.show = true);
+      this.orderId = id;
+    },
+    onConfirm() {
+      if (this.payPass == "" && this.tradeType == 1) {
+        this.$toast("请输入交易密码");
+        return;
+      }
+      if (this.orderId) {
+        matchingMoneyTrade(this.orderId, this.payPass).then(res => {
+          if (res) this.getTradeHallList();
+        });
+      }
+    },
+    //买入/卖出操作
+    pubCoinTrade() {
+      pushCoinTradeInfo(
+        this.tradeType,
+        this.moneyNum,
+        this.tradePrice,
+        this.payPass
+      ).then(() => {
+        this.tradePrice = "";
+        this.moneyNum = "";
+        this.payPass = "";
+      });
+    }
   }
 };
 </script>

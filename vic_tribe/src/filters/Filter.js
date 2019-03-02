@@ -31,6 +31,7 @@ export default {
         return fmt;
     },
     encryptPhone(phoneNumber) {
+        if(!phoneNumber) return;
         return phoneNumber.replace(/^(\d{3})\d{4}(\d{4})$/, "$1****$2");
     }
 }

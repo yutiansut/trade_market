@@ -10,7 +10,7 @@ const c2cOrderDetail = r => require(["@/view/trade/c2cOrderDetail"], r);
 const EntrustTrade = r => require(["@/view/trade/EntrustTrade"], r);
 const EntrustBuyConfirm = r => require(["@/view/trade/EntrustBuyConfirm"], r);
 const EntrustSellConfirm = r => require(["@/view/trade/EntrustSellConfirm"], r);
-const PendingOrder = r => require(["@/view/trade/PendingOrder"], r);
+const EntrustPendingOrder = r => require(["@/view/trade/EntrustPendingOrder"], r);
 const appList = r => require(["@/view/app/Application"], r);
 const User = r => require(["@/view/user/User"], r);
 const UserInfo = r => require(["@/view/user/UserInfo"], r);
@@ -141,8 +141,8 @@ const routes = [
   },
   {
     path: "/trade/pending_order",
-    name: "PendingOrder",
-    component: PendingOrder,
+    name: "EntrustPendingOrder",
+    component: EntrustPendingOrder,
     meta: {
       title: "订单详情",
       auth: true,

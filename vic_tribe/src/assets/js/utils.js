@@ -67,9 +67,47 @@ function getQueryParams() {
     };
     return args;
 };
+function removeItemById(id, arr) {
+    if (id == "" || id == undefined || id == null || !Array.isArray(arr)) {
+        console.error('检测参数传递')
+        return false;
+    };
+
+    for (var i = arr.length; i > 0; i--) {
+        if (arr[i].id == id) {
+            arr.splice(i, 1)
+        };
+    }
+    return arr;
+}
+function getItemById(id, arr) {
+    if (id == "" || id == undefined || id == null || !Array.isArray(arr)) {
+        console.error('检测参数传递')
+        return false;
+    };
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i].id == id) {
+            return arr[i];
+        };
+    }
+}
+function getFileObjectUrl(file) {
+    let url = null;
+    if (window.createObjectURL) {
+        url = window.createObjectURL(file);
+    } else if (window.URL) {
+        url = window.URL.createObjectURL(file);
+    } else if (window.webkitURL) {
+        url = window.webkitURL.createObjectURL(file);
+    }
+    return url;
+}
 export {
     dataType,
     randomNum,
     timerCounter,
-    getQueryParams
+    getQueryParams,
+    removeItemById,
+    getItemById,
+    getFileObjectUrl
 }

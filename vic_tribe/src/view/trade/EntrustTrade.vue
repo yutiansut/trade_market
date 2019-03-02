@@ -125,7 +125,7 @@
                 </div>
                 <div class="row flex flex-between">
                   <div class="col">价格：{{item.tradePrice}}</div>
-                  <div class="col color-666">时间：2018-7-7</div>
+                  <div class="col color-666">时间：{{item.createTime|formatDate('yyyy-MM-dd hh:mm:ss')}}</div>
                 </div>
                 <div class="row flex flex-between">
                   <div class="col">单号：{{item.id}}</div>
@@ -147,12 +147,13 @@
         <van-tab title="交易中">
           <template v-if='tradingList.length>0'>
             <div
+              @touchend='toPage(item.tradeStatus,item.page,item.pageSize,item.id)'
               v-for="item in tradingList"
               :key='item.id'
               class="order-list-item"
             >
               <div class="list-header h-45 van-hairline--bottom font-16">
-                <van-col span='14'>{{item.customerName}}</van-col>
+                <van-col span='14'>{{item.mallCustomerName}}</van-col>
                 <span class="amount">总计：{{item.moneyNum*item.tradePrice}}</span>
               </div>
               <div class="list-body font-14">
@@ -164,7 +165,7 @@
                 </div>
                 <div class="row flex flex-between">
                   <div class="col">价格：{{item.tradePrice}}</div>
-                  <div class="col color-666">时间：2018-7-7</div>
+                  <div class="col color-666">时间：{{item.tradeMatchTime|formatDate('yyyy-MM-dd hh:mm:ss')}}</div>
                 </div>
                 <div class="row flex flex-between">
                   <div class="col">单号：{{item.id}}</div>
@@ -172,7 +173,7 @@
               </div>
               <div class="van-hairline--top"></div>
               <div class="list-footer van-hairline--top h-45">
-                <span class="status status-1">交易中</span>
+                <span class="status status-1">{{statusMap['status_'+item.tradeStatus]}}</span>
               </div>
             </div>
           </template>
@@ -208,7 +209,7 @@
               </div>
               <div class="van-hairline--top"></div>
               <div class="list-footer van-hairline--top h-45">
-                <span class="status status-0  ">已完成</span>
+                <span class="status status-1">{{statusMap['status_'+item.tradeStatus]}}</span>
               </div>
             </div>
           </template>
@@ -305,6 +306,7 @@ import {
   selectMyCoinTradeList,
   cancleMyCoinTradeById
 } from "@/vuexStore/tradeController.js";
+import { removeItemById } from "../../assets/js/Utils.js";
 export default {
   components: { Chart },
   data() {
@@ -323,7 +325,15 @@ export default {
       pageSize: 10,
       pageCount: 1,
       payPass: "",
-      orderId: ""
+      orderId: "",
+      statusMap: {
+        status_1: "待交易",
+        status_2: "待支付",
+        status_3: "待确认",
+        status_4: "交易投诉",
+        status_5: "交易取消",
+        status_6: "交易完成"
+      }
     };
   },
   mounted() {
@@ -352,12 +362,22 @@ export default {
       this.getTradeHallList();
       marketVal && (this.marketVal = marketVal);
     },
+    toPage(status, page, pageSize, id) {
+      let params = { page, pageSize, id };
+      this.navigateTo("/trade/entrust_pending_order", params);
+    },
     cancelOrder(id) {
-      cancleMyCoinTradeById(id).then(res => {
-        if (res) {
-          this.getToMatchList();
-        }
-      });
+      this.$dialog
+        .confirm({
+          title: "提示",
+          message: "确认撤单？"
+        })
+        .then(res => {
+          cancleMyCoinTradeById(id).then(res => {
+            if (res)
+              this.pendingTradeList = removeItemById(id, this.pendingTradeList);
+          });
+        });
     },
     toSearch() {
       if (this.searchVal == "") return;
@@ -383,12 +403,6 @@ export default {
     },
     //大厅数据
     getTradeHallList() {
-      if (this.pageNo < this.pageCount) {
-        this.pageNo++;
-      } else {
-        this.$toast("没有更多数据了");
-        return;
-      }
       selectCoinTradeList(
         this.active,
         this.searchVal,
@@ -404,12 +418,6 @@ export default {
     },
     //待匹配数据
     getToMatchList() {
-      if (this.pageNo < this.pageCount) {
-        this.pageNo++;
-      } else {
-        this.$toast("没有更多数据了");
-        return;
-      }
       selectMyCoinTrade(0).then(res => {
         if (res) this.pendingTradeList = res;
       });
@@ -422,12 +430,6 @@ export default {
     },
     //交易完成列表
     getDoneList() {
-      if (this.pageNo < this.pageCount) {
-        this.pageNo++;
-      } else {
-        this.$toast("没有更多数据了");
-        return;
-      }
       selectMyCoinTradeList(this.pageNo, this.pageSize).then(res => {
         if (res) this.doneList = res.list;
       });
@@ -607,7 +609,7 @@ $gap: 1rem;
     border-color: $color-danger;
     color: $color-danger;
   }
-  .status-1 {
+  .status-2 {
     border-color: $color-success;
     color: $color-success;
   }
