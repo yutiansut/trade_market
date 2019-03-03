@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "http://www.zfbqp.cn/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.zfbqp.cn/echo/" : "ws://www.zfbqp.cn/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "https://www.zfbqp.cn/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "wss://www.zfbqp.cn/echo/" : "ws://www.zfbqp.cn/echo/",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner

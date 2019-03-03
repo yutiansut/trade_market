@@ -584,19 +584,17 @@ export default {
     },
     // 通过socket 刷新数据
     updateListBySocket(token, maincoin, tradecoin) {
-      if(webSocket){
+      if (webSocket) {
         webSocket.close();
-      };
+      }
       webSocket = new WebSocket(
-          `${this.api.socketUrl}${token ||
-            randomString(32)}/${maincoin}_${tradecoin}`
-        );
-        webSocket.onopen = () => {
-          console.log("socket 已经连接，可以发送数据");
-          webSocket.send(
-            `${maincoin}_${tradecoin}`
-          );
-        };
+        `${this.api.socketUrl}${token ||
+          randomString(32)}/${maincoin}_${tradecoin}`
+      );
+      webSocket.onopen = () => {
+        console.log("socket 已经连接，可以发送数据");
+        webSocket.send(`${maincoin}_${tradecoin}`);
+      };
       webSocket.onmessage = event => {
         let msg = JSON.parse(event.data);
         msg.info[0] && (this.currentCoinInfo = msg.info[0]);

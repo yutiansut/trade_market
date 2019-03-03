@@ -29,6 +29,18 @@
         </div>
       </div>
       <div class="form-group">
+        <div class="label color-666 font-14">原密码</div>
+        <div class="form-input font-15 van-hairline--bottom">
+          <input
+            v-model="oldpassword"
+            autocomplete="off"
+            class="h-35"
+            type="password"
+            placeholder="请输入新密码"
+          >
+        </div>
+      </div>
+      <div class="form-group">
         <div class="label color-666 font-14">新密码</div>
         <div class="form-input font-15 van-hairline--bottom">
           <input
@@ -78,7 +90,8 @@ export default {
     return {
       type: 0,
       password: "",
-      imgCode: ""
+      imgCode: "",
+      oldpassword: ""
     };
   },
   mounted() {
@@ -96,6 +109,9 @@ export default {
     },
     password(val) {
       this.$emit("onDataChange", { password: val });
+    },
+    oldpassword(val) {
+      this.$emit("onDataChange", { oldpassword: val });
     },
     imgCode(val) {
       this.$emit("onDataChange", { imgCode: val });

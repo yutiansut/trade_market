@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "http://www.upayw.com/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.upayw.com/echo/" : "ws://47.95.213.181:80/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "https://www.zfbqp.cn/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "wss://www.zfbqp.cn/echo/" : "ws://47.95.213.181:80/echo/",
         // 首页banner
         banner: {
             url: "banner",

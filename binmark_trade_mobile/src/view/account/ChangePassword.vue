@@ -29,6 +29,12 @@ export default {
         });
         return false;
       }
+      if (!this.formData.oldpassword) {
+        this.$toast({
+          message: "请输入原密码"
+        });
+        return false;
+      }
       if (!this.Util.isPassword(this.formData.password)) {
         this.$toast({
           message: "密码必须以字母开头的6-12位字符"

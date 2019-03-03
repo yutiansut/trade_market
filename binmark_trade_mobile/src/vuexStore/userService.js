@@ -362,6 +362,7 @@ const updateloginpwd = async formData => {
         let result = await Request(apiConfig.updateloginpwd, {
             code: formData.code,
             password: formData.password,
+            oldpassword: formData.oldpassword,
             type: formData.type
         });
         let data = handelResult(result);
@@ -382,6 +383,7 @@ const updatepaypassword = async formData => {
         let result = await Request(apiConfig.updatepaypassword, {
             type: formData.type,
             code: formData.code,
+            oldpassword: formData.oldpassword,
             password: formData.password,
         });
         let data = handelResult(result);
