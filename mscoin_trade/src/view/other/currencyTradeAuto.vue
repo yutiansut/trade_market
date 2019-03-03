@@ -600,7 +600,7 @@ export default {
       // 接收数据
       webSocket.onmessage = event => {
         let msg = JSON.parse(event.data);
-        this.currentCoinInfo = msg.info[0];
+        msg.info[0] && (this.currentCoinInfo = msg.info[0]);
         this.latestBuyData = this.Util.sumCalc(msg.buy, "price", "number");
         this.latestSoldData = this.Util.sumCalc(msg.sell, "price", "number");
         this.historicalBuyData = this.Util.sumCalc(msg.top, "price", "number");
@@ -763,46 +763,50 @@ export default {
       that.request(that.api.getapido, { maincoin, tradcoin }).then(res => {
         let data = res.data.list[0];
         if (!data) return;
-        let price = 0;
-        let nowPrice = that.currentCoinInfo.prise * 1;
-        let highPrice = data.heightprice;
-        let lowPrice = data.lastprice;
-        let time = data.tradtime;
-        let timeOut = Math.floor(Math.random() * (2 * time + 5));
-        that.timerOut = setTimeout(
-          function func() {
-            let number = that.randomNum(
-              data.number * 1 - data.numbergas * 1,
-              data.number * 1 + data.numbergas * 1
+
+        that.timerOut = setTimeout(function func() {
+          let price = 0;
+          let nowPrice = that.currentCoinInfo.prise * 1;
+          let highPrice = data.heightprice;
+          let lowPrice = data.lastprice;
+          let time = data.tradtime;
+          let timeOut = Math.floor(Math.random() * (2 * time + 5));
+          let number = that.randomNum(
+            data.number * 1 - data.numbergas * 1,
+            data.number * 1 + data.numbergas * 1
+          );
+          if (nowPrice > highPrice) {
+            price = nowPrice - data.pricegas * 1;
+            that
+              .tradeHandle(that.api.forsell, {
+                maincoin: maincoin,
+                tradecoin: tradcoin,
+                number: number,
+                price: price
+              })
+              .then(res => {
+                if (res.code != 0) {
+                  clearTimeout(that.timerOut);
+                  return;
+                }
+                timeOut = Math.floor(Math.random() * (2 * time + 5));
+                that.timerOut = setTimeout(func, timeOut * 1000);
+              });
+          } else if (nowPrice < highPrice && nowPrice > lowPrice) {
+            let flag = 0;
+            price = that.randomNum(
+              nowPrice - data.pricegas,
+              nowPrice + data.pricegas
             );
-            if (nowPrice > data.heightprice) {
-              price = nowPrice - data.pricegas * 1;
-              that.tradeHandle(that.api.forsell, {
-                maincoin: maincoin,
-                tradecoin: tradcoin,
-                number: number,
-                price: price
-              }).then(res => {
-                if (res.code != 0) {
-                  clearTimeout(that.timerOut);
-                  return;
-                }
-                timeOut = Math.floor(Math.random() * (2 * time + 5));
-                that.timerOut = setTimeout(func, timeOut * 1000);
-              });
-            } else if (nowPrice < highPrice && nowPrice > lowPrice) {
-              let flag = 0;
-              price = that.randomNum(
-                nowPrice - data.pricegas,
-                nowPrice + data.pricegas
-              );
-              if (fag == 0) {
-                that.tradeHandle(that.api.forbuy, {
+            if (fag == 0) {
+              that
+                .tradeHandle(that.api.forbuy, {
                   maincoin: maincoin,
                   tradecoin: tradcoin,
                   number: number,
                   price: price
-                }).then(res => {
+                })
+                .then(res => {
                   console.log(res);
                   if (res.code != 0) {
                     clearTimeout(that.timerOut);
@@ -811,31 +815,35 @@ export default {
                   timeOut = Math.floor(Math.random() * (2 * time + 5));
                   that.timerOut = setTimeout(func, timeOut * 1000);
                 });
-              } else {
-                that.tradeHandle(that.api.forsell, {
-                  maincoin: maincoin,
-                  tradecoin: tradcoin,
-                  number: number,
-                  price: price
-                }).then(res => {
-                  console.log(res);
-                  if (res.code != 0) {
-                    clearTimeout(that.timerOut);
-                    return;
-                  }
-                  timeOut = Math.floor(Math.random() * (2 * time + 5));
-                  that.timerOut = setTimeout(func, timeOut * 1000);
-                });
-              }
-              flag = !flag;
             } else {
-              price = nowPrice + data.pricegas * 1;
-              that.tradeHandle(that.api.forbuy, {
+              that
+                .tradeHandle(that.api.forsell, {
+                  maincoin: maincoin,
+                  tradecoin: tradcoin,
+                  number: number,
+                  price: price
+                })
+                .then(res => {
+                  console.log(res);
+                  if (res.code != 0) {
+                    clearTimeout(that.timerOut);
+                    return;
+                  }
+                  timeOut = Math.floor(Math.random() * (2 * time + 5));
+                  that.timerOut = setTimeout(func, timeOut * 1000);
+                });
+            }
+            flag = !flag;
+          } else {
+            price = nowPrice + data.pricegas * 1;
+            that
+              .tradeHandle(that.api.forbuy, {
                 maincoin: maincoin,
                 tradecoin: tradcoin,
                 number: number,
                 price: price
-              }).then(res => {
+              })
+              .then(res => {
                 if (res.code != 0) {
                   clearTimeout(that.timerOut);
                   return;
@@ -843,10 +851,8 @@ export default {
                 timeOut = Math.floor(Math.random() * (2 * time + 5));
                 that.timerOut = setTimeout(func, timeOut * 1000);
               });
-            }
-          },
-          timeOut * 1000
-        );
+          }
+        }, timeOut * 1000);
       });
     },
     // 获取账户状态
@@ -1263,7 +1269,7 @@ $border: 1px solid #e5e5e5;
   }
 }
 .k-map {
-  height: 414px;
+  height: 514px;
   margin-bottom: 25px;
 }
 .form-wrap {

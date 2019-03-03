@@ -720,6 +720,7 @@
             var kline = new Kline();
             //var klineUrl = "http://192.168.5.112/trade/kline?needTickers=1&symbol=BTC_USDT&type=15min&size=1000";
             var klineUrl = window.location.protocol + "//" + window.location.host + "/API/kline";
+            var d = new Date();
             setInterval(function () {
                 if (GLOBAL_VAR.time_type == "1min") {
                     //K线图每分钟更新1分钟线

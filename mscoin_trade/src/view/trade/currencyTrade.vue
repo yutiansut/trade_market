@@ -57,11 +57,6 @@
               <i>{{currentCoinInfo.number*1}}&nbsp;{{tradecoin}}</i>
             </span>
           </div>
-          <button
-            @click="navigateTo('/kline_trade',{maincoinid: maincoin,coinid: tradecoin})"
-            style="margin-left:20%;"
-            class="btn-inline btn-hover btn-success btn-small"
-          >K线交易</button>
         </div>
         <!-- K线图占位 -->
         <div
@@ -512,7 +507,7 @@ export default {
       //当日可用
       myAvailable: "",
       // 当前币种
-      currentCoinInfo: {},
+      currentCoinInfo: "",
       // 充币地址
       chargeAddress: "",
       // 充币二维码
@@ -522,7 +517,9 @@ export default {
       canTrade: false,
       isGetSocketMsg: false,
       iframUrl: "./static/kline.html?",
-      timer: null
+      timer: null,
+      autoStart: false,
+      timerOut: null
     };
   },
   mounted() {
@@ -710,7 +707,6 @@ export default {
         this.tradecoin
       );
     },
-
     //获取委托数据
     awaitResult(maincoin, tradecoin) {
       let params = {
@@ -752,9 +748,10 @@ export default {
     // 最新交易信息
     getCurrentInfo(maincoin, tradcoin) {
       this.request(this.api.searchcoin, { maincoin, tradcoin }).then(res => {
-        this.currentCoinInfo = res.data.list;
+        this.currentCoinInfo = res.data.list[0];
       });
     },
+
     // 获取账户状态
     getState() {
       return this.request(this.api.saftyState).then(res => {
@@ -813,6 +810,7 @@ export default {
         } else {
           this.errMsg(res.msg);
         }
+        return Promise.resolve(res);
       });
     },
     // 删除列表某一项
@@ -1168,7 +1166,7 @@ $border: 1px solid #e5e5e5;
   }
 }
 .k-map {
-  height: 500px;
+  height: 514px;
   margin-bottom: 25px;
 }
 .form-wrap {

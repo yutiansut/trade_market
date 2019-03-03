@@ -62,14 +62,16 @@
             {{scope.row.total*1}}
           </template>
         </el-table-column>
-        <el-table-column
-          :width='$i18n.locale=="zh-CN"?"120":"230"'
-          :label="$t('operation')||'操作'"
-        >
+        <el-table-column :label="$t('operation')||'操作'">
           <div
             class="operation"
             slot-scope="scope"
           >
+            <span
+              @click="showDialog(2,scope.row)"
+              v-if="scope.row.name=='RNC'"
+              class="color-danger"
+            >转积分</span>|
             <span
               @click="showDialog(0,scope.row)"
               class="color-danger"
@@ -123,10 +125,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <!-- <div class="tips font-12 color-999">
-          <template v-if="$i18n.locale=='zh-CN'">USDT提现地址支持比特币BTC和以太坊ETH ERC20格式</template>
-          <template v-if="$i18n.locale=='en-US'">USDT address supports BTC formated address and ETH ERC200 formated address</template>
-        </div> -->
         <el-form-item :label='$t("addressName")||"地址名称"'>
           <el-input
             v-model="addressName"
@@ -134,12 +132,6 @@
           >
           </el-input>
         </el-form-item>
-        <!-- <div class="tips font-12 color-999">
-          <template v-if="$i18n.locale=='zh-CN'">提现成功后，系统会记住您的提现地址，以便下次使用，填写“地址名称”可便于您分辨钱包地址</template>
-          <template v-if="$i18n.locale=='en-US'">After the withdrawal is done, the system will save your withdrawal address for the next time,
-            fill in 'address name' will help you distinguish wallet addresses better.
-          </template>
-        </div> -->
         <el-form-item :label='$t("withdrawAmount")||"提现数额（币数）"'>
           <el-input
             v-model="formData.number"
@@ -222,6 +214,103 @@
       :chargeAddress='chargeAddress'
     >
     </charge-box>
+    <!-- 转激活分弹窗 -->
+    <dialog-box
+      :dialogTitle='$t("label201")||"转积分"'
+      :showDialog='showTransferDialog'
+      @onDialogClose='dialogClose(2)'
+    >
+      <el-form
+        label-position='top'
+        @submit.native.prevent
+      >
+        <el-form-item :label='$t("label204")'>
+          <el-input
+            disabled
+            v-model="userInfo.member"
+            autocomplete='off'
+            :placeholder='$t("label202")'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='$t("label205")'>
+          <el-input
+            v-model="transferFormData.account"
+            autocomplete='off'
+            :placeholder='$t("label203")'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label='$t("label206")'>
+          <el-input
+            v-model="transferFormData.number"
+            autocomplete='off'
+            :placeholder='$t("label207")'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item :label="$t('label163')">
+          <el-radio-group v-model="veriType">
+            <el-radio
+              :disabled='bindCellphone?false:true'
+              label="0"
+            >{{$t('mobileCode')||'手机验证码'}}</el-radio>
+            <el-radio
+              label='1'
+              :disabled='bindEmail?false:true'
+            >
+              {{$t('label161')||'邮箱验证码'}}
+            </el-radio>
+            <el-radio
+              label='2'
+              :disabled='bindGoogle?false:true'
+            >
+              {{$t('googleCode')||'谷歌验证码'}}
+            </el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item
+          v-if="veriType!='2'"
+          :label='veriType=="0"?$t("mobileCode"):$t("emailCode")'
+        >
+          <div class="mobile-code-wrap p-rel">
+            <el-input
+              v-model="transferFormData.code"
+              name='code'
+              :placeholder='veriType=="0"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
+              :disabled="myCode?false:true"
+            >
+            </el-input>
+            <div
+              @click='sendCode'
+              class="mobile-code abs-v-center color-danger"
+            >{{$t(this.codeTexti18n)}}{{second}}
+            </div>
+          </div>
+        </el-form-item>
+        <el-form-item
+          v-else
+          :label='$t("googleCode")||"谷歌验证码"'
+        >
+          <el-input
+            v-model="transferFormData.code"
+            :placeholder='$t("fillGoogleCode")||"请填写谷歌验证码"'
+          ></el-input>
+        </el-form-item>
+        <el-form-item :label='$t("fundPwd")||"资金密码"'>
+          <el-input
+            type='password'
+            v-model="transferFormData.password"
+            :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'
+          ></el-input>
+        </el-form-item>
+        <button
+          style="margin-top: 30px;"
+          @click="confirmTransfer"
+          class="btn-block btn-large btn-danger btn-active"
+        >确认转出</button>
+      </el-form>
+    </dialog-box>
   </div>
 </template>
 <script>
@@ -232,6 +321,7 @@ export default {
     return {
       showChargeDialog: false,
       showWidthDrawDialog: false,
+      showTransferDialog: false,
       usdtAddr: [
         {
           title: "添加地址",
@@ -246,11 +336,22 @@ export default {
         password: "",
         code: ""
       },
+      transferFormData: {
+        account: "",
+        number: "",
+        password: "",
+        code: ""
+      },
       bindCellphone: false,
       bindEmail: false,
       bindGoogle: false,
       errorLabel: {
         address: "label173",
+        number: "label174",
+        password: "label175",
+        code: "label172"
+      },
+      transferError: {
         number: "label174",
         password: "label175",
         code: "label172"
@@ -271,7 +372,9 @@ export default {
       myAccount: "",
       showLoading: false,
       //我的地址
-      myPropetyData: null
+      myPropetyData: null,
+      userInfo: {},
+      defaultType: "0"
     };
   },
   computed: {
@@ -293,12 +396,29 @@ export default {
   },
   mounted() {
     this.getAccount();
+    this.$bus.on("userLoaded", data => {
+      this.userInfo = data;
+    });
     this.getState();
   },
   methods: {
     changeStyle({ columnIndex }) {
       if (columnIndex == 5) {
         return "text-align:right;";
+      }
+    },
+    confirmTransfer() {
+      if (
+        this.transferFormData.code == "" ||
+        !this.transferFormData.number ||
+        !this.transferFormData.password
+      ) {
+        this.errMsg(this.$t("请填写完整信息"));
+        return;
+      }
+      if (isNaN(this.transferFormData.number)) {
+        this.errMsg("label208");
+        return false;
       }
     },
     initData() {
@@ -308,12 +428,18 @@ export default {
         password: "",
         code: ""
       };
+      this.transferFormData = {
+        account: "",
+        number: "",
+        password: "",
+        code: ""
+      };
       this.getCodeTimes = 0;
       this.canGetCode = true;
-      clearInterval(this.timer);
-      this.veriType = "0";
-      this.addressName = "";
       this.codeTexti18n = "getMsgCode";
+      clearInterval(this.timer);
+      this.veriType = this.defaultType;
+      this.addressName = "";
     },
     getAccount() {
       this.showLoading = true;
@@ -333,7 +459,7 @@ export default {
         }
       });
     },
-    //获取绑定配饰
+    //获取绑定配置
     getState() {
       this.request(this.api.saftyState).then(res => {
         if (res.code == "0") {
@@ -342,10 +468,11 @@ export default {
           this.bindEmail = this.bindState.emailstate;
           this.bindGoogle = this.bindState.googlestate;
           if (this.bindCellphone && !this.bindEmail) {
-            this.veriType = "0";
+            this.defaultType = "0";
           } else if (this.bindEmail && !this.bindCellphone) {
-            this.veriType = "0";
+            this.defaultType = "1";
           }
+          this.veriType = this.defaultType;
         }
       });
     },
@@ -365,6 +492,7 @@ export default {
     showDialog(i, data) {
       let coin = data.name;
       this.coinInfo = data;
+      this.getState();
       switch (i) {
         case 0:
           this.getAddress(coin);
@@ -390,6 +518,9 @@ export default {
           }
           this.getMyAddressList(coin);
           this.getDayNumber(coin);
+          break;
+        case 2:
+          this.showTransferDialog = true;
           break;
       }
     },
@@ -473,23 +604,22 @@ export default {
       return result;
     },
     dialogClose(i) {
+      this.veriType = this.defaultType;
       switch (i) {
         case 1:
           this.showChargeDialog = false;
           break;
         case 0:
           this.showWidthDrawDialog = false;
-          this.canGetCode = true;
-          this.second = "";
-          this.codeTexti18n = "getMsgCode";
-          for (let key in this.formData) {
-            this.formData[key] == "";
-          }
-          this.timer && clearInterval(this.timer);
+          this.initData();
+          break;
+        case 2:
+          this.showTransferDialog = false;
+          this.initData();
           break;
       }
     },
-    // 提交表单
+    // 提交充币
     onSubmit() {
       if (!this.isValEmpty()) {
         return false;
@@ -570,6 +700,7 @@ export default {
     margin-top: 15px;
   }
 }
+
 .mobile-code {
   width: 120px;
   text-align: right;
