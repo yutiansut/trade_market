@@ -41,7 +41,7 @@ const Register = async (phone, password, code, parentPhone, payPass, userName) =
             payPass
         });
         let data = handelResult(result);
-        return data;
+        return data || result;
     } catch (err) {
         console.log(err)
     }
@@ -53,7 +53,10 @@ const forgetPassword = async (phone, password, code) => {
             phone, password, code
         });
         let data = handelResult(result);
-        return data;
+        if (data) {
+            Toast.message(result.msg);
+            return data;
+        }
     } catch (err) {
         console.log(err)
     }

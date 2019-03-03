@@ -584,23 +584,23 @@ export default {
     },
     // 通过socket 刷新数据
     updateListBySocket(token, maincoin, tradecoin) {
-      console.log("浏览器支持websocket");
-      if (webSocket) {
-        webSocket.send(`${maincoin}_${tradecoin}`);
-        return false;
-      }
-      webSocket = new WebSocket(
-        `${this.api.socketUrl}${token ||
-          randomString(32)}/${maincoin}_${tradecoin}`
-      );
-      webSocket.onopen = () => {
-        console.log("socket 已经连接，可以发送数据");
-        webSocket.send(`${maincoin}_${tradecoin}`);
+      if(webSocket){
+        webSocket.close();
       };
-      // 接收数据
+      webSocket = new WebSocket(
+          `${this.api.socketUrl}${token ||
+            randomString(32)}/${maincoin}_${tradecoin}`
+        );
+        webSocket.onopen = () => {
+          console.log("socket 已经连接，可以发送数据");
+          webSocket.send(
+            `${maincoin}_${tradecoin}`
+          );
+        };
       webSocket.onmessage = event => {
         let msg = JSON.parse(event.data);
         msg.info[0] && (this.currentCoinInfo = msg.info[0]);
+        console.log(msg);
         this.latestBuyData = this.Util.sumCalc(msg.buy, "price", "number");
         this.latestSoldData = this.Util.sumCalc(msg.sell, "price", "number");
         this.historicalBuyData = this.Util.sumCalc(msg.top, "price", "number");
@@ -797,7 +797,6 @@ export default {
         showLoading: true
       }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
-
         if (res.code == "0") {
           this.updateLastestData(
             this.storage.get("token"),

@@ -1,7 +1,7 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "http://www.upayw.com/API" : "/API",
-        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.upayw.com/echo/" : "ws://47.95.213.181:80/echo/",
+        baseURL: process.env.NODE_ENV === 'production' ? "http://www.zfbqp.cn/API" : "/API",
+        socketUrl: process.env.NODE_ENV === 'production' ? "ws://www.zfbqp.cn/echo/" : "ws://www.zfbqp.cn/echo/",
         // 二维码路径
         qrUrl: 'https://www.kmsjqm.cn/',
         // 首页banner
@@ -368,6 +368,9 @@ let apiCfg = (function () {
         },
         searchcoin: {
             url: "searchcoin"
+        },
+        exchange: {
+            url: "exchange"
         }
     }
 }());

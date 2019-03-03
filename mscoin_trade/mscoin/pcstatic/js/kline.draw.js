@@ -8957,7 +8957,7 @@ var RequestData = function (showLoading) {
     if (showLoading == true) {
         $("#chart_loading").addClass("activated");
     }
-    
+
     $(document).ready(GLOBAL_VAR.G_HTTP_REQUEST = $.ajax({
         type: "get",
         url: GLOBAL_VAR.url,
@@ -8993,7 +8993,7 @@ var RequestData = function (showLoading) {
                 //kline.setTopTickers(json.data.list.datas.topTickers);
                 // GLOBAL_VAR.KLineData = eval(json.data.list.datas.data);
                 GLOBAL_VAR.KLineData = json.data.list.data.lines;
-                
+
                 try {
                     if (!GLOBAL_VAR.chartMgr.updateData("frame0.k0", GLOBAL_VAR.KLineData)) {
                         //GLOBAL_VAR.requestParam = setHttpRequestParam(GLOBAL_VAR.market_from, GLOBAL_VAR.time_type, GLOBAL_VAR.limit, null);

@@ -38,7 +38,6 @@ const passwordVisable = {
     },
     methods: {
         toggleVisiable() {
-            console.log(1)
             this.passwordVisable = !this.passwordVisable;
         }
     }

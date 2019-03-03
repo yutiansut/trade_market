@@ -316,7 +316,7 @@ module.exports = {
     avisalPrice: "指导价",
     minNum: "最少",
     newPassword: "新密码",
-    oldPassword: "旧密码",
+    oldPassword: "原密码",
     completed: "已完成",
     binded: "已绑定",
     label100: "请输入Twitter链接",

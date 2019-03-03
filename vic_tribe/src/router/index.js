@@ -20,6 +20,7 @@ const AccountSetting = r => require(['@/view/user/AccountSetting'], r);
 const UserAuth = r => require(['@/view/user/UserAuth'], r);
 const ResetPassword = r => require(['@/view/user/ResetPassword'], r);
 const ResetTradePassword = r => require(['@/view/user/ResetTradePassword'], r);
+const ForgetPassword = r => require(['@/view/user/ForgetPassword'], r);
 const EntrustOrderDetail = r => require(['@/view/trade/EntrustOrderDetail'], r);
 const MyTeam = r => require(['@/view/user/MyTeam'], r);
 const FeedBack = r => require(['@/view/user/FeedBack'], r);
@@ -269,7 +270,15 @@ const routes = [
         title: "用户注册",
         auth: false
       }
-    }]
+    }, {
+      path: "/userentry/forget_password",
+      name: "ForgetPassword",
+      component: ForgetPassword,
+      meta: {
+        title: "找回登录密码",
+        auth: false
+      }
+    },]
   },
   {
     path: "/news",

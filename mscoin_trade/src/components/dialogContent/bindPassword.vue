@@ -51,6 +51,15 @@
             </div>
           </div>
         </el-form-item>
+        <el-form-item :label='$t("oldPassword")||oldPasswordLabel'>
+          <el-input
+            name='oldpassword'
+            type='password'
+            v-model="formData.oldpassword"
+            :placeholder='$t("pwdPlaceholder")||"请输入密码"'
+          >
+          </el-input>
+        </el-form-item>
         <el-form-item :label='$t("newPassword")||passwordLabel'>
           <el-input
             name='password'
@@ -115,6 +124,10 @@ export default {
       type: String,
       default: "手机号码"
     },
+    oldPasswordLabel: {
+      type: String,
+      default: "原密码"
+    },
     passwordLabel: {
       type: String,
       default: "新密码"
@@ -136,6 +149,7 @@ export default {
         type: "",
         code: "",
         password: "",
+        oldpassword: "",
         imgCode: ""
       }
     };
@@ -191,12 +205,14 @@ export default {
       this.request(this.api[api], {
         type: this.formData.type,
         code: this.formData.code,
+        oldpassword: this.formData.oldpassword,
         password: this.formData.password,
         showLoading: true
       }).then(res => {
         if (res.code == "0") {
           this.successMsg(res.msg);
           this.closeModal();
+          //如果为修改登录密码则退出当前用户登录，否则，修改密码。
           if (this.apiKey != "updateloginpwd") {
             this.$emit("fundPasswordUpdated");
           } else {

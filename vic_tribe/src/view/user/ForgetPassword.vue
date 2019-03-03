@@ -1,18 +1,17 @@
 <template>
   <div class="login user-entry">
-    <account-head></account-head>
+    <account-head
+      to='/userentry/login'
+      linkLabel='返回登录'
+    ></account-head>
     <div class="page-head font-bold">
-      <span class="font-20">登录</span>
+      <span class="font-20">找回密码</span>
       <span class="font-18">VIC&nbsp;&nbsp;tribe</span>
     </div>
     <p class="label font-14 color-666">
-      您可以使用VIC tribe账号/手机号进行登录
+      您可以使用手机号进行找回
     </p>
     <form class="form">
-      <!-- <tab-bar
-        @onTabChange='onTabChange'
-        :tabItem='tabItem'
-      ></tab-bar> -->
       <van-row v-show="type=='0'">
         <van-col
           class="font-16"
@@ -30,25 +29,8 @@
           >
         </van-col>
       </van-row>
-      <van-row v-show="type=='1'">
-        <van-col
-          class="font-16"
-          span='6'
-        >邮箱</van-col>
-        <van-col
-          class="font-16"
-          span='18'
-        >
-          <input
-            v-model="account"
-            autocomplete='off'
-            type="text"
-            placeholder="请输入邮箱"
-          >
-        </van-col>
-      </van-row>
       <van-row>
-        <van-col span='6'>密码</van-col>
+        <van-col span='6'>新密码</van-col>
         <van-col span='14'>
           <input
             v-model="password"
@@ -65,7 +47,25 @@
           ></i>
         </van-col>
       </van-row>
-      <!-- <van-row>
+      <van-row>
+        <van-col span='6'>确认密码</van-col>
+        <van-col span='14'>
+          <input
+            v-model="repassword"
+            autocomplete='off'
+            :type="passwordVisable?'text':'password'"
+            placeholder="请再次输入密码"
+          >
+        </van-col>
+        <van-col span='4'>
+          <i
+            @touchend="toggleVisiable"
+            class="iconfont font-24"
+            :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
+          ></i>
+        </van-col>
+      </van-row>
+      <van-row>
         <van-col span='6'>验证码</van-col>
         <van-col span='10'>
           <input
@@ -81,35 +81,27 @@
             v-text="codeText"
           ></span>
         </van-col>
-      </van-row> -->
+      </van-row>
     </form>
-    <router-link
-      class="font-14 fr link-to"
-      to='/userentry/forget_password'
-    >忘记密码？</router-link>
     <button
       @touchend='onSubmit'
       class="btn-block btn-large btn-default btn-active btn-round"
-    >登录</button>
-    <a
-      href=""
-      class="down-load font-16"
-    >下载APP</a>
-    <p class="version p-abs abs-h-center txt-center font-18 color-999">VIC tribe 1.0版本</p>
+    >确认</button>
   </div>
 </template>
 <script>
 import accountHead from "@/components/account/accountHead";
-import { passwordVisable } from "@/mixins/mixins.js";
-import { Login, getSmsCode } from "@/vuexStore/commonController.js";
+import { passwordVisable, verCodeMixin } from "@/mixins/mixins.js";
+import { forgetPassword, getSmsCode } from "@/vuexStore/commonController.js";
 export default {
   components: { accountHead, passwordVisable },
-  mixins: [passwordVisable],
+  mixins: [passwordVisable, verCodeMixin],
   data() {
     return {
       type: 0,
       account: "",
-      password: ""
+      password: "",
+      repassword: ""
     };
   },
   methods: {
@@ -131,6 +123,16 @@ export default {
         code = 1;
         return { code, msg };
       }
+      if (this.repassword !== this.password) {
+        msg = "两次输入密码不一致";
+        code = 1;
+        return { code, msg };
+      }
+      if (!this.code) {
+        msg = "验证码不能为空";
+        code = 1;
+        return { code, msg };
+      }
       return { code, msg };
     },
     onSubmit() {
@@ -139,14 +141,22 @@ export default {
         this.$toast(msg);
         return;
       }
-      Login(this.account, this.password).then(res => {
+      forgetPassword(this.phone, this.password, this.code).then(res => {
         if (res) {
-          this.$store.dispatch("changeLoginState", true);
-          this.storage.set("isLogin", true);
-          this.storage.set("token", res.data.token);
-          this.navigateTo("/");
+          this.navigateTo("/userentry/login");
         }
       });
+    },
+    getCode() {
+      if (!this.Validate.isPhone(this.account)) {
+        this.$toast("手机号码格式不正确");
+        return;
+      }
+      if (this.canGetCode) {
+        getSmsCode(this.account, 1).then(res => {
+          this.timeCountDown();
+        });
+      }
     },
     onTabChange(i) {
       this.type = i;
@@ -155,15 +165,9 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.login {
-  .down-load {
-    display: block;
-    text-align: center;
-    color: #fff;
-    margin-top: 3.7vh;
-  }
-  .version {
-    bottom: 2rem;
-  }
+.form {
+  margin-bottom: 4rem;
 }
 </style>
+
+

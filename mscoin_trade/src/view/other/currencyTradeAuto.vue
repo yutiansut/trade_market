@@ -586,8 +586,7 @@ export default {
     updateListBySocket(token, maincoin, tradecoin) {
       console.log("浏览器支持websocket");
       if (webSocket) {
-        webSocket.send(`${maincoin}_${tradecoin}`);
-        return false;
+        webSocket.close();
       }
       webSocket = new WebSocket(
         `${this.api.socketUrl}${token ||
@@ -787,6 +786,11 @@ export default {
               .then(res => {
                 if (res.code != 0) {
                   clearTimeout(that.timerOut);
+                  this.updateLastestData(
+                    this.storage.get("token"),
+                    this.maincoin,
+                    this.tradecoin
+                  );
                   return;
                 }
                 timeOut = Math.floor(Math.random() * (2 * time + 5));
@@ -809,6 +813,11 @@ export default {
                 .then(res => {
                   console.log(res);
                   if (res.code != 0) {
+                    this.updateLastestData(
+                      this.storage.get("token"),
+                      this.maincoin,
+                      this.tradecoin
+                    );
                     clearTimeout(that.timerOut);
                     return;
                   }
@@ -826,6 +835,11 @@ export default {
                 .then(res => {
                   console.log(res);
                   if (res.code != 0) {
+                    this.updateLastestData(
+                      this.storage.get("token"),
+                      this.maincoin,
+                      this.tradecoin
+                    );
                     clearTimeout(that.timerOut);
                     return;
                   }
@@ -845,6 +859,11 @@ export default {
               })
               .then(res => {
                 if (res.code != 0) {
+                  this.updateLastestData(
+                    this.storage.get("token"),
+                    this.maincoin,
+                    this.tradecoin
+                  );
                   clearTimeout(that.timerOut);
                   return;
                 }

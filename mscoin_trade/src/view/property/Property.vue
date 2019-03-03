@@ -191,13 +191,13 @@
             :placeholder='$t("fillGoogleCode")||"请填写谷歌验证码"'
           ></el-input>
         </el-form-item>
-        <el-form-item :label='$t("fundPwd")||"资金密码"'>
+        <!-- <el-form-item :label='$t("fundPwd")||"资金密码"'>
           <el-input
             type='password'
             v-model="formData.password"
             :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <button
           @click="onSubmit"
           class="btn-block btn-danger btn-large btn-active"
@@ -249,61 +249,13 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item :label="$t('label163')">
-          <el-radio-group v-model="veriType">
-            <el-radio
-              :disabled='bindCellphone?false:true'
-              label="0"
-            >{{$t('mobileCode')||'手机验证码'}}</el-radio>
-            <el-radio
-              label='1'
-              :disabled='bindEmail?false:true'
-            >
-              {{$t('label161')||'邮箱验证码'}}
-            </el-radio>
-            <el-radio
-              label='2'
-              :disabled='bindGoogle?false:true'
-            >
-              {{$t('googleCode')||'谷歌验证码'}}
-            </el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item
-          v-if="veriType!='2'"
-          :label='veriType=="0"?$t("mobileCode"):$t("emailCode")'
-        >
-          <div class="mobile-code-wrap p-rel">
-            <el-input
-              v-model="transferFormData.code"
-              name='code'
-              :placeholder='veriType=="0"?$t("mobileCodePlaceholder"):$t("emailCodePlaceholder")'
-              :disabled="myCode?false:true"
-            >
-            </el-input>
-            <div
-              @click='sendCode'
-              class="mobile-code abs-v-center color-danger"
-            >{{$t(this.codeTexti18n)}}{{second}}
-            </div>
-          </div>
-        </el-form-item>
-        <el-form-item
-          v-else
-          :label='$t("googleCode")||"谷歌验证码"'
-        >
-          <el-input
-            v-model="transferFormData.code"
-            :placeholder='$t("fillGoogleCode")||"请填写谷歌验证码"'
-          ></el-input>
-        </el-form-item>
-        <el-form-item :label='$t("fundPwd")||"资金密码"'>
+        <!-- <el-form-item :label='$t("fundPwd")||"资金密码"'>
           <el-input
             type='password'
             v-model="transferFormData.password"
             :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <button
           style="margin-top: 30px;"
           @click="confirmTransfer"
@@ -315,6 +267,8 @@
 </template>
 <script>
 import chargeBox from "@/components/dialogContent/chargeBox";
+import { checkTradePassword } from "../../service/TradeService.js";
+
 export default {
   components: { chargeBox },
   data() {
@@ -347,11 +301,6 @@ export default {
       bindGoogle: false,
       errorLabel: {
         address: "label173",
-        number: "label174",
-        password: "label175",
-        code: "label172"
-      },
-      transferError: {
         number: "label174",
         password: "label175",
         code: "label172"
@@ -408,17 +357,45 @@ export default {
       }
     },
     confirmTransfer() {
-      if (
-        this.transferFormData.code == "" ||
-        !this.transferFormData.number ||
-        !this.transferFormData.password
-      ) {
+      if (!this.transferFormData.account || !this.transferFormData.number) {
         this.errMsg(this.$t("请填写完整信息"));
         return;
       }
       if (isNaN(this.transferFormData.number)) {
         this.errMsg("label208");
         return false;
+      }
+      if (!this.storage.get("tradePasswordChecked")) {
+        this.$prompt("请输入交易密码", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputPattern: /\S/,
+          inputType: "password",
+          inputErrorMessage: "交易密码不能为空"
+        })
+          .then(({ value }) => {
+            checkTradePassword(value).then(res => {
+              if (res.code != 0) {
+                this.storage.set("tradePasswordChecked", false);
+                this.errMsg("交易密码不正确");
+              } else {
+                this.storage.set("tradePasswordChecked", true);
+                this.successMsg(res.msg);
+              }
+            });
+          })
+          .catch(() => {});
+      } else {
+        this.request(this.api.exchange, {
+          account: this.transferFormData.account,
+          number: this.transferFormData.number
+        }).then(res => {
+          if (res.code) {
+            this.successMsg(res.msg);
+          } else {
+            this.errMsg(res.msg);
+          }
+        });
       }
     },
     initData() {
@@ -603,6 +580,7 @@ export default {
       }
       return result;
     },
+    // 关闭弹窗
     dialogClose(i) {
       this.veriType = this.defaultType;
       switch (i) {
