@@ -20,7 +20,7 @@
           >
           <div class="heading">{{tradecoin}}/{{maincoin}}</div>
           <div class="market-val flex flex-v-center">
-            <span class="font-16">{{currentCoinInfo.prise*1}}</span>
+            <span class="font-16">≈￥{{(currentCoinInfo.cny||0)*1}}</span>
             <!-- <span class="font-14 color-666">≈0.05 CNY </span> -->
           </div>
           <div class="market-condition font-12">
@@ -31,7 +31,7 @@
               ></em>
               <i
                 :class="currentCoinInfo.rise*1>0?'color-danger':'color-success'"
-                v-text='currentCoinInfo.rise*1+"%"'
+                v-text='(currentCoinInfo.rise||0)*1+"%"'
               >
               </i>
             </span>
@@ -40,21 +40,21 @@
                 class="color-666"
                 v-text="$t('high')||'高'"
               ></em>
-              <i>{{currentCoinInfo.height*1}}</i>
+              <i>{{(currentCoinInfo.height||0)*1}}</i>
             </span>
             <span>
               <em
                 class="color-666"
                 v-text="$t('low')||'低'"
               ></em>
-              <i>{{currentCoinInfo.low*1}}</i>
+              <i>{{(currentCoinInfo.low||0)*1}}</i>
             </span>
             <span>
               <em
                 class="color-666"
                 v-text="$t('dayVol')||'24H量'"
               ></em>
-              <i>{{currentCoinInfo.number*1}}&nbsp;{{tradecoin}}</i>
+              <i>{{(currentCoinInfo.number||0)*1}}&nbsp;{{tradecoin}}</i>
             </span>
           </div>
         </div>

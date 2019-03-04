@@ -111,8 +111,8 @@ const modifyLoginPass = async (oldPassword, phone, newPassword, code) => {
             });
         let data = handelResult(result);
         if (data) {
+            Toast(result.msg);
             return data;
-            Toast(result.msg)
         }
     } catch (err) {
         console.log(err)

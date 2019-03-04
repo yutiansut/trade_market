@@ -102,6 +102,13 @@ function getFileObjectUrl(file) {
     }
     return url;
 }
+function isEmptyObject(obj) {
+    let name;
+    for (name in obj) {
+        return false;
+    }
+    return true;
+};
 export {
     dataType,
     randomNum,
@@ -109,5 +116,6 @@ export {
     getQueryParams,
     removeItemById,
     getItemById,
-    getFileObjectUrl
+    getFileObjectUrl,
+    isEmptyObject
 }

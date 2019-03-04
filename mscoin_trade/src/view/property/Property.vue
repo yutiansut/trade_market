@@ -390,8 +390,10 @@ export default {
           account: this.transferFormData.account,
           number: this.transferFormData.number
         }).then(res => {
-          if (res.code) {
+          if (res.code == 0) {
             this.successMsg(res.msg);
+            this.getAccount();
+            this.dialogClose(2);
           } else {
             this.errMsg(res.msg);
           }

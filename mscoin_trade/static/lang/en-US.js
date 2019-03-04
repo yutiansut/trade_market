@@ -475,5 +475,6 @@ module.exports = {
     "请输入有效的数量或价格": 'Invalid price or number',
     "两次输入姓名不匹配": "Names are not the same one",
     "该邮箱已经注册过，请直接登录": "Email has been used",
-    "注册失败": "Register faild"
+    "注册失败": "Register faild",
+    "提币失败": "Failed"
 }
