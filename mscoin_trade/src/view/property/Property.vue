@@ -67,11 +67,12 @@
             class="operation"
             slot-scope="scope"
           >
-            <span
-              @click="showDialog(2,scope.row)"
-              v-if="scope.row.name=='RNC'"
-              class="color-danger"
-            >转积分</span>|
+            <template v-if="scope.row.name=='RNC'">
+              <span
+                @click="showDialog(2,scope.row)"
+                class="color-danger"
+              >转积分</span>|
+            </template>
             <span
               @click="showDialog(0,scope.row)"
               class="color-danger"
@@ -132,6 +133,15 @@
           >
           </el-input>
         </el-form-item>
+        <el-form-item
+          v-if="coinInfo.name==='XRP'"
+          :label='$t("label209")'
+        >
+          <el-input
+            v-model="formData.tag"
+            :placeholder='$t("label210")'
+          ></el-input>
+        </el-form-item>
         <el-form-item :label='$t("withdrawAmount")||"提现数额（币数）"'>
           <el-input
             v-model="formData.number"
@@ -148,7 +158,8 @@
             <el-radio
               :disabled='bindCellphone?false:true'
               label="0"
-            >{{$t('mobileCode')||'手机验证码'}}</el-radio>
+            >{{$t('mobileCode')||'手机验证码'}}
+            </el-radio>
             <el-radio
               label='1'
               :disabled='bindEmail?false:true'
@@ -191,13 +202,6 @@
             :placeholder='$t("fillGoogleCode")||"请填写谷歌验证码"'
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item :label='$t("fundPwd")||"资金密码"'>
-          <el-input
-            type='password'
-            v-model="formData.password"
-            :placeholder='$t("fundPwdPlaceholder")||"请填写资金密码"'
-          ></el-input>
-        </el-form-item> -->
         <button
           @click="onSubmit"
           class="btn-block btn-danger btn-large btn-active"
@@ -211,6 +215,7 @@
       :showCharge='showChargeDialog'
       @closeModel='dialogClose(1)'
       :coin='coinInfo.name'
+      :tag='mytag'
       :chargeAddress='chargeAddress'
     >
     </charge-box>
@@ -288,7 +293,8 @@ export default {
         address: "",
         number: "",
         password: "",
-        code: ""
+        code: "",
+        tag: ""
       },
       transferFormData: {
         account: "",
@@ -320,10 +326,10 @@ export default {
       timer: null,
       myAccount: "",
       showLoading: false,
-      //我的地址
       myPropetyData: null,
       userInfo: {},
-      defaultType: "0"
+      defaultType: "0",
+      mytag: ""
     };
   },
   computed: {
@@ -405,7 +411,8 @@ export default {
         address: "",
         number: "",
         password: "",
-        code: ""
+        code: "",
+        tag: ""
       };
       this.transferFormData = {
         account: "",
@@ -413,6 +420,7 @@ export default {
         password: "",
         code: ""
       };
+
       this.getCodeTimes = 0;
       this.canGetCode = true;
       this.codeTexti18n = "getMsgCode";
@@ -523,10 +531,19 @@ export default {
       this.request(this.api.getaddress, { coin: coin, showLoading: true }).then(
         res => {
           if (res.code == "0") {
+            console.log(res)
             this.showChargeDialog = true;
-            this.chargeAddress = res.data.address[0]
-              ? res.data.address[0].address
-              : "";
+            try {
+              
+              if(this.coinInfo.name=="XRP"){
+                this.chargeAddress = res.data.address.address;
+                this.mytag = res.data.address.tag;
+              }else{
+                this.chargeAddress = res.data.address[0].address;
+              }
+            } catch (error) {
+              console.log(error);
+            }
           } else {
             this.errMsg(res.msg);
           }
@@ -572,6 +589,9 @@ export default {
     },
     isValEmpty() {
       let result = false;
+      if (!this.coinInfo.name === "XRP") {
+        delete this.formData.tag;
+      }
       for (let key in this.formData) {
         if (this.formData[key] == "") {
           this.errMsg(this.errorLabel[key]);
@@ -599,7 +619,7 @@ export default {
           break;
       }
     },
-    // 提交充币
+    // 提交
     onSubmit() {
       if (!this.isValEmpty()) {
         return false;
@@ -612,8 +632,18 @@ export default {
         this.errMsg("label143" || "提现数额不得超过单次提币限额");
         return false;
       }
+      let address = "";
+      if (this.coinInfo.name === "XRP") {
+        address = `${this.formData.address},${this.formData.tag}`;
+      } else {
+        address = this.formData.address;
+      }
+      // let address = this.coinInfo.name==="XRP"
       this.request(this.api.outcoin, {
-        ...this.formData,
+        address: address,
+        number: this.formData.number,
+        password: this.formData.password,
+        code: this.formData.code,
         coin: this.coinInfo.name,
         type: this.veriType,
         addressName: this.addressName || "",

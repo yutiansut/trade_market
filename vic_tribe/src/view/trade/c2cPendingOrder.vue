@@ -193,7 +193,6 @@ import {
   confirmMyMoneyTrade
 } from "@/vuexStore/tradeController.js";
 import apiConfig from "@/config/apiConfig.js";
-import axios from "axios";
 export default {
   data() {
     return {
@@ -237,7 +236,7 @@ export default {
       formData.append("token", this.storage.get("token"));
       formData.append("id", this.$route.query.id);
       options.data = formData;
-      options.url = `${this.api.baseURL}${apiConfig.payMyMoneyTrade.url}`;
+      options.url = `${this.api.baseURL}${apiConfig.uploadImages.url}`;
       axios(options).then(res => {
         console.log(res);
       });

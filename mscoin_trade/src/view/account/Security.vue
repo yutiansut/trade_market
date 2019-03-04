@@ -244,6 +244,7 @@
     </div>
     <!-- 修改登录密码 -->
     <bind-password
+      passwordType="loginpassword"
       :show='dialogId=="loginPassword"?true:false'
       :title='$t("changePwd")||"修改登录密码"'
       :bindEmail='bindState.emailstate=="0"?false:true'
@@ -254,6 +255,7 @@
     </bind-password>
     <!-- 修改设置资金密码 -->
     <bind-password
+      passwordType="tradepassword"
       :show='dialogId=="financialPassword"?true:false'
       :title='fundPassTitle'
       apiKey='updatepaypassword'

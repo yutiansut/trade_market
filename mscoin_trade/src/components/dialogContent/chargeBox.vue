@@ -8,10 +8,6 @@
       <div class="mt-15 charge-label">
         <template v-if="$i18n.locale=='zh-CN'">请将{{coin}}汇入如下地址</template>
         <template v-if="$i18n.locale=='en-US'">Please place {{coin}} to the following address</template>
-        <!-- <router-link to="">
-          <template v-if="$i18n.locale=='zh-CN'">（点击这里查看区块链记录）</template>
-          <template v-if="$i18n.locale=='en-US'">(click to check block chain record)</template>
-        </router-link> -->
       </div>
       <input
         class="eth-addr"
@@ -30,6 +26,14 @@
         >
         </vue-qr>
       </div>
+      <template v-if="tag">
+        <div class="tag-label">{{$t("label209")}}</div>
+        <input
+          class="eth-addr"
+          disabled='disabled'
+          :value="tag"
+        />
+      </template>
       <div class="warning color-666">
         <template v-if="$i18n.locale=='en-US'">
           Please send the number of {{coin}} you need to recharge to this address via the {{coin}} client or online wallet. After the transmission is completed, the system will automatically recharge the virtual currency to your account on the site after 12 confirmations. 12 confirmations take about 0.5 to 1 hour, please be patient. The same address can be recharged multiple times without affecting the account. The minimum recharge amount is 0.0001.
@@ -52,7 +56,8 @@ export default {
     },
     chargeAddress: "",
     qrCode: null,
-    coin: null
+    coin: null,
+    tag: null
   },
   data() {
     return {
@@ -78,6 +83,9 @@ export default {
   margin-top: 20px;
   .charge-label {
     margin-bottom: 10px;
+  }
+  .tag-label {
+    margin: 15px 0;
   }
   input {
     @include textVcenter;

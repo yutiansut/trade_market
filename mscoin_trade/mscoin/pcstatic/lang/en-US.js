@@ -425,6 +425,9 @@ module.exports = {
     label206: "Transfer amount",
     label207: "Input transfer number",
     label208: "Transfer number must be Number type",
+    label209: "Tag",
+    label210: "Input any keywords",
+    label211: "Default tradepassword is loginpassword",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",
@@ -475,5 +478,6 @@ module.exports = {
     "请输入有效的数量或价格": 'Invalid price or number',
     "两次输入姓名不匹配": "Names are not the same one",
     "该邮箱已经注册过，请直接登录": "Email has been used",
-    "注册失败": "Register faild"
+    "注册失败": "Register faild",
+    "提币失败": "Failed"
 }

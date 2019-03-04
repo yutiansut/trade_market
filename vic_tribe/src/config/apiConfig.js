@@ -38,6 +38,16 @@ let apiCfg = (function () {
             url: 'api/common/modifyPayPass.do',
             method: 'post'
         },
+        //上传base64
+        uploadImagesByBase64: {
+            url: 'api/common/uploadImagesByBase64.do',
+            method: 'post'
+        },
+        //上传多图
+        uploadImages: {
+            url: 'api/common/uploadImages.do',
+            method: "post"
+        },
         //修改头像
         modifyCustomerHead: {
             url: 'api/common/modifyCustomerHead.do',

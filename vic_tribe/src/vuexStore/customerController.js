@@ -12,7 +12,7 @@ function handelResult(result) {
             });
             return false;
         } else {
-            return result.data;
+            return result.data || result;
         }
     } catch (err) {
         console.log(err)
@@ -82,16 +82,9 @@ const getFeedbackType = async () => {
     }
 };
 //修改个人信息
-const modifyCustomerInfo = async (bankAddress, bankInfo, trueName, customerCard, bankName, bankCard) => {
+const modifyCustomerInfo = async (dataObject) => {
     try {
-        let result = await Request(apiConfig.modifyCustomerInfo, {
-            bankAddress,
-            bankInfo,
-            trueName,
-            customerCard,
-            bankName,
-            bankCard
-        });
+        let result = await Request(apiConfig.modifyCustomerInfo, { ...dataObject });
         let data = handelResult(result);
         if (data) { Toast(data.msg); return data };
     } catch (err) {

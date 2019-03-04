@@ -702,6 +702,7 @@ export default {
           confirmButtonText: "确定",
           cancelButtonText: "取消",
           inputPattern: /\S/,
+          inputType: "password",
           inputErrorMessage: this.$t("label199")
         })
           .then(({ value }) => {

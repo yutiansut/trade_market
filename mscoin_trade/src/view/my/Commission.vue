@@ -55,33 +55,18 @@ export default {
   data() {
     return {
       showLoading: false,
-      commissionList: [
-        {
-          wdate: "2019-02-19",
-          coin: "USTT",
-          number: "0.0012",
-          relation: "1",
-          offer: "test002"
-        },
-        {
-          wdate: "2019-02-18",
-          coin: "ETH",
-          number: "0.0011",
-          relation: "13",
-          offer: "test001"
-        }
-      ]
+      commissionList: []
     };
   },
   mounted() {
-    // this.request(this.api.proceeds).then(res => {
-    //   this.showLoading = false;
-    //   try {
-    //     this.commissionList = res.data.list;
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // });
+    this.request(this.api.proceeds).then(res => {
+      this.showLoading = false;
+      try {
+        this.commissionList = res.data.list;
+      } catch (err) {
+        console.log(err);
+      }
+    });
   },
   methods: {}
 };

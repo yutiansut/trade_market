@@ -207,7 +207,7 @@ export default {
     selectMyCoinTrading(page, pageSize).then(res => {
       if (res) {
         this.orderDetail = getItemById(id, res);
-        console.log(this.orderDetail)
+        console.log(this.orderDetail);
       }
     });
   },
@@ -238,7 +238,7 @@ export default {
       formData.append("token", this.storage.get("token"));
       formData.append("id", this.$route.query.id);
       options.data = formData;
-      options.url = `${this.api.baseURL}${apiConfig.payMyCoinTrade.url}`;
+      options.url = `${this.api.baseURL}${apiConfig.uploadImages.url}`;
       axios(options).then(res => {
         console.log(res);
       });

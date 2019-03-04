@@ -24,7 +24,8 @@ import {
   Tag,
   Tab,
   Tabs,
-  Dialog
+  Dialog,
+  Uploader
 } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
@@ -39,6 +40,7 @@ Vue.use(Tabbar)
   .use(Tab)
   .use(Tabs)
   .use(Dialog)
+  .use(Uploader)
 /**
  * 引入全局组件
  */

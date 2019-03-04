@@ -27,13 +27,7 @@
             >{{$t('label161')||'邮箱验证码'}}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <!-- <el-form-item :label='formData.type=="1"?$t("cellphone"):$t("email")'>
-          <el-input
-            v-model="formData.codeAccount"
-            :placeholder='formData.type=="1"?$t("mobilePlaceholder"):$t("emailPlaceholder")'
-          >
-          </el-input>
-        </el-form-item> -->
+
         <el-form-item :label='formData.type=="0"?$t("mobileCode"):$t("emailCode")'>
           <div class="mobile-code-wrap p-rel">
             <el-input
@@ -51,7 +45,22 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item :label='$t("oldPassword")||oldPasswordLabel'>
+        <el-form-item
+          v-if='passwordType=="loginpassword"'
+          :label='$t("oldPassword")'
+        >
+          <el-input
+            name='oldpassword'
+            type='password'
+            v-model="formData.oldpassword"
+            :placeholder='$t("pwdPlaceholder")||"请输入密码"'
+          >
+          </el-input>
+        </el-form-item>
+        <el-form-item
+          v-else
+          :label='$t("loginPwd")'
+        >
           <el-input
             name='oldpassword'
             type='password'
@@ -131,6 +140,10 @@ export default {
     passwordLabel: {
       type: String,
       default: "新密码"
+    },
+    passwordType: {
+      type: String,
+      default: "loginpassword"
     }
   },
   data() {
