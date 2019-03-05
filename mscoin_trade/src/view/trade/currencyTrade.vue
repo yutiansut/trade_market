@@ -616,7 +616,7 @@ export default {
         maincoin: maincoin,
         tradcoin: tradecoin
       };
-      if(this.timer) clearInterval(this.timer);
+      if (this.timer) clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (ajaxDone) {
           // 买入五档

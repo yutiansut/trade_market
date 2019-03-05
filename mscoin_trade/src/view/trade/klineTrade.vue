@@ -749,7 +749,7 @@ export default {
       };
       webSocket.onerror = err => {
         console.log(err);
-        this.updateListByAjax(maincoin,tradecoin);
+        this.updateListByAjax(maincoin, tradecoin);
       };
       webSocket.onclose = () => {
         console.log("socket 连接关闭");
@@ -757,6 +757,7 @@ export default {
     },
     //通过ajax更新数据
     updateListByAjax(maincoin, tradecoin) {
+      if (this.timer) clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (ajaxDone) {
           Promise.all([
@@ -768,9 +769,9 @@ export default {
             this.myHistoryEntrustList = res[1];
           });
           let params = {
-        maincoin: maincoin,
-        tradcoin: tradecoin
-      };
+            maincoin: maincoin,
+            tradcoin: tradecoin
+          };
           // 买入五档
           const buyOrder = this.request(this.api.buyorder, params);
           // 卖出五档
