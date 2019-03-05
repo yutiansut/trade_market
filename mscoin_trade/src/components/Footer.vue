@@ -182,7 +182,7 @@ export default {
         }
       ],
       logo: require("@/assets/images/footer/bottom_logo.png"),
-      qrcode: "http://www.upayw.com/static/download.html"
+      qrcode: "https://www.amcoinio.com/pcstatic/download.html"
     };
   },
   computed: {

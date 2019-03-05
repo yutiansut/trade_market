@@ -167,10 +167,10 @@
         return false;
       }
     }
-    document.onload = function () {
+    window.onload = function () {
       var winHeight = window.innerHeight;
-      if (isWeixin()) {
-        let weixinTip = document.getElementsByName('weixin-tip');
+      if (is_weixin()) {
+        let weixinTip = document.getElementsByName('weixin-tip')[0];
         weixinTip.style.width = winHeight + 'px';
         weixinTip.style.display = 'block';
       }

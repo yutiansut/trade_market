@@ -73,9 +73,9 @@ function removeItemById(id, arr) {
         return false;
     };
 
-    for (var i = arr.length; i > 0; i--) {
+    for (let i = 0; i < arr.length; i++) {
         if (arr[i].id == id) {
-            arr.splice(i, 1)
+            arr.splice(i, 1);
         };
     }
     return arr;

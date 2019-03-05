@@ -617,6 +617,7 @@ export default {
         maincoin: maincoin,
         tradcoin: tradecoin
       };
+      if (this.timer) clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (ajaxDone) {
           // 买入五档
@@ -628,7 +629,7 @@ export default {
           Promise.all([buyOrder, sellOrder, allOrder])
             .then(res => {
               this.showLoading = false;
-              ajaxDone = true;
+
               let [buyOrder, sellOrder, allOrder] = [...res];
               this.latestBuyData = this.Util.sumCalc(
                 buyOrder.data.list,
@@ -645,6 +646,7 @@ export default {
                 "price",
                 "number"
               );
+              ajaxDone = true;
             })
             .catch(err => {
               console.log(err);
@@ -652,7 +654,7 @@ export default {
           this.getCurrentInfo(maincoin, tradecoin);
         }
         ajaxDone = false;
-      }, 1000);
+      }, 3000);
     },
     // 单列样式
     myCellStyle() {
@@ -702,8 +704,8 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.updateLastestData(
-        this.storage.get("token"),
+      this.updateListByAjax(
+        // this.storage.get("token"),
         this.maincoin,
         this.tradecoin
       );
@@ -748,9 +750,12 @@ export default {
     },
     // 最新交易信息
     getCurrentInfo(maincoin, tradcoin) {
-      this.request(this.api.searchcoin, { maincoin, tradcoin }).then(res => {
-        this.currentCoinInfo = res.data.list[0];
-      });
+      return this.request(this.api.searchcoin, { maincoin, tradcoin }).then(
+        res => {
+          if (this.currentCoinInfo) return;
+          this.currentCoinInfo = res.data.list[0];
+        }
+      );
     },
     randomNum(min, max) {
       return Math.random() * (max - min) + min;
@@ -762,14 +767,13 @@ export default {
       that.request(that.api.getapido, { maincoin, tradcoin }).then(res => {
         let data = res.data.list[0];
         if (!data) return;
-
+        let time = data.tradtime;
+        let timeOut = Math.floor(Math.random() * (2 * time + 5));
         that.timerOut = setTimeout(function func() {
           let price = 0;
           let nowPrice = that.currentCoinInfo.prise * 1;
           let highPrice = data.heightprice;
           let lowPrice = data.lastprice;
-          let time = data.tradtime;
-          let timeOut = Math.floor(Math.random() * (2 * time + 5));
           let number = that.randomNum(
             data.number * 1 - data.numbergas * 1,
             data.number * 1 + data.numbergas * 1
@@ -786,10 +790,10 @@ export default {
               .then(res => {
                 if (res.code != 0) {
                   clearTimeout(that.timerOut);
-                  this.updateLastestData(
-                    this.storage.get("token"),
-                    this.maincoin,
-                    this.tradecoin
+                  that.updateLastestData(
+                    that.storage.get("token"),
+                    that.maincoin,
+                    that.tradecoin
                   );
                   return;
                 }
@@ -799,10 +803,10 @@ export default {
           } else if (nowPrice < highPrice && nowPrice > lowPrice) {
             let flag = 0;
             price = that.randomNum(
-              nowPrice - data.pricegas,
-              nowPrice + data.pricegas
+              nowPrice - data.pricegas * 1,
+              nowPrice + data.pricegas * 1
             );
-            if (fag == 0) {
+            if (flag == 0) {
               that
                 .tradeHandle(that.api.forbuy, {
                   maincoin: maincoin,
@@ -811,12 +815,11 @@ export default {
                   price: price
                 })
                 .then(res => {
-                  console.log(res);
                   if (res.code != 0) {
-                    this.updateLastestData(
-                      this.storage.get("token"),
-                      this.maincoin,
-                      this.tradecoin
+                    that.updateLastestData(
+                      that.storage.get("token"),
+                      that.maincoin,
+                      that.tradecoin
                     );
                     clearTimeout(that.timerOut);
                     return;
@@ -833,12 +836,11 @@ export default {
                   price: price
                 })
                 .then(res => {
-                  console.log(res);
                   if (res.code != 0) {
-                    this.updateLastestData(
-                      this.storage.get("token"),
-                      this.maincoin,
-                      this.tradecoin
+                    that.updateLastestData(
+                      that.storage.get("token"),
+                      that.maincoin,
+                      that.tradecoin
                     );
                     clearTimeout(that.timerOut);
                     return;
@@ -859,10 +861,10 @@ export default {
               })
               .then(res => {
                 if (res.code != 0) {
-                  this.updateLastestData(
-                    this.storage.get("token"),
-                    this.maincoin,
-                    this.tradecoin
+                  that.updateLastestData(
+                    that.storage.get("token"),
+                    that.maincoin,
+                    that.tradecoin
                   );
                   clearTimeout(that.timerOut);
                   return;

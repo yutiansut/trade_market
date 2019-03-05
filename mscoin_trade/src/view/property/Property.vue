@@ -531,16 +531,11 @@ export default {
       this.request(this.api.getaddress, { coin: coin, showLoading: true }).then(
         res => {
           if (res.code == "0") {
-            console.log(res)
+            console.log(res);
             this.showChargeDialog = true;
             try {
-              
-              if(this.coinInfo.name=="XRP"){
-                this.chargeAddress = res.data.address.address;
-                this.mytag = res.data.address.tag;
-              }else{
-                this.chargeAddress = res.data.address[0].address;
-              }
+              this.chargeAddress = res.data.address;
+              this.mytag = res.data.tag;
             } catch (error) {
               console.log(error);
             }

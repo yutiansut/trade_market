@@ -153,7 +153,7 @@
               class="order-list-item"
             >
               <div class="list-header h-45 van-hairline--bottom font-16">
-                <van-col span='14'>{{item.customerName}}</van-col>
+                <van-col span='14'>{{item.tradeType==1?item.buyRealName:item.mallRealName}}</van-col>
                 <span class="amount">总计：{{item.moneyNum*item.tradePrice}}</span>
               </div>
               <div class="list-body font-14">

@@ -79,7 +79,7 @@
     <div class="van-hairline--bottom"></div>
     <!-- 菜单项 -->
     <div class="menu">
-      <router-link to=''>
+      <router-link to='/home/mine'>
         <img
           class="add-banner"
           :src="assetConfig.noticeBarBg"

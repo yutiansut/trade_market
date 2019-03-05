@@ -126,7 +126,7 @@ export default {
     return {
       userData: this.userModel,
       dropDownTop: 0,
-      qrUrl: "http://www.upayw.com/static/download.html",
+      qrUrl: "https://www.amcoinio.com/pcstatic/download.html",
       myOrderDropdown: [
         {
           label: "账单明细",

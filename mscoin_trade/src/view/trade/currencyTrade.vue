@@ -582,7 +582,7 @@ export default {
         this.updateListByAjax(maincoin, tradecoin);
       }
     },
-    // 通过socket 刷新数据
+    // 通过socket 刷新数据(方法弃用)
     updateListBySocket(token, maincoin, tradecoin) {
       if (webSocket) {
         webSocket.close();
@@ -616,6 +616,7 @@ export default {
         maincoin: maincoin,
         tradcoin: tradecoin
       };
+      if(this.timer) clearInterval(this.timer);
       this.timer = setInterval(() => {
         if (ajaxDone) {
           // 买入五档
@@ -651,7 +652,7 @@ export default {
           this.getCurrentInfo(maincoin, tradecoin);
         }
         ajaxDone = false;
-      }, 1000);
+      }, 1500);
     },
     // 单列样式
     myCellStyle() {
@@ -699,8 +700,8 @@ export default {
         .catch(err => {
           console.log(err);
         });
-      this.updateLastestData(
-        this.storage.get("token"),
+      this.updateListByAjax(
+        // this.storage.get("token"),
         this.maincoin,
         this.tradecoin
       );
@@ -746,6 +747,7 @@ export default {
     // 最新交易信息
     getCurrentInfo(maincoin, tradcoin) {
       this.request(this.api.searchcoin, { maincoin, tradcoin }).then(res => {
+        if (this.currentCoinInfo) return;
         this.currentCoinInfo = res.data.list[0];
       });
     },
@@ -874,10 +876,10 @@ export default {
         this.errMsg("买入量/卖出量不能为空");
         return false;
       }
-      if (!this.Util.isInt(number)) {
-        this.errMsg("买入量/卖出量必须是整数");
-        return false;
-      }
+      // if (!this.Util.isInt(number)) {
+      //   this.errMsg("买入量/卖出量必须是整数");
+      //   return false;
+      // }
       return true;
     },
     buyHandle() {

@@ -253,7 +253,7 @@
       @closeModal='onClose'
     >
     </bind-password>
-    <!-- 修改设置资金密码 -->
+    <!-- 修改资金密码 -->
     <bind-password
       passwordType="tradepassword"
       :show='dialogId=="financialPassword"?true:false'
@@ -261,7 +261,8 @@
       apiKey='updatepaypassword'
       :bindEmail='bindState.emailstate=="0"?false:true'
       :bindCellphone='bindState.tel?true:false'
-      :passwordLabel='$t("fundPwd")||"资金密码"'
+      :passwordLabel='$t("newFundPwd")||"资金密码"'
+      :oldPasswordLabel='$t("loginPwd")'
       @fundPasswordUpdated='fundPasswordUpdated'
       @closeModal='onClose'
     >

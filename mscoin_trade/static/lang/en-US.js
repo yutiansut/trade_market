@@ -162,6 +162,7 @@ module.exports = {
     loginRepass: "Repeat password",
     loginPwdDesp: "Password you login",
     fundPwd: "Trade password",
+    newFundPwd: "new fund password",
     fundPwdDesp: "Password for transaction，keep it safe",
     mobileAccount: "Mobile account",
     mobileAccountDesp: "The account for login",

@@ -45,10 +45,7 @@
             </div>
           </div>
         </el-form-item>
-        <el-form-item
-          v-if='passwordType=="loginpassword"'
-          :label='$t("oldPassword")'
-        >
+        <el-form-item :label='oldPasswordLabel'>
           <el-input
             name='oldpassword'
             type='password'
@@ -57,19 +54,7 @@
           >
           </el-input>
         </el-form-item>
-        <el-form-item
-          v-else
-          :label='$t("loginPwd")'
-        >
-          <el-input
-            name='oldpassword'
-            type='password'
-            v-model="formData.oldpassword"
-            :placeholder='$t("pwdPlaceholder")||"请输入密码"'
-          >
-          </el-input>
-        </el-form-item>
-        <el-form-item :label='$t("newPassword")||passwordLabel'>
+        <el-form-item :label='passwordLabel'>
           <el-input
             name='password'
             type='password'

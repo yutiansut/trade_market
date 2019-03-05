@@ -162,6 +162,7 @@ module.exports = {
     loginRepass: "确认密码",
     loginPwdDesp: "用于登陆时的密码",
     fundPwd: "交易密码",
+    newFundPwd: "新交易密码",
     fundPwdDesp: "交易时密码，请谨慎保管",
     mobileAccount: "手机账户",
     mobileAccountDesp: "绑定后可用于登录",
