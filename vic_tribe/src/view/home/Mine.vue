@@ -51,13 +51,6 @@
       </div>
       <div class="menu flex flex-between">
         <div class="flex">
-          <!-- <div class="item">
-            <img
-              class="icon thumb-45"
-              :src="assetConfig.icon_1"
-            >
-            <span class="label font-14">兑换中心</span>
-          </div> -->
           <div
             @touchend='navigateTo("/user/invite")'
             class="item"
@@ -103,7 +96,7 @@
           <swiper-slide :key='item.id'>
             <router-link
               class="font-14 van-ellipsis"
-              :to='"/news/detail/"+item.id'
+              :to='{path:"/news/detail/",query:{id:item.id,pageNo:item.page,pageSize:item.pageSize}}'
               v-text="item.noticeTitle"
             ></router-link>
           </swiper-slide>
