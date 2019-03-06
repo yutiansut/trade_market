@@ -39,7 +39,7 @@
             <div class="btn-wrap">
               <button
                 :disabled='disabled'
-                @touchend='onSubmit'
+                @click='onSubmit'
                 class="btn-block btn-large btn-dark btn-active btn-radius"
               >确定转换
               </button>
@@ -79,7 +79,7 @@
             <div class="btn-wrap">
               <button
                 :disabled='disabled'
-                @touchend='onSubmit'
+                @click='onSubmit'
                 class="btn-block btn-large btn-dark btn-active btn-radius"
               >确定转换
               </button>

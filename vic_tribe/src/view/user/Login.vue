@@ -58,7 +58,7 @@
         </van-col>
         <van-col span='4'>
           <i
-            @touchend="toggleVisiable"
+            @click="toggleVisiable"
             class="iconfont font-24"
             :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
           ></i>
@@ -70,7 +70,7 @@
       to='/userentry/forget_password'
     >忘记密码？</router-link>
     <button
-      @touchend='onSubmit'
+      @click='onSubmit'
       class="btn-block btn-large btn-default btn-active btn-round"
     >登录</button>
     <a

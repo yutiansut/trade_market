@@ -32,7 +32,7 @@
           <p class="color-666 tips font-12">*新用户默认支付密码为：123456，请在账户设置中更改</p>
           <button
             :disabled='disabled'
-            @touchend='onSubmit'
+            @click='onSubmit'
             class="btn-block btn-large btn-dark btn-active btn-radius"
           >确认转账</button>
         </van-tab>

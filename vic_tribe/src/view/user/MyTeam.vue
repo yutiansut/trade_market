@@ -9,7 +9,7 @@
           class="p-abs abs-v-center"
           size='1.8rem'
           name="arrow-left"
-          @touchend='goBack'
+          @click='goBack'
         />
         <span>{{$store.state.headerTitle}}</span>
       </div>

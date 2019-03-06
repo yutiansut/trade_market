@@ -159,7 +159,7 @@
           </div>
         </div>
         <button
-          @touchend='onSubmit'
+          @click='onSubmit'
           class="btn btn-dark btn-large btn-block btn-radius"
         >上传交易凭证</button>
       </div>
@@ -179,7 +179,7 @@
         </div>
         <button
           v-if="orderDetail.applyStatus==2&&orderDetail.tradeStatus==3&&orderDetail.flagMerchant==1"
-          @touchend='confirmPay'
+          @click='confirmPay'
           class="btn btn-dark btn-large btn-block btn-radius"
         >确认收款</button>
       </div>

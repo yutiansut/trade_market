@@ -23,7 +23,7 @@
         />
       </van-cell-group>
       <button
-        @touchend='logOut'
+        @click='logOut'
         class="btn-block btn-large btn-danger btn-round"
       >退出登录</button>
     </div>
@@ -35,7 +35,8 @@ export default {
     logOut() {
       this.storage.set("token", "");
       this.storage.set("isLogin", false);
-      this.$store.dispatch("updateLoginState", false);
+      this.$store.dispatch("changeLoginState", false);
+      this.navigateTo("/userentry/login");
     }
   }
 };

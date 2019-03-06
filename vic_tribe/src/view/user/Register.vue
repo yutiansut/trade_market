@@ -62,7 +62,7 @@
         <van-col span='4'>
           <i
             class="iconfont font-24"
-            @touchend="toggleVisiable"
+            @click="toggleVisiable"
             :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
           ></i>
         </van-col>
@@ -79,7 +79,7 @@
         </van-col>
         <van-col span='4'>
           <i
-            @touchend="toggleVisiable"
+            @click="toggleVisiable"
             class="iconfont font-24"
             :class="passwordVisable?'icon-eye_open':'icon-icon_eye-close'"
           ></i>
@@ -97,7 +97,7 @@
         </van-col>
         <van-col span='8'>
           <span
-            @touchend='getCode'
+            @click='getCode'
             v-text="codeText"
           ></span>
         </van-col>
@@ -121,7 +121,7 @@
       </van-row>
     </form>
     <button
-      @touchend='onSubmit'
+      @click='onSubmit'
       class="btn-block btn-large btn-default btn-active btn-round"
     >注册</button>
     <!-- <div class="terms font-16">

@@ -32,14 +32,14 @@
           label='验证码'
         >
           <span
-            @touchend='getCode'
+            @click='getCode'
             slot="button"
             v-text="codeText"
           ></span>
         </van-field>
       </van-cell-group>
       <button
-        @touchend='saveChange'
+        @click='saveChange'
         :disabled="disabled"
         class="btn-block btn-radius btn-active btn-dark btn-large"
       >保存修改</button>

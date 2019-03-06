@@ -48,7 +48,6 @@
               @click="onTabChange($event,i,item)"
             >
               {{item.coinid}}&nbsp;{{$t('trade')}}
-              <!-- <span v-if='i<mainCoinModel.maincoin.length-1' class="dot abs-v-center"></span> -->
               <span class="dot abs-v-center"></span>
             </li>
             <li

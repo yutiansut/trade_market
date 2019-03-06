@@ -146,11 +146,11 @@
         class="btn-group flex"
       >
         <button
-          @touchend='onCancel'
+          @click='onCancel'
           class="btn-large btn-block btn-default btn-radius btn-active"
         >取消</button>
         <button
-          @touchend='onConfirmEdit'
+          @click='onConfirmEdit'
           class="btn-large btn-block btn-dark btn-radius btn-active"
         >保存编辑</button>
       </div>

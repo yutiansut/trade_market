@@ -10,7 +10,7 @@
       </div>
       <div class="head-rt">
         <span
-          @touchend='navigateTo("/user/invite")'
+          @click='navigateTo("/user/invite")'
           :style="{backgroundImage:'url('+assetConfig.iconBg_1+')'}"
           class="icon"
         ></span>

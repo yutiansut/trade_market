@@ -18,7 +18,7 @@
               :key='i'
             >
               <button
-                @touchend='changeFeedType(item.code,i)'
+                @click='changeFeedType(item.code,i)'
                 :class="i==typeIndex ?'btn-dark':'btn-normal'"
                 class="btn-small btn-round"
                 v-text="item.name"
@@ -43,7 +43,7 @@
           </div>
           <div class="btn-group">
             <button
-              @touchend='pubFeedBack'
+              @click='pubFeedBack'
               :disabled='context==""?true:false'
               class="btn-block btn-large btn-dark btn-radius"
             >提交</button>

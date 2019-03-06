@@ -46,7 +46,7 @@
               </van-cell-group>
               <div class="btn-wrap">
                 <button
-                  @touchend='pubCoinTrade'
+                  @click='pubCoinTrade'
                   :disabled='disabled'
                   class="btn-block btn-active btn-large btn-danger btn-radius"
                 >买入</button>
@@ -97,7 +97,7 @@
               </van-cell-group>
               <div class="btn-wrap">
                 <button
-                  @touchend='pubCoinTrade'
+                  @click='pubCoinTrade'
                   :disabled='disabled||payPass==""'
                   class="btn-block btn-active btn-large btn-success btn-radius"
                 >卖出</button>
@@ -134,7 +134,7 @@
               <div class="van-hairline--top"></div>
               <div class="list-footer van-hairline--top h-45">
                 <span
-                  @touchend='cancelOrder(item.id)'
+                  @click='cancelOrder(item.id)'
                   class="status status-1"
                 >撤单</span>
               </div>
@@ -147,7 +147,7 @@
         <van-tab title="交易中">
           <template v-if='tradingList.length>0'>
             <div
-              @touchend='toPage(item.tradeStatus,item.page,item.pageSize,item.id)'
+              @click='toPage(item.tradeStatus,item.page,item.pageSize,item.id)'
               v-for="item in tradingList"
               :key='item.id'
               class="order-list-item"
@@ -239,7 +239,7 @@
               >
             </label>
             <button
-              @touchend='toSearch'
+              @click='toSearch'
               class="btn-dark btn-active font-15 btn-radius"
             >搜索</button>
           </div>
@@ -267,7 +267,7 @@
               </div>
               <div class="item-right flex flex-h-center flex-v-center">
                 <button
-                  @touchend='toConfirmPage(item)'
+                  @click='toConfirmPage(item)'
                   class="btn btn-danger btn-active font-14"
                 >{{item.tradeType==1?"买入":"卖出"}}</button>
               </div>
@@ -414,7 +414,7 @@ export default {
         this.$toast("没有更所数据了");
         return;
       }
-      selectMyCoinTrade(0).then(res => {
+      selectMyCoinTrade(1).then(res => {
         if (res) {
           this.pendingTradeList = res;
           this.pageNo = res.currentPageNo;
@@ -480,6 +480,7 @@ export default {
         this.tradePrice = "";
         this.moneyNum = "";
         this.payPass = "";
+        this.getTradeHallList();
       });
     }
   }

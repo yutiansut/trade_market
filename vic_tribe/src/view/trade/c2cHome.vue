@@ -22,7 +22,7 @@
           </van-cell-group>
           <div class="btn-wrap">
             <button
-              @touchend='pubCoinTrade'
+              @click='pubCoinTrade'
               :disabled='disabled'
               class="btn-block btn-active btn-large btn-danger btn-radius"
             >买入</button>
@@ -50,7 +50,7 @@
           </van-cell-group>
           <div class="btn-wrap">
             <button
-              @touchend='pubCoinTrade'
+              @click='pubCoinTrade'
               :disabled='disabled||payPass==""'
               class="btn-block btn-active btn-large btn-success btn-radius"
             >卖出</button>
@@ -189,7 +189,7 @@
             <div class="van-hairline--top"></div>
             <div class="list-footer h-45">
               <button
-                @touchend='toConfirmPage(item)'
+                @click='toConfirmPage(item)'
                 class="btn btn-danger btn-active font-14"
               >{{item.tradeType==1?"买入":"卖出"}}</button>
             </div>
@@ -399,6 +399,7 @@ export default {
         this.moneyNum = "";
         this.payPass = "";
       });
+      this.getTradeHallList();
     }
   }
 };

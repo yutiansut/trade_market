@@ -18,7 +18,7 @@
         <div class="input-group">
           <span class="label font-14">交易密码</span>
           <van-field
-            v-model="paypass"
+            v-model="payPass"
             :border='false'
             placeholder='请输入交易密码'
           ></van-field>
@@ -26,7 +26,7 @@
         </div>
         <button
           :disabled="disabled"
-          @touchend='onSubmit'
+          @click='onSubmit'
           class="btn-block btn-large btn-dark btn-radius"
         >确定卖出</button>
       </div>

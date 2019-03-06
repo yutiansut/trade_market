@@ -16,7 +16,7 @@
       </van-cell-group>
       <div class="btn-wrap">
         <button
-          @touchend='onSubmit'
+          @click='onSubmit'
           class="btn btn-block btn-large btn-active btn-dark btn-radius"
         >确定买入</button>
       </div>

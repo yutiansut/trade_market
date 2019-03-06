@@ -15,14 +15,14 @@
         ></van-cell>
         <van-field
           v-if="tradeType==2"
-          v-model="paypass"
+          v-model="payPass"
           :border='false'
           placeholder='请输入交易密码'
         ></van-field>
       </van-cell-group>
       <div class="btn-wrap">
         <button
-          @touchend='onSubmit'
+          @click='onSubmit'
           class="btn btn-block btn-large btn-dark btn-radius"
           v-text='tradeType==1?"买入":"卖出"'
         ></button>

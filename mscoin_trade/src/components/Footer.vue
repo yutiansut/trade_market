@@ -40,13 +40,13 @@
                 alt="logo"
               >
             </router-link>
-            <router-link
+            <!-- <router-link
               class="ml-0"
               to='/Binmarkxqc@gmail.com'
             ><i class="iconfont icon-icon"></i></router-link>
             <router-link to='/'><i class="iconfont icon-zhifeiji"></i></router-link>
             <router-link to='/Binmarkxqc@gmail.com'><i class="iconfont icon-email"></i></router-link>
-            <router-link to='Binmarkxqc@gmail.com'><i class="iconfont icon-facebook"></i></router-link>
+            <router-link to='Binmarkxqc@gmail.com'><i class="iconfont icon-facebook"></i></router-link> -->
           </li>
           <li class="font-14">CopyRight&nbsp;{{copyRight}}&nbsp;
             <em v-text="$t('copyRight')"></em>&nbsp;

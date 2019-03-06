@@ -144,7 +144,7 @@ export default {
         subItem: null
       },
       // 用户协议地址
-      agreementUrl: "http://www.upayw.com/static/services.pdf",
+      agreementUrl: "http://www.amcoinio.com/pcstatic/services.pdf",
       showLoading: true,
       navBarCfg: [
         {

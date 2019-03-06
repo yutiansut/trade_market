@@ -36,7 +36,7 @@
           v-for="(item,i) in awards"
           :key='item.id'
           :style="item.cssStyle"
-          @touchend='getAward(item.id,i)'
+          @click='getAward(item.id,i)'
           class="item-random p-abs scaleAni"
         >
           <img
@@ -52,7 +52,7 @@
       <div class="menu flex flex-between">
         <div class="flex">
           <div
-            @touchend='navigateTo("/user/invite")'
+            @click='navigateTo("/user/invite")'
             class="item"
           >
             <img
@@ -64,7 +64,7 @@
         </div>
         <div class="flex">
           <div
-            @touchend='navigateTo("/record/bill_record")'
+            @click='navigateTo("/record/bill_record")'
             class="item"
           >
             <img
@@ -74,7 +74,7 @@
             <span class="label font-14">收益记录</span>
           </div>
           <!-- <div
-            @touchend='toggleSignShow'
+            @click='toggleSignShow'
             class="item"
           >
             <img
@@ -128,7 +128,7 @@
         class="sign-box p-rel"
       >
         <van-icon
-          @touchend='toggleSignShow'
+          @click='toggleSignShow'
           size='30px'
           name='close'
         />

@@ -7,7 +7,7 @@
       <span
         class="p-rel"
         :class="tabIndex==i?'active':''"
-        @touchend='onTabTouch(i,item)'
+        @click='onTabTouch(i,item)'
         :key="i"
         v-text="item"
       ></span>
