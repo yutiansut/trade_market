@@ -73,16 +73,20 @@
                 class="color-danger"
               >转积分</span>|
             </template>
-            <span
-              @click="showDialog(0,scope.row)"
-              class="color-danger"
-              v-text="$t('recharge')||'充值'"
-            ></span>|
-            <span
-              @click="showDialog(1,scope.row)"
-              class="color-success"
-              v-text="$t('withdrawCoin')||'提币'"
-            ></span>
+            <template v-if="scope.row.isin==0">
+              <span
+                @click="showDialog(0,scope.row)"
+                class="color-danger"
+                v-text="$t('recharge')||'充值'"
+              ></span>|
+            </template>
+            <template v-if="scope.row.isout==0">
+              <span
+                @click="showDialog(1,scope.row)"
+                class="color-success"
+                v-text="$t('withdrawCoin')||'提币'"
+              ></span>
+            </template>
           </div>
         </el-table-column>
       </el-table>

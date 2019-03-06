@@ -59,10 +59,12 @@
       >
         <swiper :options="noticeSwiper">
           <template v-for="item in scrollNotices">
+              {{item.currentPageNo}}
+
             <swiper-slide :key='item.id'>
               <router-link
                 class="font-14 van-ellipsis"
-                :to='"/news/detail/"+item.id'
+                :to='{path:"/news/detail/",query:{id:item.id,pageNo:item.page,pageSize:item.pageSize}}'
                 v-text="item.noticeTitle"
               ></router-link>
             </swiper-slide>

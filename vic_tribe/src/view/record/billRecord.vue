@@ -1,6 +1,7 @@
 <template>
   <div class="app-body">
     <van-tabs
+      sticky
       v-model="type"
       color='#333'
     >
@@ -83,6 +84,7 @@ export default {
     return {
       type: 0,
       pageNo: 1,
+      pageCount: 1,
       pageSize: 10,
       balanceList: [],
       vicList: [],
@@ -95,14 +97,23 @@ export default {
     }
   },
   mounted() {
+    if (this.pageNo > 1 && this.pageNo >= this.pageCount) {
+      this.$toast("没有更所数据了");
+      return;
+    }
     selectCustomerProfit(this.recordType, this.pageNo, this.pageSize).then(
       res => {
         this.balanceList = res.list;
+        this.pageNo = res.pageNo;
+        this.pageCount = res.pageCount;
+        if (this.pageNo < this.pageCount) this.pageNo++;
       }
     );
   },
   watch: {
     type(newVal, oldVal) {
+      this.pageNo = 1;
+      this.pageCount = 1;
       selectCustomerProfit(this.recordType, this.pageNo, this.pageSize).then(
         res => {
           switch (this.recordType) {

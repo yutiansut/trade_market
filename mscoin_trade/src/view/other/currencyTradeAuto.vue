@@ -58,7 +58,7 @@
             </span>
           </div>
         </div>
-        <!-- K线图占位 -->
+        <!-- K线图 -->
         <div
           id='kMap'
           class="k-map"
@@ -92,7 +92,10 @@
               </div>
               <div class="input-group">
                 <label v-text="$t('buyingRate')||'买入价'"></label>
-                <el-input v-model="buyFormData.price">
+                <el-input
+                  :disabled='true'
+                  v-model="buyFormData.price"
+                >
                   <span
                     class="unit"
                     slot="suffix"
@@ -103,7 +106,10 @@
               </div>
               <div class="input-group">
                 <label v-text="$t('buyVol')||'买入量'"></label>
-                <el-input v-model="buyFormData.orderVol">
+                <el-input
+                  :disabled='true'
+                  v-model="buyFormData.orderVol"
+                >
                   <span
                     class="unit"
                     slot="suffix"
@@ -116,6 +122,7 @@
                 <i v-text="buyTotal*1"></i>
               </div>
               <button
+                :disabled='true'
                 @click="buyHandle"
                 class="btn-block btn-large btn-danger btn-active"
                 v-html="buyingLabel"
@@ -141,7 +148,10 @@
               </div>
               <div class="input-group">
                 <label v-text="$t('sellingRate')||'卖出价'"></label>
-                <el-input v-model="sellFormData.price">
+                <el-input
+                  :disabled='true'
+                  v-model="sellFormData.price"
+                >
                   <span
                     class="unit"
                     slot="suffix"
@@ -152,7 +162,10 @@
               </div>
               <div class="input-group">
                 <label v-text="$t('sellVol')||'卖出量'"></label>
-                <el-input v-model="sellFormData.orderVol">
+                <el-input
+                  :disabled='true'
+                  v-model="sellFormData.orderVol"
+                >
                   <span
                     class="unit"
                     slot="suffix"
@@ -165,6 +178,7 @@
                 <i v-text="sellTotal*1"></i>
               </div>
               <button
+                :disabled='true'
                 @click="sellHandle"
                 class="btn-block btn-large btn-success btn-active"
                 v-html="sellingLabel"
@@ -278,7 +292,6 @@
           </div>
         </div>
         <div class="panel-container flex flex-between">
-          <!-- 左侧内容 -->
           <div class="content-lf">
             <!-- 当前委托 -->
             <div
@@ -467,11 +480,7 @@ import { Loading } from "element-ui";
 import { randomString } from "@/assets/js/common.js";
 import { checkTradePassword } from "../../service/TradeService.js";
 import CeAsideComp from "@/components/aside/CEasideComp.vue";
-let webSocket = null;
 let ajaxDone = true;
-window.onbeforeunload = () => {
-  webSocket.close();
-};
 export default {
   components: { CeAsideComp },
   data() {
@@ -528,133 +537,56 @@ export default {
     });
   },
   beforeRouteLeave(to, from, next) {
-    if (webSocket) {
-      webSocket.close();
-      webSocket = null;
-      clearInterval(this.timer);
-      this.timer = null;
-    }
+    clearInterval(this.timer);
+    this.timer = null;
     next();
   },
   methods: {
-    // 更新买入/卖出socket
-    updateLastestData(token, maincoin, tradecoin) {
-      if ("WebSocket" in window) {
-        this.updateListBySocket(token, maincoin, tradecoin);
-      } else {
-        let params = {
-          maincoin: maincoin,
-          tradcoin: tradecoin
-        };
-        //获取最新交易信息
-        this.getCurrentInfo(maincoin, tradecoin);
-        // 买入五档
-        const buyOrder = this.request(this.api.buyorder, params);
-        // 卖出五档
-        const sellOrder = this.request(this.api.sellorder, params);
-        // 交易记录
-        const allOrder = this.request(this.api.gettoporder, params);
-
-        Promise.all([buyOrder, sellOrder, allOrder])
-          .then(res => {
-            this.showLoading = false;
-            ajaxDone = true;
-            let [buyOrder, sellOrder, allOrder] = [...res];
-            this.latestBuyData = this.Util.sumCalc(
-              buyOrder.data.list,
-              "price",
-              "number"
-            );
-            this.latestSoldData = this.Util.sumCalc(
-              sellOrder.data.list,
-              "price",
-              "number"
-            );
-            this.historicalBuyData = this.Util.sumCalc(
-              allOrder.data.list,
-              "price",
-              "number"
-            );
-          })
-          .catch(err => {
-            console.log(err);
-          });
-        this.updateListByAjax(maincoin, tradecoin);
-      }
-    },
-    // 通过socket 刷新数据
-    updateListBySocket(token, maincoin, tradecoin) {
-      console.log("浏览器支持websocket");
-      if (webSocket) {
-        webSocket.close();
-      }
-      webSocket = new WebSocket(
-        `${this.api.socketUrl}${token ||
-          randomString(32)}/${maincoin}_${tradecoin}`
-      );
-      webSocket.onopen = () => {
-        console.log("socket 已经连接，可以发送数据");
-        webSocket.send(`${maincoin}_${tradecoin}`);
-      };
-      // 接收数据
-      webSocket.onmessage = event => {
-        let msg = JSON.parse(event.data);
-        msg.info[0] && (this.currentCoinInfo = msg.info[0]);
-        this.latestBuyData = this.Util.sumCalc(msg.buy, "price", "number");
-        this.latestSoldData = this.Util.sumCalc(msg.sell, "price", "number");
-        this.historicalBuyData = this.Util.sumCalc(msg.top, "price", "number");
-      };
-      webSocket.onerror = err => {
-        this.updateListByAjax(maincoin, tradecoin);
-      };
-      webSocket.onclose = () => {
-        console.log("socket 连接关闭");
-      };
-    },
     // 通过轮询刷新数据
     updateListByAjax(maincoin, tradecoin) {
+      this.getLiveData(maincoin, tradecoin);
+      if (this.timer) clearInterval(this.timer);
+      this.timer = setInterval(() => {
+        if (ajaxDone) {
+          this.getCurrentInfo(maincoin, tradecoin);
+          this.getLiveData(maincoin, tradecoin);
+        }
+        ajaxDone = false;
+      }, 3000);
+    },
+    //获取实时数据
+    getLiveData(maincoin, tradecoin) {
       let params = {
         maincoin: maincoin,
         tradcoin: tradecoin
       };
-      if (this.timer) clearInterval(this.timer);
-      this.timer = setInterval(() => {
-        if (ajaxDone) {
-          // 买入五档
-          const buyOrder = this.request(this.api.buyorder, params);
-          // 卖出五档
-          const sellOrder = this.request(this.api.sellorder, params);
-          // 交易记录
-          const allOrder = this.request(this.api.gettoporder, params);
-          Promise.all([buyOrder, sellOrder, allOrder])
-            .then(res => {
-              this.showLoading = false;
-
-              let [buyOrder, sellOrder, allOrder] = [...res];
-              this.latestBuyData = this.Util.sumCalc(
-                buyOrder.data.list,
-                "price",
-                "number"
-              );
-              this.latestSoldData = this.Util.sumCalc(
-                sellOrder.data.list,
-                "price",
-                "number"
-              );
-              this.historicalBuyData = this.Util.sumCalc(
-                allOrder.data.list,
-                "price",
-                "number"
-              );
-              ajaxDone = true;
-            })
-            .catch(err => {
-              console.log(err);
-            });
-          this.getCurrentInfo(maincoin, tradecoin);
-        }
-        ajaxDone = false;
-      }, 3000);
+      //最新价格
+      this.getCurrentInfo(maincoin, tradecoin);
+      // 买入五档
+      this.request(this.api.buyorder, params).then(res => {
+        this.latestBuyData = this.Util.sumCalc(
+          res.data.list,
+          "price",
+          "number"
+        );
+      });
+      // 卖出五档
+      this.request(this.api.sellorder, params).then(res => {
+        this.latestSoldData = this.Util.sumCalc(
+          res.data.list,
+          "price",
+          "number"
+        );
+      });
+      // 交易记录
+      const allOrder = this.request(this.api.gettoporder, params).then(res => {
+        this.historicalBuyData = this.Util.sumCalc(
+          res.data.list,
+          "price",
+          "number"
+        );
+        ajaxDone = true;
+      });
     },
     // 单列样式
     myCellStyle() {
@@ -676,83 +608,45 @@ export default {
       //获取最新的价格信息
       this.getCurrentInfo(this.maincoin, this.tradecoin);
       //获取可用;
-      Promise.all([
-        this.getAvailabel(this.maincoin),
-        this.getAvailabel(this.tradecoin)
-      ])
-        .then(res => {
-          console.log(`可用：${JSON.stringify(res)}`);
-          this.myBlance = res[0].usable;
-          this.myAvailable = res[1].usable;
-        })
-        .catch(err => {
-          this.errMsg(err);
-        });
+      this.getAvailabel(this.maincoin).then(res => {
+        this.myBlance = res.usable;
+      });
+      this.getAvailabel(this.tradecoin).then(res => {
+        this.myAvailable = res.usable;
+      });
       // 获取币种交易信息
-      this.awaitResult(this.maincoin, this.tradecoin)
-        .then(res => {
-          let [entrustData, orderData] = [...res];
-          if (entrustData) {
-            this.currentDeclareData = this.Util.sumCalc(
-              entrustData.data.list,
-              "price",
-              "number"
-            );
-          }
-          orderData && (this.historicalDeclareData = orderData.data.list);
-        })
-        .catch(err => {
-          console.log(err);
-        });
-      this.updateListByAjax(
-        // this.storage.get("token"),
-        this.maincoin,
-        this.tradecoin
-      );
+      this.getTradeResult(this.maincoin, this.tradecoin);
+      this.updateListByAjax(this.maincoin, this.tradecoin);
     },
     //获取委托数据
-    awaitResult(maincoin, tradecoin) {
+    getTradeResult(maincoin, tradecoin) {
       let params = {
         maincoin: maincoin,
         tradcoin: tradecoin
       };
       // 获取当前委托
-      const entrustData = this.request(this.api.getentrust, params).then(
-        res => {
-          if (res.code == "0") {
-            return Promise.resolve(res);
-          } else {
-            return Promise.reject(res.msg);
-          }
+      this.request(this.api.getentrust, params).then(res => {
+        if (res.code == "0") {
+          this.currentDeclareData = this.Util.sumCalc(
+            res.data.list,
+            "price",
+            "number"
+          );
         }
-      );
+      });
       // 获取历史委托
-      const orderData = this.request(this.api.gethistoryorder, params).then(
-        res => {
-          if (res.code == "0") {
-            return Promise.resolve(res);
-          } else {
-            return Promise.reject(res.msg);
-          }
+      this.request(this.api.gethistoryorder, params).then(res => {
+        if (res.code == "0") {
+          this.historicalDeclareData = res.data.list;
+        } else {
+          return Promise.reject(res.msg);
         }
-      );
-      //获取交易历史
-      const allOrderData = this.request(this.api.gettoporder, params).then(
-        res => {
-          if (res.code == "0") {
-            return Promise.resolve(res);
-          } else {
-            return Promise.reject(res.msg);
-          }
-        }
-      );
-      return Promise.all([entrustData, orderData, allOrderData]);
+      });
     },
     // 最新交易信息
     getCurrentInfo(maincoin, tradcoin) {
       return this.request(this.api.searchcoin, { maincoin, tradcoin }).then(
         res => {
-          if (this.currentCoinInfo) return;
           this.currentCoinInfo = res.data.list[0];
         }
       );
@@ -790,11 +684,6 @@ export default {
               .then(res => {
                 if (res.code != 0) {
                   clearTimeout(that.timerOut);
-                  that.updateLastestData(
-                    that.storage.get("token"),
-                    that.maincoin,
-                    that.tradecoin
-                  );
                   return;
                 }
                 timeOut = Math.floor(Math.random() * (2 * time + 5));
@@ -816,11 +705,6 @@ export default {
                 })
                 .then(res => {
                   if (res.code != 0) {
-                    that.updateLastestData(
-                      that.storage.get("token"),
-                      that.maincoin,
-                      that.tradecoin
-                    );
                     clearTimeout(that.timerOut);
                     return;
                   }
@@ -837,11 +721,6 @@ export default {
                 })
                 .then(res => {
                   if (res.code != 0) {
-                    that.updateLastestData(
-                      that.storage.get("token"),
-                      that.maincoin,
-                      that.tradecoin
-                    );
                     clearTimeout(that.timerOut);
                     return;
                   }
@@ -861,11 +740,6 @@ export default {
               })
               .then(res => {
                 if (res.code != 0) {
-                  that.updateLastestData(
-                    that.storage.get("token"),
-                    that.maincoin,
-                    that.tradecoin
-                  );
                   clearTimeout(that.timerOut);
                   return;
                 }
@@ -921,13 +795,8 @@ export default {
         showLoading: true
       }).then(res => {
         console.log(`操作结果：${JSON.stringify(res)}`);
-
         if (res.code == "0") {
-          this.updateLastestData(
-            this.storage.get("token"),
-            this.maincoin,
-            this.tradecoin
-          );
+          this.getTradeResult(params.maincoin, params.tradecoin);
           this.successMsg(res.msg || "操作成功");
           this.myBlance -= this.buyTotal;
           this.myAvailable -= this.sellTotal;
@@ -976,11 +845,7 @@ export default {
           this.getDataFaild(res.msg);
           return false;
         }
-        this.updateLastestData(
-          this.storage.get("token"),
-          this.maincoin,
-          this.tradecoin
-        );
+        this.getTradeResult(this.maincoin, this.tradecoin);
         this.successMsg(res.msg);
         this.delItemFromList(id, this.currentDeclareData);
         if (type == 0) {
@@ -1080,6 +945,14 @@ export default {
       // if (mainCoinModel.tradecoinid == data.coinid) return false;
       mainCoinModel.tradecoinid = data.coinid;
       mainCoinModel.coinid = data.maincoinid;
+      this.latestBuyData = [];
+      this.latestSoldData = [];
+      //当日委托
+      this.currentDeclareData = [];
+      //历史委托
+      this.historicalDeclareData = [];
+      //成交历史
+      this.historicalBuyData = [];
       this.loadData(data);
     },
     // 是否能够交易
@@ -1110,40 +983,36 @@ export default {
   },
   computed: {
     amountLabel() {
-      return `${this.$t("amount") || "数量"}(${this.tradecoin})`;
+      return `${this.$t("amount")}(${this.tradecoin})`;
     },
     buyingLabel() {
-      return `${this.$t("buy") || "买入"}&nbsp;${this.tradecoin}`;
+      return `${this.$t("buy")}&nbsp;${this.tradecoin}`;
     },
     sellingLabel() {
-      return `${this.$t("sell") || "卖出"}&nbsp;${this.tradecoin}`;
+      return `${this.$t("sell")}&nbsp;${this.tradecoin}`;
     },
     priceLabel() {
-      return `${this.$t("price") || "价格"}(${this.maincoin})`;
+      return `${this.$t("price")}(${this.maincoin})`;
     },
     totalLabel() {
-      return `${this.$t("total") || "累计"}(${this.maincoin})`;
+      return `${this.$t("total")}(${this.maincoin})`;
     },
     marketVolLabel() {
-      return `${this.$t("marketVol") || "挂单量"}(${this.tradecoin})`;
+      return `${this.$t("marketVol")}(${this.tradecoin})`;
     },
     //可用余额
     availabelBalance() {
       let num = this.myBlance * 1;
-      return `${this.$t("avilable") || "可用"}&nbsp;${num || 0}&nbsp;${
-        this.maincoin
-      }`;
+      return `${this.$t("avilable")}&nbsp;${num || 0}&nbsp;${this.maincoin}`;
     },
     //可兑换额度
     availabelAmount() {
-      return `${this.$t("canExchange") || "可兑换"}&nbsp;${this.myAvailable *
-        1 || 0}&nbsp;${this.tradecoin}`;
+      return `${this.$t("canExchange")}&nbsp;${this.myAvailable * 1 ||
+        0}&nbsp;${this.tradecoin}`;
     },
     // 最新价
     latestPrice() {
-      // {{$t('latestPrice')||'最新价'}}&nbsp;0.0000011422&nbsp;BTC
-      return `${this.$t("latestPrice") || "最新价"}&nbsp;${this.currentCoinInfo
-        .prise * 1}`;
+      return `${this.$t("latestPrice")}&nbsp;${this.currentCoinInfo.prise * 1}`;
     },
     //总数
     buyTotal() {

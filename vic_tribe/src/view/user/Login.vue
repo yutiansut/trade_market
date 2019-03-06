@@ -65,23 +65,6 @@
           ></i>
         </van-col>
       </van-row>
-      <!-- <van-row>
-        <van-col span='6'>验证码</van-col>
-        <van-col span='10'>
-          <input
-            v-model="code"
-            autocomplete='off'
-            type="text"
-            placeholder="请输入验证码"
-          >
-        </van-col>
-        <van-col span='8'>
-          <span
-            @touchend='getCode'
-            v-text="codeText"
-          ></span>
-        </van-col>
-      </van-row> -->
     </form>
     <router-link
       class="font-14 fr link-to"

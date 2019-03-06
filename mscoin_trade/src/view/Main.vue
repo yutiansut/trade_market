@@ -86,7 +86,7 @@
             </div>
           </el-table-column>
           <el-table-column
-            width='80'
+            width='100'
             :label="$t('status')||'状态'"
           >
             <span
@@ -105,17 +105,17 @@
           <el-table-column :label="$t('label179')">
             <template slot-scope="scope">≈&nbsp;{{scope.row.cny*1}}</template>
           </el-table-column>
-          <el-table-column :label="'24H '+$t('highestPrice')||'最高价'">
+          <el-table-column :label="'24H '+$t('highestPrice')">
             <template slot-scope="scope">{{scope.row.height*1}}</template>
           </el-table-column>
-          <el-table-column :label="'24H '+$t('lowestPrice')||'最低价'">
+          <el-table-column :label="'24H '+$t('lowestPrice')">
             <template slot-scope="scope">{{scope.row.low*1}}</template>
           </el-table-column>
-          <el-table-column :label="'24H '+$t('volumn')||'成交量'">
+          <el-table-column :label="'24H '+$t('volumn')">
             <template slot-scope="scope">{{scope.row.number*1}}</template>
           </el-table-column>
           <el-table-column
-            :label="($t('priceChange')||'涨跌')+'（'+($t('day')||'日')+'）'"
+            :label="$t('priceChange')+'（'+$t('day')+'）'"
             width='120px;'
           >
             <template slot-scope="scope">
@@ -194,7 +194,7 @@ export default {
       loading: true,
       mainCoinModel: mainCoinModel,
       statusMap: {
-        s_0: "inavailable",
+        s_0: "inavilable",
         s_1: "avilable"
       },
       currentMainCoin: "",
@@ -222,7 +222,6 @@ export default {
       this.currentCoinId = coin;
       this.getTradCoin(coin);
       this.currentMainCoin = mainCoinModel.maincoin[0];
-      console.log(this.currentMainCoin);
     });
   },
   beforeDestroy() {
@@ -231,9 +230,9 @@ export default {
   methods: {
     onNewsLoad(data) {
       this.newsList = data;
-      this.newSwip();
+      this.newsSwip();
     },
-    newSwip() {
+    newsSwip() {
       let i = 0;
       this.timer = setInterval(() => {
         let len = this.newsList.length;

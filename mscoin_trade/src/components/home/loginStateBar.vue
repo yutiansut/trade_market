@@ -195,16 +195,14 @@ export default {
     },
     // 获取用户信息
     getUserInfo() {
+      if (!this.storage.get("isLogin")) return;
       this.request(this.api.userinfo).then(res => {
         console.log(`个人信息:${JSON.stringify(res)}`);
         if (res.code == "0" && res.data) {
+          let data = res.data.userinfo[0];
           this.userData = Object.assign({}, this.userData, {
             balance: res.data.amount * 1,
-            tel: res.data.userinfo[0] && res.data.userinfo[0].tel,
-            email: res.data.userinfo[0] && res.data.userinfo[0].email,
-            member: res.data.userinfo[0] && res.data.userinfo[0].member,
-            viplevel: res.data.userinfo[0] && res.data.userinfo[0].viplevel,
-            sharecode: res.data.userinfo[0] && res.data.userinfo[0].sharecode
+            ...data
           });
           this.$bus.emit("userLoaded", this.userData);
         } else {

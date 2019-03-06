@@ -294,7 +294,7 @@ const routes = [
       }
     },
     {
-      path: "/news/detail/:id",
+      path: "/news/detail",
       name: "newsDetail",
       component: newsDetail,
       meta: {

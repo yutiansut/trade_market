@@ -279,7 +279,6 @@
         </div>
       </div>
     </div>
-
   </div>
 </template>
 <script>
@@ -309,7 +308,7 @@ export default {
       doneList: [],
       moneyNum: "",
       searchVal: "",
-      pageNo: 0,
+      pageNo: 1,
       pageSize: 10,
       pageCount: 1,
       payPass: "",
@@ -377,7 +376,7 @@ export default {
       let that = this;
       this.tradePrice = "";
       this.moneyNum = "";
-      this.pageNo = 0;
+      this.pageNo = 1;
       this.pageCount = 1;
       if (index <= 1) {
         this.getTradeHallList();
@@ -391,6 +390,10 @@ export default {
     },
     //大厅数据
     getTradeHallList() {
+      if (this.pageNo > 1 && this.pageNo >= this.pageCount) {
+        this.$toast("没有更所数据了");
+        return;
+      }
       selectCoinTradeList(
         this.tradeType,
         this.searchVal,
@@ -401,25 +404,53 @@ export default {
           this.tradeHallData = res.list;
           this.pageNo = res.currentPageNo;
           this.pageCount = res.pageCount;
+          if (this.pageNo < this.pageCount) this.pageNo++;
         }
       });
     },
     //待匹配数据
     getToMatchList() {
+      if (this.pageNo > 1 && this.pageNo >= this.pageCount) {
+        this.$toast("没有更所数据了");
+        return;
+      }
       selectMyCoinTrade(0).then(res => {
-        if (res) this.pendingTradeList = res;
+        if (res) {
+          this.pendingTradeList = res;
+          this.pageNo = res.currentPageNo;
+          this.pageCount = res.pageCount;
+          if (this.pageNo < this.pageCount) this.pageNo++;
+        }
       });
     },
     //交易中数据
     getTradingList() {
+      if (this.pageNo > 1 && this.pageNo >= this.pageCount) {
+        this.$toast("没有更所数据了");
+        return;
+      }
       selectMyCoinTrading().then(res => {
-        if (res) this.tradingList = res;
+        if (res) {
+          this.tradingList = res;
+          this.pageNo = res.currentPageNo;
+          this.pageCount = res.pageCount;
+          if (this.pageNo < this.pageCount) this.pageNo++;
+        }
       });
     },
     //交易完成列表
     getDoneList() {
+      if (this.pageNo > 1 && this.pageNo >= this.pageCount) {
+        this.$toast("没有更所数据了");
+        return;
+      }
       selectMyCoinTradeList(this.pageNo, this.pageSize).then(res => {
-        if (res) this.doneList = res.list;
+        if (res) {
+          this.doneList = res.list;
+          this.pageNo = res.currentPageNo;
+          this.pageCount = res.pageCount;
+          if (this.pageNo < this.pageCount) this.pageNo++;
+        }
       });
     },
     toConfirmPage(item) {

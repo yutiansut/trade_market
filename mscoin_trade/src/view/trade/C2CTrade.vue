@@ -19,33 +19,33 @@
             src=""
             alt=""
           >
-          <span class="font-bold font-20">{{coinInfo.coinid}}/CNY</span>
+          <span class="font-bold font-20">{{coinInfo.coinid +"/CNY"}}</span>
           <div class="market-condition">
             <span>
               <em
                 class="color-666"
-                v-text="$t('livePrice')||'实时价'"
+                v-text="$t('livePrice')"
               ></em>
               <i v-text="'￥'+coinInfo.cny"></i>
             </span>
             <span>
               <em
                 class="color-666"
-                v-text="$t('increase')||'涨幅'"
+                v-text="$t('increase')"
               ></em>
               <i class="color-danger">+3.68%</i>
             </span>
             <span>
               <em
                 class="color-666"
-                v-text="$t('high')||'高'"
+                v-text="$t('high')"
               ></em>
               <i>￥7.29</i>
             </span>
             <span>
               <em
                 class="color-666"
-                v-text="$t('low')||'低'"
+                v-text="$t('low')"
               ></em>
               <i>￥6.70</i>
             </span>
@@ -68,7 +68,7 @@
               ></span>
               <router-link
                 to='./property'
-                v-text="$t('recharge')||'充值'"
+                v-text="$t('recharge')"
               ></router-link>
             </div>
             <div class="input-group">
@@ -81,7 +81,7 @@
               </el-input>
             </div>
             <div class="input-group">
-              <label v-text="$t('buyVol')||'买入量'"></label>
+              <label v-text="$t('buyVol')"></label>
               <el-input
                 :placeholder='minNum'
                 v-model="buyFormData.number"
@@ -89,12 +89,12 @@
                 <span
                   class="unit"
                   slot="suffix"
-                  v-text="coinInfo.coinid||''"
+                  v-text="coinInfo.coinid"
                 ></span>
               </el-input>
             </div>
             <div class="input-group">
-              <label v-text="$t('money')||'金额'"></label>
+              <label v-text="$t('money')"></label>
               <el-input
                 disabled='disabled'
                 :value="buyTotal"
@@ -126,11 +126,11 @@
               ></span>
               <router-link
                 to='./property'
-                v-text="$t('recharge')||'充值'"
+                v-text="$t('recharge')"
               ></router-link>
             </div>
             <div class="input-group">
-              <label v-text="$t('sellingValiation')||'卖出估价'"></label>
+              <label v-text="$t('sellingValiation')"></label>
               <el-input v-model="sellFormData.price">
                 <span
                   class="unit"
@@ -139,7 +139,7 @@
               </el-input>
             </div>
             <div class="input-group">
-              <label v-text="$t('sellVol')||'卖出量'"></label>
+              <label v-text="$t('sellVol')"></label>
               <el-input
                 :placeholder='minNum'
                 v-model="sellFormData.number"
@@ -152,7 +152,7 @@
               </el-input>
             </div>
             <div class="input-group">
-              <label v-text="$t('money')||'金额'"></label>
+              <label v-text="$t('money')"></label>
               <el-input
                 disabled='disabled'
                 :value="sellTotal"
@@ -175,7 +175,7 @@
         <div class="panel-container">
           <div
             class="panel-header font-18 font-bit-bold"
-            v-text="$t('inOrder')||'市场挂单'"
+            v-text="$t('inOrder')"
           ></div>
           <div class="break-line"></div>
           <el-table
@@ -185,16 +185,16 @@
           >
             <el-table-column
               width="120"
-              :label='$t("type")||"类型"'
+              :label='$t("type")'
             >
               <span
                 slot-scope="scope"
-                v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                v-text="scope.row.type=='0'?$t('buy'):$t('sell')"
                 :class="scope.row.type=='0'?'color-danger':'color-success'"
               >
               </span>
             </el-table-column>
-            <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+            <el-table-column :label='$t("price")+"(CNY)"'>
               <template slot-scope="scope">
                 {{scope.row.price*1}}
               </template>
@@ -204,7 +204,7 @@
                 {{scope.row.number*1}}
               </template>
             </el-table-column>
-            <el-table-column :label='($t("total")||"总计")+"(CNY)"'>
+            <el-table-column :label='$t("total")+"(CNY)"'>
               <span
                 slot-scope="scope"
                 v-text="scope.row.total*1"
@@ -212,17 +212,17 @@
             </el-table-column>
             <el-table-column
               prop='member'
-              :label='($t("label188")||"商家")'
+              :label='$t("label188")'
             >
             </el-table-column>
             <el-table-column
               prop='wdate'
-              :label='($t("createdTime")||"创建时间")'
+              :label='$t("createdTime")'
             >
             </el-table-column>
             <el-table-column
               width='100'
-              :label='$t("operation")||"操作"'
+              :label='$t("operation")'
             >
               <template slot-scope="scope">
                 <button
@@ -252,21 +252,21 @@
               <el-table-column
                 width="150"
                 prop='autoid'
-                :label='$t("orderId")||"单号"'
+                :label='$t("orderId")'
               >
               </el-table-column>
               <el-table-column
                 width='120'
-                :label='$t("type")||"类型"'
+                :label='$t("type")'
               >
                 <span
                   slot-scope="scope"
-                  v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                  v-text="scope.row.type=='0'?$t('buy'):$t('sell')"
                   :class="scope.row.type=='0'?'color-danger':'color-success'"
                 >
                 </span>
               </el-table-column>
-              <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+              <el-table-column :label='$t("price")+"(CNY)"'>
                 <template slot-scope="scope">
                   {{scope.row.price*1}}
                 </template>
@@ -285,12 +285,12 @@
               <el-table-column
                 width="200"
                 prop='wdate'
-                :label='$t("createdTime")||"建立时间"'
+                :label='$t("createdTime")'
               >
               </el-table-column>
               <el-table-column
                 width="100"
-                :label='$t("operation")||"操作"'
+                :label='$t("operation")'
               >
                 <a
                   slot-scope="scope"
@@ -307,7 +307,7 @@
         <div class="panel-container">
           <div
             class="panel-header font-18 font-bit-bold"
-            v-text="$t('myCtcOrder')||'我的CTC交易订单'"
+            v-text="$t('myCtcOrder')"
           >
           </div>
           <template v-if="userData.isLogin">
@@ -316,7 +316,7 @@
               <el-table-column
                 width="150"
                 prop='autoid'
-                :label='$t("orderId")||"单号"'
+                :label='$t("orderId")'
               >
               </el-table-column>
               <el-table-column
@@ -329,7 +329,7 @@
               </el-table-column>
               <el-table-column
                 width='120'
-                :label='$t("type")||"类型"'
+                :label='$t("type")'
               >
                 <span
                   slot-scope="scope"
@@ -338,7 +338,7 @@
                 >
                 </span>
               </el-table-column>
-              <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+              <el-table-column :label='$t("price")+"(CNY)"'>
                 <template slot-scope="scope">
                   {{scope.row.price*1}}
                 </template>
@@ -356,13 +356,13 @@
               </el-table-column>
               <el-table-column
                 prop='wdate'
-                :label='$t("createdTime")||"建立时间"'
+                :label='$t("createdTime")'
               >
               </el-table-column>
               <el-table-column
                 align='center'
                 width='200'
-                :label='$t("operation")||"操作"'
+                :label='$t("operation")'
               >
                 <template slot-scope="scope">
                   <!-- 待付款 -->
@@ -426,7 +426,7 @@
               <el-table-column
                 width="150"
                 prop='autoid'
-                :label='$t("orderId")||"单号"'
+                :label='$t("orderId")'
               >
               </el-table-column>
               <el-table-column
@@ -435,12 +435,12 @@
               >
                 <span
                   slot-scope="scope"
-                  v-text="scope.row.type=='0'?($t('buy')||'买入'):($t('sell')||'卖出')"
+                  v-text="scope.row.type=='0'?$t('buy'):$t('sell')"
                   :class="scope.row.type=='0'?'color-danger':'color-success'"
                 >
                 </span>
               </el-table-column>
-              <el-table-column :label='($t("price")||"价格")+"(CNY)"'>
+              <el-table-column :label='$t("price")+"(CNY)"'>
                 <template slot-scope="scope">
                   {{scope.row.price*1}}
                 </template>
@@ -450,7 +450,7 @@
                   {{scope.row.number*1}}
                 </template>
               </el-table-column>
-              <el-table-column :label='($t("label188")||"用户账号")'>
+              <el-table-column :label='$t("label188")'>
                 <template slot-scope="scope">
                   {{scope.row.type==0?scope.row.sellmember:scope.row.sellmember}}
                 </template>
@@ -461,14 +461,14 @@
               <el-table-column
                 width="200"
                 prop='wdate'
-                :label='$t("createdTime")||"建立时间"'
+                :label='$t("createdTime")'
               >
               </el-table-column>
               <el-table-column
                 width="100"
-                :label='$t("status")||"状态"'
+                :label='$t("status")'
               >
-                <span slot-scope='scope'>已完成</span>
+                <span>已完成</span>
               </el-table-column>
             </el-table>
           </template>
@@ -655,29 +655,28 @@ export default {
   computed: {
     // 购买文字
     buyingLabel() {
-      return `${this.$t("buy") || "买入"}&nbsp;${this.coinInfo.coinid || ""}`;
+      return `${this.$t("buy")}&nbsp;${this.coinInfo.coinid || ""}`;
     },
     // 售卖文字
     sellingLabel() {
-      return `${this.$t("sell") || "买入"}&nbsp;${this.coinInfo.coinid || ""}`;
+      return `${this.$t("sell")}&nbsp;${this.coinInfo.coinid || ""}`;
     },
     // 数量项目
     numberLabel() {
-      return `${this.$t("amount") || "数量"}(${this.coinInfo.coinid || ""})`;
+      return `${this.$t("amount")}(${this.coinInfo.coinid || ""})`;
     },
     //金额文字
     amountLabel() {
-      return `${this.$t("money") || "金额"}(CNY)`;
+      return `${this.$t("money")}(CNY)`;
     },
     // 可用
     myAvailableLabel() {
-      return `${this.$t("avilable") || "可用"}&nbsp;${this.myAvailable *
+      return `${this.$t("avilable")}&nbsp;${this.myAvailable *
         1}&nbsp;${this.coinInfo.coinid}`;
     },
     //平台指导价
     advisalPrice() {
-      // {{$t('avilable')||'可用'}}&nbsp;0.00000000{{coinInfo.coinid}}
-      return `${this.$t("avisalPrice") || "指导价"}&nbsp;￥${
+      return `${this.$t("avisalPrice")}&nbsp;￥${
         this.coinInfo.cny
       }`;
     },
@@ -691,7 +690,7 @@ export default {
     },
     //最少限制
     minNum() {
-      return `${this.$t("minNum") || "最少"} ${this.coinInfo.minnum * 1}`;
+      return `${this.$t("minNum")} ${this.coinInfo.minnum * 1}`;
     }
   },
   methods: {
@@ -847,7 +846,6 @@ export default {
           price: this.sellFormData.price
         };
         this.dialogId = 1;
-        // this.publicOrder(this.api.addsellc2c, param);
       } else {
         this.errMsg("label121" || "请输入有效价格");
       }
@@ -863,14 +861,8 @@ export default {
       }
       this.dialogId = 4;
       let type = rowData.type;
-
       this.marketOrderDetail = {
-        type: rowData.type,
-        autoid: rowData.autoid,
-        coinid: rowData.coinid,
-        number: rowData.number,
-        price: rowData.price,
-        total: rowData.total,
+        ...rowData,
         limitAmount: 0
       };
       this.marketOrderCfg = {
