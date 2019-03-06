@@ -6,7 +6,6 @@
     ></account-head>
     <div class="page-head font-bold">
       <span class="font-20">找回密码</span>
-      <span class="font-18">VIC&nbsp;&nbsp;tribe</span>
     </div>
     <p class="label font-14 color-666">
       您可以使用手机号进行找回

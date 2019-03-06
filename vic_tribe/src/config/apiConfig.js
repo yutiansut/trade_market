@@ -1,8 +1,8 @@
 let apiCfg = (function () {
     return {
-        baseURL: process.env.NODE_ENV === 'production' ? "https://admin.kmsjqm.cn/" : "http://192.168.16.180:8080/vik/",
+        baseURL: process.env.NODE_ENV === 'production' ? "http://awladmin.zfbqp.cn/" : "http://192.168.16.180:8080/vik/",
         // 二维码路径
-        qrUrl: 'https://www.kmsjqm.cn/',
+        qrUrl: 'http://awladmin.zfbqp.cn/',
         //登录
         login: {
             url: 'api/common/login.do',

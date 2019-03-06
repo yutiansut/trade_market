@@ -6,7 +6,6 @@
     ></account-head>
     <div class="page-head font-bold">
       <span class="font-20">注册</span>
-      <span class="font-18">VIC&nbsp;&nbsp;tribe</span>
     </div>
     <p class="label font-14 color-666">
       您可以使用手机号进行注册
@@ -125,10 +124,10 @@
       @touchend='onSubmit'
       class="btn-block btn-large btn-default btn-active btn-round"
     >注册</button>
-    <div class="terms font-16">
+    <!-- <div class="terms font-16">
       <p class="color-999 font-14">点击“注册”按钮即表示您同意</p>
       <a href="">服务条款</a><a href="">风险与合规披露</a><a href="">隐私政策声明</a>
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -142,11 +141,15 @@ export default {
     return {
       // tabItem: ["手机号", "邮箱"],
       type: 0,
-      account: "15623454605",
-      password: "123456",
-      repassword: "123456",
-      parentPhone: "15623454605"
+      account: "",
+      password: "",
+      repassword: "",
+      parentPhone: ""
     };
+  },
+  mounted() {
+    let { parentPhone } = this.$route.query;
+    parentPhone && (this.parentPhone = parentPhone);
   },
   methods: {
     validate() {
@@ -214,7 +217,7 @@ export default {
 
 <style lang="scss" scoped>
 .btn-block {
-  margin-top: 4.5vh;
+  margin-top: 6vh;
   margin-bottom: 1rem;
 }
 .terms {

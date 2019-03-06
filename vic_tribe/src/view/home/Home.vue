@@ -6,7 +6,7 @@
           class="logo"
           :src="assetConfig.logo"
         >
-        <span class="font-bit-bold font-18">VIC</span>
+        <span class="font-bit-bold font-18">爱维链</span>
       </div>
       <div class="head-rt">
         <span

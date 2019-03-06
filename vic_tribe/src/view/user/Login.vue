@@ -3,10 +3,9 @@
     <account-head></account-head>
     <div class="page-head font-bold">
       <span class="font-20">登录</span>
-      <span class="font-18">VIC&nbsp;&nbsp;tribe</span>
     </div>
     <p class="label font-14 color-666">
-      您可以使用VIC tribe账号/手机号进行登录
+      您可以使用账号/手机号进行登录
     </p>
     <form class="form">
       <!-- <tab-bar

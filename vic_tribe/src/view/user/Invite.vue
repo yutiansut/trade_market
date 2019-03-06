@@ -12,11 +12,12 @@
         <div class="tip font-16 color-999 txt-center">扫描二维码下载APP</div>
         <div class="qr-code">
           <vue-qr
-            :text="this.$store.state.userInfo.customerName"
+            :text="qrUrl"
             margin="10"
             dotScale="1"
             size="120"
           ></vue-qr>
+
         </div>
         <div class="rec-code abs-h-center flex flex-v-center font-14">
           <div>我的推荐</div>
@@ -40,6 +41,7 @@
 <script>
 import vueQr from "vue-qr";
 import { selectCustomer } from "../../vuexStore/customerController.js";
+import apiConfig from "../../config/apiConfig.js";
 export default {
   components: { vueQr },
   data() {
@@ -54,6 +56,13 @@ export default {
   },
   mounted() {
     selectCustomer();
+  },
+  computed: {
+    qrUrl() {
+      return `${apiConfig.qrUrl}?parentPhone=${
+        this.$store.state.userInfo.customerName
+      }`;
+    }
   },
   methods: {
     onCopy() {
