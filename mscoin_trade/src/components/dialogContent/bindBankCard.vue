@@ -44,13 +44,6 @@
             :placeholder='$t("bankBranchPlaceholder")||"请输入开户支行"'
           ></el-input>
         </el-form-item>
-        <!-- <el-form-item :label='$t("googleCode")||"谷歌验证码"'>
-          <el-input
-            name='googleCode'
-            v-model="googleCode"
-            :placeholder='$t("googleCode")||"请输入谷歌验证码"'
-          ></el-input>
-        </el-form-item> -->
         <el-form-item :label='$t("fundPwd")'>
           <el-input
             v-model="password"

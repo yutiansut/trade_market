@@ -39,6 +39,13 @@
           v-text="$t('withdrawRecord')||'提币记录'"
         >
         </a>
+        <!-- <a
+          @click="onTabClick(2,'getmyput')"
+          href="javascript:"
+          :class="currentIndex==2?'active':''"
+          v-text="'积分记录'"
+        >
+        </a> -->
       </div>
       <el-table
         v-loading='showLoading'

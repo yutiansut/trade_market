@@ -99,19 +99,19 @@
             width='100'
             :label="$t('price')||'价格'"
           >
-            <template slot-scope="scope">{{scope.row.prise*1}}&nbsp;{{currentMainCoin.icon}}</template>
+            <template slot-scope="scope">{{scope.row.prise|toFix(3)}}&nbsp;{{currentMainCoin.icon}}</template>
           </el-table-column>
           <el-table-column :label="$t('label179')">
-            <template slot-scope="scope">≈&nbsp;{{scope.row.cny*1}}</template>
+            <template slot-scope="scope">≈&nbsp;{{scope.row.cny|toFix(3)}}</template>
           </el-table-column>
           <el-table-column :label="'24H '+$t('highestPrice')">
-            <template slot-scope="scope">{{scope.row.height*1}}</template>
+            <template slot-scope="scope">{{scope.row.height|toFix(3)}}</template>
           </el-table-column>
           <el-table-column :label="'24H '+$t('lowestPrice')">
-            <template slot-scope="scope">{{scope.row.low*1}}</template>
+            <template slot-scope="scope">{{scope.row.low|toFix(3)}}</template>
           </el-table-column>
           <el-table-column :label="'24H '+$t('volumn')">
-            <template slot-scope="scope">{{scope.row.number*1}}</template>
+            <template slot-scope="scope">{{scope.row.number|toFix(3)}}</template>
           </el-table-column>
           <el-table-column
             :label="$t('priceChange')+'（'+$t('day')+'）'"

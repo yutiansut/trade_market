@@ -227,16 +227,9 @@
                     <span
                       style="width:25%;"
                       class="column"
-                      v-text="item.price*1"
-                    ></span>
-                    <span
-                      class="column"
-                      v-text="item.number*1"
-                    ></span>
-                    <span
-                      class="column txt-rt"
-                      v-text="item.total*1"
-                    ></span>
+                    >{{item.price|toFix(3)}}</span>
+                    <span class="column">{{(item.number*1)|toFix(3)}}</span>
+                    <span class="column txt-rt">{{item.total|toFix(3)}}</span>
                   </div>
                 </template>
               </div>
@@ -322,17 +315,17 @@
                 </el-table-column>
                 <el-table-column :label='priceLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.price*1}}
+                    {{scope.row.price*1|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='marketVolLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.number*1}}
+                    {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='$t("volumn")||"成交量"'>
                   <template slot-scope="scope">
-                    {{scope.row.dealnumber*1}}
+                    {{scope.row.dealnumber|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -380,17 +373,17 @@
                 </el-table-column>
                 <el-table-column :label='priceLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.price*1}}
+                    {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='marketVolLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.number*1}}
+                    {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='$t("volumn")||"成交量"'>
                   <template slot-scope="scope">
-                    {{scope.row.dealnumber*1}}
+                    {{scope.row.dealnumber|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -441,7 +434,7 @@
                   :label='priceLabel'
                 >
                   <template slot-scope="scope">
-                    {{scope.row.price*1}}
+                    {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -449,14 +442,11 @@
                   :label='amountLabel'
                 >
                   <template slot-scope="scope">
-                    {{scope.row.number*1}}
+                    {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='totalLabel'>
-                  <div
-                    slot-scope="scope"
-                    v-text="scope.row.total"
-                  ></div>
+                  <div slot-scope="scope">{{scope.row.total|toFix(3)}}</div>
                 </el-table-column>
               </el-table>
             </template>
@@ -673,9 +663,11 @@ export default {
             data.number * 1 + data.numbergas * 1
           );
           if (nowPrice > highPrice) {
-            price = nowPrice - data.pricegas * 1;
+            price = that.randomNum(nowPrice - data.pricegas * 1, nowPrice);
+            let api =
+              Math.random() * 10 > 5 ? that.api.forbuy : that.api.forsell;
             that
-              .tradeHandle(that.api.forsell, {
+              .tradeHandle(api, {
                 maincoin: maincoin,
                 tradecoin: tradcoin,
                 number: number,
@@ -730,7 +722,9 @@ export default {
             }
             flag = !flag;
           } else {
-            price = nowPrice + data.pricegas * 1;
+            price = that.randomNum(nowPrice, nowPrice + data.pricegas * 1);
+            let api =
+              Math.random() * 10 > 5 ? that.api.forbuy : that.api.forsell;
             that
               .tradeHandle(that.api.forbuy, {
                 maincoin: maincoin,

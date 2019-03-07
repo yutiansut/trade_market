@@ -8,12 +8,13 @@
   .h-#{$i*5} {
     height: 5px * $i;
   }
-  /* 缩虐图尺寸 --rounded 圆形*/
+  /* 缩虐图尺寸 --*/
   .thumb-#{$i*5} {
     width: 5px * $i;
     height: 5px * $i;
   }
 }
+
 .color-danger {
   color: $color-danger;
 }

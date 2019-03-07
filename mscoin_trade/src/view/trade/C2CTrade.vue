@@ -304,6 +304,7 @@
           </template>
           <unlogin-tip></unlogin-tip>
         </div>
+        <!-- 我的 c2c 交易订单-->
         <div class="panel-container">
           <div
             class="panel-header font-18 font-bit-bold"
@@ -319,14 +320,7 @@
                 :label='$t("orderId")'
               >
               </el-table-column>
-              <el-table-column
-                width="150"
-                :label='$t("theirName")'
-              >
-                <template slot-scope="scope">
-                  {{scope.row.type==0?scope.row.sellmember:scope.row.buymember}}
-                </template>
-              </el-table-column>
+
               <el-table-column
                 width='120'
                 :label='$t("type")'
@@ -346,6 +340,11 @@
               <el-table-column :label='numberLabel'>
                 <template slot-scope="scope">
                   {{scope.row.number*1}}
+                </template>
+              </el-table-column>
+              <el-table-column :label='$t("theirName")'>
+                <template slot-scope="scope">
+                  {{scope.row.type==0?scope.row.sellmember:scope.row.buymember}}
                 </template>
               </el-table-column>
               <el-table-column :label='amountLabel'>
@@ -380,28 +379,26 @@
                     >{{$t(scope.row.status_i18n)}}</span>&nbsp;&nbsp;
                     <em
                       @click="checkPhoto(scope.row.photo)"
-                      v-if='scope.row.photo'
                       class="color-primary"
                       v-text="$t('label193')"
                     ></em>
                     <em
                       @click="cancelRequest(scope.row.autoid)"
-                      v-else
                       class="color-primary"
                     >申诉</em>
                   </div>
                   <!-- 待对方收款 -->
-                  <div v-else><span class="color-success">
+                  <div v-else>
+                    <span class="color-success">
                       {{$t(scope.row.status_i18n)}}
                     </span>&nbsp;&nbsp;
                     <em
-                      v-if='scope.row.photo'
+                      @click="checkPhoto(scope.row.photo)"
                       class="color-primary"
                       v-text="$t('label193')"
                     ></em>
                     <em
                       @click="cancelRequest(scope.row.autoid)"
-                      v-else
                       class="color-primary"
                     >申诉</em>
                   </div>
@@ -452,7 +449,7 @@
               </el-table-column>
               <el-table-column :label='$t("label188")'>
                 <template slot-scope="scope">
-                  {{scope.row.type==0?scope.row.sellmember:scope.row.sellmember}}
+                  {{scope.row.type==0?scope.row.tradmember:scope.row.member}}
                 </template>
               </el-table-column>
               <el-table-column :label='amountLabel'>
@@ -465,7 +462,7 @@
               >
               </el-table-column>
               <el-table-column
-                width="100"
+                align='center'
                 :label='$t("status")'
               >
                 <span>已完成</span>
@@ -544,9 +541,17 @@
           type="file"
         >
         <button class="btn-success btn-small">上传凭证</button>
+        <a
+          v-if="imgUrl"
+          :href="imgUrl"
+          target="_blank"
+          class="photo-preivew"
+        >
+          <img :src="imgUrl">
+        </a>
       </div>
-    </order-paid>
 
+    </order-paid>
     <order-paid
       :show='dialogId==6?true:false'
       :title="$t('orderDetail')||'订单详情'"
@@ -565,6 +570,7 @@ import marketOrder from "@/components/dialogContent/MarketOrder";
 import orderPaid from "@/components/dialogContent/orderPaid";
 import axios from "axios";
 import { checkTradePassword } from "../../service/TradeService.js";
+let timer = null;
 export default {
   components: {
     TradeConfirm,
@@ -624,6 +630,11 @@ export default {
       C2CRecord: []
     };
   },
+  beforeRouteLeave(to, from, next) {
+    if (timer) clearInterval(timer);
+    timer = null;
+    next();
+  },
   mounted() {
     this.getc2corder();
     this.getState();
@@ -650,6 +661,7 @@ export default {
           this.Util.sumCalc(result, "price", "number");
           this.marketList = result;
         }
+        this.refreshOrder(this.coinInfo.coinid);
       });
   },
   computed: {
@@ -671,14 +683,13 @@ export default {
     },
     // 可用
     myAvailableLabel() {
-      return `${this.$t("avilable")}&nbsp;${this.myAvailable *
-        1}&nbsp;${this.coinInfo.coinid}`;
+      return `${this.$t("avilable")}&nbsp;${this.myAvailable * 1}&nbsp;${
+        this.coinInfo.coinid
+      }`;
     },
     //平台指导价
     advisalPrice() {
-      return `${this.$t("avisalPrice")}&nbsp;￥${
-        this.coinInfo.cny
-      }`;
+      return `${this.$t("avisalPrice")}&nbsp;￥${this.coinInfo.cny}`;
     },
     //买入总金额
     buyTotal() {
@@ -695,7 +706,7 @@ export default {
   },
   methods: {
     //检测交易密码有效性
-    checkTradePassword() {
+    checkTradePassword(succCb) {
       if (!this.storage.get("tradePasswordChecked")) {
         this.$prompt(this.$t("label199"), this.$t("label140"), {
           confirmButtonText: "确定",
@@ -711,6 +722,7 @@ export default {
                 this.errMsg(this.$t("label200"));
               } else {
                 this.storage.set("tradePasswordChecked", true);
+                succCb && succCb(res);
                 this.successMsg(res.msg);
               }
             });
@@ -719,6 +731,14 @@ export default {
         return false;
       }
       return true;
+    },
+    refreshOrder(coin) {
+      if (timer) clearInterval(timer);
+
+      timer = setInterval(() => {
+        this.getc2callorder(coin);
+        this.gettradorder(coin);
+      }, 2000);
     },
     // 发布订单
     publicOrder(apiKey, param) {
@@ -773,6 +793,7 @@ export default {
         }
       });
     },
+
     //查看凭证
     checkPhoto(photo) {
       if (photo) {
@@ -794,7 +815,22 @@ export default {
     onFileChange(e) {},
     // 撤销我的c2c订单
     cancelMyc2cOrder(autoid) {
-      if (!this.checkTradePassword()) {
+      if (
+        !this.checkTradePassword(() => {
+          this.request(this.api.clearc2c, {
+            autoid: autoid,
+            showLoading: true
+          }).then(res => {
+            if (res.code == "0") {
+              this.successMsg(res.msg || "操作成功");
+              this.delItemFromList(autoid, this.myOrderList);
+              this.delItemFromList(autoid, this.marketList);
+            } else {
+              this.errMsg(res.msg || "操作失败");
+            }
+          });
+        })
+      ) {
         return false;
       }
       this.request(this.api.clearc2c, {
@@ -826,6 +862,17 @@ export default {
         return;
       }
       if (!isNaN(this.buyTotal) && this.buyTotal > 0) {
+        if (
+          !this.checkTradePassword(() => {
+            this.confirmData = {
+              number: this.buyFormData.number,
+              price: this.buyFormData.price
+            };
+            this.dialogId = 0;
+          })
+        ) {
+          return;
+        }
         this.confirmData = {
           number: this.buyFormData.number,
           price: this.buyFormData.price
@@ -841,6 +888,17 @@ export default {
         return;
       }
       if (!isNaN(this.sellTotal) && this.sellTotal > 0) {
+        if (
+          !this.checkTradePassword(() => {
+            this.confirmData = {
+              number: this.sellFormData.number,
+              price: this.sellFormData.price
+            };
+            this.dialogId = 1;
+          })
+        ) {
+          return;
+        }
         this.confirmData = {
           number: this.sellFormData.number,
           price: this.sellFormData.price
@@ -1001,9 +1059,6 @@ export default {
         this.errMsg("label120" || "请登录后操作");
         return false;
       }
-      if (!this.checkTradePassword()) {
-        return false;
-      }
       return true;
     },
     //检测是否能够交易
@@ -1104,6 +1159,18 @@ span {
   background: $bd-color;
   transform: scaleX(0.5);
   bottom: 0;
+}
+.photo-preivew {
+  margin-top: 20px;
+  display: block;
+  width: 180px;
+  margin-left: 12px;
+  img {
+    width: 100%;
+  }
+  &:first-child {
+    margin-left: 0;
+  }
 }
 span {
   &.status-0 {

@@ -213,16 +213,9 @@
                     <span
                       style="width:25%;"
                       class="column"
-                      v-text="item.price*1"
-                    ></span>
-                    <span
-                      class="column"
-                      v-text="item.number*1"
-                    ></span>
-                    <span
-                      class="column txt-rt"
-                      v-text="item.total*1"
-                    ></span>
+                    >{{item.price|toFix(3)}}</span>
+                    <span class="column">{{item.number|toFix(3)}}</span>
+                    <span class="column txt-rt">{{item.total|toFix(3)}}</span>
                   </div>
                 </template>
               </div>
@@ -254,18 +247,9 @@
                       v-html="$t('buy')+'&nbsp;'+(index+1)"
                     >
                     </span>
-                    <span
-                      class="column"
-                      v-text="item.price*1"
-                    ></span>
-                    <span
-                      class="column"
-                      v-text="item.number*1"
-                    ></span>
-                    <span
-                      class="column txt-rt"
-                      v-text="item.total*1"
-                    ></span>
+                    <span class="column">{{item.price|toFix(3)}}</span>
+                    <span class="column">{{item.number|toFix(3)}}</span>
+                    <span class="column txt-rt">{{item.total|toFix(3)}}</span>
                   </div>
                 </template>
               </div>
@@ -309,17 +293,17 @@
                 </el-table-column>
                 <el-table-column :label='priceLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.price*1}}
+                    {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='marketVolLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.number*1}}
+                    {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='$t("volumn")||"成交量"'>
                   <template slot-scope="scope">
-                    {{scope.row.dealnumber*1}}
+                    {{scope.row.dealnumber|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -367,17 +351,17 @@
                 </el-table-column>
                 <el-table-column :label='priceLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.price*1}}
+                    {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='marketVolLabel'>
                   <template slot-scope="scope">
-                    {{scope.row.number*1}}
+                    {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='$t("volumn")||"成交量"'>
                   <template slot-scope="scope">
-                    {{scope.row.dealnumber*1}}
+                    {{scope.row.dealnumber|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -428,7 +412,7 @@
                   :label='priceLabel'
                 >
                   <template slot-scope="scope">
-                    {{scope.row.price*1}}
+                    {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -436,14 +420,13 @@
                   :label='amountLabel'
                 >
                   <template slot-scope="scope">
-                    {{scope.row.number*1}}
+                    {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
                 <el-table-column :label='totalLabel'>
                   <div
                     slot-scope="scope"
-                    v-text="scope.row.total"
-                  ></div>
+                  >{{scope.row.total|toFix(3)}}</div>
                 </el-table-column>
               </el-table>
             </template>
@@ -750,10 +733,7 @@ export default {
         this.errMsg("买入量/卖出量不能为空");
         return false;
       }
-      if (!this.Util.isInt(number)) {
-        this.errMsg("买入量/卖出量必须是整数");
-        return false;
-      }
+
       return true;
     },
     buyHandle() {

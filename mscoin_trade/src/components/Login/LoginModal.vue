@@ -1,15 +1,23 @@
 <template>
-    <div :style="{width:width}" class="dialog">
-      <div :style="{'background':headerBg}" class="dialog-header p-rel">
-        <div :style="{'font-size':titleSize,'color':titleColor}" 
-            class="title"
-            v-text="titleText">
-        </div>
-      </div>
-      <div class="dialog-body">
-        <slot></slot>
+  <div
+    :style="{width:width}"
+    class="dialog"
+  >
+    <div
+      :style="{'background':headerBg}"
+      class="dialog-header p-rel"
+    >
+      <div
+        :style="{'font-size':titleSize,'color':titleColor}"
+        class="title"
+        v-text="titleText"
+      >
       </div>
     </div>
+    <div class="dialog-body">
+      <slot></slot>
+    </div>
+  </div>
 </template>
 <script>
 export default {

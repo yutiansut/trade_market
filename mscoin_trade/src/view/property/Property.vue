@@ -391,6 +391,18 @@ export default {
               } else {
                 this.storage.set("tradePasswordChecked", true);
                 this.successMsg(res.msg);
+                this.request(this.api.exchange, {
+                  account: this.transferFormData.account,
+                  number: this.transferFormData.number
+                }).then(res => {
+                  if (res.code == 0) {
+                    this.successMsg(res.msg);
+                    this.getAccount();
+                    this.dialogClose(2);
+                  } else {
+                    this.errMsg(res.msg);
+                  }
+                });
               }
             });
           })

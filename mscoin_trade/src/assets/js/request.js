@@ -22,7 +22,6 @@ const ajaxRequest = (function () {
             return Promise.reject(error);
         }
     );
-
     axios.interceptors.response.use(
         response => {
             return response;
