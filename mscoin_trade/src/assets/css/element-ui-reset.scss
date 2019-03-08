@@ -19,12 +19,21 @@ $color-primary: #ab1e24;
 }
 .el-table th {
   font-weight: 500;
-  font-size: 16px;
+  font-size: 15px;
   color: #444;
+  @media screen and (max-width: 1366px) {
+    font-size: 14px;
+  }
+}
+.el-table th > .cell {
+  padding: 0 4px;
 }
 .el-table td,
 .el-table th {
   padding: 8px 0 !important;
+  @media screen and (max-width: 1366px) {
+    padding: 4px 0 !important;
+  }
 }
 .el-table {
   color: $main-font-color;
@@ -59,6 +68,9 @@ $color-primary: #ab1e24;
 }
 .el-tabs__item {
   font-size: 16px;
+  @media screen and (max-width: 1366px) {
+    font-size: 14px;
+  }
   &:hover {
     color: $color-primary;
   }

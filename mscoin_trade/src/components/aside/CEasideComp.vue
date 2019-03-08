@@ -121,12 +121,12 @@ export default {
       }
       this.$bus.emit("tradeCoinLoad", data);
     },
-    // // 获取自选
-    // getCustomList() {
-    //   let customList = this.storage.get("customList");
-    //   this.currentId = "opt";
-    //   customList && customList.length > 0 && (this.tableData = customList);
-    // },
+    // 获取自选
+    getCustomList() {
+      let customList = this.storage.get("customList");
+      this.currentId = "opt";
+      customList && customList.length > 0 && (this.tableData = customList);
+    },
     // 添加自选
     addMylist(rowData, index) {
       let data = rowData;

@@ -197,7 +197,7 @@
             </div>
             <div class="break-line"></div>
             <div class="table">
-              <div class="thead font-16">
+              <div class="thead">
                 <span v-text='$t("stalls")||"档位"'></span>
                 <span v-text='priceLabel'></span>
                 <span v-text='amountLabel'></span>
@@ -411,7 +411,7 @@
                 stripe
               >
                 <el-table-column
-                  width='100'
+                  width='120'
                   :label='$t("time")||"时间"'
                 >
                   <span
@@ -420,23 +420,20 @@
                     v-text="scope.row.writedate"
                   ></span>
                 </el-table-column>
-                <el-table-column
-                  width='150'
-                  :label='priceLabel'
-                >
+                <el-table-column :label='priceLabel'>
                   <template slot-scope="scope">
                     {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
-                <el-table-column
-                  width='120'
-                  :label='amountLabel'
-                >
+                <el-table-column :label='amountLabel'>
                   <template slot-scope="scope">
                     {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
-                <el-table-column :label='totalLabel'>
+                <el-table-column
+                  align='right'
+                  :label='totalLabel'
+                >
                   <div slot-scope="scope">{{scope.row.total|toFix(3)}}</div>
                 </el-table-column>
               </el-table>
@@ -446,12 +443,6 @@
         </div>
       </el-main>
     </el-container>
-    <!-- 充币弹窗 -->
-    <!-- <charge-box
-          :showCharge='show'
-          :chargeAddress='chargeAddress' 
-          @closeModel='onClose'>
-        </charge-box> -->
     <my-footer></my-footer>
   </div>
 </template>
@@ -1074,6 +1065,10 @@ $border: 1px solid #e5e5e5;
     display: flex;
     justify-content: space-between;
     padding: 0 8px;
+    font-size: 15px;
+    @media screen and(max-width: 1366px) {
+      font-size: 13px;
+    }
     span {
       display: block;
       flex: 1.5;

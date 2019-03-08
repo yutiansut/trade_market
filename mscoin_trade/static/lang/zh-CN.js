@@ -423,7 +423,7 @@ module.exports = {
     label202: "请输入转出账号",
     label203: "请输入转入账号",
     label204: "转出账号",
-    label205: "转入账号",
+    label205: "转入MS账号",
     label206: "转出数量",
     label207: "输入转出数量",
     label208: "转出数量必须是数字",

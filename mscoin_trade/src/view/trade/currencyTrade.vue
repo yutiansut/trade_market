@@ -183,7 +183,7 @@
             </div>
             <div class="break-line"></div>
             <div class="table">
-              <div class="thead font-16">
+              <div class="thead">
                 <span v-text='$t("stalls")||"档位"'></span>
                 <span v-text='priceLabel'></span>
                 <span v-text='amountLabel'></span>
@@ -307,7 +307,8 @@
                   </template>
                 </el-table-column>
                 <el-table-column
-                  :width="$i18n.locale==='zh-CN'?'60':'120'"
+                  align='center'
+                  :width="$i18n.locale==='zh-CN'?'100':'120'"
                   :label='$t("operation")||"操作"'
                 >
                   <span
@@ -365,12 +366,12 @@
                   </template>
                 </el-table-column>
                 <el-table-column
+                align='center'
                   :width="$i18n.locale=='zh-CN'?'100':'120'"
                   :label='$t("operation")||"操作"'
                 >
                   <span
                     class="handle color-danger"
-                    slot-scope="scope"
                     v-text="$t('completed'||'已完成')"
                   >
                   </span>
@@ -386,19 +387,17 @@
                 class="font-18 font-bit-bold"
                 v-text="$t('tradeRecord')||'成交历史'"
               ></span>
-              <!-- <router-link to=''>更多</router-link> -->
             </div>
             <template v-if="userData.isLogin">
               <div class="break-line"></div>
               <el-table
-                style="font-weight:normal"
                 :data='historicalBuyData'
                 :cell-style='myCellStyle'
                 max-height='700'
                 stripe
               >
                 <el-table-column
-                  width='100'
+                  width='120'
                   :label='$t("time")||"时间"'
                 >
                   <span
@@ -407,26 +406,18 @@
                     v-text="scope.row.writedate"
                   ></span>
                 </el-table-column>
-                <el-table-column
-                  width='150'
-                  :label='priceLabel'
-                >
+                <el-table-column :label='priceLabel'>
                   <template slot-scope="scope">
                     {{scope.row.price|toFix(3)}}
                   </template>
                 </el-table-column>
-                <el-table-column
-                  width='120'
-                  :label='amountLabel'
-                >
+                <el-table-column :label='amountLabel'>
                   <template slot-scope="scope">
                     {{scope.row.number|toFix(3)}}
                   </template>
                 </el-table-column>
-                <el-table-column :label='totalLabel'>
-                  <div
-                    slot-scope="scope"
-                  >{{scope.row.total|toFix(3)}}</div>
+                <el-table-column align='right' :label='totalLabel'>
+                  <div slot-scope="scope">{{scope.row.total|toFix(3)}}</div>
                 </el-table-column>
               </el-table>
             </template>
@@ -571,10 +562,10 @@ export default {
       this.getCurrentInfo(this.maincoin, this.tradecoin);
       //获取可用;
       this.getAvailabel(this.maincoin).then(res => {
-        this.myBlance = res.usable;
+        if (res) this.myBlance = res.usable;
       });
       this.getAvailabel(this.tradecoin).then(res => {
-        this.myAvailable = res.usable;
+        if (res) this.myAvailable = res.usable;
       });
       // 获取币种交易信息
       this.getTradeResult(this.maincoin, this.tradecoin);
@@ -640,7 +631,7 @@ export default {
         if (res.code == "0") {
           return Promise.resolve(res.data.list[0]);
         } else {
-          return Promise.reject(res.msg);
+          this.errMsg(res.msg);
         }
       });
     },
@@ -957,6 +948,10 @@ $border: 1px solid #e5e5e5;
     display: flex;
     justify-content: space-between;
     padding: 0 8px;
+    font-size: 15px;
+    @media screen and(max-width: 1366px) {
+      font-size: 13px;
+    }
     span {
       display: block;
       flex: 1.5;

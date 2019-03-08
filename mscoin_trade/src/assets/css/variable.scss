@@ -38,7 +38,7 @@ $content-width: 66%;
 @mixin float($float: left) {
   float: $float;
 }
-@mixin minWidth($min: 1280px) {
+@mixin minWidth($min: 1366px) {
   min-width: $min;
 }
 @mixin hCenter {

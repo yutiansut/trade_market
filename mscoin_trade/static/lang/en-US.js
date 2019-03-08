@@ -422,7 +422,7 @@ module.exports = {
     label202: "Input your account",
     label203: "Input transferee account",
     label204: "Outcome account",
-    label205: "Income account",
+    label205: "Income MS account",
     label206: "Transfer amount",
     label207: "Input transfer number",
     label208: "Transfer number must be Number type",
