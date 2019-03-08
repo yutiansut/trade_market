@@ -429,6 +429,8 @@ module.exports = {
     label209: "Tag",
     label210: "Input any keywords",
     label211: "Default tradepassword is loginpassword",
+    label212: "Complain",
+    label213: "In complaint",
     "手机绑定失败": "Bind error",
     "该邮箱还未注册，请先注册": "Email is not registered",
     "认证失败": "Check failed",

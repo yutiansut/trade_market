@@ -261,18 +261,9 @@
                       v-html="$t('buy')+'&nbsp;'+(index+1)"
                     >
                     </span>
-                    <span
-                      class="column"
-                      v-text="item.price*1"
-                    ></span>
-                    <span
-                      class="column"
-                      v-text="item.number*1"
-                    ></span>
-                    <span
-                      class="column txt-rt"
-                      v-text="item.total*1"
-                    ></span>
+                    <span class="column">{{item.price|toFix(3)}}</span>
+                    <span class="column">{{item.number|toFix(3)}}</span>
+                    <span class="column txt-rt">{{item.total|toFix(3)}}</span>
                   </div>
                 </template>
               </div>

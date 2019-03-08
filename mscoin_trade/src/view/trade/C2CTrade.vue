@@ -385,7 +385,7 @@
                     <em
                       @click="cancelRequest(scope.row.autoid)"
                       class="color-primary"
-                    >申诉</em>
+                    >{{$t("label212")}}</em>
                   </div>
                   <!-- 待对方收款 -->
                   <div v-else>
@@ -400,7 +400,7 @@
                     <em
                       @click="cancelRequest(scope.row.autoid)"
                       class="color-primary"
-                    >申诉</em>
+                    >{{$t("label212")}}</em>
                   </div>
                 </template>
               </el-table-column>
@@ -465,7 +465,10 @@
                 align='center'
                 :label='$t("status")'
               >
-                <span>已完成</span>
+                <span slot-scope="scope">
+                  <template v-if="scope.row.state==2">{{$t('completed')}}</template>
+                  <template v-if="scope.row.state==5">{{$t('label213')}}</template>
+                </span>
               </el-table-column>
             </el-table>
           </template>
@@ -502,12 +505,6 @@
       @closeModel='onModelClose'
     >
     </trade-confirm>
-    <!-- 订单匹配弹窗 -->
-    <!-- <order-match
-          :show='dialogId==2?true:false'
-          :myData='orderMatchList'
-          :operateLable='$t(operateLabeli18n)||operateLable'>
-        </order-match> -->
     <!-- 挂单买入/卖出待确认弹窗 -->
     <order-confirm :show='dialogId==3?true:false'>
     </order-confirm>
@@ -550,7 +547,6 @@
           <img :src="imgUrl">
         </a>
       </div>
-
     </order-paid>
     <order-paid
       :show='dialogId==6?true:false'
@@ -800,7 +796,7 @@ export default {
         window.open(photo);
       }
     },
-    //申诉
+    //{{$t("label212")}}
     cancelRequest(id) {
       if (id) {
         this.request(this.api.appeal, {
