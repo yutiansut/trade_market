@@ -370,6 +370,10 @@ let apiCfg = (function () {
         },
         getsharecode: {
             url: "sharecode"
+        },
+        //申诉
+        appeal:{
+            url:"appeal"
         }
     }
 }());

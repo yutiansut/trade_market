@@ -397,7 +397,6 @@
                 stripe
               >
                 <el-table-column
-                  width='120'
                   :label='$t("time")||"时间"'
                 >
                   <span
@@ -944,6 +943,7 @@ $border: 1px solid #e5e5e5;
 }
 .table {
   .thead {
+    overflow: hidden;
     @include textVcenter();
     display: flex;
     justify-content: space-between;

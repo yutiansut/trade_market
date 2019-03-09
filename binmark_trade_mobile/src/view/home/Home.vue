@@ -107,15 +107,17 @@
             ></div>
             <div class="color-666">
               <span>24h量&nbsp;</span>
-              <span v-text="item.number*1"></span>
+              <!-- <span v-text="item.number*1 toFix(4)"></span> -->
+              <span>{{item.number*1 | toFix(4)}}</span>
             </div>
           </van-col>
           <van-col span="9">
             <div class="font-15 font-bold">{{item.prise*1}}&nbsp;{{mainCoinInfo.icon}}</div>
             <div
               class="color-666"
-              v-html="'≈&nbsp;'+mainCoinInfo.cny*item.prise+'&nbsp;cny'"
-            ></div>
+            > 
+              <span>{{mainCoinInfo.cny*item.prise | toFix(4)}}</span>
+            </div>
           </van-col>
           <van-col span="5">
             <span

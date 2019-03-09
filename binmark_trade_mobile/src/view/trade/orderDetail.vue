@@ -43,6 +43,18 @@
           <span v-text="orderDetail.zj*1"></span>
         </dd>
       </dl>
+      <!-- 上传凭证 -->
+      <!-- v-if='orderDetail.type == 0' -->
+      <dl v-if="orderDetail.type==0&&orderDetail.state==0" class="confirm-payment content">
+        <van-uploader :after-read="onRead" style="display:block">
+          <p class="color-999 up-big">上传凭证</p>
+        </van-uploader>
+      </dl>
+      <div v-if="upImgUrl||orderDetail.photo">
+        <img :src="upImgUrl" alt width="50%" class="img-suo">
+      </div>
+      <!-- 申诉功能 -->
+      <dl v-if="orderDetail.state==1" class="confirm-payment content appeal" @click="appeal">申诉功能</dl>
     </div>
     <button
       @click="handleOrder"
@@ -53,6 +65,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 import {
   getMyc2cTrade,
   confirmPayment,
@@ -62,23 +75,12 @@ export default {
   data() {
     return {
       orderStatus: 0,
-      orderDetail: {}
+      orderDetail: {},
+      upImgUrl: ""
     };
   },
   mounted() {
-    let { id, type } = this.$route.query;
-    if (!id) return false;
-    getMyc2cTrade().then(res => {
-      if (res && res.length > 0) {
-        let item = null;
-        for (let i = 0; i < res.length; i++) {
-          if (res[i].autoid == id && res[i].type == type) {
-            item = res[i];
-            this.orderDetail = item;
-          }
-        }
-      }
-    });
+    this.getOrerDetail();
   },
   computed: {
     btnText() {
@@ -90,14 +92,32 @@ export default {
         return "待对方收款";
       } else if (this.orderDetail.type == 1 && this.orderDetail.state == 1) {
         return "确认收款";
-      } else {
+      } else if (this.orderDetail.state == 5) {
+        return "申诉中";
+      } else if (this.orderDetail.state == 2) {
         return "已完成";
       }
     }
   },
   methods: {
+    getOrerDetail() {
+      let { id, type } = this.$route.query;
+      if (!id) return false;
+      getMyc2cTrade().then(res => {
+        if (res && res.length > 0) {
+          let item = null;
+          for (let i = 0; i < res.length; i++) {
+            if (res[i].autoid == id && res[i].type == type) {
+              item = res[i];
+              this.orderDetail = item;
+            }
+          }
+        }
+      });
+    },
     handleOrder() {
       if (this.orderDetail.type == 0 && this.orderDetail.state == 0) {
+        if (this.upImgUrl == "") return this.$toast("请先上传凭证");
         confirmPayment(this.orderDetail.autoid).then(res => {
           if (res) {
             this.orderDetail.state = 1;
@@ -107,9 +127,34 @@ export default {
         confirmReceivePayment(this.orderDetail.autoid).then(res => {
           if (res) {
             this.navigateTo("/trade/c2c_trade");
+            this.orderDetail.state = 2;
           }
         });
       }
+    },
+    //上传凭证
+    onRead(file) {
+      let formData = new FormData();
+      let options = {
+        headers: {
+          "Content-Type": "MultipartFile/form-data"
+        },
+        method: "post"
+      };
+      formData.append("imgurl", file.file);
+      options.url = `${this.api.baseURL}/${this.api.img.url}`;
+      options.data = formData;
+      axios(options).then(res => {
+        console.log(res);
+        this.upImgUrl = res.data.data.isFlag;
+      });
+    },
+    // 申诉功能
+    appeal() {
+      let params = { id: this.orderDetail.autoid };
+      this.request(this.api.appeal, params).then(res => {
+        if (res) this.orderDetail.state = 5;
+      });
     }
   }
 };
@@ -140,5 +185,16 @@ button.confirm-btn {
     @include textVcenter(35px);
     font-size: 14px;
   }
+}
+.content .up-big {
+  text-align: center;
+  font-size: 16px;
+}
+.img-suo {
+  margin: 1rem auto;
+}
+.appeal {
+  text-align: center;
+  font-size: 16px;
 }
 </style>

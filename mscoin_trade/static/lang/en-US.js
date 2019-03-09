@@ -288,6 +288,8 @@ module.exports = {
     decimalPlace: "Decimal place",
     officialSite: "Official site",
     whitePaperLink: "White paper link",
+    buyer: "Buyer",
+    seller: "seller",
     blockChainExploer: "Block chain exploer",
     logoUrl: "Upload LOGO",
     twitterLink: "Twitter link",

@@ -422,11 +422,13 @@
             >
               <el-table-column
                 width="150"
+                sortable
                 prop='autoid'
                 :label='$t("orderId")'
               >
               </el-table-column>
               <el-table-column
+                sortable
                 width='120'
                 :label='$t("type")||"类型"'
               >
@@ -437,26 +439,39 @@
                 >
                 </span>
               </el-table-column>
-              <el-table-column :label='$t("price")+"(CNY)"'>
+              <el-table-column
+                sortable
+                :label='$t("price")+"(CNY)"'
+              >
                 <template slot-scope="scope">
                   {{scope.row.price*1}}
                 </template>
               </el-table-column>
-              <el-table-column :label='numberLabel'>
+              <el-table-column
+                sortable
+                :label='numberLabel'
+              >
                 <template slot-scope="scope">
                   {{scope.row.number*1}}
                 </template>
               </el-table-column>
-              <el-table-column :label='$t("label188")'>
+              <el-table-column
+                sortable
+                :label='$t("label188")'
+              >
                 <template slot-scope="scope">
                   {{scope.row.type==0?scope.row.tradmember:scope.row.member}}
                 </template>
               </el-table-column>
-              <el-table-column :label='amountLabel'>
+              <el-table-column
+                sortable
+                :label='amountLabel'
+              >
                 <span slot-scope="scope">{{scope.row.zj*1}}</span>
               </el-table-column>
               <el-table-column
-                width="200"
+                sortable
+                width="150"
                 prop='wdate'
                 :label='$t("createdTime")'
               >
@@ -464,6 +479,7 @@
               <el-table-column
                 align='center'
                 :label='$t("status")'
+                sortable
               >
                 <span slot-scope="scope">
                   <template v-if="scope.row.state==2">{{$t('completed')}}</template>

@@ -349,7 +349,7 @@ const routes = [
         name: "AccountCenter",
         component: AccountCenter,
         meta: {
-          title: "账户管理",
+          title: "个人信息",
           auth: true
         }
       },

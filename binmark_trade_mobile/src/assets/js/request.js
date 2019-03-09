@@ -129,6 +129,7 @@ const ajaxRequest = (function () {
         } else {
             delete httpDefaultOpts.params;
         }
+        console.log(data)
         httpDefaultOpts.showLoading = !(data && data.showLoading == '0')
 
         let promise = new Promise(function (resolve, reject) {

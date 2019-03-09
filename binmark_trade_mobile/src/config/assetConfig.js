@@ -64,6 +64,7 @@ export default {
         no_record: require("../assets/images/no_record.png"),
         share_bg: require("../assets/images/share_bg.png"),
         share_content_bg: require("../assets/images/share_content_bg.png"),
+        log_out: require("../assets/images/tuichu.png"),
         default: require("../assets/images/default.png")
     }
 }

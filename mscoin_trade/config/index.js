@@ -6,7 +6,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/API': {
-        target: "http://192.168.28.51:80",
+        target: "https://www.amcoinio.com",
         changeOrigin: true
       }
     },

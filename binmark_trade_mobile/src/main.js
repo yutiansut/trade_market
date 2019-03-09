@@ -27,6 +27,7 @@ import {
   Tabs,
   Toast,
   Actionsheet,
+  Uploader ,
 } from "vant";
 Vue.use(Tabbar)
   .use(TabbarItem)
@@ -42,7 +43,8 @@ Vue.use(Tabbar)
   .use(Tabs)
   .use(NoticeBar)
   .use(Actionsheet)
-  .use(Toast);
+  .use(Toast)
+  .use(Uploader );
 
 /**
  * 引入全局组件
@@ -64,6 +66,10 @@ import Request from "@/assets/js/request";
 import myStorage from "@/assets/js/myStorage";
 import apiCfg from "@/config/apiConfig";
 import assetConfig from "@/config/assetConfig";
+import filter from './assets/js/filter';
+Object.keys(filter).forEach(key => {
+  Vue.filter(key, filter[key])
+});
 Vue.config.productionTip = false;
 
 /**

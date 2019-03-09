@@ -44,11 +44,30 @@
           />
         </div>
       </router-link>
+      <a href="javascript:;" @click='logout()' v-if='Store.state.isLogin'>
+        <div class="bar-item flex flex-v-center flex-between">
+          <div class="label flex flex-v-center">
+            <img
+              class="icon-img"
+              :src='assetConfig.imgs.log_out'   
+            >
+            <div
+              class="font-14"
+            >退出登录</div>
+          </div>
+          <van-icon
+            color="#999"
+            size="1.2rem"
+            name="arrow"
+          />
+        </div>
+      </a>
+      
     </div>
   </div>
 </template>
 <script>
-import { getUserInfo } from "@/vuexStore/storeService.js";
+import { getUserInfo,Logout} from "@/vuexStore/storeService.js";
 export default {
   name: "user-aside",
   data() {
@@ -60,7 +79,7 @@ export default {
           icon: this.assetConfig.imgs.user_icon_1
         },
         {
-          label: "账户管理",
+          label: "个人信息",
           link: "/account/center",
           icon: this.assetConfig.imgs.user_icon_2
         },
@@ -110,6 +129,17 @@ export default {
   mounted() {
     if (this.Store.state.isLogin) {
       getUserInfo();
+    }
+  },
+  methods:{
+    logout(){
+      Logout().then(res=>{
+        if(res){
+          // this.storage.set('token',false)
+          window.localStorage.clear()
+          this.$router.push('/userentry/login')
+        } 
+      }); 
     }
   }
 };
